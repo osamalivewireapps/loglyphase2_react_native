@@ -1,4 +1,5 @@
 import Fonts from './Fonts';
 import Images from './Images';
 import Colors from './Colors';
-export { Fonts, Images, Colors }
+import Icons from './Icons';
+export { Fonts, Images, Colors, Icons }

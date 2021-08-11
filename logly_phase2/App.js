@@ -10,22 +10,18 @@
  */
 
 import React from 'react';
-import { ScrollView, StatusBar, Text, View } from 'react-native';
-import { TransitionPresets, TransitionSpecs } from '@react-navigation/stack';
+import { TransitionPresets } from '@react-navigation/stack';
 
 
-import {
-  Colors,
-  DebugInstructions,
-  Header,
-  LearnMoreLinks,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import { ThanksRegistrationController, BusinessOwnerController, BusAccountPackagesController, RegistrationAccountTypeController, PasswordResetController, ChangePasswordController, VerificationCodeController, LoginController, RegistrationController, ForgotPasswordController } from './src';
+import {
+  LoginController, ThanksRegistrationController, BusinessOwnerController,
+  BusAccountPackagesController, RegistrationAccountTypeController,
+  PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController
+} from './src';
 import SplashScreen from './src/container/Splash';
 
 const Stack = createNativeStackNavigator();
@@ -46,6 +42,7 @@ class App extends React.Component {
           <Stack.Screen name="PasswordReset" component={PasswordResetController} />
           <Stack.Screen name="ChangePassword" component={ChangePasswordController} />
           <Stack.Screen name="RegisterAccountType" component={RegistrationAccountTypeController} />
+          <Stack.Screen name="BusAccountPackages" component={BusAccountPackagesController} />
           <Stack.Screen name="ThanksRegistration" component={ThanksRegistrationController} />
           <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} />
         </Stack.Navigator>

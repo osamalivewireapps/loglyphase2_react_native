@@ -6,8 +6,7 @@
 import React, { Component, useState } from 'react';
 import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput } from 'react-native';
 import InputPasswordToggle from '../../components/InputPasswordToggle';
-import { Colors, Fonts } from '../../theme';
-import Icons from '../../theme/Icons';
+import { Colors, Fonts, Icons } from '../../theme';
 import CheckBox from 'react-native-check-box';
 
 function LoginView(props) {
