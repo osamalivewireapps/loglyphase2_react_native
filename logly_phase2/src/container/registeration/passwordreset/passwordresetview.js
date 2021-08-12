@@ -45,14 +45,14 @@ function PasswordResetView(props) {
                     fontSize: 28, textAlign: 'center', padding: 10,
                     paddingTop: 25, paddingBottom: 25,
                     fontFamily: Fonts.type.bold, color: 'black'
-                }}>Passwords Reset Succesfully</Text>
+                }}>Password Reset Successfully</Text>
 
                 <Text style={{
                     ...styles.generalTxt,
                     fontSize: 20, textAlign: 'center', paddingStart: 10,
                     paddingEnd: 10, paddingBottom: 60
 
-                }}>You have successfully resets your password. Please use your new password to login.</Text>
+                }}>You have successfully reset your password. Please use your new password to login.</Text>
 
 
                 <TouchableOpacity

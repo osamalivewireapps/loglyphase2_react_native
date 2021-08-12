@@ -23,7 +23,7 @@ function BusAccountPackagesView(props) {
                     backgroundColor: Colors.appBgColor,
                     borderBottomLeftRadius: 30,
                     borderBottomRightRadius: 30,
-                    height: Dimensions.get('screen').height / 3.5,
+                    height: Dimensions.get('screen').height / 3,
                     padding: 20,
                     paddingStart: 40,
                     paddingTop: 40,

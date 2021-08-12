@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     styleTextInput: {
         fontFamily: Fonts.type.base,
         fontSize: 16,
-        color: '#585858'
+        color: 'black'
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor, borderRadius: 30,
@@ -141,6 +141,7 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 10,
+        color: 'black'
     },
 
     underlineStyleHighLighted: {

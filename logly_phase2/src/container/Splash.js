@@ -18,35 +18,45 @@ class SplashScreen extends React.Component {
                 <Image source={Images.appBg} style={{ position: 'absolute' }} />
 
                 <View style={{
-                    justifyContent: 'center', alignItems: 'center', height: '100%',
+                    height: '100%',
+                    justifyContent: 'center', alignItems: 'center',
                 }}>
-                    <Image source={Images.img_animals} style={{}} />
-                    <Image source={Images.logo_logly_splash} style={{ marginTop: 40 }} />
-                    <Text style={{
-                        fontSize: 14, textAlign: 'center', marginTop: 10,
-                        fontFamily: Fonts.type.light, color: 'white', marginStart: 60, marginEnd: 60
-                    }}>Share Your Love for Animals - Love Logged And Organized!</Text>
+                    <View style={{ flex: 5 }}>
+                        <Image source={Images.img_animals}
+                            resizeMode='contain'
+                            style={{ height: Dimensions.get('screen').height / 2 }} />
+                    </View>
+                    <View style={{
+                        flex: 3, justifyContent: 'center', alignItems: 'center',
 
-                    <TouchableOpacity
-                        onPress={() => { this.props.navigation.navigate('Registration') }}
-                        style={{ marginTop: 30, backgroundColor: Colors.appYellow, borderRadius: 20 }}>
+                    }}>
+                        <Image source={Images.logo_logly_splash} />
                         <Text style={{
-                            fontSize: 22, textAlign: 'center', padding: 10, paddingStart: 120, paddingEnd: 120,
+                            fontSize: 14, textAlign: 'center', marginTop: 0,
+                            fontFamily: Fonts.type.light, color: 'white', marginStart: 60, marginEnd: 60
+                        }}>Share Your Love for Animals - Love Logged And Organized!</Text>
+                    </View>
+                    <View style={{ flex: 2, justifyContent: 'flex-end', marginBottom: 10 }}>
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.navigate('Registration') }}
+                            style={{ marginTop: 0, backgroundColor: Colors.appYellow, borderRadius: 20 }}>
+                            <Text style={{
+                                fontSize: 22, textAlign: 'center', padding: 10, paddingStart: 120, paddingEnd: 120,
 
-                            fontFamily: Fonts.type.light, color: Colors.appBgColor
-                        }}>SIGNUP</Text>
-                    </TouchableOpacity>
+                                fontFamily: Fonts.type.light, color: Colors.appBgColor
+                            }}>SIGNUP</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                        onPress={() => { this.props.navigation.navigate('Login') }}
-                        style={{ marginTop: 20, backgroundColor: 'white', borderRadius: 20 }}>
-                        <Text style={{
-                            fontSize: 22, textAlign: 'center', padding: 10, paddingStart: 127, paddingEnd: 127,
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.navigate('Login') }}
+                            style={{ marginTop: 10, backgroundColor: 'white', borderRadius: 20 }}>
+                            <Text style={{
+                                fontSize: 22, textAlign: 'center', padding: 10, paddingStart: 127, paddingEnd: 127,
 
-                            fontFamily: Fonts.type.light, color: Colors.appBgColor
-                        }}>LOGIN</Text>
-                    </TouchableOpacity>
-
+                                fontFamily: Fonts.type.light, color: Colors.appBgColor
+                            }}>LOGIN</Text>
+                        </TouchableOpacity>
+                    </View>
 
 
                 </View>
