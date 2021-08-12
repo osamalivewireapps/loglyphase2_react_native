@@ -1,22 +1,60 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 /* eslint-disable quotes */
-import React, { Component, useState } from 'react';
+import React, { Component, useRef, useState, useEffect } from 'react';
 import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput } from 'react-native';
 import InputPasswordToggle from '../../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons } from '../../../theme';
 import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
+import { FlatList } from 'react-native-gesture-handler';
 
 function RegistrationView(props) {
 
-    const { backScreen, openRegisterAccount } = props;
+    const { backScreen, openRegisterAccount,
+        arrStates, userStateLocation, userState,
+        arrCity, userCityLocation, userCity,
+        validateName, enterName, setUserName } = props;
 
     const [password, setPassword] = useState('');
     const [email, setemail] = useState('');
     const [rememberCheck, setrememberCheck] = useState(false);
+
+
+    //STATES...
+    const inputEl = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const [filterArray, setFilterArr] = useState([]);
+
+    //CITY...
+    const inputCity = useRef(null);
+    const [isCityVisible, setIsCityVisible] = useState(false);
+    const [filterCityArray, setFilterCityArr] = useState([]);
+
+
+    useEffect(() => {
+        if (isVisible && arrStates) {
+
+            setFilterArr(arrStates.filter((e) => {
+                console.log("state name----->", e.name + "--" + userState)
+                return e.name.includes(userState)
+            }))
+        }
+    }, [userStateLocation])
+
+    useEffect(() => {
+        if (isCityVisible && arrCity) {
+
+            setFilterCityArr(arrCity.filter((e) => {
+                console.log("city name----->", e.name + "--" + userCity)
+                return e.name.includes(userCity)
+            }))
+        }
+    }, [userCityLocation])
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -45,7 +83,13 @@ function RegistrationView(props) {
                     marginEnd: 30
                 }}>
 
-                    <View style={{ ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+                    <View style={{
+                        ...styles.boxcontainer,
+
+                        flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center',
+                        shadowColor: validateName ? 'black' : 'darkred',
+                        shadowOpacity: validateName ? 0.25 : 1
+                    }}>
 
                         <Image source={Icons.icon_user} />
                         <TextInput placeholder="Enter name" style={{
@@ -54,8 +98,8 @@ function RegistrationView(props) {
 
                         }}
                             keyboardType="default"
-                            onChangeText={setemail}
-                            value={email} />
+                            onChangeText={(e) => setUserName(e)}
+                            value={enterName} />
                     </View>
                     <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
 
@@ -86,33 +130,139 @@ function RegistrationView(props) {
                     <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
 
                         <Image source={Icons.icon_state} />
-                        <TextInput placeholder="Select State" style={{
-                            ...styles.styleTextInput,
-                            marginStart: 10,
-                            flex: 8
+                        <TextInput placeholder="Select State"
+                            ref={inputEl}
+                            onTouchStart={() => setIsVisible(true)}
+                            onChangeText={(e) => {
+                                userStateLocation({ name: e, stateId: -1 });
+                                setIsVisible(true)
+                            }}
+                            style={{
+                                ...styles.styleTextInput,
+                                marginStart: 10,
+                                flex: 8
 
-                        }}
+                            }}
                             keyboardType="default"
-                            onChangeText={setemail}
-                            value={email} />
-                        <Image source={Icons.icon_ios_arrow_down} />
+                            value={userState} />
+                        <TouchableOpacity
+                            onPress={() => {
+                                inputEl.current.focus();
+                                setIsVisible(true);
+                                setFilterArr(arrStates)
+
+                            }}
+                        >
+                            <Image source={Icons.icon_ios_arrow_down} />
+                        </TouchableOpacity>
+
+
                     </View>
+
+                    {(isVisible) ? <View style={{
+                        zIndex: 1,
+                        width: '100%',
+                        marginTop: 10,
+                        ...styles.boxcontainer,
+                        height: 150,
+                        shadowRadius: 4,
+                        borderRadius: 10
+
+                    }}>
+                        <FlatList
+                            data={filterArray}
+                            renderItem={(item) => {
+                                console.log("state--->", item.item.name)
+                                return (
+                                    <TouchableOpacity onPress={() => {
+                                        userStateLocation({ name: item.item.name, stateId: item.item.id });
+                                        setIsVisible(false)
+
+                                    }}>
+                                        <View >
+                                            <Text style={{
+                                                ...styles.generalTxt, borderColor: 'black',
+                                                borderWidth: 0, width: '100%', padding: 10,
+                                                borderRadius: 10, marginTop: 0,
+                                                backgroundColor: 'white',
+                                                color: 'black', fontSize: 14
+
+                                            }}>{item.item.name}</Text>
+                                        </View>
+                                    </TouchableOpacity>)
+                            }}
+                            keyExtractor={item => item.Country}
+                        />
+                    </View> : null}
 
                     <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
 
                         <Image source={Icons.icon_city} />
-                        <TextInput placeholder="Select City" style={{
-                            ...styles.styleTextInput,
-                            marginStart: 10,
-                            flex: 8
+                        <TextInput placeholder="Select City"
+                            ref={inputCity}
+                            onTouchStart={() => setIsCityVisible(true)}
+                            onChangeText={(e) => {
+                                userCityLocation({ name: e, cityId: -1 });
+                                setIsCityVisible(true)
+                            }}
+                            style={{
+                                ...styles.styleTextInput,
+                                marginStart: 10,
+                                flex: 8
 
-                        }}
+                            }}
                             keyboardType="default"
-                            onChangeText={setemail}
-                            value={email} />
+                            value={userCity}
 
-                        <Image source={Icons.icon_ios_arrow_down} />
+                        />
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                inputCity.current.focus();
+                                setIsCityVisible(true);
+                                setFilterCityArr(arrCity)
+
+                            }}
+                        >
+                            <Image source={Icons.icon_ios_arrow_down} />
+                        </TouchableOpacity>
                     </View>
+
+                    {(isCityVisible) ? <View style={{
+                        zIndex: 1,
+                        width: '100%',
+                        marginTop: 10,
+                        ...styles.boxcontainer,
+                        height: 150,
+                        shadowRadius: 4,
+                        borderRadius: 10
+
+                    }}>
+                        <FlatList
+                            data={filterCityArray}
+                            renderItem={(item) => {
+                                console.log("city--->", item.item.name)
+                                return (
+                                    <TouchableOpacity onPress={() => {
+                                        userCityLocation({ name: item.item.name, cityId: item.item.id });
+                                        setIsCityVisible(false)
+
+                                    }}>
+                                        <View >
+                                            <Text style={{
+                                                ...styles.generalTxt, borderColor: 'black',
+                                                borderWidth: 0, width: '100%', padding: 10,
+                                                borderRadius: 10, marginTop: 0,
+                                                backgroundColor: 'white',
+                                                color: 'black', fontSize: 14
+
+                                            }}>{item.item.name}</Text>
+                                        </View>
+                                    </TouchableOpacity>)
+                            }}
+                            keyExtractor={item => item.Country}
+                        />
+                    </View> : null}
 
                     <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
 
