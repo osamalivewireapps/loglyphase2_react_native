@@ -103,6 +103,7 @@ function RegistrationView(props) {
                                 ...styles.styleTextInput,
                                 marginStart: 10,
 
+
                             }}
                                 keyboardType="default"
                                 onChangeText={(e) => setUserName(e)}
@@ -114,6 +115,8 @@ function RegistrationView(props) {
                             <TextInput placeholder="Email" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
+                                flex: 1,
+                                marginEnd: 10
 
                             }}
                                 keyboardType="email-address"
@@ -127,6 +130,8 @@ function RegistrationView(props) {
                             <TextInput placeholder="Enter Phone No" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
+                                flex: 1,
+                                marginEnd: 10
 
                             }}
                                 keyboardType="number-pad"
@@ -147,7 +152,8 @@ function RegistrationView(props) {
                                 style={{
                                     ...styles.styleTextInput,
                                     marginStart: 10,
-                                    flex: 8
+                                    flex: 8,
+                                    marginEnd: 10
 
                                 }}
                                 keyboardType="default"
@@ -215,7 +221,8 @@ function RegistrationView(props) {
                                 style={{
                                     ...styles.styleTextInput,
                                     marginStart: 10,
-                                    flex: 8
+                                    flex: 8,
+                                    marginEnd: 10
 
                                 }}
                                 keyboardType="default"
@@ -277,6 +284,8 @@ function RegistrationView(props) {
                             <TextInput placeholder="Zip Code" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
+                                flex: 1,
+                                marginEnd: 10
 
                             }}
                                 keyboardType="default"

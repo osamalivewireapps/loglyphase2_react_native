@@ -72,6 +72,7 @@ function BusinessOwnerView(props) {
 
                                 <TextInput placeholder="" style={{
                                     ...styles.styleTextInput,
+                                    flex: 1,
 
                                 }}
                                     keyboardType="default"
@@ -107,6 +108,8 @@ function BusinessOwnerView(props) {
 
                                 <TextInput placeholder="" style={{
                                     ...styles.styleTextInput,
+                                    flex: 1,
+
 
                                 }}
                                     keyboardType="default"

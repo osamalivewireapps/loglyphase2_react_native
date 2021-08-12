@@ -67,6 +67,8 @@ function ForgotPasswordView(props) {
                             <TextInput placeholder="Email" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
+                                flex: 1,
+
 
                             }}
                                 keyboardType="email-address"

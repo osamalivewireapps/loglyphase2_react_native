@@ -130,7 +130,8 @@ const styles = StyleSheet.create({
     styleTextInput: {
         fontFamily: Fonts.type.base,
         fontSize: 16,
-        color: '#585858'
+        color: '#585858',
+        flex: 8
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor, borderRadius: 30,
