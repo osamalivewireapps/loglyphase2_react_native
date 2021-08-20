@@ -25,6 +25,8 @@ function StackNavigator(props) {
       <NavigationContainer>
         <Stack.Navigator screenOptions={{
           headerBackVisible: false, headerShown: false,
+          ...horizontalAnimation
+
         }}>
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
@@ -57,13 +59,13 @@ const horizontalAnimation = {
     open: {
       animation: 'timing',
       config: {
-        duration: 300,
+        duration: 500,
       }
     },
     close: {
       animation: 'timing',
       config: {
-        duration: 300,
+        duration: 500,
       }
     }
 

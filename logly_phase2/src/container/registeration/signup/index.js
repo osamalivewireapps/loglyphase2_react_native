@@ -9,32 +9,40 @@ import RegistrationView from './registrationview';
 import { userSignUpRequest, getStateRequest, getCityRequest } from '../../../actions/SignUpModule';
 import { connect } from 'react-redux';
 import utils from '../../../utils';
+import { Keyboard } from 'react-native';
+import DataHandler from '../../../utils/DataHandler';
+import { theme } from 'native-base';
 
 class RegistrationController extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: 'test1@test1.com',
+            email: 'osama@livewirelabs.co',
             password: 'Test12345',
-            phoneNo: 'test',
-            state: '"Arizona"',
-            city: "Brenda",
+            phoneNo: '12345',
+            state: '',
+            city: "",
             Zipcode: '12345',
-            dataState: [],
-            dataCity: [],
             userState: "",
             userCity: "",
+            stateId: -1,
+            cityId: -1,
 
-            userName: '',
+            userName: 'test',
             userMsg: true,
+            userEmail: true,
+            userPhone: true,
+            selectState: true,
+            selectCity: true,
+            userZipCode: true,
+            userPassword: true,
+            isCheckOnTerms: true
         }
     }
 
-    currentActions = "";
 
     componentDidMount() {
-        this.setCurrentAction("GET_STATES");
         this.props.getStateRequest();
     }
 
@@ -43,85 +51,92 @@ class RegistrationController extends Component {
     }
 
     openRegisterAccount() {
-        this.props.navigation.navigate('RegisterAccountType')
-        // this.setCurrentAction("USER_SIGNUP");
-        // this.props.userSignUpRequest(this.state);
-    }
 
-    componentDidUpdate() {
+        if (this._validateForm()) {
 
-        console.log("props---->", this.props);
+            let userObject = JSON.stringify({
+                email: this.state.email,
+                password: this.state.password,
+                phoneNo: this.state.phoneNo,
+                state: this.state.userState,
+                city: this.state.userCity,
+                stateId: this.state.stateId,
+                cityId: this.state.cityId,
+                name: this.state.userName
+            })
 
-        switch (this.currentActions) {
-            case "GET_STATES":
-                this.setState({
-                    dataState: this.props.dataState.payload.data,
-                    //userCity: this.props.dataState.payload.data[0].name
-                })
-                this.emptyCurrentAction();
-                break;
-
-            case "GET_CITIES":
-                console.log("data-->", this.props.dataCity.payload.data);
-                this.setState({
-                    dataCity: this.props.dataCity.payload.data,
-                    //userState: this.props.dataCity.payload.data[0].name
-                })
-                this.emptyCurrentAction();
-                break;
-
-            case "USER_SIGNUP":
-                console.log("data-->", this.props.signUpObject.payload.data);
-                this.emptyCurrentAction();
-                break;
+            if (DataHandler.saveUserObject(userObject)) {
+                this.props.navigation.navigate('RegisterAccountType');
+            }
         }
     }
 
-    emptyCurrentAction() {
-        this.currentActions = "";
-    }
-
-    setCurrentAction(e) {
-        this.currentActions = e;
-    }
 
     setStateLocation(txt) {
         //txt.name && txt.stateId
         this.setState({
             userState: txt.name,
             userCity: "",
+            stateId: txt.stateId,
+            selectState: utils.isValidUserName(txt.name),
         });
         if (txt.stateId !== -1) {
-            this.setCurrentAction("GET_CITIES");
-            this.props.getCityRequest(txt.stateId);
+            if (this.state.userState !== txt.name) {
+                this.props.getCityRequest(txt.stateId);
+            }
         }
     }
 
     setCityLocation(txt) {
         //txt.name && txt.cityId
-        this.setState({ userCity: txt.name, locNameMgs: utils.combineGeneralValidate(txt) });
+        this.setState({
+            userCity: txt.name,
+            cityId: txt.cityId,
+            selectCity: utils.isValidUserName(txt.name)
+        });
     }
 
     setUserName(txt) {
         this.setState({ userName: txt, userMsg: utils.isValidUserName(txt) });
     }
 
+    setEmail(txt) {
+        this.setState({ email: txt, userEmail: utils.isEmailValid(txt) });
+    }
+
+    setPhoneNo(txt) {
+        this.setState({ phoneNo: txt, userPhone: utils.isValidUserName(txt) });
+    }
+
+    setZipCode(txt) {
+        this.setState({ Zipcode: txt, userZipCode: utils.isValidUserName(txt) });
+    }
+
     setPassword(txt) {
         this.setState({
             password: txt,
-            passwordMsg: utils.combinePasswordValidate(txt),
+            userPassword: utils.isPasswordValid(txt),
         });
     }
 
+    setCheckTerms(isCheck) {
+        this.setState({ isCheckOnTerms: isCheck })
+    }
+
     render() {
+
         return (
             <RegistrationView props
-                arrStates={this.state.dataState}
+                arrStates={this.props.dataState.payload?.data}
                 userState={this.state.userState}
                 userStateLocation={(e) => this.setStateLocation(e)}
-                arrCity={this.state.dataCity}
+                validateState={this.state.selectState}
+
+                arrCity={this.props.dataCity.payload?.data}
                 userCityLocation={(e) => this.setCityLocation(e)}
                 userCity={this.state.userCity}
+                validateCity={this.state.selectCity}
+
                 openRegisterAccount={(e) => this.openRegisterAccount(e)}
                 backScreen={(e) => { this.goingBack(e) }}
 
@@ -129,17 +144,122 @@ class RegistrationController extends Component {
                 validateName={this.state.userMsg}
                 setUserName={(e) => { this.setUserName(e) }}
 
+                enterEmail={this.state.email}
+                validateEmail={this.state.userEmail}
+                setEmail={(e) => { this.setEmail(e) }}
+
+                enterPhone={this.state.phoneNo}
+                validatePhone={this.state.userPhone}
+                setPhone={(e) => { this.setPhoneNo(e) }}
+
+
+                enterZipCode={this.state.Zipcode}
+                validateZipCode={this.state.userZipCode}
+                setZipCode={(e) => { this.setZipCode(e) }}
+
+                enterPassword={this.state.password}
+                validatePassword={this.state.userPassword}
+                setPassword={(e) => { this.setPassword(e) }}
+
+                checkTerms={this.state.isCheckOnTerms}
+                setCheckTerms={(e) => this.setCheckTerms(e)}
+
+
 
             />
         );
     }
+
+
+    _validateForm = () => {
+        const { userName, email, phoneNo, userState, userCity,
+            Zipcode, password, isCheckOnTerms } = this.state;
+
+        Keyboard.dismiss();
+
+        if (!utils.isValidUserName(userName)) {
+
+            utils.topAlertError("name is required");
+
+            this.setState({
+                userMsg: false
+            });
+            return false;
+        }
+        else if (!utils.isEmailValid(email)) {
+
+            utils.topAlertError("email is required");
+
+            this.setState({
+                userEmail: false
+            });
+            return false;
+        }
+        else if (!utils.isValidUserName(phoneNo)) {
+
+            utils.topAlertError("phone is required");
+
+            this.setState({
+                userPhone: false
+            });
+            return false;
+        }
+        else if (!utils.isValidUserName(userState)) {
+
+            utils.topAlertError("state is required");
+
+            this.setState({
+                selectState: false
+            });
+            return false;
+        }
+        else if (!utils.isValidUserName(userCity)) {
+
+            utils.topAlertError("city is required");
+
+            this.setState({
+                selectCity: false
+            });
+            return false;
+        }
+        else if (!utils.isValidUserName(Zipcode)) {
+
+            utils.topAlertError("zipcode is required");
+
+            this.setState({
+                userZipCode: false
+            });
+            return false;
+        }
+        else if (!utils.isPasswordValid(password)) {
+
+            utils.topAlertError("password is rexquired");
+
+            this.setState({
+                userPassword: false
+            });
+            return false;
+        }
+        else if (!isCheckOnTerms) {
+
+            utils.topAlertError("please accept terms before proceeding");
+            return false;
+        }
+
+
+        return true;
+    };
 }
 
-const mapStateToProps = ({ user }) => ({
-    signUpObject: user.signUpData,
-    dataState: user.stateData,
-    dataCity: user.cityData
-});
+// Map the state of the redux store to the component props.
+const mapStateToProps = ({ user }) => {
+
+    return {
+        signUpObject: user.signUpData,
+        dataState: user.stateData,
+        dataCity: user.cityData,
+    };
+};
 
 const mapDispatchToProps = dispatch => ({
     getStateRequest: () => dispatch(getStateRequest()),

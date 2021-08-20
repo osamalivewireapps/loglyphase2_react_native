@@ -17,7 +17,6 @@ class ForgotPasswordController extends Component {
     }
 
     goingBack(e) {
-        console.log("forgot_password_prosp-->", this.props)
         this.props.navigation.pop();
     }
 

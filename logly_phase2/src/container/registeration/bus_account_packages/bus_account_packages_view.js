@@ -23,7 +23,6 @@ function BusAccountPackagesView(props) {
                     backgroundColor: Colors.appBgColor,
                     borderBottomLeftRadius: 30,
                     borderBottomRightRadius: 30,
-                    height: Dimensions.get('screen').height / 3,
                     padding: 20,
                     paddingStart: 40,
                     paddingTop: 40,
@@ -31,7 +30,7 @@ function BusAccountPackagesView(props) {
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                     <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>Business Account Packages</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut</Text>

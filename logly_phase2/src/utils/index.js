@@ -20,8 +20,8 @@ class Util {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
-  isPasswordValid(password: string) {
-    return password.length > 8;
+  isPasswordValid(password) {
+    return password.length >= 8;
   }
   isValidName(name) {
     return /^[a-zA-Z '.-]*$/.test(name);
@@ -29,6 +29,10 @@ class Util {
 
   isValidUserName(name) {
     return /^[a-zA-Z0-9]+$/.test(name);
+  }
+
+  isLengthGraterThanZero(name) {
+    return name.length > 0;
   }
 
   combineEmailValidate(email) {

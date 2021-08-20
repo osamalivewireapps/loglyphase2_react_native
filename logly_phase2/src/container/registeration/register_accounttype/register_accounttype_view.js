@@ -16,6 +16,7 @@ function RegistrationAccountTypeView(props) {
 
     const { accTypeSelection, accountTypeSelection, openBusOwner, backScreen, listAccountType, openBusPackages } = props;
 
+    console.log("account_type-->", listAccountType)
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -25,7 +26,6 @@ function RegistrationAccountTypeView(props) {
                     backgroundColor: Colors.appBgColor,
                     borderBottomLeftRadius: 30,
                     borderBottomRightRadius: 30,
-                    height: Dimensions.get('screen').height / 4.5,
                     padding: 20,
                     paddingStart: 40,
                     paddingTop: 40,
@@ -33,7 +33,7 @@ function RegistrationAccountTypeView(props) {
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                     <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>Register Account</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Please fill the details below</Text>
@@ -78,14 +78,14 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                 onPress={() => {
                     accTypeSelection({
                         isSelectedIndex: index,
-                        registerAccountType: data.title,
+                        registerAccountType: data.name,
                     })
                 }}
 
                 style={{
                     ...styles.boxcontainer,
                     padding: 15, justifyContent: 'center',
-                    backgroundColor: data.color
+                    backgroundColor: getRowColor(index)
 
                 }}>
 
@@ -106,7 +106,7 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                             fontSize: 1,
                             flex: 9
 
-                        }}>{data.title}</AutoSizeText>
+                        }}>{data.name}</AutoSizeText>
 
 
                     {accountTypeSelection.isSelectedIndex === index ?
@@ -133,7 +133,7 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                         marginTop: 10,
                         color: 'black',
 
-                    }}>{data.desc}</Text>
+                    }}>{data.description}</Text>
 
                 <Text
                     style={{
@@ -158,11 +158,11 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                             fontFamily: Fonts.type.bold, fontSize: 22,
                             marginEnd: 10, color: 'black',
 
-                        }}>$99.9/Month</AutoSizeText>
+                        }}>{data.priceMethod === 'Monthly & Yearly' ? data.monthlyPrice + "/Month" : (data.lifetimePrice ? data.lifetimePrice + " Lifetime" : "Lifetime")}</AutoSizeText>
 
 
                     <TouchableOpacity
-                        onPress={() => openBusPackages()}
+                        onPress={() => openBusPackages(index)}
                         style={{
                             ...styles.styleButtons,
                             alignSelf: 'flex-end',
@@ -215,5 +215,24 @@ const styles = StyleSheet.create({
         backgroundColor: Colors.appBgColor, borderRadius: 30
     }
 });
+
+const getRowColor = (index) => {
+
+    switch (index) {
+        case 0:
+            return '#ACFCF4'
+        case 1:
+            return '#FFDC7D'
+        case 2:
+            return '#9EFF87'
+        case 3:
+            return '#FCC8AA'
+        case 4:
+            return '#E9BDFB'
+
+        default:
+            return '#ACFCF4'
+    }
+}
 
 export default RegistrationAccountTypeView;

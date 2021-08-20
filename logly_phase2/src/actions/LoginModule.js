@@ -19,13 +19,18 @@ export const userLoginRequest = (data1) => async (dispatch) => {
             }
         );
         dispatch(DisableLoader())
-        console.log(data)
-        dispatch({ type: USERLOGIN, payload: data })
+        console.log(data);
+        if (data.status === 200) {
+            dispatch({ type: USERLOGIN, payload: data })
+        }
+        else {
+            utils.topAlertError(data.message);
+        }
     }
     catch (error) {
         console.log("error-------->", error.response)
         dispatch(DisableLoader());
-        utils.getErrorMsg(error)
+        utils.topAlertError(error)
     }
 
 }

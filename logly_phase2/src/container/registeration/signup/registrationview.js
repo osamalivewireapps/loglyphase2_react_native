@@ -1,3 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable no-alert */
+/* eslint-disable semi */
 /* eslint-disable no-unused-vars */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
@@ -11,20 +14,27 @@ import { Colors, Fonts, Icons } from '../../../theme';
 import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
+import { Keyboard } from 'react-native';
 
-const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0
+
+const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0;
 
 function RegistrationView(props) {
 
     const { backScreen, openRegisterAccount,
         arrStates, userStateLocation, userState,
         arrCity, userCityLocation, userCity,
-        validateName, enterName, setUserName } = props;
+        validateName, enterName, setUserName,
+        enterEmail, validateEmail, setEmail,
+        enterPhone,
+        validatePhone,
+        setPhone, validateState, validateCity,
+        enterZipCode, validateZipCode, setZipCode,
+        enterPassword, validatePassword, setPassword,
+        checkTerms, setCheckTerms
 
-    const [password, setPassword] = useState('');
-    const [email, setemail] = useState('');
-    const [rememberCheck, setrememberCheck] = useState(false);
 
+    } = props;
 
     //STATES...
     const inputEl = useRef(null);
@@ -36,12 +46,16 @@ function RegistrationView(props) {
     const [isCityVisible, setIsCityVisible] = useState(false);
     const [filterCityArray, setFilterCityArr] = useState([]);
 
+    //SCROLLVIEW
+    const scroll = useRef(null);
+
 
     useEffect(() => {
+
+
         if (isVisible && arrStates) {
 
             setFilterArr(arrStates.filter((e) => {
-                console.log("state name----->", e.name + "--" + userState)
                 return e.name.includes(userState)
             }))
         }
@@ -51,7 +65,6 @@ function RegistrationView(props) {
         if (isCityVisible && arrCity) {
 
             setFilterCityArr(arrCity.filter((e) => {
-                console.log("city name----->", e.name + "--" + userCity)
                 return e.name.includes(userCity)
             }))
         }
@@ -66,23 +79,24 @@ function RegistrationView(props) {
                     backgroundColor: Colors.appBgColor,
                     borderBottomLeftRadius: 30,
                     borderBottomRightRadius: 30,
-                    height: Dimensions.get('screen').height / 4.5,
                     padding: 20,
                     paddingStart: 40,
                     paddingTop: 40,
                     flex: 0
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back} style={{ marginTop: 0 }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>Register Account</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Please fill the details below</Text>
             </View>
-            <ScrollView>
-
+            <ScrollView
+                ref={scroll}
+                keyboardShouldPersistTaps='handled'
+            >
                 <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    behavior={Platform.OS === "ios" ? "padding" : null}
                     keyboardVerticalOffset={keyboardVerticalOffset}
                 >
                     <View style={{
@@ -93,7 +107,7 @@ function RegistrationView(props) {
                         <View style={{
                             ...styles.boxcontainer,
 
-                            flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center',
+                            flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center',
                             shadowColor: validateName ? 'black' : 'darkred',
                             shadowOpacity: validateName ? 0.25 : 1
                         }}>
@@ -102,14 +116,20 @@ function RegistrationView(props) {
                             <TextInput placeholder="Enter name" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
-
-
                             }}
                                 keyboardType="default"
                                 onChangeText={(e) => setUserName(e)}
                                 value={enterName} />
                         </View>
-                        <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+
+
+                        <View style={{
+                            ...styles.boxcontainer,
+                            marginTop: 15, flexDirection: 'row', padding: 20,
+                            paddingTop: 0, paddingBottom: 0, alignItems: 'center',
+                            shadowColor: validateEmail ? 'black' : 'darkred',
+                            shadowOpacity: validateEmail ? 0.25 : 1
+                        }}>
 
                             <Image source={Icons.icon_email} />
                             <TextInput placeholder="Email" style={{
@@ -120,11 +140,17 @@ function RegistrationView(props) {
 
                             }}
                                 keyboardType="email-address"
-                                onChangeText={setemail}
-                                value={email} />
+                                onChangeText={(e) => setEmail(e)}
+                                value={enterEmail} />
                         </View>
 
-                        <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            shadowColor: validatePhone ? 'black' : 'darkred',
+                            shadowOpacity: validatePhone ? 0.25 : 1,
+                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0,
+                            paddingBottom: 0, alignItems: 'center'
+                        }}>
 
                             <Image source={Icons.icon_phone} />
                             <TextInput placeholder="Enter Phone No" style={{
@@ -135,34 +161,51 @@ function RegistrationView(props) {
 
                             }}
                                 keyboardType="number-pad"
-                                onChangeText={setemail}
-                                value={email} />
+                                onChangeText={(e) => setPhone(e)}
+                                value={enterPhone} />
                         </View>
 
-                        <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            shadowColor: validateState ? 'black' : 'darkred',
+                            shadowOpacity: validateState ? 0.25 : 1,
+                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                        }}>
 
                             <Image source={Icons.icon_state} />
                             <TextInput placeholder="Select State"
                                 ref={inputEl}
-                                onTouchStart={() => setIsVisible(true)}
+
+
+                                onPressIn={() => {
+
+                                    inputEl.current.focus();
+                                    if (inputCity.current.isFocused())
+                                        return
+
+                                    setIsVisible(true);
+                                    setIsCityVisible(false)
+                                    setFilterArr(arrStates)
+                                    scroll.current.scrollTo({ x: 0, y: 150, animated: true })
+                                }}
                                 onChangeText={(e) => {
                                     userStateLocation({ name: e, stateId: -1 });
-                                    setIsVisible(true)
+                                    setIsVisible(isVisible)
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
                                     marginStart: 10,
                                     flex: 8,
-                                    marginEnd: 10
+                                    marginEnd: 10,
 
                                 }}
                                 keyboardType="default"
                                 value={userState} />
                             <TouchableOpacity
                                 onPress={() => {
-                                    inputEl.current.focus();
-                                    setIsVisible(true);
-                                    setFilterArr(arrStates)
+                                    setIsVisible(!isVisible);
+                                    setIsCityVisible(false)
+
 
                                 }}
                             >
@@ -173,21 +216,23 @@ function RegistrationView(props) {
                         </View>
 
                         {(isVisible) ? <View style={{
-                            zIndex: 1,
                             width: '100%',
                             marginTop: 10,
                             ...styles.boxcontainer,
                             height: 150,
                             shadowRadius: 4,
-                            borderRadius: 10
+                            borderRadius: 10,
+                            zIndex: 1
 
                         }}>
+
                             <FlatList
+                                keyboardShouldPersistTaps='handled'
                                 data={filterArray}
                                 renderItem={(item) => {
-                                    console.log("state--->", item.item.name)
                                     return (
                                         <TouchableOpacity onPress={() => {
+                                            Keyboard.dismiss()
                                             userStateLocation({ name: item.item.name, stateId: item.item.id });
                                             setIsVisible(false)
 
@@ -206,17 +251,38 @@ function RegistrationView(props) {
                                 }}
                                 keyExtractor={item => item.Country}
                             />
+
                         </View> : null}
 
-                        <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            shadowColor: validateCity ? 'black' : 'darkred',
+                            shadowOpacity: validateCity ? 0.25 : 1,
+                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0,
+                            paddingBottom: 0, alignItems: 'center',
+                        }}>
 
                             <Image source={Icons.icon_city} />
                             <TextInput placeholder="Select City"
                                 ref={inputCity}
-                                onTouchStart={() => setIsCityVisible(true)}
+                                onPressIn={() => {
+                                    setIsVisible(false)
+                                    if (userState.length !== 0) {
+                                        setIsCityVisible(true)
+                                        setFilterCityArr(arrCity)
+                                        scroll.current.scrollTo({ x: 0, y: 200, animated: true })
+                                    } else {
+                                        alert("Please select state first..")
+                                        setIsCityVisible(false)
+                                    }
+                                }
+                                }
                                 onChangeText={(e) => {
+                                    setIsVisible(false)
                                     userCityLocation({ name: e, cityId: -1 });
                                     setIsCityVisible(true)
+                                    scroll.current.scrollTo({ x: 0, y: 200, animated: true })
+
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
@@ -232,9 +298,7 @@ function RegistrationView(props) {
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    inputCity.current.focus();
-                                    setIsCityVisible(true);
-                                    setFilterCityArr(arrCity)
+                                    setIsCityVisible(!isCityVisible);
 
                                 }}
                             >
@@ -253,11 +317,12 @@ function RegistrationView(props) {
 
                         }}>
                             <FlatList
+                                keyboardShouldPersistTaps='handled'
                                 data={filterCityArray}
                                 renderItem={(item) => {
-                                    console.log("city--->", item.item.name)
                                     return (
                                         <TouchableOpacity onPress={() => {
+                                            Keyboard.dismiss();
                                             userCityLocation({ name: item.item.name, cityId: item.item.id });
                                             setIsCityVisible(false)
 
@@ -278,7 +343,12 @@ function RegistrationView(props) {
                             />
                         </View> : null}
 
-                        <View style={{ ...styles.boxcontainer, marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            shadowColor: validateZipCode ? 'black' : 'darkred',
+                            shadowOpacity: validateZipCode ? 0.25 : 1,
+                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                        }}>
 
                             <Image source={Icons.icon_zipcode} />
                             <TextInput placeholder="Zip Code" style={{
@@ -289,13 +359,15 @@ function RegistrationView(props) {
 
                             }}
                                 keyboardType="default"
-                                onChangeText={setemail}
-                                value={email} />
+                                onChangeText={(e) => setZipCode(e)}
+                                value={enterZipCode} />
                         </View>
 
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row',
-                            marginTop: 15, padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center'
+                            shadowColor: validatePassword ? 'black' : 'darkred',
+                            shadowOpacity: validatePassword ? 0.25 : 1,
+                            marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                         }}>
 
                             <Image source={Icons.icon_lock} />
@@ -305,8 +377,8 @@ function RegistrationView(props) {
                                     marginStart: 10
                                 }}
                                 placeholder="Password"
-                                value={password}
-                                onChangeText={setPassword} />
+                                value={enterPassword}
+                                onChangeText={(e) => setPassword(e)} />
                         </View>
 
                         <View style={{
@@ -318,10 +390,10 @@ function RegistrationView(props) {
 
                             <CheckBox
                                 onClick={() => {
-                                    setrememberCheck(!rememberCheck)
+                                    setCheckTerms(!checkTerms)
                                 }}
                                 style={{ flex: 0 }}
-                                isChecked={rememberCheck}
+                                isChecked={checkTerms}
 
                             />
 
@@ -365,6 +437,7 @@ function RegistrationView(props) {
                     </View>
                 </KeyboardAvoidingView>
             </ScrollView>
+
         </View>
     );
 }

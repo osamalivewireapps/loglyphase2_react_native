@@ -51,15 +51,10 @@ export const NOT_SHOW_MSG = 'not_show';
 export const ERROR_API = 'error';
 export const REFRESH_DATA = 'refresh';
 
-export const LEGENDS_NOTIFICATION_CHANNEL = {
-    id: 'fourball-channel',
-    name: 'Fourball Notifications'
-};
-
-export const NOTIFICATION_PERMISSION_DENIED_ERROR =
-    'Please allow notifications and get notified timely';
-
-export const NOTIFICATIONS_TOPICS_TO_SUBSCRIBE = 'fourball';
-
 export const userObject = 'userObject';
 export const userPreferences = 'userPreferences';
+
+export const PET_LOVER = "PET_LOVER";
+export const CHARITY_ACCOUNT = "CHARITY_ACCOUNT";
+export const PET_LOVER_ID = "5fac021fbd5c030e375233ad";
+export const CHARITY_ID = "5fd18456787db01efbd05fab"

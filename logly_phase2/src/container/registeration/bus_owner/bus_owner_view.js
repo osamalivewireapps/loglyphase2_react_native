@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
@@ -10,21 +11,35 @@ import InputPasswordToggle from '../../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons } from '../../../theme';
 import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
-import { marginBottom } from 'styled-system';
+import { marginBottom, zIndex } from 'styled-system';
+import { CHARITY_ID } from '../../../constants';
+import ModalDropdown from 'react-native-modal-dropdown';
+import { Keyboard } from 'react-native';
 
-const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0
 
 function BusinessOwnerView(props) {
 
-    const { backScreen, openRegisterAccount, accountType } = props;
+    const arrEmpStength = [
+        '1-10',
+        '11-25',
+        '26-50',
+        '51-100',
+        '100+',
+    ]
+
+    const {
+        nameBus, validateBusName, setBusName,
+        strengthEmp, validateBusEmp, setEmpStrength,
+        urlBus, validateBusURL, setBusUrl,
+        backScreen, openRegisterAccount, accountType } = props;
+
     const [email, setemail] = useState('');
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <KeyboardAvoidingView
-                    flex={1}
-                    behavior={Platform.OS === "ios" ? "padding" : "height"}
+                    behavior={Platform.OS === "ios" ? "padding" : null}
 
                 >
                     <View
@@ -38,9 +53,9 @@ function BusinessOwnerView(props) {
                         }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                             <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                            <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                            <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                         </TouchableOpacity>
-                        <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{accountType === 'Charity / Non Profit' ? "Charity / Non Profit" : "Business Owner"}</Text>
+                        <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{accountType === CHARITY_ID ? "Charity / Non Profit" : "Business Owner"}</Text>
                         <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Add your business details below</Text>
                     </View>
                     <View
@@ -67,7 +82,13 @@ function BusinessOwnerView(props) {
                                 ...styles.generalTxt, color: 'black', fontSize: 15,
                                 marginBottom: 5, marginStart: 5
                             }}>Business Name</Text>
-                            <View style={{ ...styles.boxcontainer, flexDirection: 'row', padding: 15, alignItems: 'center' }}>
+                            <View style={{
+                                ...styles.boxcontainer,
+                                flexDirection: 'row', padding: 0, alignItems: 'center',
+                                shadowColor: validateBusName ? 'black' : 'darkred',
+                                shadowOpacity: validateBusName ? 0.25 : 1,
+                                paddingStart: 15, paddingEnd: 15,
+                            }}>
 
 
                                 <TextInput placeholder="" style={{
@@ -76,34 +97,67 @@ function BusinessOwnerView(props) {
 
                                 }}
                                     keyboardType="default"
-                                    onChangeText={setemail}
-                                    value={email} />
+                                    onChangeText={(e) => setBusName(e)}
+                                    value={nameBus} />
                             </View>
 
                             <Text style={{
                                 ...styles.generalTxt, color: 'black', fontSize: 15,
                                 marginBottom: 5, marginStart: 5, marginTop: 25
                             }}>No.of.Employees</Text>
-                            <View style={{ ...styles.boxcontainer, flexDirection: 'row', padding: 15, alignItems: 'center' }}>
+                            <View style={{
+                                ...styles.boxcontainer, flexDirection: 'row', padding: 0,
+                                alignItems: 'center',
+                                shadowColor: validateBusEmp ? 'black' : 'darkred',
+                                shadowOpacity: validateBusEmp ? 0.25 : 1,
+                                backgroundColor: 'white', flexDirection: 'row'
+                            }}>
 
+                                <ModalDropdown
+                                    style={{
+                                        backgroundColor: 'white', width: '92%', height: 50,
+                                        borderTopLeftRadius: 30, borderTopRightRadius: 30,
+                                        justifyContent: 'center', alignItems: 'center',
+                                        paddingTop: 25, paddingStart: 15,
+                                        borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
 
-                                <TextInput placeholder="" style={{
-                                    ...styles.styleTextInput,
-                                    flex: 8
+                                    }}
+                                    defaultValue={"Select No.of.Employees"}
+                                    textStyle={{
+                                        ...styles.innerText,
+                                        fontSize: 16,
+                                        color: 'black',
+                                        width: '100%',
+                                        height: 50,
+                                    }}
 
-                                }}
-                                    keyboardType="default"
-                                    onChangeText={setemail}
-                                    value={email} />
+                                    dropdownStyle={{ backgroundColor: 'white', width: '85%', marginStart: -15 }}
+                                    dropdownTextStyle={{
+                                        ...styles.innerText,
+                                        fontSize: 16,
+                                        color: 'black',
+                                        backgroundColor: 'white'
+                                    }}
+                                    onSelect={(item) => {
+                                        setEmpStrength(item)
+                                    }}
+                                    defaultIndex={0}
+                                    options={arrEmpStength} />
 
                                 <Image source={Icons.icon_ios_arrow_down} />
+
                             </View>
 
                             <Text style={{
                                 ...styles.generalTxt, color: 'black', fontSize: 15,
-                                marginBottom: 5, marginStart: 5, marginTop: 25
+                                marginBottom: 5, marginStart: 5, marginTop: 25,
                             }}>Website URL</Text>
-                            <View style={{ ...styles.boxcontainer, flexDirection: 'row', padding: 15, alignItems: 'center' }}>
+                            <View style={{
+                                ...styles.boxcontainer, flexDirection: 'row', paddingStart: 15, paddingEnd: 15,
+                                alignItems: 'center',
+                                shadowColor: validateBusURL ? 'black' : 'darkred',
+                                shadowOpacity: validateBusURL ? 0.25 : 1,
+                            }}>
 
 
                                 <TextInput placeholder="" style={{
@@ -113,8 +167,8 @@ function BusinessOwnerView(props) {
 
                                 }}
                                     keyboardType="default"
-                                    onChangeText={setemail}
-                                    value={email} />
+                                    onChangeText={(e) => setBusUrl(e)}
+                                    value={urlBus} />
                             </View>
 
 
@@ -124,7 +178,7 @@ function BusinessOwnerView(props) {
                         AND MOREOVER SET TEXT FOR UPLOAD DOCUMENT
                     */}
 
-                            {accountType === 'Charity / Non Profit' ?
+                            {accountType === CHARITY_ID ?
                                 <TouchableOpacity style={{
                                     ...styles.styleAttachButtons,
                                     marginBottom: 5, marginTop: 25, padding: 8,
@@ -145,11 +199,13 @@ function BusinessOwnerView(props) {
 
                         </View>
 
-                        <View>
+                        <View style={{}} >
                             <TouchableOpacity
-                                onPress={() => openRegisterAccount()}
+                                onPress={() => {
+                                    openRegisterAccount()
+                                }}
                                 style={{
-                                    ...styles.styleButtons, marginTop: 25
+                                    ...styles.styleButtons, marginTop: 25,
                                 }}>
                                 <Text style={{
                                     fontSize: 22, textAlign: 'center', padding: 10,
@@ -170,9 +226,18 @@ function BusinessOwnerView(props) {
 const styles = StyleSheet.create({
 
     boxcontainer: {
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
         height: 50,
-        backgroundColor: '#E3E3E3',
-        borderRadius: 10
+        backgroundColor: 'white',
+        elevation: 5,
+        borderRadius: 40,
+        marginTop: 5
     },
     generalTxt: {
         color: 'white',

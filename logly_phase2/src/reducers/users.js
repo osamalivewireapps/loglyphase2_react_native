@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable semi */
-import { USERLOGIN, USERSIGNUP, GET_STATES, GET_CITIES } from './../actions/ActionTypes';
+import { USERLOGIN, USERSIGNUP, GET_STATES, GET_CITIES, GET_SUBS, VERIFY_CODE } from './../actions/ActionTypes';
 
 // USERSIGNUP, USERUPDATE, SOCIAL_LOGIN, EDIT_PRO_PIC, ADDLOCATION, SAVE_PROFILE } 
 
@@ -14,13 +14,13 @@ const initialState = {
   changeLocData: {},
   saveProfile: {},
   stateData: {},
-  cityData: {}
+  cityData: {},
+  subsData: {},
+  verifyData: {}
 };
 
 export default (state = initialState, actions) => {
   console.log("actions.type", actions.type)
-
-  debugger
 
   switch (actions.type) {
     case USERLOGIN:
@@ -41,8 +41,11 @@ export default (state = initialState, actions) => {
     case GET_CITIES:
       return ({ ...state, cityData: actions })
 
-    // case USERUPDATE:
-    //   return ({ ...state, updateData: actions })
+    case GET_SUBS:
+      return ({ ...state, subsData: actions })
+
+    case VERIFY_CODE:
+      return ({ ...state, verifyData: actions })
 
     // case SOCIAL_LOGIN:
     //   return ({ ...state, socialData: actions })

@@ -1,3 +1,5 @@
+/* eslint-disable quotes */
+/* eslint-disable react/no-did-update-set-state */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
@@ -7,6 +9,11 @@ import Snackbar from 'react-native-snackbar';
 import { Colors, Fonts, Images } from '../../../theme';
 import Util from '../../../utils';
 import RegistrationAccountTypeView from './register_accounttype_view';
+import { getSubscriptionRequest, userSignUpRequest } from '../../../actions/SignUpModule'
+import { GET_SUBS, USERSIGNUP } from '../../../actions/ActionTypes';
+import { connect } from 'react-redux';
+import DataHandler from '../../../utils/DataHandler';
+import { PET_LOVER_ID } from '../../../constants';
 
 class RegistrationAccountTypeController extends Component {
 
@@ -14,45 +21,47 @@ class RegistrationAccountTypeController extends Component {
         super(props);
     }
 
+    currentActions = "";
+
     state = {
         accountTypeSelection: {
             isSelectedIndex: -1,
             registerAccountType: '',
         },
+        accountType: [],
     }
 
-    accountType = [
-        {
-            color: '#ACFCF4',
-            title: 'Pet Lover',
-            price: '99.9 / month',
-            desc: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut'
-        },
-        {
-            color: '#FFDC7D',
-            title: 'Business Owner',
-            price: '99.9 / month',
-            desc: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut'
-        },
-        {
-            color: '#9EFF87',
-            title: 'Charity / Non Profit',
-            price: '99.9 / month',
-            desc: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut'
-        },
-        {
-            color: '#FCC8AA',
-            title: 'Business Service Provider',
-            price: '99.9 / month',
-            desc: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut'
-        },
-        {
-            color: '#E9BDFB',
-            title: 'Business Listing',
-            price: '99.9 / month',
-            desc: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut'
+    componentDidMount() {
+        this.currentActions = GET_SUBS;
+        this.props.getSubscriptionRequest();
+
+        DataHandler.getUserObject().then((value) => {
+            this.userObject = JSON.parse(value);
+        });
+
+    }
+
+    componentDidUpdate() {
+        switch (this.currentActions) {
+            case GET_SUBS:
+                this.setCurrentAction("");
+                this.setState({ accountType: this.props.subsData.payload.data })
+                break;
+
+            case USERSIGNUP:
+                this.setCurrentAction("");
+                this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id });
+                break
         }
-    ]
+    }
+
+    emptyCurrentAction() {
+        this.currentActions = "";
+    }
+
+    setCurrentAction(e) {
+        this.currentActions = e;
+    }
 
     goingBack(e) {
         this.props.navigation.pop();
@@ -62,16 +71,34 @@ class RegistrationAccountTypeController extends Component {
         this.setState({ accountTypeSelection: accType })
     }
 
-    openBusAccountPackages() {
-        this.props.navigation.navigate('BusAccountPackages', { showBack: true });
+    openBusAccountPackages(e) {
+        this.props.navigation.navigate('BusAccountPackages', { showBack: true, packageId: this.state.accountType[e]._id });
     }
 
     openBusOwnerScreen() {
         if (this.state.accountTypeSelection.isSelectedIndex !== -1) {
-            if (this.state.accountTypeSelection.isSelectedIndex === 0) {
-                this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountTypeSelection.registerAccountType });
-            } else {
-                this.props.navigation.navigate('BusinessOwner', { accountType: this.state.accountTypeSelection.registerAccountType });
+
+            this.userObject = {
+                ...this.userObject,
+                "packageId": this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id,
+                "packageType": this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType
+            }
+
+            console.log("userobject-->", this.userObject);
+
+            if (this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id === PET_LOVER_ID) {
+
+                //CALL REGISTRATION API..
+                this.setCurrentAction(USERSIGNUP);
+                this.props.userSignUpRequest(this.userObject);
+            }
+
+
+            else {
+
+                //SET USER DATA..
+                if (DataHandler.saveUserObject(JSON.stringify(this.userObject)))
+                    this.props.navigation.navigate('BusinessOwner', { accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id });
             }
         }
 
@@ -81,16 +108,32 @@ class RegistrationAccountTypeController extends Component {
     }
 
     render() {
+
         return (
             <RegistrationAccountTypeView
-                listAccountType={this.accountType}
+                listAccountType={this.state.accountType}
                 accountTypeSelection={this.state.accountTypeSelection}
                 accTypeSelection={(e) => this.selectAccountType(e)}
-                openBusPackages={() => this.openBusAccountPackages()}
+                openBusPackages={(e) => this.openBusAccountPackages(e)}
                 openBusOwner={() => this.openBusOwnerScreen()}
                 props backScreen={(e) => { this.goingBack(e) }} />
         );
     }
 }
 
-export default RegistrationAccountTypeController;
+const mapStateToProps = ({ user }) => ({
+    subsData: user.subsData,
+    signUpObject: user.signUpData,
+
+});
+
+const mapDispatchToProps = dispatch => ({
+    getSubscriptionRequest: () => dispatch(getSubscriptionRequest()),
+    userSignUpRequest: (data) => dispatch(userSignUpRequest(data)),
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(RegistrationAccountTypeController);

@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@react-native-clipboard/clipboard": "^1.8.4",
     "@react-native-community/async-storage": "^1.12.1",
     "@react-navigation/native": "^6.0.0",
     "@react-navigation/native-stack": "^6.0.0",
@@ -24,8 +25,12 @@
     "react-native": "0.64.2",
     "react-native-auto-size-text": "^1.1.1",
     "react-native-check-box": "^2.1.7",
+    "react-native-dropdown-picker": "^3.7.6",
     "react-native-elements": "^3.4.2",
     "react-native-gesture-handler": "^1.10.3",
+    "react-native-keyboard-aware-scroll-view": "^0.9.4",
+    "react-native-modal-dropdown": "^1.0.1",
+    "react-native-otp-inputs": "^7.0.3",
     "react-native-safe-area-context": "^3.2.0",
     "react-native-screens": "^3.4.0",
     "react-native-snackbar": "^2.4.0",
@@ -41,7 +46,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
-    "@babel/runtime": "^7.12.5",
+    "@babel/runtime": "^7.15.3",
     "@react-native-community/eslint-config": "^2.0.0",
     "babel-jest": "^26.6.3",
     "eslint": "7.14.0",

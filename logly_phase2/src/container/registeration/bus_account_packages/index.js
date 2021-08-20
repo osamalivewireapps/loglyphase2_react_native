@@ -5,11 +5,23 @@ import React, { Component } from 'react';
 import { SafeAreaView, Text, Image, Dimensions, View } from 'react-native';
 import { Colors, Fonts, Images } from '../../theme';
 import BusAccountPackagesView from './bus_account_packages_view';
+import { getSubscriptionRequest } from '../../../actions/SignUpModule';
+import { connect } from 'react-redux';
 
 class BusAccountPackagesController extends Component {
 
+
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
+
+        this.packageId = this.props.route.params.packageId;
+
+        this.props.getSubscriptionRequest().then(() => {
+
+        })
     }
 
     subPackages = [
@@ -111,4 +123,18 @@ class BusAccountPackagesController extends Component {
     }
 }
 
-export default BusAccountPackagesController;
+const mapStateToProps = ({ user }) => {
+    return {
+        subsData: user.subsData
+    }
+};
+
+const mapDispatchToProps = dispatch => ({
+    getSubscriptionRequest: () => dispatch(getSubscriptionRequest()),
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(BusAccountPackagesController);

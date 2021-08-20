@@ -36,7 +36,7 @@ function ChangePasswordView(props) {
                         }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                             <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                            <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                            <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: -5 }}>Back</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{
@@ -56,7 +56,7 @@ function ChangePasswordView(props) {
 
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row',
-                            marginTop: 15, padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center'
+                            marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                         }}>
 
                             <Image source={Icons.icon_lock} />
@@ -72,7 +72,7 @@ function ChangePasswordView(props) {
 
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row',
-                            marginTop: 15, padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center'
+                            marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                         }}>
 
                             <Image source={Icons.icon_lock} />

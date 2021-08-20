@@ -36,7 +36,7 @@ function ForgotPasswordView(props) {
                         }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                             <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                            <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                            <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{
@@ -61,7 +61,10 @@ function ForgotPasswordView(props) {
                         }}>Please enter the registered email
                             address below.</Text>
 
-                        <View style={{ ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 10, paddingBottom: 10, alignItems: 'center' }}>
+                        <View style={{
+                            ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 0,
+                            paddingBottom: 0, alignItems: 'center'
+                        }}>
 
                             <Image source={Icons.icon_email} />
                             <TextInput placeholder="Email" style={{

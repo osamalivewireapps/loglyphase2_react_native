@@ -3,13 +3,15 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 /* eslint-disable quotes */
+import OtpInputs from 'react-native-otp-inputs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, { useState } from 'react';
 import { TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
 
 function VerificationCodeView(props) {
-    const { backScreen, openEnterPasswordScreen } = props;
+    const { backScreen, openEnterPasswordScreen,
+        verificationCode, setPinCode } = props;
 
 
     return (
@@ -29,7 +31,7 @@ function VerificationCodeView(props) {
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                     <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
             </View>
             <View style={{
@@ -52,20 +54,21 @@ function VerificationCodeView(props) {
 
                 }}>Please check your email. We sent you a verification code.</Text>
 
-                <OTPInputView
+                <OtpInputs
+                    defaultValue={verificationCode}
+                    autofillFromClipboard={true}
+                    handleChange={(code) => setPinCode(code)}
+                    numberOfInputs={6}
                     style={{
-                        width: '100%', height: 20, paddingStart: 30,
-                        paddingEnd: 30,
+                        width: '100%', height: 20, paddingStart: 20,
+                        paddingEnd: 20, flexDirection: 'row', color: 'black',
+
                     }}
-                    pinCount={6}
-                    // code={this.state.code} //You can supply this prop or not. The component will be used as a controlled / uncontrolled component respectively.
-                    // onCodeChanged = {code => { this.setState({code})}}
-                    autoFocusOnLoad
-                    codeInputFieldStyle={styles.underlineStyleBase}
-                    codeInputHighlightStyle={styles.underlineStyleHighLighted}
-                    onCodeFilled={(code) => {
-                        console.log(`Code is ${code}, you are good to go!`)
-                    }}
+                    focusStyles={styles.borderStyleHighLighted}
+                    keyboardType="numbers-and-punctuation"
+                    inputStyles={{ textAlign: 'center' }}
+                    inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 10 }}
+
                 />
 
                 <Text style={{

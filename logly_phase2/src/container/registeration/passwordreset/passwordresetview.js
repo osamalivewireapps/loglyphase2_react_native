@@ -30,7 +30,7 @@ function PasswordResetView(props) {
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
                     <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10 }}>Back</Text>
+                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
             </View>
             <View style={{
