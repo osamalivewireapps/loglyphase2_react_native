@@ -1,15 +1,41 @@
+/* eslint-disable keyword-spacing */
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
+import { Keyboard } from 'react-native';
 import { SafeAreaView, Text, Image, Dimensions, View, Alert } from 'react-native';
+import { connect } from 'react-redux';
 import { Colors, Fonts, Images } from '../../theme';
+import utils from '../../utils';
 import LoginView from './loginview';
+import { userLoginRequest } from '../../actions/LoginModule';
 
 class LoginController extends Component {
 
     constructor(props) {
         super(props);
+        this.state = {
+            email: '',//'osama@livewirelabs.co',
+            password:'',// 'Test12345',
+            userEmail: true,
+            userPassword: true,
+            isCheckOnTerms: true
+        }
+    }
+
+    setEmail(txt) {
+        this.setState({ email: txt, userEmail: utils.isEmailValid(txt) });
+    }
+    setPassword(txt) {
+        this.setState({
+            password: txt,
+            userPassword: utils.isPasswordValid(txt),
+        });
+    }
+    setCheckTerms(isCheck) {
+        this.setState({ isCheckOnTerms: isCheck })
     }
 
     registerScreen(e) {
@@ -24,13 +50,93 @@ class LoginController extends Component {
         this.props.navigation.pop();
     }
 
+    openPolicyScreen(txt) {
+        this.props.navigation.navigate('PolicyScreen', { header: txt });
+    }
+
+    loginAccount() {
+
+        if (this._validateForm()) {
+
+         
+            this.props.userLoginRequest(this.state).then((status) => {
+
+                if(status === 200){
+                    //this.props.navigation.navigate('RegisterAccountType');
+                    alert("Login Successfully")
+                }
+            });
+
+        }
+    }
+
     render() {
         return (
-            <LoginView openRegisterScreen={(e) => this.registerScreen(e)}
+            <LoginView
+                enterEmail={this.state.email}
+                validateEmail={this.state.userEmail}
+                setEmail={(e) => { this.setEmail(e) }}
+
+                enterPassword={this.state.password}
+                validatePassword={this.state.userPassword}
+                setPassword={(e) => { this.setPassword(e) }}
+
+                checkTerms={this.state.isCheckOnTerms}
+                setCheckTerms={(e) => this.setCheckTerms(e)}
+
+                openRegisterScreen={(e) => this.registerScreen(e)}
                 openForgotScreen={(e) => this.forgotPasswordScreen(e)}
-                backScreen={(e) => { this.goingBack(e) }} />
+                backScreen={(e) => { this.goingBack(e) }}
+                openPolicyScreen={(e) => this.openPolicyScreen(e)}
+
+                loginScreen={(e) => this.loginAccount(e)}
+            />
         );
     }
+
+    _validateForm = () => {
+        const { email, password, isCheckOnTerms } = this.state;
+
+        Keyboard.dismiss();
+
+        if (!utils.isEmailValid(email)) {
+
+            utils.topAlertError("email is required");
+
+            this.setState({
+                userEmail: false
+            });
+            return false;
+        }
+        else if (!utils.isPasswordValid(password)) {
+
+            utils.topAlertError("password is rexquired");
+
+            this.setState({
+                userPassword: false
+            });
+            return false;
+        }
+       
+
+        return true;
+    };
+
 }
 
-export default LoginController;
+const mapStateToProps = ({ user }) => {
+    return {
+        userData: user.userData,
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    userLoginRequest: (data) => dispatch(userLoginRequest(data)),
+
+});
+
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(LoginController);

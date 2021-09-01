@@ -11,12 +11,12 @@ import { Colors, Fonts, Icons } from '../../../theme';
 const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0
 
 function ForgotPasswordView(props) {
-    const { backScreen, openVerificationCodeScreen } = props;
+    const { backScreen, openVerificationCodeScreen,
+        userEmail, setEmail } = props;
 
-    const [email, setemail] = useState('');
-
+  
     return (
-        <ScrollView>
+        <ScrollView keyboardShouldPersistTaps='handled'>
             <KeyboardAvoidingView
                 behavior='position' keyboardVerticalOffset={keyboardVerticalOffset}
             >
@@ -74,9 +74,10 @@ function ForgotPasswordView(props) {
 
 
                             }}
+                                autoCapitalize='none'
                                 keyboardType="email-address"
-                                onChangeText={setemail}
-                                value={email} />
+                                onChangeText={(e) => setEmail(e)}
+                                value={userEmail} />
                         </View>
 
                         <TouchableOpacity

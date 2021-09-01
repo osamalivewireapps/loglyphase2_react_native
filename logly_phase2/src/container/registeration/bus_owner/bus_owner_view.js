@@ -96,6 +96,7 @@ function BusinessOwnerView(props) {
                                     flex: 1,
 
                                 }}
+                                    autoCapitalize='none'
                                     keyboardType="default"
                                     onChangeText={(e) => setBusName(e)}
                                     value={nameBus} />
@@ -139,7 +140,7 @@ function BusinessOwnerView(props) {
                                         backgroundColor: 'white'
                                     }}
                                     onSelect={(item) => {
-                                        setEmpStrength(item)
+                                        setEmpStrength(arrEmpStength[item])
                                     }}
                                     defaultIndex={0}
                                     options={arrEmpStength} />
@@ -151,7 +152,7 @@ function BusinessOwnerView(props) {
                             <Text style={{
                                 ...styles.generalTxt, color: 'black', fontSize: 15,
                                 marginBottom: 5, marginStart: 5, marginTop: 25,
-                            }}>Website URL</Text>
+                            }}>Website (Optional)</Text>
                             <View style={{
                                 ...styles.boxcontainer, flexDirection: 'row', paddingStart: 15, paddingEnd: 15,
                                 alignItems: 'center',
@@ -166,6 +167,7 @@ function BusinessOwnerView(props) {
 
 
                                 }}
+                                    autoCapitalize='none'
                                     keyboardType="default"
                                     onChangeText={(e) => setBusUrl(e)}
                                     value={urlBus} />

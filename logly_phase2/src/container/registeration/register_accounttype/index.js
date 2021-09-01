@@ -13,7 +13,7 @@ import { getSubscriptionRequest, userSignUpRequest } from '../../../actions/Sign
 import { GET_SUBS, USERSIGNUP } from '../../../actions/ActionTypes';
 import { connect } from 'react-redux';
 import DataHandler from '../../../utils/DataHandler';
-import { PET_LOVER_ID } from '../../../constants';
+import { INDIVIDUAL, PET_LOVER_ID } from '../../../constants';
 
 class RegistrationAccountTypeController extends Component {
 
@@ -48,10 +48,6 @@ class RegistrationAccountTypeController extends Component {
                 this.setState({ accountType: this.props.subsData.payload.data })
                 break;
 
-            case USERSIGNUP:
-                this.setCurrentAction("");
-                this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id });
-                break
         }
     }
 
@@ -72,7 +68,7 @@ class RegistrationAccountTypeController extends Component {
     }
 
     openBusAccountPackages(e) {
-        this.props.navigation.navigate('BusAccountPackages', { showBack: true, packageId: this.state.accountType[e]._id });
+        this.props.navigation.navigate('BusAccountPackages', { showBack: true, packageId: this.state.accountType[e].packageType });
     }
 
     openBusOwnerScreen() {
@@ -86,11 +82,13 @@ class RegistrationAccountTypeController extends Component {
 
             console.log("userobject-->", this.userObject);
 
-            if (this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id === PET_LOVER_ID) {
+            if (this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType === INDIVIDUAL) {
 
                 //CALL REGISTRATION API..
                 this.setCurrentAction(USERSIGNUP);
-                this.props.userSignUpRequest(this.userObject);
+                this.props.userSignUpRequest(this.userObject).then(()=>{
+                    this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType });
+                });
             }
 
 
@@ -98,7 +96,7 @@ class RegistrationAccountTypeController extends Component {
 
                 //SET USER DATA..
                 if (DataHandler.saveUserObject(JSON.stringify(this.userObject)))
-                    this.props.navigation.navigate('BusinessOwner', { accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex]._id });
+                    this.props.navigation.navigate('BusinessOwner', { accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType });
             }
         }
 

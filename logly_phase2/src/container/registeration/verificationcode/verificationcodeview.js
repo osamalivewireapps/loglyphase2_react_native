@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
@@ -10,8 +11,8 @@ import { TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInpu
 import { Colors, Fonts, Icons } from '../../../theme';
 
 function VerificationCodeView(props) {
-    const { backScreen, openEnterPasswordScreen,
-        verificationCode, setPinCode } = props;
+    const { backScreen, openEnterPasswordScreen, pinLength,
+        verificationCode, setPinCode, resendCode } = props;
 
 
     return (
@@ -58,26 +59,29 @@ function VerificationCodeView(props) {
                     defaultValue={verificationCode}
                     autofillFromClipboard={true}
                     handleChange={(code) => setPinCode(code)}
-                    numberOfInputs={6}
+                    numberOfInputs={pinLength}
                     style={{
-                        width: '100%', height: 20, paddingStart: 20,
-                        paddingEnd: 20, flexDirection: 'row', color: 'black',
+                        width: '100%', height: 45, paddingStart: 0,
+                        justifyContent:'center',
+                        paddingEnd: 0, flexDirection: 'row', color: 'black',
 
                     }}
                     focusStyles={styles.borderStyleHighLighted}
                     keyboardType="numbers-and-punctuation"
                     inputStyles={{ textAlign: 'center' }}
-                    inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 10 }}
+                    inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3,paddingTop:0}}
 
                 />
 
-                <Text style={{
-                    ...styles.generalTxt,
-                    marginTop: 30,
-                    fontSize: 22, textAlign: 'center', paddingStart: 30,
-                    paddingEnd: 30, color: 'green'
-
-                }}>Resend Verification Code</Text>
+                <TouchableOpacity onPress={(e) => resendCode()}>
+                    <Text style={{
+                        ...styles.generalTxt,
+                        marginTop: 20,
+                        fontSize: 22, textAlign: 'center', paddingStart: 30,
+                        paddingEnd: 30, color: 'green',
+              
+                    }}>Resend Verification Code</Text>
+                </TouchableOpacity>
 
                 <TouchableOpacity
                     onPress={() => openEnterPasswordScreen()}
@@ -123,7 +127,9 @@ const styles = StyleSheet.create({
     styleTextInput: {
         fontFamily: Fonts.type.base,
         fontSize: 16,
-        color: 'black'
+        color: 'black',
+        textAlign: 'center',
+        backgroundColor: 'yellow'
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor, borderRadius: 30,
@@ -136,6 +142,7 @@ const styles = StyleSheet.create({
 
     borderStyleHighLighted: {
         borderColor: "#03DAC6",
+
     },
 
     underlineStyleBase: {
@@ -144,7 +151,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black',
         borderRadius: 10,
-        color: 'black'
+        color: 'black',
+        fontSize:18,
     },
 
     underlineStyleHighLighted: {

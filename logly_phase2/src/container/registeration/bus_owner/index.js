@@ -45,6 +45,7 @@ class BusinessOwnerController extends Component {
                 "businessName": this.state.busName,
                 "noOfEmployees": this.state.empQuantity,
                 "website": this.state.busUrl,
+                "packageId": "5fac021fbd5c030e375233ad"
             }
             //CALL REGISTRATION API..
             this.props.userSignUpRequest(this.userObject).then(() => {
@@ -59,11 +60,11 @@ class BusinessOwnerController extends Component {
     }
 
     setEmpQuantity(txt) {
-        this.setState({ empQuantity: txt, isBusEmployees: utils.isValidUserName(txt) });
+        this.setState({ empQuantity: txt, isBusEmployees: utils.isLengthGraterThanZero(txt) });
     }
 
     setBusUrl(txt) {
-        this.setState({ busUrl: txt, isBusUrl: utils.isValidUserName(txt) });
+        this.setState({ busUrl: txt, isBusUrl: utils.isValidLink(txt) });
     }
 
     render() {
@@ -102,7 +103,7 @@ class BusinessOwnerController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidUserName(empQuantity)) {
+        else if (!utils.isLengthGraterThanZero(empQuantity)) {
 
             utils.topAlertError("No.of.Employees is required");
 
@@ -111,15 +112,15 @@ class BusinessOwnerController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidUserName(busUrl)) {
+        // else if (!utils.isValidLink(busUrl)) {
 
-            utils.topAlertError("url is required");
+        //     utils.topAlertError("url is required");
 
-            this.setState({
-                isBusUrl: false
-            });
-            return false;
-        }
+        //     this.setState({
+        //         isBusUrl: false
+        //     });
+        //     return false;
+        // }
 
 
         return true;

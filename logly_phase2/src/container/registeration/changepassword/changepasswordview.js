@@ -9,15 +9,16 @@ import InputPasswordToggle from '../../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 
 function ChangePasswordView(props) {
-    const { backScreen, openpasswordResetScreen } = props;
+    const { backScreen, openpasswordResetScreen,
+        password, confirmPassword,
+        setPassword, setConfirmPassword   } = props;
 
-    const [password, setPassword] = useState('');
-
+ 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
 
-            <ScrollView>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <KeyboardAvoidingView
                     flex={1}
                     behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -65,9 +66,10 @@ function ChangePasswordView(props) {
                                     ...styles.styleTextInput,
                                     marginStart: 10
                                 }}
+                                autoCapitalize='none'
                                 placeholder="New Password"
                                 value={password}
-                                onChangeText={setPassword} />
+                                onChangeText={(e)=>setPassword(e)} />
                         </View>
 
                         <View style={{
@@ -81,9 +83,10 @@ function ChangePasswordView(props) {
                                     ...styles.styleTextInput,
                                     marginStart: 10
                                 }}
+                                autoCapitalize='none'
                                 placeholder="Confirm Password"
-                                value={password}
-                                onChangeText={setPassword} />
+                                value={confirmPassword}
+                                onChangeText={(e)=>setConfirmPassword(e)} />
                         </View>
 
                         <TouchableOpacity

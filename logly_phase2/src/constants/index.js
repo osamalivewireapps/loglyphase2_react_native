@@ -57,4 +57,9 @@ export const userPreferences = 'userPreferences';
 export const PET_LOVER = "PET_LOVER";
 export const CHARITY_ACCOUNT = "CHARITY_ACCOUNT";
 export const PET_LOVER_ID = "5fac021fbd5c030e375233ad";
-export const CHARITY_ID = "5fd18456787db01efbd05fab"
+export const CHARITY_ID = "5fd18456787db01efbd05fab";
+export const INDIVIDUAL = "Individual";
+
+
+export const TERMS = "terms";
+export const POLICY = "policy";

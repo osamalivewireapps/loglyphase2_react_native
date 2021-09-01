@@ -12,8 +12,11 @@ import CollapsibleSection from '../../../components/CollapsibleSection';
 
 function BusAccountPackagesView(props) {
 
-    const { btnConfirmPress, showBack, backScreen, packagesType, packagesAmount } = props;
+    const { btnConfirmPress, showBack, backScreen, packagesType, packagesAmount,
+        accountPackage, selectAccountPackage, isShowBack } = props;
     let btnTxt = showBack ? "BACK" : "PROCEED";
+
+    console.log("package amount-->", packagesAmount)
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -43,7 +46,7 @@ function BusAccountPackagesView(props) {
                 }}>
 
                     {/* {getAccountView(listAccountType)} */}
-                    {renderExpandableList(packagesType, packagesAmount)}
+                    {renderExpandableList(packagesType, packagesAmount, props)}
 
                     <TouchableOpacity
                         onPress={() => btnConfirmPress()}
@@ -70,19 +73,19 @@ function BusAccountPackagesView(props) {
 
 
 
-function renderExpandableList(packagesType, packagesAmount) {
+function renderExpandableList(packagesType, packagesAmount, props) {
     return (
         <FlatList
             data={packagesType}
             renderItem={({ item, index }) => (
-                renderCollapsibleItem(item, index, packagesAmount)
+                renderCollapsibleItem(item, index, packagesAmount, props)
             )}
         />
     )
 }
 
 
-function renderCollapsibleItem(item, index, packagesAmount) {
+function renderCollapsibleItem(item, index, packagesAmount, props) {
     return (
         <CollapsibleSection
             header={
@@ -109,15 +112,16 @@ function renderCollapsibleItem(item, index, packagesAmount) {
             }
         >
             <View>
-                {getAccountView(packagesAmount[index].package)}
+                {getAccountView(packagesAmount[index], item, index, props)}
             </View>
         </CollapsibleSection>
     )
 }
 
-function getAccountView(listData) {
+function getAccountView(listData, packageType, outerId, props) {
 
-    return listData.map((data) => {
+    console.log("listdata--->", listData)
+    return listData.map((data, index) => {
 
         return (
             <View
@@ -125,11 +129,24 @@ function getAccountView(listData) {
                 style={{
                     ...styles.boxcontainer,
                     padding: 15, justifyContent: 'center',
-                    backgroundColor: data.color
+                    backgroundColor: index === 0 ? '#FFEBEB' : (index > 0 ? '#FEFADC' : '#9EFF87')
 
                 }}>
 
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    {props.isShowBack === false ?
+                        <TouchableOpacity
+                            onPress={(e) => props.selectAccountPackage({
+                                outerIndex: outerId,
+                                innerId: index
+                            })}>
+                            <Image
+                                source={(props.accountPackage.outerIndex === outerId &&
+                                    props.accountPackage.innerId === index) ? Icons.icon_check_paackage :
+                                    Icons.icon_uncheck_paackage} />
+                        </TouchableOpacity> :
+
+                        <View />}
                     <AutoSizeText
                         numberOfLines={1}
                         minFontSize={14}
@@ -137,9 +154,11 @@ function getAccountView(listData) {
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
+                            marginStart: 5,
                             marginEnd: 10, color: 'black',
+                            fontFamily: Fonts.type.bold
 
-                        }}>{data.title}</AutoSizeText>
+                        }}>{data.name}</AutoSizeText>
 
 
 
@@ -151,7 +170,7 @@ function getAccountView(listData) {
                         marginTop: 10,
                         color: 'black',
 
-                    }}>{data.desc}</Text>
+                    }}>{getFormattedTxt(data, packageType)}</Text>
 
 
 
@@ -159,15 +178,15 @@ function getAccountView(listData) {
                 <TouchableOpacity style={{
                     ...styles.styleButtons,
                     alignSelf: 'flex-end'
-                }}>
+                }} >
                     <Text style={{
                         textAlign: 'center',
                         ...styles.generalTxt,
                         fontFamily: Fonts.type.bold,
                         color: Colors.appBgColor,
-                        fontSize: 12, padding: 4
+                        fontSize: 12, padding: 4,
 
-                    }}>{data.price}</Text>
+                    }}>{packageType.toLowerCase() === "lifetime" ? "$ " + data.lifetimePrice + "/ lifetime" : (packageType === "Monthly" ? " $" + data.monthlyPrice + "/ month" : " $" + data.yearlyPrice + "/ year")}</Text>
                 </TouchableOpacity>
 
 
@@ -177,6 +196,10 @@ function getAccountView(listData) {
     })
 
 
+}
+
+const getFormattedTxt = (data, packageType) => {
+    return data.description + "\nAllowed Animals " + data.allowedAnimal + "\nAllowed Products " + data.allowedProduct + "\nAllowed Employees " + data.allowedEmp
 }
 
 const styles = StyleSheet.create({

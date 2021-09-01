@@ -5,32 +5,46 @@ import { baseUrl } from "../webconfig/globalConfig";
 import { EnableLoader, DisableLoader } from "./LoaderProgress";
 import utils from './../utils'
 
-export const userLoginRequest = (data1) => async (dispatch) => {
-    try {
-        dispatch(EnableLoader())
-        const { data } = await axios.post(`${baseUrl}/users/login`,
-            { email: data1.userName, password: data1.password },
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json',
-                    'Accept-Encoding': "gzip, deflate",
-                }
-            }
-        );
-        dispatch(DisableLoader())
-        console.log(data);
-        if (data.status === 200) {
-            dispatch({ type: USERLOGIN, payload: data })
-        }
-        else {
-            utils.topAlertError(data.message);
-        }
-    }
-    catch (error) {
-        console.log("error-------->", error.response)
-        dispatch(DisableLoader());
-        utils.topAlertError(error)
-    }
+const timeOut = 500;
+export const userLoginRequest = (data1) => (dispatch) => {
 
+    console.log("fields-->", data1);
+
+    return new Promise((resolve) => {
+
+        dispatch(EnableLoader());
+        axios.post(`${baseUrl}/user/login`,
+            {
+                email: data1.email,
+                password: data1.password,
+                role: "breeder"
+            }
+        )
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    dispatch({ type: USERLOGIN, payload: response.data.data });
+                    resolve(response.data.status)
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                    resolve(response.data.status)
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
 }

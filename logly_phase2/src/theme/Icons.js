@@ -18,4 +18,6 @@ const icon_dropdown_circle = require('../assets/icons/icon_dropdown_circle/icon_
 const icon_check_circle_green = require('../assets/icons/icon_check_circle_green/icon_check_circle_green.png');
 const icon_ios_arrow_down = require('../assets/icons/icon_ios_arrow_down/icon_ios_arrow_down.png');
 const icon_attach_file = require('../assets/icons/icon_attach_file/icon_attach_file.png');
-export default { icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };
+const icon_uncheck_paackage = require('../assets/icons/icon_uncheck_paackage/icon_uncheck_paackage.png');
+const icon_check_paackage = require('../assets/icons/icon_check_paackage/icon_check_paackage.png');
+export default { icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };

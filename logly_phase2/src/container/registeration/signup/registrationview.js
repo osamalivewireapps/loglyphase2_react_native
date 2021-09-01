@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-duplicate-props */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-alert */
 /* eslint-disable semi */
@@ -15,6 +16,8 @@ import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Keyboard } from 'react-native';
+import zipCodes from '../../../helpers/zipcodes'
+import { POLICY, TERMS } from '../../../constants';
 
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0;
@@ -31,7 +34,7 @@ function RegistrationView(props) {
         setPhone, validateState, validateCity,
         enterZipCode, validateZipCode, setZipCode,
         enterPassword, validatePassword, setPassword,
-        checkTerms, setCheckTerms
+        checkTerms, setCheckTerms, openPolicyScreen
 
 
     } = props;
@@ -45,6 +48,11 @@ function RegistrationView(props) {
     const inputCity = useRef(null);
     const [isCityVisible, setIsCityVisible] = useState(false);
     const [filterCityArray, setFilterCityArr] = useState([]);
+
+    //ZipCode...
+    const inputZipCode = useRef(null);
+    const [isZipVisible, setIsZipVisible] = useState(false);
+    const [filterZipArray, setFilterZipArr] = useState([]);
 
     //SCROLLVIEW
     const scroll = useRef(null);
@@ -69,6 +77,21 @@ function RegistrationView(props) {
             }))
         }
     }, [userCityLocation])
+
+    let GetZipcodeByCity = userCity ? zipCodes.filter(e => e.City === userCity) : [];
+
+    useEffect(() => {
+
+    
+        if (isZipVisible && GetZipcodeByCity) {
+        if (!enterZipCode)
+                setFilterZipArr(GetZipcodeByCity);
+            else
+                setFilterZipArr(GetZipcodeByCity.filter((e) => {
+                    return (e.name.includes(enterZipCode))
+                }))
+        }
+    }, [setZipCode])
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -113,10 +136,11 @@ function RegistrationView(props) {
                         }}>
 
                             <Image source={Icons.icon_user} />
-                            <TextInput placeholder="Enter name" style={{
+                            <TextInput placeholder="name" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
                             }}
+                                autoCapitalize='none'
                                 keyboardType="default"
                                 onChangeText={(e) => setUserName(e)}
                                 value={enterName} />
@@ -136,9 +160,10 @@ function RegistrationView(props) {
                                 ...styles.styleTextInput,
                                 marginStart: 10,
                                 flex: 1,
-                                marginEnd: 10
-
+                                marginEnd: 10,
+                   
                             }}
+                                autoCapitalize='none'
                                 keyboardType="email-address"
                                 onChangeText={(e) => setEmail(e)}
                                 value={enterEmail} />
@@ -153,13 +178,15 @@ function RegistrationView(props) {
                         }}>
 
                             <Image source={Icons.icon_phone} />
-                            <TextInput placeholder="Enter Phone No" style={{
+                            <TextInput placeholder="Phone No" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
                                 flex: 1,
-                                marginEnd: 10
-
+                                marginEnd: 10,
+                     
                             }}
+                                maxLength={10}
+                                autoCapitalize='none'
                                 keyboardType="number-pad"
                                 onChangeText={(e) => setPhone(e)}
                                 value={enterPhone} />
@@ -175,7 +202,7 @@ function RegistrationView(props) {
                             <Image source={Icons.icon_state} />
                             <TextInput placeholder="Select State"
                                 ref={inputEl}
-
+                            autoCapitalize='none'
 
                                 onPressIn={() => {
 
@@ -185,6 +212,7 @@ function RegistrationView(props) {
 
                                     setIsVisible(true);
                                     setIsCityVisible(false)
+                                    setIsZipVisible(false)
                                     setFilterArr(arrStates)
                                     scroll.current.scrollTo({ x: 0, y: 150, animated: true })
                                 }}
@@ -203,8 +231,9 @@ function RegistrationView(props) {
                                 value={userState} />
                             <TouchableOpacity
                                 onPress={() => {
-                                    setIsVisible(!isVisible);
-                                    setIsCityVisible(false)
+                                    //setIsVisible(!isVisible);
+                                    //setIsCityVisible(false)
+                                    //setIsZipVisible(false)
 
 
                                 }}
@@ -265,15 +294,18 @@ function RegistrationView(props) {
                             <Image source={Icons.icon_city} />
                             <TextInput placeholder="Select City"
                                 ref={inputCity}
+                                autoCapitalize='none'
                                 onPressIn={() => {
                                     setIsVisible(false)
                                     if (userState.length !== 0) {
                                         setIsCityVisible(true)
                                         setFilterCityArr(arrCity)
+                                        setIsZipVisible(false)
                                         scroll.current.scrollTo({ x: 0, y: 200, animated: true })
                                     } else {
                                         alert("Please select state first..")
                                         setIsCityVisible(false)
+                                        setIsZipVisible(false)
                                     }
                                 }
                                 }
@@ -281,6 +313,7 @@ function RegistrationView(props) {
                                     setIsVisible(false)
                                     userCityLocation({ name: e, cityId: -1 });
                                     setIsCityVisible(true)
+                                    setIsZipVisible(false)
                                     scroll.current.scrollTo({ x: 0, y: 200, animated: true })
 
                                 }}
@@ -292,13 +325,14 @@ function RegistrationView(props) {
 
                                 }}
                                 keyboardType="default"
+                                autoCapitalize='none'
                                 value={userCity}
 
                             />
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    setIsCityVisible(!isCityVisible);
+                                    //setIsCityVisible(!isCityVisible);
 
                                 }}
                             >
@@ -325,6 +359,7 @@ function RegistrationView(props) {
                                             Keyboard.dismiss();
                                             userCityLocation({ name: item.item.name, cityId: item.item.id });
                                             setIsCityVisible(false)
+                                            setIsZipVisible(false)
 
                                         }}>
                                             <View >
@@ -351,17 +386,94 @@ function RegistrationView(props) {
                         }}>
 
                             <Image source={Icons.icon_zipcode} />
-                            <TextInput placeholder="Zip Code" style={{
-                                ...styles.styleTextInput,
-                                marginStart: 10,
-                                flex: 1,
-                                marginEnd: 10
 
-                            }}
+                            <TextInput placeholder="Zip Code"
+                                ref={inputZipCode}
+                                autoCapitalize='none'
+                                onPressIn={() => {
+                                    setIsVisible(false)
+                                    setIsCityVisible(false)
+                                    if (userCity.length !== 0) {
+                                        setIsVisible(false)
+                                        setIsCityVisible(false)
+                                        setIsZipVisible(true)
+                                        setFilterZipArr(GetZipcodeByCity)
+                                        scroll.current.scrollTo({ x: 0, y: 300, animated: true })
+                                    } else {
+                                        alert("Please select city first..")
+                                        setIsCityVisible(false)
+                                        setIsZipVisible(false)
+                                        setIsZipVisible(false)
+                                    }
+                                }
+                                }
+                                onChangeText={(e) => {
+                                    setIsVisible(false)
+                                    setIsCityVisible(false)
+                                    setZipCode(e)
+                                    setIsZipVisible(true)
+                                    scroll.current.scrollTo({ x: 0, y: 300, animated: true })
+
+                                }}
+                                style={{
+                                    ...styles.styleTextInput,
+                                    marginStart: 10,
+                                    flex: 8,
+                                    marginEnd: 10
+
+                                }}
+                                autoCapitalize='none'
                                 keyboardType="default"
-                                onChangeText={(e) => setZipCode(e)}
-                                value={enterZipCode} />
+                                value={enterZipCode}
+
+                            />
+
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setIsCityVisible(!isCityVisible);
+
+                                }}
+                            >
+                                <Image source={Icons.icon_ios_arrow_down} />
+                            </TouchableOpacity>
                         </View>
+                        {(isZipVisible) ? <View style={{
+                            zIndex: 1,
+                            width: '100%',
+                            marginTop: 10,
+                            ...styles.boxcontainer,
+                            height: 150,
+                            shadowRadius: 4,
+                            borderRadius: 10
+
+                        }}>
+                            <FlatList
+                                keyboardShouldPersistTaps='handled'
+                                data={filterZipArray}
+                                renderItem={(item) => {
+                                    return (
+                                        <TouchableOpacity onPress={() => {
+                                            Keyboard.dismiss();
+                                            setZipCode(item.item.name);
+                                            setIsCityVisible(false)
+                                            setIsZipVisible(false)
+
+                                        }}>
+                                            <View >
+                                                <Text style={{
+                                                    ...styles.generalTxt, borderColor: 'black',
+                                                    borderWidth: 0, width: '100%', padding: 10,
+                                                    borderRadius: 10, marginTop: 0,
+                                                    backgroundColor: 'white',
+                                                    color: 'black', fontSize: 14
+
+                                                }}>{item.item.name}</Text>
+                                            </View>
+                                        </TouchableOpacity>)
+                                }}
+                                keyExtractor={item => item.City}
+                            />
+                        </View> : null}
 
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row',
@@ -376,6 +488,7 @@ function RegistrationView(props) {
                                     ...styles.styleTextInput,
                                     marginStart: 10
                                 }}
+                                autoCapitalize='none'
                                 placeholder="Password"
                                 value={enterPassword}
                                 onChangeText={(e) => setPassword(e)} />
@@ -403,21 +516,29 @@ function RegistrationView(props) {
                                     ...styles.generalTxt, fontSize: 14, color: 'black',
                                     textAlign: 'center'
                                 }}>
-                                <Text
-
-                                >I accept the </Text>
+                                {/* <Text> */}
+                                I accept the </Text>
+                                <TouchableOpacity style={{marginTop:-2}} onPress={(e) => openPolicyScreen(TERMS)}>
                                 <Text
                                     style={{
+                                        ...styles.generalTxt, fontSize: 14,
                                         textDecorationLine: 'underline',
-                                        color: Colors.appBgColor
+                                        color: Colors.appBgColor,
                                     }}>Terms of Use</Text>
-                                <Text> and </Text>
+                                </TouchableOpacity>
+                            <Text style={{
+                                ...styles.generalTxt, fontSize: 14, color: 'black',
+                                textAlign: 'center'
+                            }}> and </Text>
+                                <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(POLICY)}>
                                 <Text
                                     style={{
                                         textDecorationLine: 'underline',
                                         color: Colors.appBgColor
                                     }}>Privacy Policy</Text>
-                            </Text>
+                                </TouchableOpacity>
+                            {/* </Text> */}
+
 
                         </View>
 

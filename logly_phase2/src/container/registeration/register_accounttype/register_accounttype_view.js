@@ -11,6 +11,7 @@ import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { backgroundColor } from 'styled-system';
+import { INDIVIDUAL } from '../../../constants';
 
 function RegistrationAccountTypeView(props) {
 
@@ -106,7 +107,7 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                             fontSize: 1,
                             flex: 9
 
-                        }}>{data.name}</AutoSizeText>
+                        }}>{data.type}</AutoSizeText>
 
 
                     {accountTypeSelection.isSelectedIndex === index ?
@@ -158,7 +159,10 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                             fontFamily: Fonts.type.bold, fontSize: 22,
                             marginEnd: 10, color: 'black',
 
-                        }}>{data.priceMethod === 'Monthly & Yearly' ? data.monthlyPrice + "/Month" : (data.lifetimePrice ? data.lifetimePrice + " Lifetime" : "Lifetime")}</AutoSizeText>
+                        }}>
+                        {data.type==="Individual"?"Free":"$"+data.minprice}
+                        {/* {data.priceMethod === 'Monthly & Yearly' ? data.monthlyPrice + "/Month" : (data.lifetimePrice ? data.lifetimePrice + " Lifetime" : "Lifetime")} */}
+                        </AutoSizeText>
 
 
                     <TouchableOpacity

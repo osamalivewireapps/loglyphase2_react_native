@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 export { LoginController } from './container';
+export { PolicyController } from './container';
 export {
     VerificationCodeController,
     ThanksRegistrationController,

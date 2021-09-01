@@ -15,9 +15,9 @@ export const userSignUpRequest = (data1) => (dispatch) => {
     return new Promise((resolve) => {
 
         dispatch(EnableLoader());
-
         axios.post(`${baseUrl}/user/breeder/register`,
             {
+                zipcode:data1.zipcode,
                 city: data1.city,
                 email: data1.email,
                 name: data1.name,
@@ -59,38 +59,128 @@ export const userSignUpRequest = (data1) => (dispatch) => {
     });
 }
 
+export const emailCheckRequest = (data1) => (dispatch) => {
 
+    console.log("fields-->", data1);
 
-export const userVerifyCode = (verifyCode) => dispatch => {
+    return new Promise((resolve) => {
 
-    console.log('url-->', `${baseUrl}/user/verify/` + verifyCode);
-    dispatch(EnableLoader());
-    return new Promise(() => {
-        axios.
-            get(`${baseUrl}/user/verify/` + verifyCode)
+        dispatch(EnableLoader());
+
+        axios.post(`${baseUrl}/user/emailCheck`,
+            {
+                email: data1.email,
+            }
+        )
             .then(response => {
 
                 console.log("response-->", response);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
-                    dispatch({ type: VERIFY_CODE, payload: response.data.message });
+                    resolve(true)
                 }
                 else {
                     setTimeout(() => {
                         utils.topAlertError(response.data.message);
                     }, timeOut);
+
                 }
 
             })
             .catch(error => {
 
-                console.log("response error123-->", error.message);
+                console.log("response error-->", error.message);
                 dispatch(DisableLoader());
                 setTimeout(() => {
                     utils.topAlertError(error.message);
                 }, timeOut);
+            });
+    });
+}
+
+
+
+export const userVerifyCode = (data1) => dispatch => {
+
+    console.log("fields-->", data1);
+
+    return new Promise((resolve) => {
+
+        dispatch(EnableLoader());
+
+        axios.post(`${baseUrl}/user/verifyByCode`,
+            {
+                code: data1.pinCode,
+            }
+        )
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+
+                }
+
             })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const resendVerifyCode = (data1) => dispatch => {
+
+    console.log("fields-->", data1);
+
+    return new Promise((resolve) => {
+
+        dispatch(EnableLoader());
+
+        axios.post(`${baseUrl}/user/resendCodeVerification`,
+            {
+                email: data1.email,
+            }
+        )
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                    resolve(true)
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
     });
 };
 
@@ -155,12 +245,14 @@ export const getCityRequest = (stateId) => dispatch => {
     });
 };
 
+
+
 export const getSubscriptionRequest = () => dispatch => {
 
     dispatch(EnableLoader());
     return new Promise((resolve) => {
         axios.
-            get(`${baseUrl}/subscription`)
+            get(`${baseUrl}/subscription/minimum`)
             .then(response => {
                 dispatch(DisableLoader());
 
@@ -186,5 +278,34 @@ export const getSubscriptionRequest = () => dispatch => {
     });
 };
 
+export const getPackagesByType = (type) => dispatch => {
 
+    dispatch(EnableLoader());
+    return new Promise((resolve) => {
+        axios.
+            get(`${baseUrl}/subscription/packageByType/` + type)
+            .then(response => {
+                dispatch(DisableLoader());
+
+                console.log("response-->", response);
+
+                if (response.data.status === 200) {
+                    dispatch({ type: GET_SUBS, payload: response.data });
+                    resolve({ type: GET_SUBS, payload: response.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
 

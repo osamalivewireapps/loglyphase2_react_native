@@ -4,18 +4,20 @@
 /* eslint-disable no-undef */
 /* eslint-disable quotes */
 import React, { Component, useState } from 'react';
-import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput } from 'react-native';
+import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native';
 import InputPasswordToggle from '../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons } from '../../theme';
 import CheckBox from 'react-native-check-box';
 import { Platform } from 'react-native';
+import { POLICY, TERMS } from './../../constants';
+import { Button } from 'react-native';
 
 function LoginView(props) {
-    const { openRegisterScreen, backScreen, openForgotScreen } = props;
+    const { openRegisterScreen, backScreen, openForgotScreen, openPolicyScreen,
+        enterEmail, validateEmail, setEmail,
+        enterPassword, validatePassword, setPassword,
+        checkTerms, setCheckTerms, loginScreen } = props;
 
-    const [password, setPassword] = useState('');
-    const [email, setemail] = useState('');
-    const [rememberCheck, setrememberCheck] = useState(false);
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -43,7 +45,11 @@ function LoginView(props) {
                 marginEnd: 30
             }}>
 
-                <View style={{ ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center' }}>
+                <View style={{
+                    ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                    , shadowColor: validateEmail ? 'black' : 'darkred',
+                    shadowOpacity: validateEmail ? 0.25 : 1
+                }}>
 
                     <Image source={Icons.icon_email} />
                     <TextInput placeholder="Email" style={{
@@ -51,13 +57,16 @@ function LoginView(props) {
                         marginStart: 10,
 
                     }}
+                        autoCapitalize='none'
                         keyboardType="email-address"
-                        onChangeText={setemail}
-                        value={email} />
+                        onChangeText={(e) => setEmail(e)}
+                        value={enterEmail} />
                 </View>
                 <View style={{
                     ...styles.boxcontainer, flexDirection: 'row',
                     marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                    , shadowColor: validatePassword ? 'black' : 'darkred',
+                    shadowOpacity: validatePassword ? 0.25 : 1
                 }}>
 
                     <Image source={Icons.icon_lock} />
@@ -66,9 +75,10 @@ function LoginView(props) {
                             ...styles.styleTextInput,
                             marginStart: 10
                         }}
+                        autoCapitalize='none'
                         placeholder="Password"
-                        value={password}
-                        onChangeText={setPassword} />
+                        value={enterPassword}
+                        onChangeText={(e) => setPassword(e)} />
                 </View>
 
                 <View style={{
@@ -80,10 +90,10 @@ function LoginView(props) {
 
                     <CheckBox
                         onClick={() => {
-                            setrememberCheck(!rememberCheck)
+                            setCheckTerms(!checkTerms)
                         }}
                         style={{ flex: 1 }}
-                        isChecked={rememberCheck}
+                        isChecked={checkTerms}
                         rightText={"Remember me"}
                         rightTextStyle={{ ...styles.generalTxt, fontSize: 14, color: 'black', marginStart: 5 }}
                     />
@@ -100,7 +110,7 @@ function LoginView(props) {
             }}>
                 <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0
-                }}>
+                }} onPress={(e) => loginScreen(e)}>
                     <Text style={{
                         fontSize: 22, textAlign: 'center', padding: 10,
                         paddingStart: 127, paddingEnd: 127,
@@ -110,7 +120,7 @@ function LoginView(props) {
                 </TouchableOpacity>
 
                 <View style={{
-                    flex: 1, alignItems: 'center', justifyContent: 'center',
+                    flex: 1, alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row'
 
                 }}>
                     <Text
@@ -119,38 +129,57 @@ function LoginView(props) {
                             ...styles.generalTxt, fontSize: 14, color: 'black',
                             textAlign: 'center'
                         }}>
+                        Don't have an account yet? </Text>
+                    <TouchableOpacity style={{}} onPress={() => { openRegisterScreen() }}>
                         <Text
+                            style={{
+                                ...styles.generalTxt, fontSize: 14,
+                                textDecorationLine: 'underline',
+                                color: Colors.appBgColor,
+                                backgroundColor: 'white'
 
-                        >Don't have an account yet? </Text>
-                        <TouchableOpacity onPress={() => openRegisterScreen()}>
-                            <Text
-                                style={{
-                                    textDecorationLine: 'underline',
-                                    color: Colors.appBgColor
-                                }}>Register Here</Text>
-                        </TouchableOpacity>
-                    </Text>
-                    <Text
+
+                            }}>Register Here</Text>
+                    </TouchableOpacity>
+                </View>
+                <View style={{
+                    flex: 1, alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'row',
+                    marginTop:10
+          
+                }}>
+                    {/* <Text
                         numberOfLines={1}
                         style={{
                             ...styles.generalTxt, fontSize: 14, color: 'black',
                             textAlign: 'center', marginTop: 15
-                        }}>
-                        <Text
+                        }}> */}
+                    <Text style={{
+                        ...styles.generalTxt, fontSize: 14, color: 'black',
+                        textAlign: 'center'
+                    }}
 
-                        >Please look into </Text>
-                        <Text
-                            style={{
-                                textDecorationLine: 'underline',
-                                color: Colors.appBgColor
-                            }}>Terms of Use</Text>
-                        <Text> and </Text>
-                        <Text
-                            style={{
-                                textDecorationLine: 'underline',
-                                color: Colors.appBgColor
-                            }}>Privacy Policy</Text>
-                    </Text>
+                    >Please look into </Text>
+                    <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(TERMS)}>
+                    <Text
+                        style={{
+                            ...styles.generalTxt, fontSize: 14,
+                            textDecorationLine: 'underline',
+                            color: Colors.appBgColor,
+                        }}>Terms of Use</Text>
+                    </TouchableOpacity>
+                    <Text style={{
+                        ...styles.generalTxt, fontSize: 14, color: 'black',
+                        textAlign: 'center'
+                    }}> and </Text>
+                    <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(POLICY)}>
+                    <Text
+                        style={{
+                            ...styles.generalTxt, fontSize: 14,
+                            textDecorationLine: 'underline',
+                            color: Colors.appBgColor
+                        }}>Privacy Policy</Text>
+                    </TouchableOpacity>
+                    {/* </Text> */}
 
                 </View>
 

@@ -6,30 +6,29 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import RegistrationView from './registrationview';
-import { userSignUpRequest, getStateRequest, getCityRequest } from '../../../actions/SignUpModule';
+import { emailCheckRequest, getStateRequest, getCityRequest } from '../../../actions/SignUpModule';
 import { connect } from 'react-redux';
 import utils from '../../../utils';
 import { Keyboard } from 'react-native';
 import DataHandler from '../../../utils/DataHandler';
-import { theme } from 'native-base';
 
 class RegistrationController extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: 'osama@livewirelabs.co',
-            password: 'Test12345',
-            phoneNo: '12345',
+            email: '',//'osama@livewirelabs.co',
+            password:'',//Test12345',
+            phoneNo:'',//'12345',
             state: '',
             city: "",
-            Zipcode: '12345',
+            Zipcode: '',
             userState: "",
             userCity: "",
             stateId: -1,
             cityId: -1,
 
-            userName: 'test',
+            userName:'',// 'test',
             userMsg: true,
             userEmail: true,
             userPhone: true,
@@ -49,6 +48,11 @@ class RegistrationController extends Component {
     goingBack(e) {
         this.props.navigation.pop();
     }
+    
+
+    openPolicyScreen(txt){
+        this.props.navigation.navigate('PolicyScreen',{header:txt});
+    }
 
     openRegisterAccount() {
 
@@ -62,18 +66,22 @@ class RegistrationController extends Component {
                 city: this.state.userCity,
                 stateId: this.state.stateId,
                 cityId: this.state.cityId,
-                name: this.state.userName
+                name: this.state.userName,
+                zipcode: this.state.Zipcode
             })
 
-            if (DataHandler.saveUserObject(userObject)) {
+             this.props.emailCheckRequest(this.state).then(() => {
+
+                 if (DataHandler.saveUserObject(userObject)) {
                 this.props.navigation.navigate('RegisterAccountType');
             }
+            });
+           
         }
     }
 
 
     setStateLocation(txt) {
-        //txt.name && txt.stateId
         this.setState({
             userState: txt.name,
             userCity: "",
@@ -88,7 +96,6 @@ class RegistrationController extends Component {
     }
 
     setCityLocation(txt) {
-        //txt.name && txt.cityId
         this.setState({
             userCity: txt.name,
             cityId: txt.cityId,
@@ -109,7 +116,7 @@ class RegistrationController extends Component {
     }
 
     setZipCode(txt) {
-        this.setState({ Zipcode: txt, userZipCode: utils.isValidUserName(txt) });
+        this.setState({ Zipcode: txt, userZipCode: utils.isValidZipCode(this.state.city,txt) });
     }
 
     setPassword(txt) {
@@ -163,6 +170,8 @@ class RegistrationController extends Component {
 
                 checkTerms={this.state.isCheckOnTerms}
                 setCheckTerms={(e) => this.setCheckTerms(e)}
+
+                openPolicyScreen = {(e)=> this.openPolicyScreen(e)}
 
 
 
@@ -222,7 +231,7 @@ class RegistrationController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidUserName(Zipcode)) {
+        else if (!utils.isValidZipCode(this.state.city, Zipcode)) {
 
             utils.topAlertError("zipcode is required");
 
@@ -242,7 +251,7 @@ class RegistrationController extends Component {
         }
         else if (!isCheckOnTerms) {
 
-            utils.topAlertError("please accept terms before proceeding");
+            utils.topAlertError("Please accept terms before proceeding");
             return false;
         }
 
@@ -263,8 +272,9 @@ const mapStateToProps = ({ user }) => {
 
 const mapDispatchToProps = dispatch => ({
     getStateRequest: () => dispatch(getStateRequest()),
-    userSignUpRequest: (data) => dispatch(userSignUpRequest(data)),
+    emailCheckRequest: (data) => dispatch(emailCheckRequest(data)),
     getCityRequest: (data) => dispatch(getCityRequest(data))
+    
 });
 
 

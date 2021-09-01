@@ -1,6 +1,8 @@
 /* eslint-disable prettier/prettier */
 import LoginController from './Login';
-export { LoginController };
+import PolicyController from './policy';
+ 
+export { LoginController, PolicyController };
 export {
     VerificationCodeController,
     ThanksRegistrationController,
