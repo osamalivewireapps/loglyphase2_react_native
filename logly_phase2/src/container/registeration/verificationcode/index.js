@@ -23,7 +23,7 @@ class VerificationCodeController extends Component {
         super(props);
         this.state = {
             pinCode: '',
-            pinCodeLength: this.props.route.params?8:6,
+            pinCodeLength: 6,
         }
     }
 
@@ -44,7 +44,7 @@ class VerificationCodeController extends Component {
         if (!this.state.pinCode) {
             utils.topAlertError("Please enter code..")
         } else {
-            if (this.props.route.params) {
+            if (!this.props.route.params.isChangePassword) {
                 this.props.userVerifyCode(this.state.pinCode).then((response)=>{
                     if (this.props.route.params.accountType === INDIVIDUAL || this.props.route.params.accountType === CHARITY_ID)
                         this.props.navigation.navigate('ThanksRegistration');
@@ -79,8 +79,8 @@ class VerificationCodeController extends Component {
     }
 
     resendVerificationCode(){
-        this.props.resendVerifyCode(this.userObject).then(()=>{
-            this.setState({ pinCodeLength:6})
+        this.props.resendVerifyCode(this.props.route.params.email).then(()=>{
+            
         });
     }
 

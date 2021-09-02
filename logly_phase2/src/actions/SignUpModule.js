@@ -29,6 +29,7 @@ export const userSignUpRequest = (data1) => (dispatch) => {
                 businessName: data1.businessName ? data1.businessName : "",
                 noOfEmployees: data1.noOfEmployees ? data1.noOfEmployees : "",
                 website: data1.website ? data1.website : "",
+                mobile: true,
             }
         )
             .then(response => {
@@ -111,7 +112,7 @@ export const userVerifyCode = (data1) => dispatch => {
 
         axios.post(`${baseUrl}/user/verifyByCode`,
             {
-                code: data1.pinCode,
+                code: data1,
             }
         )
             .then(response => {
@@ -151,7 +152,7 @@ export const resendVerifyCode = (data1) => dispatch => {
 
         axios.post(`${baseUrl}/user/resendCodeVerification`,
             {
-                email: data1.email,
+                email: data1,
             }
         )
             .then(response => {

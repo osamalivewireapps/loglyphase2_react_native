@@ -49,7 +49,7 @@ class BusinessOwnerController extends Component {
             }
             //CALL REGISTRATION API..
             this.props.userSignUpRequest(this.userObject).then(() => {
-                this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.props.route.params.accountType });
+                this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.props.route.params.accountType, email: this.userObject.email });
             });
 
         }

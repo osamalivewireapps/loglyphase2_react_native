@@ -136,7 +136,7 @@ function RegistrationView(props) {
                         }}>
 
                             <Image source={Icons.icon_user} />
-                            <TextInput placeholder="name" style={{
+                            <TextInput placeholder="Name" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
                             }}

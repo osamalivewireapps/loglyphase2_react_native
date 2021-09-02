@@ -110,7 +110,7 @@ class LoginController extends Component {
         }
         else if (!utils.isPasswordValid(password)) {
 
-            utils.topAlertError("password is rexquired");
+            utils.topAlertError("password is required");
 
             this.setState({
                 userPassword: false

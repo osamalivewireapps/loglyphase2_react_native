@@ -60,7 +60,7 @@ export const userVerifyForgotCode = (data1) => dispatch => {
 
         axios.post(`${baseUrl}/user/verifyByCodePassword`,
             {
-                code: data1.pinCode,
+                code: data1,
             }
         )
             .then(response => {

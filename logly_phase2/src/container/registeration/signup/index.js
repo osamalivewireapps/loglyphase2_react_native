@@ -18,7 +18,7 @@ class RegistrationController extends Component {
         super(props);
         this.state = {
             email: '',//'osama@livewirelabs.co',
-            password:'',//Test12345',
+            password:'',//'Test12345',
             phoneNo:'',//'12345',
             state: '',
             city: "",
@@ -242,7 +242,7 @@ class RegistrationController extends Component {
         }
         else if (!utils.isPasswordValid(password)) {
 
-            utils.topAlertError("password is rexquired");
+            utils.topAlertError("password is required");
 
             this.setState({
                 userPassword: false

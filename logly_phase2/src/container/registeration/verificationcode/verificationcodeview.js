@@ -7,7 +7,7 @@
 import OtpInputs from 'react-native-otp-inputs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, { useState } from 'react';
-import { TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { Platform,TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
 
 function VerificationCodeView(props) {
@@ -69,7 +69,7 @@ function VerificationCodeView(props) {
                     focusStyles={styles.borderStyleHighLighted}
                     keyboardType="numbers-and-punctuation"
                     inputStyles={{ textAlign: 'center' }}
-                    inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3,paddingTop:0}}
+                    inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3,paddingTop:(Platform.OS === "ios" ? 12 : 0)}}
 
                 />
 

@@ -27,7 +27,7 @@ class ForgotPasswordController extends Component {
         }
 
         this.props.userForgotPassword(this.state.email).then(() => {
-            this.props.navigation.navigate('VerificationCode');
+            this.props.navigation.navigate('VerificationCode', { email: this.state.email,isChangePassword:true});
         })
     }
 

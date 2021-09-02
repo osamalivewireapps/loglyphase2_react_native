@@ -87,7 +87,7 @@ class RegistrationAccountTypeController extends Component {
                 //CALL REGISTRATION API..
                 this.setCurrentAction(USERSIGNUP);
                 this.props.userSignUpRequest(this.userObject).then(()=>{
-                    this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType });
+                    this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType, email: this.userObject.email  });
                 });
             }
 
