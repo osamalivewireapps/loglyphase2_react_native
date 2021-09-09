@@ -61,7 +61,7 @@ class RegistrationController extends Component {
             let userObject = JSON.stringify({
                 email: this.state.email,
                 password: this.state.password,
-                phoneNo: this.state.phoneNo,
+                phone: this.state.phoneNo,
                 state: this.state.userState,
                 city: this.state.userCity,
                 stateId: this.state.stateId,

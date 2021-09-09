@@ -1,3 +1,5 @@
+/* eslint-disable no-alert */
+/* eslint-disable quotes */
 /* eslint-disable keyword-spacing */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
@@ -11,6 +13,7 @@ import { Colors, Fonts, Images } from '../../theme';
 import utils from '../../utils';
 import LoginView from './loginview';
 import { userLoginRequest } from '../../actions/LoginModule';
+import DataHandler from '../../utils/DataHandler';
 
 class LoginController extends Component {
 
@@ -18,7 +21,7 @@ class LoginController extends Component {
         super(props);
         this.state = {
             email: '',//'osama@livewirelabs.co',
-            password:'',// 'Test12345',
+            password: '',// 'Test12345',
             userEmail: true,
             userPassword: true,
             isCheckOnTerms: true
@@ -58,12 +61,15 @@ class LoginController extends Component {
 
         if (this._validateForm()) {
 
-         
-            this.props.userLoginRequest(this.state).then((status) => {
+            this.props.userLoginRequest(this.state).then((response) => {
 
-                if(status === 200){
-                    //this.props.navigation.navigate('RegisterAccountType');
-                    alert("Login Successfully")
+                if (response.status === 200) {
+                    alert("Login Successfully");
+                }
+                else if (response.status === 400) {
+                    if (DataHandler.saveUserObject(JSON.stringify(response.userData))) {
+                        this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: response.userData.packageType, email: response.userData.email });
+                    }
                 }
             });
 
@@ -117,7 +123,7 @@ class LoginController extends Component {
             });
             return false;
         }
-       
+
 
         return true;
     };

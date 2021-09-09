@@ -38,7 +38,7 @@ class SplashScreen extends React.Component {
                     </View>
                     <View style={{ flex: 2, justifyContent: 'flex-end', marginBottom: 10 }}>
                         <TouchableOpacity
-                            onPress={() => { this.props.navigation.navigate('Registration') }}
+                            onPress={() => { this.props.navigation.navigate('Registration')}}
                             style={{ marginTop: 0, backgroundColor: Colors.appYellow, borderRadius: 20 }}>
                             <Text style={{
                                 fontSize: 22, textAlign: 'center', padding: 10, paddingStart: 120, paddingEnd: 120,

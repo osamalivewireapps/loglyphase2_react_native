@@ -10,6 +10,7 @@ import { Colors, Fonts, Images } from '../../theme';
 import BusinessOwnerView from './bus_owner_view';
 import { userSignUpRequest } from './../../../actions/SignUpModule';
 import { connect } from 'react-redux';
+import DocumentPicker from 'react-native-document-picker';
 
 class BusinessOwnerController extends Component {
 
@@ -24,6 +25,8 @@ class BusinessOwnerController extends Component {
             isBusName: true,
             isBusEmployees: true,
             isBusUrl: true,
+            image:"",
+            fileName:""
         }
     }
 
@@ -45,11 +48,19 @@ class BusinessOwnerController extends Component {
                 "businessName": this.state.busName,
                 "noOfEmployees": this.state.empQuantity,
                 "website": this.state.busUrl,
-                "packageId": "5fac021fbd5c030e375233ad"
+                "packageId": "",
+                "image":this.state.image
+            }
+
+            if (this.props.route.params.accountType.toLowerCase().startsWith("charity") && !this.state.fileName){
+                utils.topAlert("Please attach form before proceeding")
+                return;
             }
             //CALL REGISTRATION API..
-            this.props.userSignUpRequest(this.userObject).then(() => {
-                this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.props.route.params.accountType, email: this.userObject.email });
+            this.props.userSignUpRequest(this.userObject).then((response) => {
+                if (DataHandler.saveUserObject(JSON.stringify(response.payload))) {
+                    this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: response.payload.packageType, email: response.payload.email });
+                }
             });
 
         }
@@ -85,8 +96,21 @@ class BusinessOwnerController extends Component {
 
                 accountType={this.props.route.params.accountType}
                 openRegisterAccount={(e) => this.openRegisterAccount(e)}
-                backScreen={(e) => { this.goingBack(e) }} />
+                backScreen={(e) => { this.goingBack(e) }} 
+                openDocumetFolder={(e) => { this.openDocumetFolder(e) }}
+
+                fileName={this.state.fileName}
+                deleteFile={(e) => { this.deleteFile(e)}}
+                />
         );
+    }
+
+    openDocumetFolder(){
+        this.docPicker()
+    }
+
+    deleteFile(){
+        this.setState({ image:"", fileName:"" });
     }
 
     _validateForm = () => {
@@ -125,6 +149,42 @@ class BusinessOwnerController extends Component {
 
         return true;
     };
+
+    async docPicker() {
+        // Pick a single file
+        try {
+            const res = await DocumentPicker.pick({
+                //by using allFiles type, you will able to pick any type of media from user device, 
+                //There can me more options as well
+                //DocumentPicker.types.images: All image types
+                //DocumentPicker.types.plainText: Plain text files
+                //DocumentPicker.types.audio: All audio types
+                //DocumentPicker.types.pdf: PDF documents
+                //DocumentPicker.types.zip: Zip files
+                //DocumentPicker.types.csv: Csv files
+                //DocumentPicker.types.doc: doc files
+                //DocumentPicker.types.docx: docx files
+                //DocumentPicker.types.ppt: ppt files
+                //DocumentPicker.types.pptx: pptx files
+                //DocumentPicker.types.xls: xls files
+                //DocumentPicker.types.xlsx: xlsx files
+                //For selecting more more than one options use the 
+                //type: [DocumentPicker.types.csv,DocumentPicker.types.xls]
+                type: [DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx, DocumentPicker.types.images],
+            });
+            console.log("uri--->", res[0].uri);
+            this.setState({ image: res[0].uri, fileName: res[0].name});
+            //this.uploadAPICall(res);//here you can call your API and send the data to that API
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+                console.log("error -----", err);
+            } else {
+                console.log("error ----->", err);
+                throw err;
+
+            }
+        }
+    }
 }
 
 const mapStateToProps = ({ user }) => ({

@@ -15,6 +15,7 @@ import { marginBottom, zIndex } from 'styled-system';
 import { CHARITY_ID } from '../../../constants';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { Keyboard } from 'react-native';
+import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 
 
 function BusinessOwnerView(props) {
@@ -31,9 +32,9 @@ function BusinessOwnerView(props) {
         nameBus, validateBusName, setBusName,
         strengthEmp, validateBusEmp, setEmpStrength,
         urlBus, validateBusURL, setBusUrl,
-        backScreen, openRegisterAccount, accountType } = props;
+        backScreen, openRegisterAccount, accountType, openDocumetFolder,
+        fileName, deleteFile } = props;
 
-    const [email, setemail] = useState('');
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -55,7 +56,10 @@ function BusinessOwnerView(props) {
                             <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
                             <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                         </TouchableOpacity>
-                        <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{accountType === CHARITY_ID ? "Charity / Non Profit" : "Business Owner"}</Text>
+                        <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 25, marginTop: 10 }}>
+                            {accountType.toLowerCase().startsWith("charity") ? "Charity / Non Profit" : "Business Owner"}
+                        </Text>
+
                         <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Add your business details below</Text>
                     </View>
                     <View
@@ -111,7 +115,7 @@ function BusinessOwnerView(props) {
                                 alignItems: 'center',
                                 shadowColor: validateBusEmp ? 'black' : 'darkred',
                                 shadowOpacity: validateBusEmp ? 0.25 : 1,
-                                backgroundColor: 'white', flexDirection: 'row'
+                                backgroundColor: 'white'
                             }}>
 
                                 <ModalDropdown
@@ -173,20 +177,58 @@ function BusinessOwnerView(props) {
                                     value={urlBus} />
                             </View>
 
+                            <Text style={{
+                                ...styles.generalTxt, color: 'black', fontSize: 16,
+                                marginStart: 5, marginTop: 20, fontFamily: Fonts.type.medium,
+                            }}>{accountType.toLowerCase().startsWith("charity") ? "Please Attach the 501-C form." : "Attachment"}
+                            </Text>
 
+                            {fileName ?
+                                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+
+                                    <View style={{ flexDirection: 'column', flex: 9 }}>
+
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={14}
+                                            fontSize={14}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt, color: 'black', fontSize: 14,
+                                                marginStart: 5, marginTop: 5
+
+                                            }}>{fileName}
+                                        </AutoSizeText>
+
+
+                                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                            <Text style={{
+                                                ...styles.generalTxt, color: 'black', fontSize: 12,
+                                                marginStart: 5, marginTop: 0, textAlign: 'center', height: '100%'
+                                            }}>Completed</Text>
+                                            <Image source={Icons.icon_feather_check_circle} marginStart={5} />
+                                        </View>
+                                    </View>
+                                    <TouchableOpacity onPress={() => deleteFile()}>
+                                        <Image source={Icons.icon_material_delete} marginStart={5} />
+                                    </TouchableOpacity>
+                                </View>
+                                : <View />}
                             {/* 
                     TODO
                         SET STATE FOR VISIBILITY W.R.T ACCOUNT TYPE
                         AND MOREOVER SET TEXT FOR UPLOAD DOCUMENT
                     */}
 
-                            {accountType === CHARITY_ID ?
-                                <TouchableOpacity style={{
+                            {!fileName ?
+                                (<TouchableOpacity style={{
                                     ...styles.styleAttachButtons,
-                                    marginBottom: 5, marginTop: 25, padding: 8,
+                                    marginBottom: 5, marginTop: 15, padding: 8,
                                     width: '60%', justifyContent: 'center', alignItems: 'center',
                                     flexDirection: 'row'
-                                }}>
+                                }}
+                                    onPress={() => { openDocumetFolder() }}
+                                >
                                     <Image source={Icons.icon_attach_file} />
                                     <Text style={{
                                         ...styles.generalTxt,
@@ -194,10 +236,11 @@ function BusinessOwnerView(props) {
                                         marginStart: 10,
                                         color: Colors.appBgColor, fontSize: 16,
 
-                                    }}>Attach Document</Text>
-                                </TouchableOpacity> : <View />
-                            }
-
+                                    }}>
+                                        {accountType.toLowerCase().startsWith("charity") ? "Attach Document" : "Attach Photo"}
+                                    </Text>
+                                </TouchableOpacity>)
+                                : <View />}
 
                         </View>
 

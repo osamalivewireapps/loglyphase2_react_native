@@ -160,7 +160,7 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                             marginEnd: 10, color: 'black',
 
                         }}>
-                        {data.type==="Individual"?"Free":"$"+data.minprice}
+                        {(data.type === "Individual" || data.type.startsWith("Charity"))?"Free":"$"+data.minprice}
                         {/* {data.priceMethod === 'Monthly & Yearly' ? data.monthlyPrice + "/Month" : (data.lifetimePrice ? data.lifetimePrice + " Lifetime" : "Lifetime")} */}
                         </AutoSizeText>
 
@@ -179,6 +179,7 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
 
                         }}>View Details</Text>
                     </TouchableOpacity>
+                    
 
                 </View>
 

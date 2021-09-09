@@ -6,8 +6,9 @@ import React, { Component } from 'react';
 import { SafeAreaView, Text, Image, Dimensions, View } from 'react-native';
 import { Colors, Fonts, Images } from '../../theme';
 import BusAccountPackagesView from './bus_account_packages_view';
-import { getPackagesByType } from '../../../actions/SignUpModule';
+import { getPackagesByType, registerPackage } from '../../../actions/SignUpModule';
 import { connect } from 'react-redux';
+import DataHandler from '../../../utils/DataHandler';
 
 class BusAccountPackagesController extends Component {
 
@@ -52,6 +53,10 @@ class BusAccountPackagesController extends Component {
             this.setState({ subPackages: tmpPackageType, packageType: tmpPackTYpeBundles })
 
         })
+
+        DataHandler.getUserObject().then((value) => {
+            this.userObject = JSON.parse(value);
+        });
     }
 
     //subPackages = [
@@ -136,12 +141,25 @@ class BusAccountPackagesController extends Component {
     confirmBtnPress(e) {
         if (this.props.route.params.showBack) {
             this.props.navigation.pop();
-        } else
-            this.props.navigation.navigate('ThanksRegistration');
+        } else{
+            this.userObject = {
+                ...this.userObject,
+                "packageId": this.state.packageType[this.state.accountPackage.outerIndex][this.state.accountPackage.innerId]._id,
+                "type": this.state.subPackages[this.state.accountPackage.outerIndex],
+
+            }
+            this.props.registerPackage(this.userObject).then(() => {
+                this.props.navigation.navigate('ThanksRegistration');
+            });
+            
+        }
 
     }
 
     setPackageAccount(obj) {
+
+        console.log("packages--->", this.state.packageType[obj.outerIndex][obj.innerId.name]);
+       
         this.setState({
             accountPackage: {
                 outerIndex: obj.outerIndex,
@@ -175,6 +193,7 @@ const mapStateToProps = ({ user }) => {
 
 const mapDispatchToProps = dispatch => ({
     getPackagesByType: (data) => dispatch(getPackagesByType(data)),
+    registerPackage: (data) => dispatch(registerPackage(data)),
 });
 
 
