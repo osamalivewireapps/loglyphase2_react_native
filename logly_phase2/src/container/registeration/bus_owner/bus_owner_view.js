@@ -6,7 +6,7 @@
 /* eslint-disable no-undef */
 /* eslint-disable quotes */
 import React, { Component, useState } from 'react';
-import { KeyboardAvoidingView, TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput, Platform } from 'react-native';
 import InputPasswordToggle from '../../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons } from '../../../theme';
 import CheckBox from 'react-native-check-box';
@@ -60,13 +60,13 @@ function BusinessOwnerView(props) {
                             {accountType.toLowerCase().startsWith("charity") ? "Charity / Non Profit" : "Business Owner"}
                         </Text>
 
-                        <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Add your business details below</Text>
+                        <Text style={{ ...styles.generalTxt, marginTop: Platform.OS === 'ios' ? 0 : 10 }}>Add your business details below</Text>
                     </View>
                     <View
                         style={{
-                            borderTopLeftRadius: 30,
-                            borderTopRightRadius: 30,
-                            marginTop: -25,
+                            borderTopLeftRadius: Platform.OS === 'ios' ?20:30,
+                            borderTopRightRadius: Platform.OS === 'ios' ?20:30,
+                            marginTop: Platform.OS==='ios'?-10:-25,
                             backgroundColor: 'white',
                             paddingStart: 30,
                             paddingEnd: 30,
@@ -100,6 +100,7 @@ function BusinessOwnerView(props) {
                                     flex: 1,
 
                                 }}
+                                    maxLength={75}
                                     autoCapitalize='none'
                                     keyboardType="default"
                                     onChangeText={(e) => setBusName(e)}
@@ -180,7 +181,7 @@ function BusinessOwnerView(props) {
                             <Text style={{
                                 ...styles.generalTxt, color: 'black', fontSize: 16,
                                 marginStart: 5, marginTop: 20, fontFamily: Fonts.type.medium,
-                            }}>{accountType.toLowerCase().startsWith("charity") ? "Please Attach the 501-C form." : "Attachment"}
+                            }}>{accountType.toLowerCase().startsWith("charity") ? "Please Attach the 501-C form." : "Photo ID"}
                             </Text>
 
                             {fileName ?
@@ -237,7 +238,7 @@ function BusinessOwnerView(props) {
                                         color: Colors.appBgColor, fontSize: 16,
 
                                     }}>
-                                        {accountType.toLowerCase().startsWith("charity") ? "Attach Document" : "Attach Photo"}
+                                        {accountType.toLowerCase().startsWith("charity") ? "Attach" : "Attach Photo"}
                                     </Text>
                                 </TouchableOpacity>)
                                 : <View />}

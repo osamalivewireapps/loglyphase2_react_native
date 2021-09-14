@@ -4,11 +4,12 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { SafeAreaView, Text, Image, Dimensions, View } from 'react-native';
-import { Colors, Fonts, Images } from '../../theme';
+import { Colors, Fonts, Images } from '../../../theme';
 import BusAccountPackagesView from './bus_account_packages_view';
 import { getPackagesByType, registerPackage } from '../../../actions/SignUpModule';
 import { connect } from 'react-redux';
 import DataHandler from '../../../utils/DataHandler';
+import Util from '../../../utils';
 
 class BusAccountPackagesController extends Component {
 
@@ -141,7 +142,7 @@ class BusAccountPackagesController extends Component {
     confirmBtnPress(e) {
         if (this.props.route.params.showBack) {
             this.props.navigation.pop();
-        } else{
+        } else if (this.state.accountPackage.outerIndex >= 0 && this.state.accountPackage.innerId >= 0){
             this.userObject = {
                 ...this.userObject,
                 "packageId": this.state.packageType[this.state.accountPackage.outerIndex][this.state.accountPackage.innerId]._id,
@@ -152,6 +153,8 @@ class BusAccountPackagesController extends Component {
                 this.props.navigation.navigate('ThanksRegistration');
             });
             
+        }else{
+            Util.topAlert("Please select packages")
         }
 
     }
@@ -180,7 +183,8 @@ class BusAccountPackagesController extends Component {
                 packagesAmount={this.state.packageType}
                 showBack={this.props.route.params.showBack}
                 btnConfirmPress={() => this.confirmBtnPress()}
-                props backScreen={(e) => { this.goingBack(e) }} />
+                props backScreen={(e) => { this.goingBack(e) }}
+                packageId={this.props.route.params.packageId} />
         );
     }
 }

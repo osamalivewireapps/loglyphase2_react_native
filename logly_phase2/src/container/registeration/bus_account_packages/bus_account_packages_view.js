@@ -1,3 +1,4 @@
+/* eslint-disable curly */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
@@ -13,7 +14,7 @@ import CollapsibleSection from '../../../components/CollapsibleSection';
 function BusAccountPackagesView(props) {
 
     const { btnConfirmPress, showBack, backScreen, packagesType, packagesAmount,
-        accountPackage, selectAccountPackage, isShowBack } = props;
+        accountPackage, selectAccountPackage, isShowBack, packageId } = props;
     let btnTxt = showBack ? "BACK" : "PROCEED";
 
     console.log("package amount-->", packagesAmount)
@@ -35,7 +36,7 @@ function BusAccountPackagesView(props) {
                     <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
                     <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>Business Account Packages</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{packageId}</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut</Text>
             </View>
             <ScrollView>
@@ -170,7 +171,7 @@ function getAccountView(listData, packageType, outerId, props) {
                         marginTop: 10,
                         color: 'black',
 
-                    }}>{getFormattedTxt(data, packageType)}</Text>
+                    }}>{getFormattedTxt(data, props.packageId)}</Text>
 
 
 
@@ -198,8 +199,12 @@ function getAccountView(listData, packageType, outerId, props) {
 
 }
 
-const getFormattedTxt = (data, packageType) => {
-    return data.description + "\nAllowed Animals " + data.allowedAnimal + "\nAllowed Products " + data.allowedProduct + "\nAllowed Employees " + data.allowedEmp
+const getFormattedTxt = (data, packageId) => {
+    if (packageId.includes("Service")) {
+        return "Allowed Appointments:10 " + "\nAllowed Services 40" + "\nAllowed Employees " + data.allowedEmp
+    }
+    else
+        return data.description + "\nAllowed Animals " + data.allowedAnimal + "\nAllowed Products " + data.allowedProduct + "\nAllowed Employees " + data.allowedEmp
 }
 
 const styles = StyleSheet.create({

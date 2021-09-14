@@ -16,8 +16,8 @@ import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
 import { FlatList } from 'react-native-gesture-handler';
 import { Keyboard } from 'react-native';
-import zipCodes from '../../../helpers/zipcodes'
 import { POLICY, TERMS } from '../../../constants';
+import KeyboardShift from '../../../components/KeyboardShift';
 
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0;
@@ -34,7 +34,7 @@ function RegistrationView(props) {
         setPhone, validateState, validateCity,
         enterZipCode, validateZipCode, setZipCode,
         enterPassword, validatePassword, setPassword,
-        checkTerms, setCheckTerms, openPolicyScreen
+        checkTerms, setCheckTerms, openPolicyScreen, zipCodes
 
 
     } = props;
@@ -78,18 +78,18 @@ function RegistrationView(props) {
         }
     }, [userCityLocation])
 
-    let GetZipcodeByCity = userCity ? zipCodes.filter(e => e.City === userCity) : [];
+    let GetZipcodeByCity = zipCodes;
 
     useEffect(() => {
 
-    
         if (isZipVisible && GetZipcodeByCity) {
-        if (!enterZipCode)
+            if (!enterZipCode)
                 setFilterZipArr(GetZipcodeByCity);
-            else
+            else {
                 setFilterZipArr(GetZipcodeByCity.filter((e) => {
-                    return (e.name.includes(enterZipCode))
+                    return (e.zipcode.includes(enterZipCode))
                 }))
+            }
         }
     }, [setZipCode])
 
@@ -117,10 +117,13 @@ function RegistrationView(props) {
             <ScrollView
                 ref={scroll}
                 keyboardShouldPersistTaps='handled'
+
+
             >
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : null}
                     keyboardVerticalOffset={keyboardVerticalOffset}
+                    enabled={true}
                 >
                     <View style={{
                         flex: 8, marginStart: 30, marginTop: 15,
@@ -161,7 +164,7 @@ function RegistrationView(props) {
                                 marginStart: 10,
                                 flex: 1,
                                 marginEnd: 10,
-                   
+
                             }}
                                 autoCapitalize='none'
                                 keyboardType="email-address"
@@ -183,7 +186,7 @@ function RegistrationView(props) {
                                 marginStart: 10,
                                 flex: 1,
                                 marginEnd: 10,
-                     
+
                             }}
                                 maxLength={10}
                                 autoCapitalize='none'
@@ -202,7 +205,7 @@ function RegistrationView(props) {
                             <Image source={Icons.icon_state} />
                             <TextInput placeholder="Select State"
                                 ref={inputEl}
-                            autoCapitalize='none'
+                                autoCapitalize='none'
 
                                 onPressIn={() => {
 
@@ -423,7 +426,7 @@ function RegistrationView(props) {
 
                                 }}
                                 autoCapitalize='none'
-                                keyboardType="default"
+                                keyboardType="number-pad"
                                 value={enterZipCode}
 
                             />
@@ -454,7 +457,7 @@ function RegistrationView(props) {
                                     return (
                                         <TouchableOpacity onPress={() => {
                                             Keyboard.dismiss();
-                                            setZipCode(item.item.name);
+                                            setZipCode(item.item.zipcode);
                                             setIsCityVisible(false)
                                             setIsZipVisible(false)
 
@@ -467,7 +470,7 @@ function RegistrationView(props) {
                                                     backgroundColor: 'white',
                                                     color: 'black', fontSize: 14
 
-                                                }}>{item.item.name}</Text>
+                                                }}>{item.item.zipcode}</Text>
                                             </View>
                                         </TouchableOpacity>)
                                 }}
@@ -488,10 +491,21 @@ function RegistrationView(props) {
                                     ...styles.styleTextInput,
                                     marginStart: 10
                                 }}
+                                onPressIn={() => {
+                                    setIsVisible(false);
+                                    setIsCityVisible(false)
+                                    setIsZipVisible(false)
+                                }}
                                 autoCapitalize='none'
                                 placeholder="Password"
                                 value={enterPassword}
-                                onChangeText={(e) => setPassword(e)} />
+                                onChangeText={(e) => {
+                                    setPassword(e)
+                                }}
+
+
+
+                            />
                         </View>
 
                         <View style={{
@@ -518,25 +532,25 @@ function RegistrationView(props) {
                                 }}>
                                 {/* <Text> */}
                                 I accept the </Text>
-                                <TouchableOpacity style={{marginTop:-2}} onPress={(e) => openPolicyScreen(TERMS)}>
+                            <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(TERMS)}>
                                 <Text
                                     style={{
                                         ...styles.generalTxt, fontSize: 14,
                                         textDecorationLine: 'underline',
                                         color: Colors.appBgColor,
                                     }}>Terms of Use</Text>
-                                </TouchableOpacity>
+                            </TouchableOpacity>
                             <Text style={{
                                 ...styles.generalTxt, fontSize: 14, color: 'black',
                                 textAlign: 'center'
                             }}> and </Text>
-                                <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(POLICY)}>
+                            <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(POLICY)}>
                                 <Text
                                     style={{
                                         textDecorationLine: 'underline',
                                         color: Colors.appBgColor
                                     }}>Privacy Policy</Text>
-                                </TouchableOpacity>
+                            </TouchableOpacity>
                             {/* </Text> */}
 
 
@@ -554,14 +568,17 @@ function RegistrationView(props) {
                             }}>CONTINUE</Text>
                         </TouchableOpacity>
 
+                        {/* <View style={{ height: 5, backgroundColor: 'red' }} /> */}
 
                     </View>
+
                 </KeyboardAvoidingView>
             </ScrollView>
 
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
 
@@ -586,11 +603,21 @@ const styles = StyleSheet.create({
     styleTextInput: {
         fontFamily: Fonts.type.base,
         fontSize: 16,
-        color: '#585858'
+        color: '#585858',
+        width: '100%'
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor, borderRadius: 30
-    }
+    },
+    container: {
+        flex: 1,
+        height: '100%',
+        justifyContent: 'space-around',
+        left: 0,
+        position: 'absolute',
+        top: 0,
+        width: '100%'
+    },
 });
 
 export default RegistrationView;

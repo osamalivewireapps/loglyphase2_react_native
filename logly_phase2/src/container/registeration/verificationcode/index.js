@@ -9,7 +9,7 @@ import React, { Component } from 'react';
 import { SafeAreaView, Text, Image, Dimensions, View, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { CHARITY_ID, INDIVIDUAL, PET_LOVER_ID } from '../../../constants';
-import { Colors, Fonts, Images } from '../../theme';
+import { Colors, Fonts, Images } from '../../../theme';
 import VerificationCodeView from './verificationcodeview';
 import { userVerifyCode, resendVerifyCode } from './../../../actions/SignUpModule';
 import { userVerifyForgotCode } from './../../../actions/ForgotPassword';

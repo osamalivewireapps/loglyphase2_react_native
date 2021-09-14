@@ -14,7 +14,7 @@ export default function InputPasswordToggle({ style, inputStyle, icon, iconColor
         <View style={[style, styles.container]}>
             <TextInput style={[styles.input, inputStyle]} secureTextEntry={!visible} {...rest} ref={refContainer} />
             <TouchableOpacity
-                style={{ marginStart: 10 }}
+                style={{ marginStart: 10}}
                 onPress={() => {
                     setVisible(!visible);
                 }}>

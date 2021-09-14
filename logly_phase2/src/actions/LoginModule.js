@@ -27,13 +27,16 @@ export const userLoginRequest = (data1) => (dispatch) => {
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
                     dispatch({ type: USERLOGIN, payload: response.data.data });
-                    resolve({status:response.data.status});
+                    resolve({ status: response.data.status });
                 }
                 else {
                     setTimeout(() => {
                         utils.topAlertError(response.data.message);
                     }, timeOut);
-                    resolve({ status: response.data.status, userData: response.data.data});
+                    if (response.data.message.startsWith("Email"))
+                        resolve({ status: response.data.status, userData: response.data.message, message: response.data.message });
+                    else
+                        resolve({ status: response.data.status, userData: response.data.data, message: response.data.message });
 
                 }
 

@@ -17,15 +17,15 @@
 		57F0CEBF274F4071B4F6C6CB /* Roboto-Thin.ttf in Resources */ = {isa = PBXBuildFile; fileRef = DBCE92F06BDB4E6E83B48204 /* Roboto-Thin.ttf */; };
 		6C0A429EFF2249E6959EA4DB /* Roboto-MediumItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 7D3C6FEFD88C49E6A60A2911 /* Roboto-MediumItalic.ttf */; };
 		6E7AD601D3604EA497F32F8E /* Roboto-Black.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1C3A26A207AE4353AA4A6C14 /* Roboto-Black.ttf */; };
+		73E23B2D5A422496E3566AF8 /* libPods-logly_phase2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 254344FE18255AA5E9C9D3E6 /* libPods-logly_phase2.a */; };
 		7B2F1E8803364A50B098D6DE /* Roboto-BoldItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1CB7E76FEE5E49DC86E28082 /* Roboto-BoldItalic.ttf */; };
+		8115CFB3007E94C8DE217CEC /* libPods-logly_phase2-logly_phase2Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E7A59D826C9E7C78058F772 /* libPods-logly_phase2-logly_phase2Tests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		82D5F046CF00FE41734365C3 /* libPods-logly_phase2-logly_phase2Tests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1E263CD865901B88D69B28F6 /* libPods-logly_phase2-logly_phase2Tests.a */; };
 		AFE8652FBEEC41B2B9CEA648 /* Roboto-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 9E7A08E2FD784A9B91ED8ED7 /* Roboto-Regular.ttf */; };
 		CDEDA7F322E34D19B49C3450 /* Roboto-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 999E62D9E67D4F06B426E476 /* Roboto-Light.ttf */; };
 		CFAE1F93121C47009ECE01B3 /* Roboto-ThinItalic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D25E678A870446FC8C41D467 /* Roboto-ThinItalic.ttf */; };
 		D1B554F1E36E400DA44C99EC /* Roboto-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 5E3EF0294B14442E87CF9C6F /* Roboto-Bold.ttf */; };
 		EA4AEBEB27F24DFFA27C8B4E /* Roboto-Medium.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C66544505654DD29F2FAF6F /* Roboto-Medium.ttf */; };
-		F99FCAD43114DCB81D8E3706 /* libPods-logly_phase2.a in Frameworks */ = {isa = PBXBuildFile; fileRef = EB30D75D06EBB77FB0AFFD19 /* libPods-logly_phase2.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,10 +39,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		00338F39B93E4FE41E8468D0 /* Pods-logly_phase2-logly_phase2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2-logly_phase2Tests.release.xcconfig"; path = "Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests.release.xcconfig"; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* logly_phase2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = logly_phase2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* logly_phase2Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = logly_phase2Tests.m; sourceTree = "<group>"; };
-		071A2FE3FE7BD403B0864E44 /* Pods-logly_phase2-logly_phase2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2-logly_phase2Tests.release.xcconfig"; path = "Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests.release.xcconfig"; sourceTree = "<group>"; };
 		13B07F961A680F5B00A75B9A /* logly_phase2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = logly_phase2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = logly_phase2/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = logly_phase2/AppDelegate.m; sourceTree = "<group>"; };
@@ -51,7 +51,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = logly_phase2/main.m; sourceTree = "<group>"; };
 		1C3A26A207AE4353AA4A6C14 /* Roboto-Black.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Black.ttf"; path = "../src/assets/fonts/Roboto-Black.ttf"; sourceTree = "<group>"; };
 		1CB7E76FEE5E49DC86E28082 /* Roboto-BoldItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BoldItalic.ttf"; path = "../src/assets/fonts/Roboto-BoldItalic.ttf"; sourceTree = "<group>"; };
-		1E263CD865901B88D69B28F6 /* libPods-logly_phase2-logly_phase2Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-logly_phase2-logly_phase2Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		254344FE18255AA5E9C9D3E6 /* libPods-logly_phase2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-logly_phase2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		28972B0EEB06909AEC3C4F09 /* Pods-logly_phase2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2.release.xcconfig"; path = "Target Support Files/Pods-logly_phase2/Pods-logly_phase2.release.xcconfig"; sourceTree = "<group>"; };
+		2E7A59D826C9E7C78058F772 /* libPods-logly_phase2-logly_phase2Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-logly_phase2-logly_phase2Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		32B8DC7F209E40CE9977D9BB /* Roboto-BlackItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-BlackItalic.ttf"; path = "../src/assets/fonts/Roboto-BlackItalic.ttf"; sourceTree = "<group>"; };
 		4F474B8E896C40F6B5A18406 /* Roboto-LightItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-LightItalic.ttf"; path = "../src/assets/fonts/Roboto-LightItalic.ttf"; sourceTree = "<group>"; };
 		5E3EF0294B14442E87CF9C6F /* Roboto-Bold.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Bold.ttf"; path = "../src/assets/fonts/Roboto-Bold.ttf"; sourceTree = "<group>"; };
@@ -61,13 +63,11 @@
 		935A0D00481B443CB45F5416 /* Roboto-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Italic.ttf"; path = "../src/assets/fonts/Roboto-Italic.ttf"; sourceTree = "<group>"; };
 		999E62D9E67D4F06B426E476 /* Roboto-Light.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Light.ttf"; path = "../src/assets/fonts/Roboto-Light.ttf"; sourceTree = "<group>"; };
 		9E7A08E2FD784A9B91ED8ED7 /* Roboto-Regular.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Regular.ttf"; path = "../src/assets/fonts/Roboto-Regular.ttf"; sourceTree = "<group>"; };
-		B9703735CFEDFBFD5ADBAB17 /* Pods-logly_phase2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2.release.xcconfig"; path = "Target Support Files/Pods-logly_phase2/Pods-logly_phase2.release.xcconfig"; sourceTree = "<group>"; };
-		BB050D419BFB7822E3BBE03C /* Pods-logly_phase2-logly_phase2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2-logly_phase2Tests.debug.xcconfig"; path = "Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		C15ED2987FD56B54D9E14027 /* Pods-logly_phase2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2.debug.xcconfig"; path = "Target Support Files/Pods-logly_phase2/Pods-logly_phase2.debug.xcconfig"; sourceTree = "<group>"; };
+		D0BECB1440920C7FE9519FA4 /* Pods-logly_phase2-logly_phase2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2-logly_phase2Tests.debug.xcconfig"; path = "Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		D25E678A870446FC8C41D467 /* Roboto-ThinItalic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-ThinItalic.ttf"; path = "../src/assets/fonts/Roboto-ThinItalic.ttf"; sourceTree = "<group>"; };
 		DBCE92F06BDB4E6E83B48204 /* Roboto-Thin.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Roboto-Thin.ttf"; path = "../src/assets/fonts/Roboto-Thin.ttf"; sourceTree = "<group>"; };
-		EB30D75D06EBB77FB0AFFD19 /* libPods-logly_phase2.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-logly_phase2.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
+		F7E0FC5B60EE0CEA6ED71765 /* Pods-logly_phase2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-logly_phase2.debug.xcconfig"; path = "Target Support Files/Pods-logly_phase2/Pods-logly_phase2.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -75,7 +75,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				82D5F046CF00FE41734365C3 /* libPods-logly_phase2-logly_phase2Tests.a in Frameworks */,
+				8115CFB3007E94C8DE217CEC /* libPods-logly_phase2-logly_phase2Tests.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +83,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F99FCAD43114DCB81D8E3706 /* libPods-logly_phase2.a in Frameworks */,
+				73E23B2D5A422496E3566AF8 /* libPods-logly_phase2.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -124,8 +124,8 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				EB30D75D06EBB77FB0AFFD19 /* libPods-logly_phase2.a */,
-				1E263CD865901B88D69B28F6 /* libPods-logly_phase2-logly_phase2Tests.a */,
+				254344FE18255AA5E9C9D3E6 /* libPods-logly_phase2.a */,
+				2E7A59D826C9E7C78058F772 /* libPods-logly_phase2-logly_phase2Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -184,10 +184,10 @@
 		C9AE90136DEAEA7C1CDD7578 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				C15ED2987FD56B54D9E14027 /* Pods-logly_phase2.debug.xcconfig */,
-				B9703735CFEDFBFD5ADBAB17 /* Pods-logly_phase2.release.xcconfig */,
-				BB050D419BFB7822E3BBE03C /* Pods-logly_phase2-logly_phase2Tests.debug.xcconfig */,
-				071A2FE3FE7BD403B0864E44 /* Pods-logly_phase2-logly_phase2Tests.release.xcconfig */,
+				F7E0FC5B60EE0CEA6ED71765 /* Pods-logly_phase2.debug.xcconfig */,
+				28972B0EEB06909AEC3C4F09 /* Pods-logly_phase2.release.xcconfig */,
+				D0BECB1440920C7FE9519FA4 /* Pods-logly_phase2-logly_phase2Tests.debug.xcconfig */,
+				00338F39B93E4FE41E8468D0 /* Pods-logly_phase2-logly_phase2Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -199,12 +199,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "logly_phase2Tests" */;
 			buildPhases = (
-				B58B7B32D4ED40E1BE2B069D /* [CP] Check Pods Manifest.lock */,
+				3B94FFD8440039720F8FE206 /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
 				00E356EB1AD99517003FC87E /* Frameworks */,
 				00E356EC1AD99517003FC87E /* Resources */,
-				DF3275F349401ABBC0919278 /* [CP] Embed Pods Frameworks */,
-				BABD4047CC687EBD7BAD8235 /* [CP] Copy Pods Resources */,
+				288211C1D7EB15687F94D13A /* [CP] Embed Pods Frameworks */,
+				7EFFAECD40A2C056E2CBA95B /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -220,14 +220,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "logly_phase2" */;
 			buildPhases = (
-				B742ADA4377F176B67933354 /* [CP] Check Pods Manifest.lock */,
+				27000FC1A5584F0A49DD360E /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				5B0296B3AECE223CEA509A7C /* [CP] Embed Pods Frameworks */,
-				9BDB4E5E945A438169C8B19D /* [CP] Copy Pods Resources */,
+				D5F80D930521DD5BC13D45FD /* [CP] Embed Pods Frameworks */,
+				67464AF8A29057945073591E /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -320,63 +320,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		5B0296B3AECE223CEA509A7C /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		9BDB4E5E945A438169C8B19D /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B58B7B32D4ED40E1BE2B069D /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-logly_phase2-logly_phase2Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		B742ADA4377F176B67933354 /* [CP] Check Pods Manifest.lock */ = {
+		27000FC1A5584F0A49DD360E /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -398,7 +342,63 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		BABD4047CC687EBD7BAD8235 /* [CP] Copy Pods Resources */ = {
+		288211C1D7EB15687F94D13A /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3B94FFD8440039720F8FE206 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-logly_phase2-logly_phase2Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		67464AF8A29057945073591E /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		7EFFAECD40A2C056E2CBA95B /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -415,21 +415,21 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		DF3275F349401ABBC0919278 /* [CP] Embed Pods Frameworks */ = {
+		D5F80D930521DD5BC13D45FD /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2-logly_phase2Tests/Pods-logly_phase2-logly_phase2Tests-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-logly_phase2/Pods-logly_phase2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -484,7 +484,7 @@
 /* Begin XCBuildConfiguration section */
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = BB050D419BFB7822E3BBE03C /* Pods-logly_phase2-logly_phase2Tests.debug.xcconfig */;
+			baseConfigurationReference = D0BECB1440920C7FE9519FA4 /* Pods-logly_phase2-logly_phase2Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -511,7 +511,7 @@
 		};
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 071A2FE3FE7BD403B0864E44 /* Pods-logly_phase2-logly_phase2Tests.release.xcconfig */;
+			baseConfigurationReference = 00338F39B93E4FE41E8468D0 /* Pods-logly_phase2-logly_phase2Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
@@ -535,11 +535,11 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C15ED2987FD56B54D9E14027 /* Pods-logly_phase2.debug.xcconfig */;
+			baseConfigurationReference = F7E0FC5B60EE0CEA6ED71765 /* Pods-logly_phase2.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 4JUQSF297B;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = logly_phase2/Info.plist;
@@ -564,11 +564,11 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B9703735CFEDFBFD5ADBAB17 /* Pods-logly_phase2.release.xcconfig */;
+			baseConfigurationReference = 28972B0EEB06909AEC3C4F09 /* Pods-logly_phase2.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CURRENT_PROJECT_VERSION = 22;
+				CURRENT_PROJECT_VERSION = 23;
 				DEVELOPMENT_TEAM = 4JUQSF297B;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = arm64;
 				INFOPLIST_FILE = logly_phase2/Info.plist;

@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable no-undef */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable prettier/prettier */
@@ -5,11 +6,15 @@
 /* eslint-disable react/jsx-no-undef */
 import React from 'react';
 import { View, Text, ImageBackground, Image, SafeAreaView, Dimensions, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { connect } from 'react-redux';
+import { DisableLoader } from '../actions/LoaderProgress';
 import { Fonts, Images, Colors } from '../theme';
+import { hideLoaderOnly } from './../actions/SignUpModule'
 
 class SplashScreen extends React.Component {
     constructor(props) {
         super(props);
+        this.props.hideLoaderOnly();
     }
 
     render() {
@@ -38,7 +43,7 @@ class SplashScreen extends React.Component {
                     </View>
                     <View style={{ flex: 2, justifyContent: 'flex-end', marginBottom: 10 }}>
                         <TouchableOpacity
-                            onPress={() => { this.props.navigation.navigate('Registration')}}
+                            onPress={() => { this.props.navigation.navigate('Registration') }}
                             style={{ marginTop: 0, backgroundColor: Colors.appYellow, borderRadius: 20 }}>
                             <Text style={{
                                 fontSize: 22, textAlign: 'center', padding: 10, paddingStart: 120, paddingEnd: 120,
@@ -68,4 +73,12 @@ class SplashScreen extends React.Component {
 }
 
 
-export default SplashScreen;
+const mapDispatchToProps = dispatch => ({
+    hideLoaderOnly: () => dispatch(hideLoaderOnly()),
+});
+
+
+export default connect(
+    null,
+    mapDispatchToProps,
+)(SplashScreen);

@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { SafeAreaView, Text, Image, Dimensions, View, Alert } from 'react-native';
-import { Colors, Fonts, Images } from '../../theme';
+import { Colors, Fonts, Images } from '../../../theme';
 import ThanksRegistrationView from './thanks_reg_view';
 import { CommonActions } from "@react-navigation/native";
 import { StackActions } from '@react-navigation/native';

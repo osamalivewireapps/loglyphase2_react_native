@@ -6,6 +6,7 @@ import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
 import com.reactnativedocumentpicker.DocumentPickerPackage;
 import com.reactnativedocumentpicker.DocumentPickerPackage;
+import com.reactnativedocumentpicker.DocumentPickerPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.oblador.vectoricons.VectorIconsPackage;

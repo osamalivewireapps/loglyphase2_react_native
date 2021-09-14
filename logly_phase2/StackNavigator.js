@@ -9,7 +9,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {
-  PolicyController,LoginController, ThanksRegistrationController, BusinessOwnerController,
+  PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController
 } from './src';
@@ -38,7 +38,7 @@ function StackNavigator(props) {
           <Stack.Screen name="RegisterAccountType" component={RegistrationAccountTypeController} />
           <Stack.Screen name="BusAccountPackages" component={BusAccountPackagesController} />
           <Stack.Screen name="ThanksRegistration" component={ThanksRegistrationController} />
-          <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} />
+          <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} /> 
           <Stack.Screen name="PolicyScreen" component={PolicyController} />
         </Stack.Navigator>
       </NavigationContainer>

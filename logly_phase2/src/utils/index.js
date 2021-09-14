@@ -5,41 +5,49 @@ import moment from "moment";
 import Snackbar from 'react-native-snackbar';
 import { MESSAGE_TYPES, ERROR_MESSAGES, TIME_FORMAT2 } from "../constants";
 import axios from 'axios';
-import zipCodes from "../helpers/zipcodes";
-
 
 class Util {
   keyExtractor = (item: Object, index: number) => index.toString();
-  isPlatformAndroid() {
+  static zipCode = {};
+  static isPlatformAndroid() {
     return Platform.OS === "android";
   }
-  isValidURL(url: "string") {
+  static isValidURL(url: "string") {
     const re = /^(http|https|fttp):\/\/|[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,6}(:[0-9]{1,5})?(\/.*)?$/;
     return re.test(url);
   }
-  isEmailValid(email: string) {
+  static isEmailValid(email: string) {
     const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     return re.test(email);
   }
-  isPasswordValid(password) {
-    return password.length >= 8;
+  static isPasswordValid(password) {
+    return /^\S{8,32}$/.test(password);//(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])
   }
-  isValidName(name) {
+  static isValidName(name) {
     return /^[a-zA-Z '.-]*$/.test(name);
   }
 
-  isValidUserName(name) {
+  static isValidUserName(name) {
     return /^[a-zA-Z0-9]+$/.test(name);
   }
 
-  async isValidZipCode(cityName, zipCode) {
-    let zipCodeCity = await zipCodes.filter(e => e.City === cityName);
-    if (zipCodeCity.length > 0) {
-      return zipCodes.filter(e => e.Name === zipCode)
-    }
+  static isLengthGreater(name) {
+    return name.length >= 3 ;
   }
 
-  isValidLink(str) {
+  static isValidPhone(name) {
+    return name.length === 10;
+  }
+
+  static isValidZipCode(cityName, zipCode, zipCodes) {
+    if (zipCodes.length > 0) {
+      let tmp = zipCodes.filter(e => e.zipcode === zipCode);
+      return tmp.length > 0 ? true : false
+    } else
+      return true
+  }
+
+  static isValidLink(str) {
     var pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
       '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
       '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
@@ -50,11 +58,11 @@ class Util {
 
   }
 
-  isLengthGraterThanZero(name) {
+  static isLengthGraterThanZero(name) {
     return name.length > 0;
   }
 
-  combineEmailValidate(email) {
+  static combineEmailValidate(email) {
     if (_.isEmpty(email))
       return this.capitalizeFirstLetter("email is required")
     else if (!this.isEmailValid(email)) {
@@ -62,7 +70,7 @@ class Util {
     }
   }
 
-  combinePasswordValidate(password) {
+  static combinePasswordValidate(password) {
     if (_.isEmpty(password))
       return this.capitalizeFirstLetter("password is required")
     else if (!this.isPasswordValid(password)) {
@@ -70,7 +78,7 @@ class Util {
     }
   }
 
-  combineNameValidate(name) {
+  static combineNameValidate(name) {
     if (_.isEmpty(name))
       return this.capitalizeFirstLetter("name is required")
     else if (!this.isValidName(name)) {
@@ -78,7 +86,7 @@ class Util {
     }
   }
 
-  combineUserNameValidate(name) {
+  static combineUserNameValidate(name) {
     if (_.isEmpty(name))
       return this.capitalizeFirstLetter("UserName is required")
     else if (!this.isValidUserName(name)) {
@@ -86,7 +94,7 @@ class Util {
     }
   }
 
-  combineGeneralValidate(name) {
+  static combineGeneralValidate(name) {
     if (_.isEmpty(name))
       return this.capitalizeFirstLetter("field is required")
     else if (!this.isValidName(name)) {
@@ -94,14 +102,14 @@ class Util {
     }
   }
 
-  topAlert(message, alertType = "success") {
+  static topAlert(message, alertType = "success") {
     Snackbar.show({
       text: message,
       duration: Snackbar.LENGTH_SHORT,
     });
   }
 
-  getErrorMsg(error) {
+  static getErrorMsg(error) {
     let msg = error.response?.data?.errors ? Array.isArray(error.response?.data?.errors) ?
       error.response?.data?.errors[0] : error.response?.data?.errors
       :
@@ -113,23 +121,23 @@ class Util {
     }, 1000);
   }
 
-  topAlertError(message, alertType = MESSAGE_TYPES.ERROR) {
+  static topAlertError(message, alertType = MESSAGE_TYPES.ERROR) {
     Snackbar.show({
       text: message,
       duration: Snackbar.LENGTH_SHORT,
     });
   }
 
-  capitalizeFirstLetter(string) {
+  static capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
   }
 
-  getFormattedDateTime = (date, format) => {
+  static getFormattedDateTime = (date, format) => {
     if (date) return moment(date).format(format);
     return "";
   };
 
-  getDateObjectFromString = (date, format) => {
+  static getDateObjectFromString = (date, format) => {
     if (date) return moment(date, format).toDate();
     return "";
   };
@@ -182,11 +190,11 @@ class Util {
   //     return final;
   //   }
 
-  isRequiredMessage(field) {
+  static isRequiredMessage(field) {
     this.topAlertError(`${this.capitalizeFirstLetter(field)} is required`);
   }
 
-  getTrimmedDataFromArray(data, length) {
+  static getTrimmedDataFromArray(data, length) {
     return data.slice(0, length);
   }
 
@@ -196,9 +204,9 @@ class Util {
   //     });
   //   };
 
-  getErrorText = err => ERROR_MESSAGES[err];
+  static getErrorText = err => ERROR_MESSAGES[err];
 
-  isSuccessResponse = response => {
+  static isSuccessResponse = response => {
     console.log("the response is:" + response.error);
     return (_.isNull(response.error))
   };
@@ -209,7 +217,7 @@ class Util {
   //     return "";
   //   };
 
-  removeSpaces(str) {
+  static removeSpaces(str) {
     return str.replace(/\s/g, "");
   }
 
@@ -226,4 +234,4 @@ class Util {
 }
 
 
-export default new Util();
+export default Util;

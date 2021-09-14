@@ -21,7 +21,7 @@ class LoginController extends Component {
         super(props);
         this.state = {
             email: '',//'osama@livewirelabs.co',
-            password: '',// 'Test12345',
+            password: '',
             userEmail: true,
             userPassword: true,
             isCheckOnTerms: true
@@ -63,12 +63,16 @@ class LoginController extends Component {
 
             this.props.userLoginRequest(this.state).then((response) => {
 
+                console.log("login-->", response);
+
                 if (response.status === 200) {
                     alert("Login Successfully");
                 }
                 else if (response.status === 400) {
-                    if (DataHandler.saveUserObject(JSON.stringify(response.userData))) {
-                        this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: response.userData.packageType, email: response.userData.email });
+                    if (!response.message.startsWith("Email")) {
+                        if (DataHandler.saveUserObject(JSON.stringify(response.userData))) {
+                            this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: response.userData.packageType, email: response.userData.email });
+                        }
                     }
                 }
             });

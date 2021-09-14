@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable semi */
-import { USERLOGIN, USERSIGNUP, GET_STATES, GET_CITIES, GET_SUBS, VERIFY_CODE } from './../actions/ActionTypes';
+import { USERLOGIN, USERSIGNUP, GET_STATES, GET_CITIES, GET_SUBS, VERIFY_CODE, GET_ZIPCODES } from './../actions/ActionTypes';
 
 // USERSIGNUP, USERUPDATE, SOCIAL_LOGIN, EDIT_PRO_PIC, ADDLOCATION, SAVE_PROFILE } 
 
@@ -16,7 +16,8 @@ const initialState = {
   stateData: {},
   cityData: {},
   subsData: {},
-  verifyData: {}
+  verifyData: {},
+  zipCodeData:{}
 };
 
 export default (state = initialState, actions) => {
@@ -46,6 +47,9 @@ export default (state = initialState, actions) => {
 
     case VERIFY_CODE:
       return ({ ...state, verifyData: actions })
+
+    case GET_ZIPCODES:
+      return ({ ...state, zipCodeData: actions })
 
     // case SOCIAL_LOGIN:
     //   return ({ ...state, socialData: actions })

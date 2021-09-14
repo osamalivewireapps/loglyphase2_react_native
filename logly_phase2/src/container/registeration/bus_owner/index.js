@@ -6,7 +6,7 @@ import { Keyboard } from 'react-native';
 import { SafeAreaView, Text, Image, Dimensions, View } from 'react-native';
 import utils from '../../../utils';
 import DataHandler from '../../../utils/DataHandler';
-import { Colors, Fonts, Images } from '../../theme';
+import { Colors, Fonts, Images } from '../../../theme';
 import BusinessOwnerView from './bus_owner_view';
 import { userSignUpRequest } from './../../../actions/SignUpModule';
 import { connect } from 'react-redux';
@@ -60,6 +60,7 @@ class BusinessOwnerController extends Component {
             this.props.userSignUpRequest(this.userObject).then((response) => {
                 if (DataHandler.saveUserObject(JSON.stringify(response.payload))) {
                     this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: response.payload.packageType, email: response.payload.email });
+                    this.setState({ fileName: '', image:''})
                 }
             });
 
@@ -67,7 +68,7 @@ class BusinessOwnerController extends Component {
     }
 
     setBusName(txt) {
-        this.setState({ busName: txt, isBusName: utils.isValidUserName(txt) });
+        this.setState({ busName: txt, isBusName: utils.isLengthGreater(txt) });
     }
 
     setEmpQuantity(txt) {
@@ -118,7 +119,7 @@ class BusinessOwnerController extends Component {
 
         Keyboard.dismiss();
 
-        if (!utils.isValidUserName(busName)) {
+        if (!utils.isLengthGreater(busName)) {
 
             utils.topAlertError("Business Name is required");
 

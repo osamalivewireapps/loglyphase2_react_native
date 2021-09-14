@@ -2,7 +2,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import { USERSIGNUP, GET_STATES, GET_CITIES, GET_SUBS, VERIFY_CODE } from './ActionTypes';
+import { USERSIGNUP, GET_STATES, GET_CITIES, GET_SUBS, VERIFY_CODE, GET_ZIPCODES } from './ActionTypes';
 import axios from "axios";
 import { baseUrl } from "../webconfig/globalConfig";
 import { EnableLoader, DisableLoader } from "./LoaderProgress";
@@ -10,6 +10,11 @@ import utils from '../utils';
 import { Platform } from 'react-native';
 
 const timeOut = 500;
+
+export const hideLoaderOnly = () => (dispatch) => {
+    dispatch(DisableLoader());
+}
+
 export const userSignUpRequest = (data1) => (dispatch) => {
 
     console.log("fields-->", data1);
@@ -35,8 +40,8 @@ export const userSignUpRequest = (data1) => (dispatch) => {
         }
 
         const formData = new FormData();
-        
-        if (data1.image){
+
+        if (data1.image) {
             formData.append('files', {
                 uri: Platform.OS === 'android' ? data1.image : data1.image,
                 type: 'image/*',
@@ -44,15 +49,16 @@ export const userSignUpRequest = (data1) => (dispatch) => {
             });
         }
         for (const key in userSignUpData) {
-            formData.append(key,userSignUpData[key]);
+            formData.append(key, userSignUpData[key]);
         }
 
         console.log("formdata-->", formData);
 
         axios.post(`${baseUrl}/user/breeder/register`,
-            
-               formData
-            
+
+            formData,
+            { timeout: 1000 * 30 },
+
         )
             .then(response => {
 
@@ -302,6 +308,36 @@ export const getCityRequest = (stateId) => dispatch => {
                 if (response.data.status === 200) {
                     dispatch({ type: GET_CITIES, payload: response.data });
                     resolve({ type: GET_CITIES, payload: response.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            })
+    });
+};
+
+export const getZipCodeByCityRequest = (cityId) => dispatch => {
+
+    console.log('url-->', `${baseUrl}/zipcode/city/` + cityId);
+    dispatch(EnableLoader());
+    return new Promise((resolve) => {
+        axios.
+            get(`${baseUrl}/zipcode/city/` + cityId)
+            .then(response => {
+                console.log('url-->', response.data.status);
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    dispatch({ type: GET_ZIPCODES, payload: response.data });
+                    resolve({ type: GET_ZIPCODES, payload: response.data });
                 }
                 else {
                     setTimeout(() => {

@@ -6,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import RegistrationView from './registrationview';
-import { emailCheckRequest, getStateRequest, getCityRequest } from '../../../actions/SignUpModule';
+import { emailCheckRequest, getStateRequest, getCityRequest, getZipCodeByCityRequest } from '../../../actions/SignUpModule';
 import { connect } from 'react-redux';
 import utils from '../../../utils';
 import { Keyboard } from 'react-native';
@@ -18,8 +18,8 @@ class RegistrationController extends Component {
         super(props);
         this.state = {
             email: '',//'osama@livewirelabs.co',
-            password:'',//'Test12345',
-            phoneNo:'',//'12345',
+            password: '',//'Test12345',
+            phoneNo: '',//'12345',
             state: '',
             city: "",
             Zipcode: '',
@@ -28,7 +28,7 @@ class RegistrationController extends Component {
             stateId: -1,
             cityId: -1,
 
-            userName:'',// 'test',
+            userName: '',// 'test',
             userMsg: true,
             userEmail: true,
             userPhone: true,
@@ -48,10 +48,10 @@ class RegistrationController extends Component {
     goingBack(e) {
         this.props.navigation.pop();
     }
-    
 
-    openPolicyScreen(txt){
-        this.props.navigation.navigate('PolicyScreen',{header:txt});
+
+    openPolicyScreen(txt) {
+        this.props.navigation.navigate('PolicyScreen', { header: txt });
     }
 
     openRegisterAccount() {
@@ -70,13 +70,13 @@ class RegistrationController extends Component {
                 zipcode: this.state.Zipcode
             })
 
-             this.props.emailCheckRequest(this.state).then(() => {
+            this.props.emailCheckRequest(this.state).then(() => {
 
-                 if (DataHandler.saveUserObject(userObject)) {
-                this.props.navigation.navigate('RegisterAccountType');
-            }
+                if (DataHandler.saveUserObject(userObject)) {
+                    this.props.navigation.navigate('RegisterAccountType');
+                }
             });
-           
+
         }
     }
 
@@ -101,6 +101,7 @@ class RegistrationController extends Component {
             cityId: txt.cityId,
             selectCity: utils.isValidUserName(txt.name)
         });
+        this.props.getZipCodeByCityRequest(txt.name);
     }
 
     setUserName(txt) {
@@ -112,11 +113,11 @@ class RegistrationController extends Component {
     }
 
     setPhoneNo(txt) {
-        this.setState({ phoneNo: txt, userPhone: utils.isValidUserName(txt) });
+        this.setState({ phoneNo: txt, userPhone: utils.isValidPhone(txt) });
     }
 
     setZipCode(txt) {
-        this.setState({ Zipcode: txt, userZipCode: utils.isValidZipCode(this.state.city,txt) });
+        this.setState({ Zipcode: txt, userZipCode: utils.isValidZipCode(this.state.city, txt, this.props.zipCodesData?.payload.data) });
     }
 
     setPassword(txt) {
@@ -171,7 +172,9 @@ class RegistrationController extends Component {
                 checkTerms={this.state.isCheckOnTerms}
                 setCheckTerms={(e) => this.setCheckTerms(e)}
 
-                openPolicyScreen = {(e)=> this.openPolicyScreen(e)}
+                openPolicyScreen={(e) => this.openPolicyScreen(e)}
+                zipCodes={this?this.props.zipCodesData.payload?.data:[]}
+
 
 
 
@@ -204,7 +207,7 @@ class RegistrationController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidUserName(phoneNo)) {
+        else if (!utils.isValidPhone(phoneNo)) {
 
             utils.topAlertError("phone is required");
 
@@ -231,7 +234,7 @@ class RegistrationController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidZipCode(this.state.city, Zipcode)) {
+        else if (!utils.isValidZipCode(this.state.city, Zipcode, this.props.zipCodesData?.payload.data)) {
 
             utils.topAlertError("zipcode is required");
 
@@ -267,14 +270,16 @@ const mapStateToProps = ({ user }) => {
         signUpObject: user.signUpData,
         dataState: user.stateData,
         dataCity: user.cityData,
+        zipCodesData:user.zipCodeData,
     };
 };
 
 const mapDispatchToProps = dispatch => ({
     getStateRequest: () => dispatch(getStateRequest()),
     emailCheckRequest: (data) => dispatch(emailCheckRequest(data)),
-    getCityRequest: (data) => dispatch(getCityRequest(data))
-    
+    getCityRequest: (data) => dispatch(getCityRequest(data)),
+    getZipCodeByCityRequest: (data) => dispatch(getZipCodeByCityRequest(data))
+
 });
 
 

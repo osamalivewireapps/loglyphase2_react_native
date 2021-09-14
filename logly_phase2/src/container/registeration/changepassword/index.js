@@ -6,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
 import { SafeAreaView, Text, Image, Dimensions, View, Alert } from 'react-native';
-import { Colors, Fonts, Images } from '../../theme';
+import { Colors, Fonts, Images } from '../../../theme';
 import ChangePasswordView from './changepasswordview';
 import { userPasswordResetCode } from '../../../actions/ForgotPassword'
 import { connect } from 'react-redux';
