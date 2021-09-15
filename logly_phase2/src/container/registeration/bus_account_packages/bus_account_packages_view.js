@@ -10,6 +10,7 @@ import { Colors, Fonts, Icons } from '../../../theme';
 import { ScrollView } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import CollapsibleSection from '../../../components/CollapsibleSection';
+import { INDIVIDUAL } from '../../../constants';
 
 function BusAccountPackagesView(props) {
 
@@ -36,43 +37,58 @@ function BusAccountPackagesView(props) {
                     <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
                     <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{packageId}</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{packageId === INDIVIDUAL ? "Pet Lover" : packageId}</Text>
+                <Text style={{ ...styles.generalTxt, marginTop: 10, fontSize: 16 }}>We provide Premium Business tools needed to run and scale your business, while saving time, money and building incredible trust with your clients
+                </Text>
             </View>
-            <ScrollView>
-                <View style={{
-                    flex: 8, marginStart: 20,
-                    marginEnd: 20,
-                    marginTop: 15
+
+
+            {packageId !== INDIVIDUAL ? (
+                <ScrollView>
+                    <View style={{
+                        flex: 8, marginStart: 20,
+                        marginEnd: 20,
+                        marginTop: 15
+                    }}>
+
+
+                        {/* {getAccountView(listAccountType)} */}
+                        {renderExpandableList(packagesType, packagesAmount, props)}
+
+                        <TouchableOpacity
+                            onPress={() => btnConfirmPress()}
+                            style={{
+                                backgroundColor: Colors.appBgColor, borderRadius: 30,
+                                flex: 0, marginTop: 25,
+                                marginStart: 10, marginEnd: 10
+                            }}>
+                            <Text style={{
+                                fontSize: 22, textAlign: 'center', padding: 10,
+                                paddingStart: 117, paddingEnd: 117,
+                                paddingTop: 15, paddingBottom: 15,
+                                ...styles.generalTxt
+                            }}>{btnTxt}</Text>
+                        </TouchableOpacity>
+                    </View>
+                </ScrollView>) :
+                (<View style={{
+                    height: Dimensions.get('window').height/2,
+                    justifyContent:'center'
+
                 }}>
-
-                    {/* {getAccountView(listAccountType)} */}
-                    {renderExpandableList(packagesType, packagesAmount, props)}
-
-                    <TouchableOpacity
-                        onPress={() => btnConfirmPress()}
-                        style={{
-                            backgroundColor: Colors.appBgColor, borderRadius: 30,
-                            flex: 0, marginTop: 25,
-                            marginStart: 10, marginEnd: 10
-                        }}>
-                        <Text style={{
-                            fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingStart: 117, paddingEnd: 117,
-                            paddingTop: 15, paddingBottom: 15,
-                            ...styles.generalTxt
-                        }}>{btnTxt}</Text>
-                    </TouchableOpacity>
-
-
+                    <Text style={{ ...styles.generalTxt, color: 'black',textAlign: 'center',fontSize:30,fontFamily:Fonts.type.bold}}>{getFreeTxt()}</Text>
                 </View>
+                )}
 
-            </ScrollView>
+
         </View>
     );
 }
 
 
+function getFreeTxt(){
+    return "This is a Free\nSubscription.";
+}
 
 function renderExpandableList(packagesType, packagesAmount, props) {
     return (

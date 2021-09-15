@@ -68,7 +68,8 @@ class RegistrationAccountTypeController extends Component {
     }
 
     openBusAccountPackages(e) {
-        this.props.navigation.navigate('BusAccountPackages', { showBack: true, packageId: this.state.accountType[e].packageType });
+        //if (this.state.accountType[e].packageType !== INDIVIDUAL)
+            this.props.navigation.navigate('BusAccountPackages', { showBack: true, packageId: this.state.accountType[e].packageType });
     }
 
     openBusOwnerScreen() {
@@ -86,8 +87,8 @@ class RegistrationAccountTypeController extends Component {
 
                 //CALL REGISTRATION API..
                 this.setCurrentAction(USERSIGNUP);
-                this.props.userSignUpRequest(this.userObject).then(()=>{
-                    this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType, email: this.userObject.email  });
+                this.props.userSignUpRequest(this.userObject).then(() => {
+                    this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: this.state.accountType[this.state.accountTypeSelection.isSelectedIndex].packageType, email: this.userObject.email });
                 });
             }
 

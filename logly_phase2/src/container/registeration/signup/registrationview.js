@@ -20,7 +20,7 @@ import { POLICY, TERMS } from '../../../constants';
 import KeyboardShift from '../../../components/KeyboardShift';
 
 
-const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0;
+const keyboardVerticalOffset = Platform.OS === 'ios' ? 30 : 0;
 
 function RegistrationView(props) {
 
@@ -34,7 +34,8 @@ function RegistrationView(props) {
         setPhone, validateState, validateCity,
         enterZipCode, validateZipCode, setZipCode,
         enterPassword, validatePassword, setPassword,
-        checkTerms, setCheckTerms, openPolicyScreen, zipCodes
+        checkTerms, setCheckTerms, openPolicyScreen, zipCodes, chooseCity,
+        chooseState
 
 
     } = props;
@@ -64,7 +65,7 @@ function RegistrationView(props) {
         if (isVisible && arrStates) {
 
             setFilterArr(arrStates.filter((e) => {
-                return e.name.includes(userState)
+                return (e.name.toLowerCase().startsWith(userState.toLowerCase()) || e.name.toLowerCase().includes(userState.toLowerCase()))
             }))
         }
     }, [userStateLocation])
@@ -73,7 +74,7 @@ function RegistrationView(props) {
         if (isCityVisible && arrCity) {
 
             setFilterCityArr(arrCity.filter((e) => {
-                return e.name.includes(userCity)
+                return (e.name.toLowerCase().startsWith(userCity.toLowerCase()) || e.name.toLowerCase().includes(userCity.toLowerCase()))
             }))
         }
     }, [userCityLocation])
@@ -117,13 +118,10 @@ function RegistrationView(props) {
             <ScrollView
                 ref={scroll}
                 keyboardShouldPersistTaps='handled'
-
-
             >
-                <KeyboardAvoidingView
-                    behavior={Platform.OS === "ios" ? "padding" : null}
-                    keyboardVerticalOffset={keyboardVerticalOffset}
-                    enabled={true}
+                <View style={{height:Dimensions.get("screen").height+100}}
+                    // behavior={Platform.OS === "ios" ? "position" : null}
+                    // keyboardVerticalOffset={keyboardVerticalOffset}
                 >
                     <View style={{
                         flex: 8, marginStart: 30, marginTop: 15,
@@ -142,7 +140,9 @@ function RegistrationView(props) {
                             <TextInput placeholder="Name" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
+                                paddingEnd: 20,
                             }}
+                                maxLength={75}
                                 autoCapitalize='none'
                                 keyboardType="default"
                                 onChangeText={(e) => setUserName(e)}
@@ -181,14 +181,14 @@ function RegistrationView(props) {
                         }}>
 
                             <Image source={Icons.icon_phone} />
-                            <TextInput placeholder="Phone No" style={{
+                            <TextInput placeholder="Cell Phone" style={{
                                 ...styles.styleTextInput,
                                 marginStart: 10,
                                 flex: 1,
                                 marginEnd: 10,
 
                             }}
-                                maxLength={10}
+                                maxLength={12}
                                 autoCapitalize='none'
                                 keyboardType="number-pad"
                                 onChangeText={(e) => setPhone(e)}
@@ -265,7 +265,7 @@ function RegistrationView(props) {
                                     return (
                                         <TouchableOpacity onPress={() => {
                                             Keyboard.dismiss()
-                                            userStateLocation({ name: item.item.name, stateId: item.item.id });
+                                            chooseState({ name: item.item.name, stateId: item.item.id });
                                             setIsVisible(false)
 
                                         }}>
@@ -360,7 +360,7 @@ function RegistrationView(props) {
                                     return (
                                         <TouchableOpacity onPress={() => {
                                             Keyboard.dismiss();
-                                            userCityLocation({ name: item.item.name, cityId: item.item.id });
+                                            chooseCity({ name: item.item.name, cityId: item.item.id });
                                             setIsCityVisible(false)
                                             setIsZipVisible(false)
 
@@ -422,9 +422,9 @@ function RegistrationView(props) {
                                     ...styles.styleTextInput,
                                     marginStart: 10,
                                     flex: 8,
-                                    marginEnd: 10
-
+                                    marginEnd: 10,
                                 }}
+                                maxLength={5}
                                 autoCapitalize='none'
                                 keyboardType="number-pad"
                                 value={enterZipCode}
@@ -502,7 +502,7 @@ function RegistrationView(props) {
                                 onChangeText={(e) => {
                                     setPassword(e)
                                 }}
-
+                                maxLength={30}
 
 
                             />
@@ -572,7 +572,7 @@ function RegistrationView(props) {
 
                     </View>
 
-                </KeyboardAvoidingView>
+                </View>
             </ScrollView>
 
         </View>

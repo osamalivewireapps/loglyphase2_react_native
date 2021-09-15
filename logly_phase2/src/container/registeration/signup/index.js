@@ -1,3 +1,4 @@
+/* eslint-disable keyword-spacing */
 /* eslint-disable react/no-did-update-set-state */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
@@ -11,6 +12,7 @@ import { connect } from 'react-redux';
 import utils from '../../../utils';
 import { Keyboard } from 'react-native';
 import DataHandler from '../../../utils/DataHandler';
+import _ from 'lodash'
 
 class RegistrationController extends Component {
 
@@ -19,7 +21,7 @@ class RegistrationController extends Component {
         this.state = {
             email: '',//'osama@livewirelabs.co',
             password: '',//'Test12345',
-            phoneNo: '',//'12345',
+            phoneNo: '',//,'1234567890',
             state: '',
             city: "",
             Zipcode: '',
@@ -86,34 +88,64 @@ class RegistrationController extends Component {
             userState: txt.name,
             userCity: "",
             stateId: txt.stateId,
-            selectState: utils.isValidUserName(txt.name),
+            selectState: utils.isValidName(txt.name),
         });
-        if (txt.stateId !== -1) {
-            if (this.state.userState !== txt.name) {
-                this.props.getCityRequest(txt.stateId);
-            }
-        }
     }
 
     setCityLocation(txt) {
         this.setState({
             userCity: txt.name,
             cityId: txt.cityId,
-            selectCity: utils.isValidUserName(txt.name)
+            selectCity: utils.isValidName(txt.name)
+        });
+    }
+
+    chooseCity(txt) {
+        this.setState({
+            userCity: txt.name,
+            cityId: txt.cityId,
+            selectCity: utils.isValidName(txt.name),
+            Zipcode:"",
         });
         this.props.getZipCodeByCityRequest(txt.name);
     }
 
+    chooseState(txt) {
+        this.setState({
+            userState: txt.name,
+            userCity: "",
+            stateId: txt.stateId,
+            selectState: utils.isValidName(txt.name),
+            Zipcode:''
+        });
+        this.props.getCityRequest(txt.stateId);
+    }
+
     setUserName(txt) {
-        this.setState({ userName: txt, userMsg: utils.isValidUserName(txt) });
+        this.setState({ userName: txt, userMsg: utils.isValidName(txt) });
     }
 
     setEmail(txt) {
         this.setState({ email: txt, userEmail: utils.isEmailValid(txt) });
     }
 
-    setPhoneNo(txt) {
-        this.setState({ phoneNo: txt, userPhone: utils.isValidPhone(txt) });
+    setPhoneNo(text) {
+        let tmp = "";
+
+        if (text.length > this.state.phoneNo.length) {
+            if (text.length > 3 && text.length <= 4 && !text.includes("-")) {
+                tmp = text.substr(0, 3) + "-" + text.substr(3, text.length);
+            }
+            else if (text.length > 7 && text.length <= 8) {
+                tmp = text.substr(0, 7) + "-" + text.substr(7, text.length);
+            }
+            else {
+                tmp = text
+            }
+        } else {
+            tmp = text;
+        }
+        this.setState({ phoneNo: tmp, userPhone: utils.isValidPhone(tmp) });
     }
 
     setZipCode(txt) {
@@ -139,11 +171,13 @@ class RegistrationController extends Component {
                 userState={this.state.userState}
                 userStateLocation={(e) => this.setStateLocation(e)}
                 validateState={this.state.selectState}
+                chooseState={(e) => { this.chooseState(e) }}
 
                 arrCity={this.props.dataCity.payload?.data}
                 userCityLocation={(e) => this.setCityLocation(e)}
                 userCity={this.state.userCity}
                 validateCity={this.state.selectCity}
+                chooseCity={(e) => { this.chooseCity(e) }}
 
                 openRegisterAccount={(e) => this.openRegisterAccount(e)}
                 backScreen={(e) => { this.goingBack(e) }}
@@ -173,7 +207,7 @@ class RegistrationController extends Component {
                 setCheckTerms={(e) => this.setCheckTerms(e)}
 
                 openPolicyScreen={(e) => this.openPolicyScreen(e)}
-                zipCodes={this?this.props.zipCodesData.payload?.data:[]}
+                zipCodes={this ? this.props.zipCodesData.payload?.data : []}
 
 
 
@@ -189,7 +223,7 @@ class RegistrationController extends Component {
 
         Keyboard.dismiss();
 
-        if (!utils.isValidUserName(userName)) {
+        if (!utils.isValidName(userName)) {
 
             utils.topAlertError("name is required");
 
@@ -216,7 +250,7 @@ class RegistrationController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidUserName(userState)) {
+        else if (!utils.isValidName(userState)) {
 
             utils.topAlertError("state is required");
 
@@ -225,7 +259,7 @@ class RegistrationController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidUserName(userCity)) {
+        else if (!utils.isValidName(userCity)) {
 
             utils.topAlertError("city is required");
 
@@ -234,7 +268,7 @@ class RegistrationController extends Component {
             });
             return false;
         }
-        else if (!utils.isValidZipCode(this.state.city, Zipcode, this.props.zipCodesData?.payload.data)) {
+        else if (!utils.isValidZipCode(this.state.city, Zipcode, (_.isEmpty(this.props.zipCodesData)?[]:this.props.zipCodesData.payload.data))) {
 
             utils.topAlertError("zipcode is required");
 
@@ -270,7 +304,7 @@ const mapStateToProps = ({ user }) => {
         signUpObject: user.signUpData,
         dataState: user.stateData,
         dataCity: user.cityData,
-        zipCodesData:user.zipCodeData,
+        zipCodesData: user.zipCodeData,
     };
 };
 

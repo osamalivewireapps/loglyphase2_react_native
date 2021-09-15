@@ -55,6 +55,7 @@ function LoginView(props) {
                     <TextInput placeholder="Email" style={{
                         ...styles.styleTextInput,
                         marginStart: 10,
+                        paddingEnd:20
 
                     }}
                         autoCapitalize='none'
@@ -73,7 +74,7 @@ function LoginView(props) {
                     <InputPasswordToggle
                         inputStyle={{
                             ...styles.styleTextInput,
-                            marginStart: 10
+                            marginStart: 10,
                         }}
                         autoCapitalize='none'
                         placeholder="Password"
@@ -144,8 +145,8 @@ function LoginView(props) {
                 </View>
                 <View style={{
                     flex: 1, alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'row',
-                    marginTop:10
-          
+                    marginTop: 10
+
                 }}>
                     {/* <Text
                         numberOfLines={1}
@@ -160,24 +161,24 @@ function LoginView(props) {
 
                     >Please look into </Text>
                     <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(TERMS)}>
-                    <Text
-                        style={{
-                            ...styles.generalTxt, fontSize: 14,
-                            textDecorationLine: 'underline',
-                            color: Colors.appBgColor,
-                        }}>Terms of Use</Text>
+                        <Text
+                            style={{
+                                ...styles.generalTxt, fontSize: 14,
+                                textDecorationLine: 'underline',
+                                color: Colors.appBgColor,
+                            }}>Terms of Use</Text>
                     </TouchableOpacity>
                     <Text style={{
                         ...styles.generalTxt, fontSize: 14, color: 'black',
                         textAlign: 'center'
                     }}> and </Text>
                     <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(POLICY)}>
-                    <Text
-                        style={{
-                            ...styles.generalTxt, fontSize: 14,
-                            textDecorationLine: 'underline',
-                            color: Colors.appBgColor
-                        }}>Privacy Policy</Text>
+                        <Text
+                            style={{
+                                ...styles.generalTxt, fontSize: 14,
+                                textDecorationLine: 'underline',
+                                color: Colors.appBgColor
+                            }}>Privacy Policy</Text>
                     </TouchableOpacity>
                     {/* </Text> */}
 
@@ -212,7 +213,9 @@ const styles = StyleSheet.create({
     styleTextInput: {
         fontFamily: Fonts.type.base,
         fontSize: 16,
-        color: '#585858'
+        color: '#585858',
+        width: '100%'
+
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor, borderRadius: 30

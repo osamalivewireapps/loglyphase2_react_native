@@ -69,6 +69,7 @@ function ChangePasswordView(props) {
                                 autoCapitalize='none'
                                 placeholder="New Password"
                                 value={password}
+                                maxLength={30}
                                 onChangeText={(e)=>setPassword(e)} />
                         </View>
 
@@ -83,6 +84,7 @@ function ChangePasswordView(props) {
                                     ...styles.styleTextInput,
                                     marginStart: 10
                                 }}
+                                maxLength={30}
                                 autoCapitalize='none'
                                 placeholder="Confirm Password"
                                 value={confirmPassword}

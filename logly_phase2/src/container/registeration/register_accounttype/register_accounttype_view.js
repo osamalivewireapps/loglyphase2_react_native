@@ -107,7 +107,7 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                             fontSize: 1,
                             flex: 9
 
-                        }}>{data.type}</AutoSizeText>
+                        }}>{data.type === "Individual"?"Pet Lover":data.type}</AutoSizeText>
 
 
                     {accountTypeSelection.isSelectedIndex === index ?

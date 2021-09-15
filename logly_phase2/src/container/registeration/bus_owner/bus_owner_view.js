@@ -6,12 +6,12 @@
 /* eslint-disable no-undef */
 /* eslint-disable quotes */
 import React, { Component, useState } from 'react';
-import { KeyboardAvoidingView, TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput, Platform } from 'react-native';
+import { KeyboardAvoidingView, TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput, Platform, Modal } from 'react-native';
 import InputPasswordToggle from '../../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons } from '../../../theme';
 import CheckBox from 'react-native-check-box';
 import { ScrollView } from 'react-native';
-import { marginBottom, zIndex } from 'styled-system';
+import { alignSelf, marginBottom, zIndex } from 'styled-system';
 import { CHARITY_ID } from '../../../constants';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { Keyboard } from 'react-native';
@@ -19,6 +19,8 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 
 
 function BusinessOwnerView(props) {
+
+    const [modalVisible, setModalVisible] = useState(false);
 
     const arrEmpStength = [
         '1-10',
@@ -33,7 +35,7 @@ function BusinessOwnerView(props) {
         strengthEmp, validateBusEmp, setEmpStrength,
         urlBus, validateBusURL, setBusUrl,
         backScreen, openRegisterAccount, accountType, openDocumetFolder,
-        fileName, deleteFile } = props;
+        fileName, deleteFile, validatePhone, setPhone, enterPhone } = props;
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -64,9 +66,9 @@ function BusinessOwnerView(props) {
                     </View>
                     <View
                         style={{
-                            borderTopLeftRadius: Platform.OS === 'ios' ?20:30,
-                            borderTopRightRadius: Platform.OS === 'ios' ?20:30,
-                            marginTop: Platform.OS==='ios'?-10:-25,
+                            borderTopLeftRadius: Platform.OS === 'ios' ? 20 : 30,
+                            borderTopRightRadius: Platform.OS === 'ios' ? 20 : 30,
+                            marginTop: Platform.OS === 'ios' ? -10 : -25,
                             backgroundColor: 'white',
                             paddingStart: 30,
                             paddingEnd: 30,
@@ -105,6 +107,32 @@ function BusinessOwnerView(props) {
                                     keyboardType="default"
                                     onChangeText={(e) => setBusName(e)}
                                     value={nameBus} />
+                            </View>
+
+                            <Text style={{
+                                ...styles.generalTxt, color: 'black', fontSize: 15,
+                                marginBottom: 5, marginStart: 5,marginTop: 25,
+                            }}>Business Phone</Text>
+
+                            <View style={{
+                                ...styles.boxcontainer,
+                                shadowColor: validatePhone ? 'black' : 'darkred',
+                                shadowOpacity: validatePhone ? 0.25 : 1,
+                                flexDirection: 'row', padding: 15, paddingTop: 0,
+                                paddingBottom: 0, alignItems: 'center'
+                            }}>
+
+                                <TextInput style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    marginEnd: 10,
+
+                                }}
+                                    maxLength={12}
+                                    autoCapitalize='none'
+                                    keyboardType="number-pad"
+                                    onChangeText={(e) => setPhone(e)}
+                                    value={enterPhone} />
                             </View>
 
                             <Text style={{
@@ -178,12 +206,18 @@ function BusinessOwnerView(props) {
                                     value={urlBus} />
                             </View>
 
-                            <Text style={{
-                                ...styles.generalTxt, color: 'black', fontSize: 16,
-                                marginStart: 5, marginTop: 20, fontFamily: Fonts.type.medium,
-                            }}>{accountType.toLowerCase().startsWith("charity") ? "Please Attach the 501-C form." : "Photo ID"}
-                            </Text>
+                            <TouchableOpacity style={{ marginStart: 5,flexDirection: 'row',marginTop: 20}}
+                                onPress={() => { setModalVisible(!modalVisible);}}
+                            >
+                                
 
+                                <Text style={{
+                                    ...styles.generalTxt, color: 'black', fontSize: 16,
+                                    marginStart: 5, fontFamily: Fonts.type.base,marginEnd:5
+                                }}>{accountType.toLowerCase().startsWith("charity") ? "Please Attach the 501-C form." : "Verify Identity"}
+                                </Text>
+                                <Image source={Icons.icon_info} style={{ alignSelf: 'center' }} />
+                            </TouchableOpacity>
                             {fileName ?
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
 
@@ -265,8 +299,37 @@ function BusinessOwnerView(props) {
 
                 </KeyboardAvoidingView>
             </ScrollView>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}
+                
+            >
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <TouchableOpacity
+                            style={{ alignSelf: 'flex-end', position: 'absolute', top: 15, right: 15 }}
+                            onPress={() => setModalVisible(!modalVisible)}
+                        >
+                            <Image source={Icons.icon_close} style={{height:10,width:10}} />
+                        </TouchableOpacity>
+                        <Text style={{ ...styles.generalTxt, color: 'black', fontSize: 16, textAlign: 'center' }}>{getInfoTxt(accountType)}</Text>
+                        
+                    </View>
+                </View>
+            </Modal>
         </View>
     );
+}
+
+function getInfoTxt(accountType){
+    if (accountType.toLowerCase().startsWith("charity"))
+    return "501-C form must be uploaded (now or later) to verify Non-Profit status and get Logly Software for Free. This will also qualify your Non-Profit for other Logly Non-Profit Platform benefits."
+    else
+        return "To help fight fraud and Scammers, we request Business Owner to hold their Driver's License next to their face, take and upload picture to verify identity.\nBy doing this step your business will automatically get a verified by Logly badge.  If you decide not to do this step, your business will be subject to other verification steps by Logly before your business is deemed verified."
 }
 
 const styles = StyleSheet.create({
@@ -305,6 +368,44 @@ const styles = StyleSheet.create({
         paddingEnd: 5,
         borderRadius: 30,
         backgroundColor: 'white',
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: 22,
+        backgroundColor: 'rgba(0,0,0,0.5)'
+    },
+    modalView: {
+        width: Dimensions.get("screen").width-50,
+        margin: 10,
+        borderRadius: 20,
+        backgroundColor: 'white',
+        padding: 30,
+        // alignItems: "center",
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 4,
+        elevation: 5
+    },
+    button: {
+        borderRadius: 20,
+        padding: 10,
+        elevation: 2
+    },
+    buttonOpen: {
+        backgroundColor: "#F194FF",
+    },
+    buttonClose: {
+        backgroundColor: "#2196F3",
+    },
+    modalText: {
+        marginBottom: 15,
+        textAlign: "center"
     }
 });
 

@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import _ from "lodash";
 import { Platform, Linking, Alert } from "react-native";
@@ -21,10 +22,13 @@ class Util {
     return re.test(email);
   }
   static isPasswordValid(password) {
-    return /^\S{8,32}$/.test(password);//(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])
+    return /^\S{8,30}$/.test(password);//(?=.*[A-Z])(?=.*[0-9])(?=.*[a-z])
   }
   static isValidName(name) {
-    return /^[a-zA-Z '.-]*$/.test(name);
+    if (name.length >= 3)
+      return /^[a-zA-Z0-9 ]*$/.test(name);
+    else
+      return false
   }
 
   static isValidUserName(name) {
@@ -32,10 +36,11 @@ class Util {
   }
 
   static isLengthGreater(name) {
-    return name.length >= 3 ;
+    return name.length >= 3;
   }
 
   static isValidPhone(name) {
+    name = name.replaceAll("-", "");
     return name.length === 10;
   }
 

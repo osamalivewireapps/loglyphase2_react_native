@@ -46,7 +46,7 @@ function VerificationCodeView(props) {
                     fontSize: 28, textAlign: 'center', padding: 10,
                     paddingTop: 25, paddingBottom: 25,
                     fontFamily: Fonts.type.bold, color: 'black'
-                }}>Enter the Verification Code</Text>
+                }}>Enter Verification Code</Text>
 
                 <Text style={{
                     ...styles.generalTxt,
