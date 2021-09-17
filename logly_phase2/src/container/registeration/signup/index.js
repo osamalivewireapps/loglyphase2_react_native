@@ -87,16 +87,16 @@ class RegistrationController extends Component {
         this.setState({
             userState: txt.name,
             userCity: "",
-            stateId: txt.stateId,
-            selectState: utils.isValidName(txt.name),
+            stateId: -1,//txt.stateId,
+            selectState: utils.isLengthGreaterZero(txt.name),
         });
     }
 
     setCityLocation(txt) {
         this.setState({
             userCity: txt.name,
-            cityId: txt.cityId,
-            selectCity: utils.isValidName(txt.name)
+            cityId: -1,//txt.cityId,
+            selectCity: utils.isLengthGreaterZero(txt.name)
         });
     }
 
@@ -104,7 +104,7 @@ class RegistrationController extends Component {
         this.setState({
             userCity: txt.name,
             cityId: txt.cityId,
-            selectCity: utils.isValidName(txt.name),
+            selectCity: utils.isLengthGreaterZero(txt.name),
             Zipcode:"",
         });
         this.props.getZipCodeByCityRequest(txt.name);
@@ -115,7 +115,8 @@ class RegistrationController extends Component {
             userState: txt.name,
             userCity: "",
             stateId: txt.stateId,
-            selectState: utils.isValidName(txt.name),
+            cityId:-1,
+            selectState: utils.isLengthGreaterZero(txt.name),
             Zipcode:''
         });
         this.props.getCityRequest(txt.stateId);
@@ -225,7 +226,7 @@ class RegistrationController extends Component {
 
         if (!utils.isValidName(userName)) {
 
-            utils.topAlertError("name is required");
+            utils.topAlertError("Name is required");
 
             this.setState({
                 userMsg: false
@@ -234,7 +235,7 @@ class RegistrationController extends Component {
         }
         else if (!utils.isEmailValid(email)) {
 
-            utils.topAlertError("email is required");
+            utils.topAlertError("Email is required");
 
             this.setState({
                 userEmail: false
@@ -243,25 +244,25 @@ class RegistrationController extends Component {
         }
         else if (!utils.isValidPhone(phoneNo)) {
 
-            utils.topAlertError("phone is required");
+            utils.topAlertError("Phone is required");
 
             this.setState({
                 userPhone: false
             });
             return false;
         }
-        else if (!utils.isValidName(userState)) {
+        else if (this.state.stateId<0) {
 
-            utils.topAlertError("state is required");
+            utils.topAlertError("State is required");
 
             this.setState({
                 selectState: false
             });
             return false;
         }
-        else if (!utils.isValidName(userCity)) {
+        else if (this.state.cityId<0) {
 
-            utils.topAlertError("city is required");
+            utils.topAlertError("City is required");
 
             this.setState({
                 selectCity: false
@@ -270,7 +271,7 @@ class RegistrationController extends Component {
         }
         else if (!utils.isValidZipCode(this.state.city, Zipcode, (_.isEmpty(this.props.zipCodesData)?[]:this.props.zipCodesData.payload.data))) {
 
-            utils.topAlertError("zipcode is required");
+            utils.topAlertError("Zipcode is required");
 
             this.setState({
                 userZipCode: false
@@ -279,7 +280,7 @@ class RegistrationController extends Component {
         }
         else if (!utils.isPasswordValid(password)) {
 
-            utils.topAlertError("password is required");
+            utils.topAlertError("Password is required");
 
             this.setState({
                 userPassword: false

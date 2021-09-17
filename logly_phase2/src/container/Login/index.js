@@ -111,7 +111,7 @@ class LoginController extends Component {
 
         if (!utils.isEmailValid(email)) {
 
-            utils.topAlertError("email is required");
+            utils.topAlertError("Email is required");
 
             this.setState({
                 userEmail: false
@@ -120,7 +120,7 @@ class LoginController extends Component {
         }
         else if (!utils.isPasswordValid(password)) {
 
-            utils.topAlertError("password is required");
+            utils.topAlertError("Password is required");
 
             this.setState({
                 userPassword: false

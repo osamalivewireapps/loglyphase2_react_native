@@ -39,6 +39,10 @@ class Util {
     return name.length >= 3;
   }
 
+  static isLengthGreaterZero(name) {
+    return name.length > 0;
+  }
+
   static isValidPhone(name) {
     name = name.replaceAll("-", "");
     return name.length === 10;

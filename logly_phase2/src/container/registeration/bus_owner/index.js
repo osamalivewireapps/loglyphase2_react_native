@@ -160,7 +160,7 @@ class BusinessOwnerController extends Component {
         }
         else if (!utils.isLengthGreater(phoneNo)) {
 
-            utils.topAlertError("phone is required");
+            utils.topAlertError("Phone is required");
 
             this.setState({
                 userPhone: false
@@ -194,22 +194,6 @@ class BusinessOwnerController extends Component {
         // Pick a single file
         try {
             const res = await DocumentPicker.pick({
-                //by using allFiles type, you will able to pick any type of media from user device, 
-                //There can me more options as well
-                //DocumentPicker.types.images: All image types
-                //DocumentPicker.types.plainText: Plain text files
-                //DocumentPicker.types.audio: All audio types
-                //DocumentPicker.types.pdf: PDF documents
-                //DocumentPicker.types.zip: Zip files
-                //DocumentPicker.types.csv: Csv files
-                //DocumentPicker.types.doc: doc files
-                //DocumentPicker.types.docx: docx files
-                //DocumentPicker.types.ppt: ppt files
-                //DocumentPicker.types.pptx: pptx files
-                //DocumentPicker.types.xls: xls files
-                //DocumentPicker.types.xlsx: xlsx files
-                //For selecting more more than one options use the 
-                //type: [DocumentPicker.types.csv,DocumentPicker.types.xls]
                 type: [DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx, DocumentPicker.types.images],
             });
             console.log("uri--->", res[0].uri);
@@ -217,11 +201,8 @@ class BusinessOwnerController extends Component {
             //this.uploadAPICall(res);//here you can call your API and send the data to that API
         } catch (err) {
             if (DocumentPicker.isCancel(err)) {
-                console.log("error -----", err);
             } else {
-                console.log("error ----->", err);
                 throw err;
-
             }
         }
     }

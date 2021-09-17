@@ -35,14 +35,14 @@ class ChangePasswordController extends Component {
 
     validateFields() {
         if (!utils.isPasswordValid(this.state.password)) {
-            utils.topAlertError("password is required");
+            utils.topAlertError("Password is required");
             return false;
         } else {
             if (!utils.isPasswordValid(this.state.confirmPassword)) {
-                utils.topAlertError("confirm password is required");
+                utils.topAlertError("Confirm password is required");
                 return false;
             } else if (this.state.password !== this.state.confirmPassword) {
-                utils.topAlertError("password not matched");
+                utils.topAlertError("Password not matched");
                 return false;
             } else
                 return true;

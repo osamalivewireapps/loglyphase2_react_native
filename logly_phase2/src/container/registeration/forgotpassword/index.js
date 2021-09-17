@@ -22,7 +22,7 @@ class ForgotPasswordController extends Component {
     codeScreen(e) {
         
         if (!utils.isEmailValid(this.state.email)) {
-            utils.topAlertError("email is required");
+            utils.topAlertError("Email is required");
             return;
         }
 
