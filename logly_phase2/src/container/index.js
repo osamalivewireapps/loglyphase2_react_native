@@ -14,3 +14,7 @@ export {
     ForgotPasswordController,
     PasswordResetController
 } from './registeration';
+
+export {
+    WelcomeRegistration, AccountSetup
+} from './setupwizard'

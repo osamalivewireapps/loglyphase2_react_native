@@ -24,4 +24,15 @@ const icon_material_delete = require('../assets/icons/icon_material_delete/icon_
 const icon_feather_check_circle = require('../assets/icons/icon_feather_check_circle/icon_feather_check_circle.png');
 const icon_info = require('../assets/icons/icon_info/icon_info.png');
 const icon_close = require('../assets/icons/icon_close/Close.png');
-export default { icon_close,icon_info,icon_feather_check_circle,icon_material_delete,icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };
+const icon_feather_arrow_right = require('../assets/icons/icon_feather_arrow_right/icon_feather_arrow_right.png');
+const icon_awesome_check_circle = require('../assets/icons/icon_awesome_check_circle/icon_awesome_check_circle.png');
+const icon_awesome_plus = require('../assets/icons/icon_awesome_plus/icon_awesome_plus.png');
+const icon_servicetype_unchecked = require('../assets/icons/icon_servicetype_unchecked/icon_servicetype_unchecked.png');
+const icon_servicetype_checked = require('../assets/icons/icon_servicetype_checked/icon_servicetype_checked.png');
+const icon_blue_clock = require('../assets/icons/icon_blue_clock/icon_blue_clock.png');
+const icon_blue_real_estate_agency = require('../assets/icons/icon_blue_real_estate_agency/icon_blue_real_estate_agency.png');
+const icon_blue_awesome_city = require('../assets/icons/icon_blue_awesome_city/icon_blue_awesome_city.png');
+const icon_blue_postalcode = require('../assets/icons/icon_blue_postalcode/icon_blue_postalcode.png');
+const icon_material_date_range = require('../assets/icons/icon_material_date_range/icon_material_date_range.png');
+const icon_three_colons = require('../assets/icons/icon_three_colons/icon_three_colons.png');
+export default { icon_three_colons,icon_material_date_range,icon_blue_postalcode,icon_blue_awesome_city,icon_blue_real_estate_agency,icon_blue_clock,icon_servicetype_checked,icon_servicetype_unchecked,icon_awesome_plus,icon_awesome_check_circle,icon_feather_arrow_right,icon_close,icon_info,icon_feather_check_circle,icon_material_delete,icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };

@@ -71,6 +71,10 @@ class Util {
     return name.length > 0;
   }
 
+  static isGraterThanZero(name) {
+    return (name.length > 0 && name>0);
+  }
+
   static combineEmailValidate(email) {
     if (_.isEmpty(email))
       return this.capitalizeFirstLetter("email is required")

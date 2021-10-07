@@ -12,3 +12,5 @@ export {
     ForgotPasswordController,
     PasswordResetController
 } from './container/registeration';
+
+export { WelcomeRegistration, ServicesSetup, AccountSetup} from './container/setupwizard'

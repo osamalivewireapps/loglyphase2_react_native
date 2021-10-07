@@ -6,5 +6,6 @@ const logo_logly_splash = require('../assets/Images/logo_logly_splash/logo_logly
 const img_login_header = require('../assets/Images/img_login_header/img_login_header.png');
 const img_new_password = require('../assets/Images/img_new_password/img_new_password.png');
 const img_fireworks = require('../assets/Images/img_fireworks/img_fireworks.png');
+const img_btn_forward = require('../assets/Images/img_btn_forward/img_btn_forward.png');
 
-export default { img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };
+export default { img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };

@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { connect } from 'react-redux';
 import React from 'react';
@@ -11,7 +12,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import {
   PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
   BusAccountPackagesController, RegistrationAccountTypeController,
-  PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController
+  PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
+  WelcomeRegistration, ServicesSetup, AccountSetup
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -40,6 +42,9 @@ function StackNavigator(props) {
           <Stack.Screen name="ThanksRegistration" component={ThanksRegistrationController} />
           <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} /> 
           <Stack.Screen name="PolicyScreen" component={PolicyController} />
+          <Stack.Screen name="WelcomeRegistration" component={WelcomeRegistration} />
+          <Stack.Screen name="ServicesSetup" component={ServicesSetup} />
+          <Stack.Screen name='AccountSetup' component={AccountSetup}/>
         </Stack.Navigator>
       </NavigationContainer>
     </Loader>
