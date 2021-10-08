@@ -32,6 +32,7 @@
     "react-native-animated-loader": "0.0.9",
     "react-native-auto-size-text": "^1.1.1",
     "react-native-check-box": "^2.1.7",
+    "react-native-date-picker": "^4.1.0",
     "react-native-document-picker": "^6.0.4",
     "react-native-dropdown-picker": "^3.7.6",
     "react-native-elements": "^3.4.2",

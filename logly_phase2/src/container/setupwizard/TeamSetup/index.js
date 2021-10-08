@@ -3,9 +3,9 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import React, { Component } from "react";
-import BusProfileView from "./busprofileview";
+import TeamSetupView from "./teamsetup_view";
 
-class BusProfile extends React.Component {
+class TeamSetup extends React.Component {
 
     constructor(props) {
         super(props);
@@ -19,10 +19,10 @@ class BusProfile extends React.Component {
         this.props.navigation.navigate('TeamMemberSetup')
     }
     render() {
-        return (<BusProfileView
+        return (<TeamSetupView
             clickNextButton={(e) => { this.clickNextButton(e) }}
             backScreen={(e) => { this.backScreen(e) }} />);
     }
 
 }
-export default BusProfile;
+export default TeamSetup;

@@ -48,7 +48,7 @@ class AccountSetup extends Component {
         this.setState({ stackComp: tmp, pageNumber: 1 })
     }
     goingBack(e) {
-        if (this.state.pageNumber===0 )
+        if (this.state.pageNumber === 0)
             this.props.navigation.navigate('Login');
         else {
             this.setState({ pageNumber: this.state.pageNumber - 1 })
@@ -56,6 +56,10 @@ class AccountSetup extends Component {
     }
 
     nextScreen(e) {
+        if (this.state.pageNumber === this.state.stackComp.length-1) {
+            this.props.navigation.navigate('BusProfileSetup');
+            return;
+        }
         this.setState({ pageNumber: this.state.pageNumber + 1 })
     }
 

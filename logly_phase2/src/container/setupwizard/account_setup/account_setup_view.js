@@ -9,8 +9,6 @@ import { Colors, Fonts, Icons } from '../../../theme';
 import { Platform } from 'react-native';
 import { Button } from 'react-native';
 import ChooseServices from "../services";
-import BusProfile from "../BusinessProfile";
-import { ScrollView } from "react-native-gesture-handler";
 import ViewPager from '@react-native-community/viewpager';
 import AnimalCategories from "../animals_category";
 import AddNewServices from "../add_new_services";

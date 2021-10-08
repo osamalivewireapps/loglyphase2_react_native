@@ -15,21 +15,26 @@ import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
 
 
-function BusProfileView(props) {
+function TeamSetupView(props) {
 
     const { backScreen, clickNextButton } = props;
-    const [valueDesc, setDesc] = useState('');
-    const [validateDesc, setValidateDesc] = useState(true);
     const [selectWeekFrequency, setSelectWeekFrequency] = useState([]);
+    const [valueName, setValueName] = useState('');
+    const [validateName, setValidateName] = useState(true);
+    const [validateEmail, setValidateEmail] = useState(true);
+    const [valueEmail, setValueEmail] = useState('');
+    const [valuePhone, setPhone] = useState('');
+    const [validatePhone, setValidatePhone] = useState(true);
     const [showBusTimings, setShowBusTimings] = useState(false);
     const [valueStartBusTiming, setValueStartBusTiming] = useState('');
     const [mode, setMode] = useState('');
     const [valueEndBusTiming, setValueEndBusTiming] = useState('');
     const [isStartBusTiming, setIsStartBusTiming] = useState(false);
-    const [valueStartTiming, setValueStartTiming] = useState('');
-    const [valueEndTiming, setValueEndTiming] = useState('');
-    const [isStartTiming, setIsStartTiming] = useState(true);
-    const [show, setShow] = useState(false);
+
+    // const [valueStartTiming, setValueStartTiming] = useState('');
+    // const [valueEndTiming, setValueEndTiming] = useState('');
+    // const [isStartTiming, setIsStartTiming] = useState(true);
+    // const [show, setShow] = useState(false);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
     const [valueHolidays, setValueHolidays] = useState('');
     const [valueTaxPercentage, setValueTaxPercentage] = useState('');
@@ -65,7 +70,7 @@ function BusProfileView(props) {
                     </TouchableOpacity>
                 </View>
                 <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
-                <Text style={{ ...styles.generalTxt2, marginTop: 10, textAlign: 'center' }}>Please setup your business profile</Text>
+                <Text style={{ ...styles.generalTxt2, marginTop: 10, textAlign: 'center' }}>Manage team members</Text>
             </View>
 
 
@@ -82,31 +87,58 @@ function BusProfileView(props) {
                     }}
 
                 />
-                <View style={{
-                    backgroundColor: '#F4F4F4', alignSelf: 'center',
-                    height: 90, width: 90, borderRadius: 100,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingTop: 10
-                }}>
 
-                    <Image source={Icons.icon_awesome_plus} />
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={14}
-                        fontSize={16}
-                        mode={ResizeTextMode.max_lines}
-                        style={{
-                            ...styles.generalTxt,
-                            color: Colors.appBgColor,
-                            textAlign: 'center',
-                            width: '100%',
-                        }}>Logo
-                    </AutoSizeText>
-
-                </View>
             </View>
 
+            <ScrollView keyboardShouldPersistTaps={true}>
+
+
+
+                <View style={{
+                    padding: 30,
+                    alignItems: 'center',
+                    alignItems: 'flex-start',
+                    flex: 1
+
+                }}>
+                    <TouchableOpacity style={{
+                        ...styles.styleButtons, flex: 0,
+                        marginTop: 35, width: '100%'
+                    }} onPress={() => { setCloseBottonSheet(true) }}>
+                        <Text style={{
+                            fontSize: 22, textAlign: 'center', padding: 10,
+                            paddingStart: 127, paddingEnd: 127,
+                            paddingTop: 15, paddingBottom: 15,
+                            ...styles.generalTxt
+                        }}>NEXT</Text>
+                    </TouchableOpacity>
+
+                    {isBottonSheetVisible ? sheetRef.current.open() : null}
+                    <RBSheet
+                        ref={sheetRef}
+                        height={Dimensions.get('screen').height - 130}
+                        openDuration={250}
+                        customStyles={{
+                            container: {
+                                borderRadius: 30
+                            }
+                        }}
+                        onClose={() => setCloseBottonSheet(false)}
+                    >
+                        {showBottomSheet()}
+                    </RBSheet>
+                </View>
+            </ScrollView>
+
+
+
+        </View>
+    )
+
+    //////////////////// BOTTOM SHEET /////////////
+    function showBottomSheet() {
+
+        return (
 
             <ScrollView keyboardShouldPersistTaps={true}>
 
@@ -120,17 +152,39 @@ function BusProfileView(props) {
 
                 }}>
 
+                    <View style={{
+                        backgroundColor: '#F4F4F4', alignSelf: 'center',
+                        height: 90, width: 90, borderRadius: 100,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: 10
+                    }}>
+
+                        <Image source={Icons.icon_awesome_plus} />
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: Colors.appBgColor,
+                                textAlign: 'center',
+                                width: '100%',
+                            }}>Logo
+                        </AutoSizeText>
+
+                    </View>
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 0
-                    }}>Description *</Text>
+                        marginStart: 5, marginTop: 15, marginBottom: 5
+                    }}>Name</Text>
                     <View style={{
                         ...styles.boxcontainer,
-                        height: 100,
+                        height: 50,
                         flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateDesc ? 'black' : 'darkred',
-                        shadowOpacity: validateDesc ? 0.25 : 1,
+                        shadowColor: validateName ? 'black' : 'darkred',
+                        shadowOpacity: validateName ? 0.25 : 1,
                         padding: 15,
                     }}>
 
@@ -139,28 +193,87 @@ function BusProfileView(props) {
                             ...styles.styleTextInput,
                             flex: 1,
                             textAlign: 'left',
-                            textAlignVertical: "top",
-                            height: 100,
-                            paddingTop: 15
                         }}
                             underlineColorAndroid='transparent'
                             require={true}
-                            multiline={true}
-                            numberOfLines={50}
-                            maxLength={75}
+                            numberOfLines={1}
                             autoCapitalize='none'
                             keyboardType="default"
                             onChangeText={(e) => {
-                                setValidateDesc(Util.isLengthGreater(e))
-                                setDesc(e)
+                                setValidateName(Util.isLengthGreater(e))
+                                setValueName(e)
                             }
                             }
-                            value={valueDesc} />
+                            value={valueName} />
                     </View>
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginStart: 5, marginTop: 25, marginBottom: 5
+                    }}>Email</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        height: 50,
+                        flexDirection: 'row', alignItems: 'center',
+                        shadowColor: validateEmail ? 'black' : 'darkred',
+                        shadowOpacity: validateEmail ? 0.25 : 1,
+                        padding: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+                            textAlign: 'left',
+                        }}
+                            underlineColorAndroid='transparent'
+                            require={true}
+                            numberOfLines={1}
+                            autoCapitalize='none'
+                            keyboardType="email-address"
+                            onChangeText={(e) => {
+                                setValidateEmail(Util.isEmailValid(e))
+                                setValueEmail(e)
+                            }
+                            }
+                            value={valueEmail} />
+                    </View>
+
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginStart: 5, marginTop: 25, marginBottom: 5
+                    }}>Phone</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        height: 50,
+                        flexDirection: 'row', alignItems: 'center',
+                        shadowColor: validatePhone ? 'black' : 'darkred',
+                        shadowOpacity: validatePhone ? 0.25 : 1,
+                        padding: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+                            textAlign: 'left',
+                        }}
+                            underlineColorAndroid='transparent'
+                            require={true}
+                            numberOfLines={1}
+                            autoCapitalize='none'
+                            keyboardType="phone-pad"
+                            onChangeText={(e) => {
+                                setPhoneNo(e)
+                            }
+                            }
+                            value={valuePhone} />
+                    </View>
+
 
                     {getWeeklyRecurring()}
                     {getBusTiming()}
-                    {getClassTiming()}
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
                         borderRadius: 10,
@@ -192,118 +305,11 @@ function BusProfileView(props) {
                         <Image source={Icons.icon_awesome_plus} />
                     </TouchableOpacity>
 
-                    {isBottonSheetVisible ? sheetRef.current.open() : null}
-                    <RBSheet
-                        ref={sheetRef}
-                        height={Dimensions.get('screen').height - 130}
-                        openDuration={250}
-                        customStyles={{
-                            container: {
-                                borderRadius: 30
-                            }
-                        }}
-                        onClose={() => setCloseBottonSheet(false)}
-                    >
-                        {showBottomSheet()}
-                    </RBSheet>
-
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: 5,marginTop:15,marginBottom:5
-                    }}>Tax Percentage</Text>
-                    <View style={{
-                        ...styles.boxcontainer,
-                        height: 50,
-                        flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateDesc ? 'black' : 'darkred',
-                        shadowOpacity: validateDesc ? 0.25 : 1,
-                        padding: 15,
-                    }}>
-
-
-                        <TextInput placeholder="" style={{
-                            ...styles.styleTextInput,
-                            flex: 1,
-                            textAlign: 'left',
-                        }}
-                            underlineColorAndroid='transparent'
-                            require={true}
-                            numberOfLines={1}
-                            autoCapitalize='none'
-                            keyboardType="default"
-                            onChangeText={(e) => {
-                                setValueTaxPercentage(e)
-                            }
-                            }
-                            value={valueTaxPercentage} />
-                    </View>
-
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons, flex: 0,
-                        marginTop: 35,width:'100%'
-                    }} onPress={() => { clickNextButton() }}>
-                        <Text style={{
-                            fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingStart: 127, paddingEnd: 127,
-                            paddingTop: 15, paddingBottom: 15,
-                            ...styles.generalTxt
-                        }}>NEXT</Text>
-                    </TouchableOpacity>
-
-                </View>
-
-
-            </ScrollView>
+                   
 
 
 
-        </View>
-    )
 
-    //////////////////// BOTTOM SHEET /////////////
-    function showBottomSheet() {
-
-        const { animalType,
-            addServices } = props;
-        return (
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View
-                    style={{
-                        backgroundColor: 'white',
-                        padding: 30,
-                        height: '100%',
-                        flex: 1,
-                        justifyContent: 'flex-start'
-                    }}>
-
-                    <View style={{
-                        ...styles.boxcontainer,
-                        height: 50,
-                        flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateHolidays ? 'black' : 'darkred',
-                        shadowOpacity: validateHolidays ? 0.25 : 1,
-                        padding:20,
-                    }}>
-
-
-                        <TextInput placeholder="" style={{
-                            ...styles.styleTextInput,
-                            textAlign: 'left',
-                            flex:1,
-                            height: 50,
-                        }}
-                            underlineColorAndroid='transparent'
-                            require={true}
-                            numberOfLines={1}
-                            autoCapitalize='none'
-                            keyboardType="default"
-                            onChangeText={(e) => {
-                                setValidateHolidays(Util.isLengthGreater(e))
-                                setValueHolidays(e)
-                            }
-                            }
-                            value={valueHolidays} />
-                    </View>
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
@@ -339,9 +345,27 @@ function BusProfileView(props) {
 
                         }}>Cancel</Text>
                     </TouchableOpacity>
-           
-            </View>
+
+                </View>
+
+
             </ScrollView>
+
+            //     {/* <ScrollView keyboardShouldPersistTaps='handled'>
+            //         <View
+            //             style={{
+            //                 backgroundColor: 'white',
+            //                 padding: 30,
+            //                 height: '100%',
+            //                 flex: 1,
+            //                 justifyContent: 'flex-start'
+            //             }}> */}
+
+
+            //     // </View>
+            //     // </ScrollView>
+            //     //    )
+            // }
         )
     }
 
@@ -454,7 +478,7 @@ function BusProfileView(props) {
                 <Text style={{
                     ...styles.bottomSheetHeader,
                     marginStart: 5
-                }}>Business Timing *</Text>
+                }}>Work Timing *</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{
@@ -525,112 +549,26 @@ function BusProfileView(props) {
         )
     }
 
-    ////////////////// BREAK TIMING ///////////
-    function getClassTiming() {
 
-        return (
-            <View marginTop={15} width='100%' >
-                {show ?
-                    (isStartTiming ?
-                        <DateTimePickerModal
-                            isVisible={show}
-                            mode={mode}
-                            date={valueStartTiming ? new Date(valueStartTiming) : new Date()}
-                            maximumDate={valueEndTiming ? new Date(valueEndTiming) : ''}
-                            onConfirm={(time) => {
-                                console.log('start-timing', time)
-                                setValueStartTiming(time)
-                                setShow(false)
+    function setPhoneNo(text) {
+        let tmp = "";
 
-                            }}
-                            onCancel={() => { setShow(false) }}
-                        /> :
-                        <DateTimePickerModal
-                            isVisible={show}
-                            mode={mode}
-                            date={valueEndTiming ? new Date(valueEndTiming) : new Date()}
-                            minimumDate={valueStartTiming ? new Date(valueStartTiming) : ''}
-                            onConfirm={(time) => {
-                                console.log('end-timing', time)
-                                setValueEndTiming(time);
-                                setShow(false)
+        if (text.length > valuePhone.length) {
+            if (text.length > 3 && text.length <= 4 && !text.includes("-")) {
+                tmp = text.substr(0, 3) + "-" + text.substr(3, text.length);
+            }
+            else if (text.length > 7 && text.length <= 8) {
+                tmp = text.substr(0, 7) + "-" + text.substr(7, text.length);
+            }
+            else {
+                tmp = text
+            }
+        } else {
+            tmp = text;
+        }
 
-                            }}
-                            onCancel={() => { setShow(false) }}
-                        />) : null}
-
-                <Text style={{
-                    ...styles.bottomSheetHeader,
-                    marginStart: 5
-                }}>Break Timing *</Text>
-                <View flexDirection='row' marginTop={0}>
-
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
-                        flex: 1,
-                        height: 50,
-                        flexDirection: 'row',
-                        padding: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: 0,
-                    }} onPress={() => {
-                        setIsStartTiming(true)
-                        setMode('time')
-                        setShow(true);
-                    }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                flex: 7,
-                            }}>Start {valueStartTiming ? moment(valueStartTiming).format('hh:mm') : ''}
-                        </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
-                        flex: 1,
-                        height: 50,
-                        padding: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: 10,
-                        flexDirection: 'row'
-                    }} onPress={() => {
-                        setIsStartTiming(false)
-                        setMode('time')
-                        setShow(true);
-                    }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                flex: 7,
-                            }}>End {valueEndTiming ? moment(valueEndTiming).format('hh:mm') : ""}
-                        </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
-                    </TouchableOpacity>
-
-
-                </View>
-
-            </View>
-        )
+        setPhone(tmp)
+        setValidatePhone(Util.isValidPhone(tmp))
     }
 }
 
@@ -700,4 +638,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default BusProfileView;
+export default TeamSetupView;

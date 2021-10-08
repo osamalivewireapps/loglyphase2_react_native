@@ -16,5 +16,5 @@ export {
 } from './registeration';
 
 export {
-    WelcomeRegistration, AccountSetup
+    TeamSetup,WelcomeRegistration, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup
 } from './setupwizard'

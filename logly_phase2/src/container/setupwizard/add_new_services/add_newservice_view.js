@@ -1,3 +1,4 @@
+/* eslint-disable no-lone-blocks */
 /* eslint-disable no-unreachable */
 /* eslint-disable comma-dangle */
 /* eslint-disable semi */
@@ -16,7 +17,6 @@ import ModalDropdown from "react-native-modal-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment, { duration } from "moment";
 import Util from "../../../utils";
-import { FUNCTION_TYPES } from "@babel/types";
 
 const DATA = [
     {
@@ -72,7 +72,6 @@ const arrDuration = [
     '100 Mins',
     '120 Mins',
 ]
-const AnimalCategories = ["Dog", "Cat", "Horse", "Parrot", "Deer", "Rabbit"];
 
 function AddNewServiceView(props) {
     const { animalType, clickNextBtn,
@@ -111,6 +110,8 @@ function AddNewServiceView(props) {
     const [arrIndex, setArrIndex] = useState(0);
     const [selectWeekFrequency, setSelectWeekFrequency] = useState([]);
     const [addNonRecurringClass, setAddNonRecurringClass] = useState([]);
+    const [nonRecurrIndex, setNonRecurrIndex] = useState(0);
+    const [showDate, setShowDate] = useState(false)
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled'>
@@ -377,6 +378,7 @@ function AddNewServiceView(props) {
         }
     }
 
+    {/** Veterinary/Pet Grooming */ }
     function getPetGroomingView() {
 
         return (
@@ -408,6 +410,7 @@ function AddNewServiceView(props) {
         )
     }
 
+    {/** Pet Training */ }
     function getPetTraining() {
 
         return (
@@ -480,6 +483,11 @@ function AddNewServiceView(props) {
         )
     }
 
+
+
+    
+
+    {/******************** COMMON COMPONENTS ******************** */ }
     function getServiceType(isShowThird) {
 
         return (<View>
@@ -668,427 +676,6 @@ function AddNewServiceView(props) {
             </View>
         )
     }
-
-    function getRecurringProgram() {
-
-        return (
-            <View style={{
-                marginTop: 15,
-                marginLeft: -5
-            }}>
-
-                <Text style={{
-                    ...styles.bottomSheetHeader,
-                    marginBottom: 5, marginStart: 5
-                }}>Class Frequency *</Text>
-                <FlatList
-                    numColumns={3}
-                    data={['Daily', 'Weekly', 'Monthly']}
-                    style={{}}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <TouchableOpacity style={{
-                                backgroundColor: selectFrequency === index ? '#FFC081' : '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 5,
-                                flex: 1,
-                                height: 50,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginStart: index === 0 ? 0 : 8,
-                            }} onPress={() => setFrequency(
-                                index
-                            )}>
-
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
-                                    mode={ResizeTextMode.max_lines}
-                                    style={{
-                                        ...styles.generalTxt,
-                                        color: Colors.appBgColor
-                                    }}>{item}
-                                </AutoSizeText>
-                            </TouchableOpacity>
-                        )
-                    }}
-                    keyExtractor={(item) => item.id}
-
-                />
-
-                {selectFrequency === 2 ? getMonthlyRecurring() : null}
-                {selectFrequency === 1 ? getWeeklyRecurring() : null}
-                {getClassTiming()}
-                {serviceTypeIndex === 0 ? getAddressView() : null}
-            </View>
-        )
-    }
-
-    function getClassTiming() {
-
-        return (
-            <View marginTop={15} >
-                {show ?
-                    (isStartTiming ?
-                        <DateTimePickerModal
-                            isVisible={show}
-                            mode={mode}
-                            date={valueStartTiming ? new Date(valueStartTiming) : new Date()}
-                            maximumDate={valueEndTiming ? new Date(valueEndTiming) : ''}
-                            onConfirm={(time) => {
-                                setValueStartTiming(time)
-
-                                setShow(false)
-
-                            }}
-                            onCancel={() => { setShow(false) }}
-                        /> :
-                        <DateTimePickerModal
-                            isVisible={show}
-                            mode={mode}
-                            date={valueEndTiming ? new Date(valueEndTiming) : new Date()}
-                            minimumDate={valueStartTiming ? new Date(valueStartTiming) : ''}
-                            onConfirm={(time) => {
-                                setValueEndTiming(time);
-
-                                setShow(false)
-
-                            }}
-                            onCancel={() => { setShow(false) }}
-                        />) : null}
-
-                <Text style={{
-                    ...styles.bottomSheetHeader,
-                    marginStart: 5
-                }}>Class Timing *</Text>
-                <View flexDirection='row' marginTop={0}>
-
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
-                        flex: 1,
-                        height: 50,
-                        flexDirection: 'row',
-                        padding: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: 0,
-                    }} onPress={() => {
-                        setIsStartTiming(true)
-                        setMode('time')
-                        setShow(true);
-                    }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                flex: 7,
-                            }}>Start {valueStartTiming ? moment(valueStartTiming).format('hh:mm') : ''}
-                        </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
-                        flex: 1,
-                        height: 50,
-                        padding: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: 10,
-                        flexDirection: 'row'
-                    }} onPress={() => {
-                        setIsStartTiming(false)
-                        setMode('time')
-                        setShow(true);
-                    }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                flex: 7,
-                            }}>End {valueEndTiming ? moment(valueEndTiming).format('hh:mm') : ""}
-                        </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
-                    </TouchableOpacity>
-
-
-                </View>
-
-            </View>
-        )
-    }
-
-    function getNonRecurringProgram() {
-
-        return (
-            <View style={{
-                marginTop: 15,
-                marginLeft: -5,
-            }}>
-
-                <View style={{
-                    backgroundColor: '#F5F5F5',
-                    justifyContent: 'flex-start',
-                    alignItems: 'flex-start',
-                    paddingBottom: 10,
-                    paddingTop: 10,
-                    borderRadius: 10
-                }}>
-                    <TouchableOpacity style={{
-                        borderRadius: 10,
-                        paddingStart: 25,
-                        paddingEnd: 25,
-                        height: 30,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row'
-                    }} onPress={() => {
-                        setClassDate('')
-                        setValueStartTiming('')
-                        setValueEndTiming('')
-                        setClassDate('');
-                        setModalVisible(true);
-                    }}
-                    >
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.bottomSheetHeader,
-                                textAlign: 'left',
-                                width: '100%',
-                            }}>Add Class
-                        </AutoSizeText>
-                        <Image source={Icons.icon_awesome_plus} />
-                    </TouchableOpacity>
-                    {addNonRecurringClass.length > 0 ?
-                        <FlatList
-                            nestedScrollEnabled={true}
-                            contentContainerStyle={{ paddingStart: 10, paddingEnd: 10, width: Dimensions.get('screen').width - 55 }}
-                            data={addNonRecurringClass}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <TouchableOpacity style={{
-                                        backgroundColor: 'white',
-                                        borderRadius: 10,
-                                        marginTop: 5,
-                                        height: 50,
-                                        width: '100%',
-
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                    }} onPress={() => {
-                                        setValueStartTiming(addNonRecurringClass.length > 0 ? item.startTiming : '')
-                                        setValueEndTiming(addNonRecurringClass.length > 0 ? item.endTiming : '')
-                                        setClassDate(addNonRecurringClass.length > 0 ? item.date : '');
-                                        setModalVisible(true)
-                                    }
-                                    }>
-
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={14}
-                                            fontSize={16}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                color: Colors.appBgColor
-                                            }}>{item.date}
-                                        </AutoSizeText>
-                                    </TouchableOpacity>
-                                )
-                            }}
-
-                        /> : null}
-                </View>
-                {serviceTypeIndex === 0 ? getAddressView(props, sheetRef) : null}
-
-            </View>
-        )
-    }
-
-    function getWeeklyRecurring() {
-        return (
-            <View>
-                <Text style={{
-                    ...styles.bottomSheetHeader,
-                    marginTop: 15, marginStart: 10
-                }}>Days of the week *</Text>
-                <FlatList
-                    numColumns={4}
-                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-                    data={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <TouchableOpacity style={{
-                                backgroundColor: isDaySelect(item) ? '#FFC081' : '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 5,
-                                width: Dimensions.get('screen').width / 5,
-                                height: 40,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginStart: 5,
-                            }} onPress={() => setWeekFrequency(
-                                { day: item }
-                            )}>
-
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
-                                    mode={ResizeTextMode.max_lines}
-                                    style={{
-                                        ...styles.generalTxt,
-                                        color: Colors.appBgColor
-                                    }}>{item}
-                                </AutoSizeText>
-                            </TouchableOpacity>
-                        )
-                    }}
-
-                />
-            </View>
-        )
-    }
-
-    function setWeekFrequency(e) {
-        let tmp = selectWeekFrequency;
-        if (tmp.length === 0) { tmp.push(e); }
-        else {
-            let itemService = tmp.find(item => item.day === e.day);
-            if (itemService) {
-                tmp.splice(tmp.indexOf(itemService), 1);
-            } else {
-                tmp.push(e);
-            }
-
-        }
-        setSelectWeekFrequency(result => [...result, tmp])
-    }
-
-    function getMonthlyRecurring() {
-
-        return (
-            <View>
-                {show ?
-                    (isStartDate ?
-                        <DateTimePickerModal
-                            isVisible={show}
-                            mode={mode}
-                            date={recurStartDate ? new Date(recurStartDate) : new Date()}
-                            maximumDate={recurEndDate ? new Date(recurEndDate) : new Date()}
-                            onConfirm={(date) => {
-                                setRecurStartDate(moment(date).format('DD-MM-YYYY'))
-
-                                setShow(false)
-
-                            }}
-                            onCancel={() => { setShow(false) }}
-                        /> :
-                        <DateTimePickerModal
-                            isVisible={show}
-                            mode={mode}
-                            date={recurEndDate ? new Date(recurEndDate) : new Date()}
-                            minimumDate={recurStartDate ? new Date(recurStartDate) : new Date()}
-                            onConfirm={(date) => {
-                                setRecurEndDate(moment(date).format('DD-MM-YYYY'));
-                                setShow(false)
-
-                            }}
-                            onCancel={() => { setShow(false) }}
-                        />) : null}
-                <Text style={{
-                    ...styles.bottomSheetHeader,
-                    marginTop: 15, marginStart: 5
-                }}>Monthly Date *</Text>
-                <View flexDirection='row' marginTop={0}>
-
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
-                        flex: 1,
-                        height: 50,
-                        flexDirection: 'row',
-                        padding: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: 0,
-                    }} onPress={() => {
-                        setMode('date');
-                        setShow(true);
-                        setIsStartDate(true)
-
-                    }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                flex: 7,
-                            }}> Date {recurStartDate}
-                        </AutoSizeText>
-                        <Image source={Icons.icon_material_date_range} />
-                    </TouchableOpacity>
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
-                        flex: 1,
-                        height: 50,
-                        padding: 15,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginStart: 10,
-                        flexDirection: 'row'
-                    }} onPress={() => {
-                        setMode('date');
-                        setShow(true);
-                        setIsStartDate(false)
-                    }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                flex: 7,
-                            }}> End {recurEndDate}
-                        </AutoSizeText>
-                        <Image source={Icons.icon_material_date_range} />
-                    </TouchableOpacity>
-
-
-                </View>
-            </View>
-        )
-    }
-
     function getAddressView() {
 
         const { isVisible, isCityVisible, isZipVisible,
@@ -1411,10 +998,436 @@ function AddNewServiceView(props) {
             </View>
         )
     }
+    {/******************** COMMON COMPONENTS ******************** */ }
+
+    {/******************** PET TRAINING ******************** */ }
+  
+    function getRecurringProgram() {
+
+        return (
+            <View style={{
+                marginTop: 15,
+                marginLeft: -5
+            }}>
+
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginBottom: 5, marginStart: 5
+                }}>Class Frequency *</Text>
+                <FlatList
+                    numColumns={3}
+                    data={['Daily', 'Weekly', 'Monthly']}
+                    style={{}}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: selectFrequency === index ? '#FFC081' : '#F5F5F5',
+                                borderRadius: 10,
+                                marginTop: 5,
+                                flex: 1,
+                                height: 50,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginStart: index === 0 ? 0 : 8,
+                            }} onPress={() => setFrequency(
+                                index
+                            )}>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={14}
+                                    fontSize={16}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
+                    }}
+                    keyExtractor={(item) => item.id}
+
+                />
+
+                {selectFrequency === 2 ? getMonthlyRecurring() : null}
+                {selectFrequency === 1 ? getWeeklyRecurring() : null}
+                {getClassTiming()}
+                {serviceTypeIndex === 0 ? getAddressView() : null}
+            </View>
+        )
+    }
+
+    function getClassTiming() {
+
+        return (
+            <View marginTop={15} >
+                {show ?
+                    (isStartTiming ?
+                        <DateTimePickerModal
+                            isVisible={show}
+                            mode={mode}
+                            date={valueStartTiming ? new Date(valueStartTiming) : new Date()}
+                            maximumDate={valueEndTiming ? new Date(valueEndTiming) : ''}
+                            onConfirm={(time) => {
+                                console.log('start-timing', time)
+                                setValueStartTiming(time)
+                                setShow(false)
+
+                            }}
+                            onCancel={() => { setShow(false) }}
+                        /> :
+                        <DateTimePickerModal
+                            isVisible={show}
+                            mode={mode}
+                            date={valueEndTiming ? new Date(valueEndTiming) : new Date()}
+                            minimumDate={valueStartTiming ? new Date(valueStartTiming) : ''}
+                            onConfirm={(time) => {
+                                console.log('end-timing', time)
+                                setValueEndTiming(time);
+                                setShow(false)
+
+                            }}
+                            onCancel={() => { setShow(false) }}
+                        />) : null}
+
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginStart: 5
+                }}>Class Timing *</Text>
+                <View flexDirection='row' marginTop={0}>
+
+                    <TouchableOpacity style={{
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: 10,
+                        marginTop: 5,
+                        flex: 1,
+                        height: 50,
+                        flexDirection: 'row',
+                        padding: 15,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginStart: 0,
+                    }} onPress={() => {
+                        setIsStartTiming(true)
+                        setMode('time')
+                        setShow(true);
+                    }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: '#777777',
+                                flex: 7,
+                            }}>Start {valueStartTiming ? moment(valueStartTiming).format('hh:mm') : ''}
+                        </AutoSizeText>
+                        <Image source={Icons.icon_blue_clock} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: 10,
+                        marginTop: 5,
+                        flex: 1,
+                        height: 50,
+                        padding: 15,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginStart: 10,
+                        flexDirection: 'row'
+                    }} onPress={() => {
+                        setIsStartTiming(false)
+                        setMode('time')
+                        setShow(true);
+                    }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: '#777777',
+                                flex: 7,
+                            }}>End {valueEndTiming ? moment(valueEndTiming).format('hh:mm') : ""}
+                        </AutoSizeText>
+                        <Image source={Icons.icon_blue_clock} />
+                    </TouchableOpacity>
+
+
+                </View>
+
+            </View>
+        )
+    }
+
+    function getNonRecurringProgram() {
+
+        return (
+            <View style={{
+                marginTop: 15,
+                marginLeft: -5,
+            }}>
+
+                <View style={{
+                    backgroundColor: '#F5F5F5',
+                    justifyContent: 'flex-start',
+                    alignItems: 'flex-start',
+                    paddingBottom: 10,
+                    paddingTop: 10,
+                    borderRadius: 10
+                }}>
+                    <TouchableOpacity style={{
+                        borderRadius: 10,
+                        paddingStart: 25,
+                        paddingEnd: 25,
+                        height: 30,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }} onPress={() => {
+                        setShowDate(false)
+                        setNonRecurrIndex(addNonRecurringClass.length)
+                        setValueStartTiming('')
+                        setValueEndTiming('')
+                        setClassDate('');
+                        setModalVisible(true);
+                    }}
+                    >
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.bottomSheetHeader,
+                                textAlign: 'left',
+                                width: '100%',
+                            }}>Add Class
+                        </AutoSizeText>
+                        <Image source={Icons.icon_awesome_plus} />
+                    </TouchableOpacity>
+                    {addNonRecurringClass.length > 0 ?
+                        <FlatList
+                            nestedScrollEnabled={true}
+                            contentContainerStyle={{ paddingStart: 10, paddingEnd: 10, width: Dimensions.get('screen').width - 55 }}
+                            data={addNonRecurringClass}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <TouchableOpacity style={{
+                                        backgroundColor: 'white',
+                                        borderRadius: 10,
+                                        marginTop: 5,
+                                        height: 50,
+                                        width: '100%',
+
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }} onPress={() => {
+                                        setShowDate(false)
+                                        setNonRecurrIndex(item.id)
+                                        setValueStartTiming(addNonRecurringClass.length > 0 ? item.startTiming : '')
+                                        setValueEndTiming(addNonRecurringClass.length > 0 ? item.endTiming : '')
+                                        setClassDate(addNonRecurringClass.length > 0 ? item.date : '');
+                                        setModalVisible(true)
+                                    }
+                                    }>
+
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={14}
+                                            fontSize={16}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                color: Colors.appBgColor
+                                            }}>{item.date}
+                                        </AutoSizeText>
+                                    </TouchableOpacity>
+                                )
+                            }}
+
+                        /> : null}
+                </View>
+                {serviceTypeIndex === 0 ? getAddressView(props, sheetRef) : null}
+
+            </View>
+        )
+    }
+
+    function getWeeklyRecurring() {
+        return (
+            <View>
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginTop: 15, marginStart: 10
+                }}>Days of the week *</Text>
+                <FlatList
+                    numColumns={4}
+                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+                    data={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: isDaySelect(item) ? '#FFC081' : '#F5F5F5',
+                                borderRadius: 10,
+                                marginTop: 5,
+                                width: Dimensions.get('screen').width / 5,
+                                height: 40,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginStart: 5,
+                            }} onPress={() => setWeekFrequency(
+                                { day: item }
+                            )}>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={14}
+                                    fontSize={16}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
+                    }}
+
+                />
+            </View>
+        )
+    }
+
+    function setWeekFrequency(e) {
+        let tmp = selectWeekFrequency;
+        if (tmp.length === 0) { tmp.push(e); }
+        else {
+            let itemService = tmp.find(item => item.day === e.day);
+            if (itemService) {
+                tmp.splice(tmp.indexOf(itemService), 1);
+            } else {
+                tmp.push(e);
+            }
+
+        }
+        setSelectWeekFrequency(result => [...result, tmp])
+    }
+
+    function getMonthlyRecurring() {
+
+        return (
+            <View>
+                {show ?
+                    (isStartDate ?
+                        <DateTimePickerModal
+                            isVisible={show}
+                            mode={mode}
+                            date={recurStartDate ? new Date(recurStartDate) : new Date()}
+                            maximumDate={recurEndDate ? new Date(recurEndDate) : new Date()}
+                            onConfirm={(date) => {
+                                setRecurStartDate(moment(date).format('DD-MM-YYYY'))
+
+                                setShow(false)
+
+                            }}
+                            onCancel={() => { setShow(false) }}
+                        /> :
+                        <DateTimePickerModal
+                            isVisible={show}
+                            mode={mode}
+                            date={recurEndDate ? new Date(recurEndDate) : new Date()}
+                            minimumDate={recurStartDate ? new Date(recurStartDate) : new Date()}
+                            onConfirm={(date) => {
+                                setRecurEndDate(moment(date).format('DD-MM-YYYY'));
+                                setShow(false)
+
+                            }}
+                            onCancel={() => { setShow(false) }}
+                        />) : null}
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginTop: 15, marginStart: 5
+                }}>Monthly Date *</Text>
+                <View flexDirection='row' marginTop={0}>
+
+                    <TouchableOpacity style={{
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: 10,
+                        marginTop: 5,
+                        flex: 1,
+                        height: 50,
+                        flexDirection: 'row',
+                        padding: 15,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginStart: 0,
+                    }} onPress={() => {
+                        setMode('date');
+                        setShow(true);
+                        setIsStartDate(true)
+
+                    }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: '#777777',
+                                flex: 7,
+                            }}> Date {recurStartDate}
+                        </AutoSizeText>
+                        <Image source={Icons.icon_material_date_range} />
+                    </TouchableOpacity>
+                    <TouchableOpacity style={{
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: 10,
+                        marginTop: 5,
+                        flex: 1,
+                        height: 50,
+                        padding: 15,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginStart: 10,
+                        flexDirection: 'row'
+                    }} onPress={() => {
+                        setMode('date');
+                        setShow(true);
+                        setIsStartDate(false)
+                    }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: '#777777',
+                                flex: 7,
+                            }}> End {recurEndDate}
+                        </AutoSizeText>
+                        <Image source={Icons.icon_material_date_range} />
+                    </TouchableOpacity>
+
+
+                </View>
+            </View>
+        )
+    }
 
     function createClassProgram() {
 
-        console.log("existing date-->", moment(classDate, 'DD-MM-YYYY').toDate());
+        console.log("existing date-->", showDate);
         return (
             <Modal
                 animationType="fade"
@@ -1425,20 +1438,20 @@ function AddNewServiceView(props) {
                 }}
 
             >
-                {show ?
+                {showDate ?
                     <DateTimePickerModal
-                        isVisible={show}
+                        isVisible={showDate}
                         mode={mode}
 
-                        date={classDate?new Date(classDate):new Date()}
+                        date={classDate ? new Date(classDate) : new Date()}
                         onConfirm={(date) => {
                             console.log("Date--->", date)
                             setClassDate(moment(date).format('YYYY-MM-DD'))
-                            setShow(false)
+                            setShowDate(false)
 
                         }}
 
-                        onCancel={() => { setShow(false) }}
+                        onCancel={() => { setShowDate(false) }}
                     /> : null}
 
                 <View style={{ ...styles.centeredView }}>
@@ -1463,7 +1476,7 @@ function AddNewServiceView(props) {
                             marginBottom: 20
                         }} onPress={() => {
                             setMode('date')
-                            setShow(true);
+                            setShowDate(true);
                         }}>
 
                             <AutoSizeText
@@ -1475,20 +1488,19 @@ function AddNewServiceView(props) {
                                     ...styles.generalTxt,
                                     color: '#777777',
                                     flex: 7,
-                                }}>Date
-                                {classDate}
+                                }}>Date {classDate}
                             </AutoSizeText>
                             <Image source={Icons.icon_material_date_range} />
                         </TouchableOpacity>
 
-                        {getClassTiming(props, sheetRef, mode, setMode, show, setShow)}
+                        {getClassTiming()}
 
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             width: '40%', alignSelf: 'center',
                             marginTop: 45, backgroundColor: '#FFC081'
                         }} onPress={() => {
-                            setNonRecurringClassItem({ id: addNonRecurringClass.length, date: classDate, startTiming: valueStartTiming, endTiming: valueEndTiming });
+                            setNonRecurringClassItem({ id: nonRecurrIndex, date: classDate, startTiming: valueStartTiming, endTiming: valueEndTiming });
                             setModalVisible(false)
                         }}>
                             <Text style={{
@@ -1528,6 +1540,7 @@ function AddNewServiceView(props) {
 
     function setNonRecurringClassItem(e) {
 
+        console.log('non-recu-item', e)
         let tmp = addNonRecurringClass;
         if (tmp.length === 0) { tmp.push(e); }
         else {
@@ -1540,7 +1553,7 @@ function AddNewServiceView(props) {
         }
         setAddNonRecurringClass(tmp);
     }
-
+   
     function isDaySelect(item) {
 
         console.log("day select-->", selectWeekFrequency.length + "-" + item);
@@ -1552,6 +1565,9 @@ function AddNewServiceView(props) {
         }
     }
 
+
+    {/******************** PET TRAINING ******************** */ }
+   
     function getAnimalCategory(type) {
         return DATA.find((x) => {
             return x.name.toLowerCase() === type.toLowerCase()

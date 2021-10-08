@@ -42,7 +42,7 @@ class AddNewServices extends Component {
         return (<AddNewServiceView
             animalType={this.props.type}
             clickNextBtn={(e) => { this.clickNextBtn(e) }}
-            wholeServices={[]}
+            wholeServices={this.state.arrServices}
             addServices={(e) => { this.addServices(e) }}
         />);
     }
