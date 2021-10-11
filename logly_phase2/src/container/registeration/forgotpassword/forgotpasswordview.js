@@ -124,13 +124,13 @@ function ForgotPasswordView(props) {
                 <TouchableOpacity style={{ flexDirection: 'row',alignItems:'center' }} onPress={() => { setServiceTypeIndex(0) }}>
                     <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
                     <Image source={Icons.icon_blue_email} style={{ marginStart: 15, marginEnd: 15, marginTop: 0 }} />
-                    <Text style={{ ...styles.generalTxt,fontSize:18,paddingTop:15}}>{sendCodePhone.email}</Text>
+                    <Text style={{ ...styles.generalTxt, fontSize: 18, paddingTop: 15 }}>{sendCodePhone.formattedEmail}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center',marginTop:25,marginBottom:50 }} onPress={() => { setServiceTypeIndex(1) }}>
                     <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
                     <Image source={Icons.icon_blue_mobile} style={{ marginStart: 15, marginEnd: 15, marginTop: 0 }} />
-                    <Text style={{ ...styles.generalTxt, fontSize: 18, paddingTop:15 }}>{sendCodePhone.phone}</Text>
+                    <Text style={{ ...styles.generalTxt, fontSize: 18, paddingTop: 15 }}>{sendCodePhone.formattedPhone}</Text>
                 </TouchableOpacity>
 
             </View>
