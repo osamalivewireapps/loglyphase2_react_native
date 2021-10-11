@@ -59,12 +59,6 @@ class LoginController extends Component {
 
     loginAccount() {
 
-        //TEMPORARY..
-        if(true){
-            this.props.navigation.navigate("WelcomeRegistration");
-            return
-        }
-
         if (this._validateForm()) {
 
             this.props.userLoginRequest(this.state).then((response) => {
