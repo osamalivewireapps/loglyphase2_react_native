@@ -35,4 +35,10 @@ const icon_blue_awesome_city = require('../assets/icons/icon_blue_awesome_city/i
 const icon_blue_postalcode = require('../assets/icons/icon_blue_postalcode/icon_blue_postalcode.png');
 const icon_material_date_range = require('../assets/icons/icon_material_date_range/icon_material_date_range.png');
 const icon_three_colons = require('../assets/icons/icon_three_colons/icon_three_colons.png');
-export default { icon_three_colons,icon_material_date_range,icon_blue_postalcode,icon_blue_awesome_city,icon_blue_real_estate_agency,icon_blue_clock,icon_servicetype_checked,icon_servicetype_unchecked,icon_awesome_plus,icon_awesome_check_circle,icon_feather_arrow_right,icon_close,icon_info,icon_feather_check_circle,icon_material_delete,icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };
+const icon_car = require('../assets/icons/icon_car/icon_car.png');
+const icon_motorbike = require('../assets/icons/icon_motorbike/icon_motorbike.png');
+const icon_pickup = require('../assets/icons/icon_pickup/icon_pickup.png');
+const icon_truck = require('../assets/icons/icon_truck/icon_truck.png');
+const icon_blue_email = require('../assets/icons/icon_blue_email/icon_blue_email.png');
+const icon_blue_mobile = require('../assets/icons/icon_blue_mobile/icon_blue_mobile.png');
+export default { icon_blue_mobile,icon_blue_email,icon_car, icon_motorbike, icon_pickup, icon_truck,icon_three_colons,icon_material_date_range,icon_blue_postalcode,icon_blue_awesome_city,icon_blue_real_estate_agency,icon_blue_clock,icon_servicetype_checked,icon_servicetype_unchecked,icon_awesome_plus,icon_awesome_check_circle,icon_feather_arrow_right,icon_close,icon_info,icon_feather_check_circle,icon_material_delete,icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };

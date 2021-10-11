@@ -8,7 +8,7 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, FlatList, ScrollView, TextInput, Keyboard, Modal } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions, FlatList, ScrollView, TextInput, Keyboard, Modal, ImageBackground } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { Fonts, Colors, Icons } from '../../../theme';
 import _ from 'lodash';
@@ -73,6 +73,14 @@ const arrDuration = [
     '120 Mins',
 ]
 
+const arrBookingPeriod = [
+    'Day(s)',
+    'Month(s)',
+    'Year(s)',
+]
+
+const AnimalCategories = ["Dog", "Cat", "Horse", "Parrot", "Deer", "Rabbit"];
+
 function AddNewServiceView(props) {
     const { animalType, clickNextBtn,
         wholeServices, addServices
@@ -112,6 +120,23 @@ function AddNewServiceView(props) {
     const [addNonRecurringClass, setAddNonRecurringClass] = useState([]);
     const [nonRecurrIndex, setNonRecurrIndex] = useState(0);
     const [showDate, setShowDate] = useState(false)
+
+    ///////////////// TRANSPORTATION /////////////////
+    const [validateRegNumber, setValidateRegNumber] = useState(true);
+    const [regNumber, setRegNumber] = useState('');
+    const [validateRentPerMile, setValidateRentPerMile] = useState(true);
+    const [rentPerMile, setRentPerMile] = useState('');
+    const [animalCategory, SetAnimalCategory] = useState([]);
+    const [vehicleTypeIndex, setVehicleTypeIndex] = useState(0);
+
+    ////////////////// PET BOARDING //////////////////
+
+    const [validatePackageName, setValidatePackageName] = useState(true);
+    const [packageName, setPackageName] = useState('');
+    const [validateRatePerDay, setValidateRatePerDay] = useState(true);
+    const [ratePerDay, setRatePerDay] = useState('');
+    const [bookingPeriod, setBookingPeriod] = useState(arrBookingPeriod[0]);
+    const [valueBookingPeriod,setValueBookingPeriod]=useState('0')
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled'>
@@ -269,7 +294,6 @@ function AddNewServiceView(props) {
                 <View style={{
                     padding: 30,
                     paddingTop: 0,
-                    marginStart: -5
                 }}>
                     <Text style={{
                         ...styles.bottomSheetHeader,
@@ -331,7 +355,11 @@ function AddNewServiceView(props) {
                                 recurStartDate: recurStartDate,
                                 recurEndDate: recurEndDate,
                                 weekFrequency: selectWeekFrequency,
-                                arrNonRecurr: addNonRecurringClass
+                                arrNonRecurr: addNonRecurringClass,
+                                vehicleType: vehicleTypeIndex,
+                                regNum: regNumber,
+                                rentPerMile: rentPerMile,
+                                transportAnimalType: animalCategory,
                             })
                             sheetRef.current.close()
                         }, 200)
@@ -372,8 +400,13 @@ function AddNewServiceView(props) {
                 return getPetGroomingView();
 
             case 'Pet Training':
-                return getPetTraining()
+                return getPetTraining();
 
+            case 'Transportation':
+                return getTransportationView();
+
+            case 'Pet Boarding':
+                return getPetBoardingView();
 
         }
     }
@@ -405,6 +438,435 @@ function AddNewServiceView(props) {
 
                 </View>
 
+
+            </View>
+        )
+    }
+
+    {/** Transportation */ }
+    function getTransportationView() {
+
+        return (
+            <View
+                style={{
+                    backgroundColor: 'white',
+                    padding: 30,
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    height: '100%',
+                    flex: 1,
+                    justifyContent: 'flex-start'
+                }}
+            >
+                <View style={{
+                }}>
+
+                    <View>
+                        <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Vehicle Type *</Text>
+                        <View flexDirection='row' marginTop={15} style={{ justifyContent: 'space-between', width: '90%' }}>
+                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(0) }}>
+                                <ImageBackground style={vehicleTypeIndex === 0 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 65 } : ''} />
+                                <Image source={Icons.icon_truck} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(1) }}>
+                                <ImageBackground style={vehicleTypeIndex === 1 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 65 } : ''} />
+                                <Image source={Icons.icon_pickup} marginTop={5} />
+                            </TouchableOpacity>
+                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(2) }}>
+                                <ImageBackground style={vehicleTypeIndex === 2 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 65 } : ''} />
+                                <Image source={Icons.icon_car} marginTop={5} />
+                            </TouchableOpacity>
+
+                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(3) }}>
+                                <ImageBackground style={vehicleTypeIndex === 3 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 80 } : ''} />
+                                <Image source={Icons.icon_motorbike} marginTop={5} />
+                            </TouchableOpacity>
+
+                        </View>
+                    </View>
+
+
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Registration Number *</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        flexDirection: 'row', padding: 0, alignItems: 'center',
+                        shadowColor: validateRegNumber ? 'black' : 'darkred',
+                        shadowOpacity: validateRegNumber ? 0.25 : 1,
+                        paddingStart: 15, paddingEnd: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+
+                        }}
+                            maxLength={75}
+                            autoCapitalize='none'
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setValidateRegNumber(Util.isLengthGreater(e))
+                                setRegNumber(e)
+                            }}
+                            value={regNumber} />
+                    </View>
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Rent Per Mile *</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        flexDirection: 'row', padding: 0, alignItems: 'center',
+                        shadowColor: validateRentPerMile ? 'black' : 'darkred',
+                        shadowOpacity: validateRentPerMile ? 0.25 : 1,
+                        paddingStart: 15, paddingEnd: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+
+                        }}
+                            maxLength={75}
+                            autoCapitalize='none'
+                            keyboardType="numeric"
+                            onChangeText={(e) => {
+                                setValidateRentPerMile(Util.isGraterThanZero(e))
+                                setRentPerMile(e)
+                            }}
+                            value={rentPerMile} />
+                    </View>
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Animal Type *</Text>
+                    <FlatList
+                        numColumns={2}
+                        data={AnimalCategories}
+                        contentContainerStyle={{ marginTop: 0 }}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity style={{
+                                    backgroundColor: isSelectService(item) ? '#FFC081' : '#F5F5F5',
+                                    borderRadius: 10,
+                                    marginTop: 10,
+                                    flex: 1,
+                                    height: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginStart: (index % 2) === 0 ? 0 : 10,
+                                }} onPress={() => addAnimalCategory({
+                                    type: item,
+                                    isSelect: animalCategory.length === 0 ? true : !isSelectService(item),
+                                    index: index
+                                })}>
+
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={14}
+                                        fontSize={16}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: Colors.appBgColor
+                                        }}>{item}
+                                    </AutoSizeText>
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(item) => item.id}
+
+                    />
+
+                </View>
+
+
+            </View>
+        )
+    }
+
+    {/** Pet Boarding */ }
+    function getPetBoardingView() {
+
+        return (
+            <View
+                style={{
+                    backgroundColor: 'white',
+                    padding: 30,
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    height: '100%',
+                    flex: 1,
+                    justifyContent: 'flex-start'
+                }}
+            >
+                <View style={{
+                }}>
+
+
+
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Package Name *</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        flexDirection: 'row', padding: 0, alignItems: 'center',
+                        shadowColor: validatePackageName ? 'black' : 'darkred',
+                        shadowOpacity: validatePackageName ? 0.25 : 1,
+                        paddingStart: 15, paddingEnd: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+
+                        }}
+                            maxLength={75}
+                            autoCapitalize='none'
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setValidatePackageName(Util.isLengthGreater(e))
+                                setPackageName(e)
+                            }}
+                            value={packageName} />
+                    </View>
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Rate Per Day *</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        flexDirection: 'row', padding: 0, alignItems: 'center',
+                        shadowColor: validateRatePerDay ? 'black' : 'darkred',
+                        shadowOpacity: validateRatePerDay ? 0.25 : 1,
+                        paddingStart: 15, paddingEnd: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+
+                        }}
+                            maxLength={75}
+                            autoCapitalize='none'
+                            keyboardType="numeric"
+                            onChangeText={(e) => {
+                                setValidateRatePerDay(Util.isGraterThanZero(e))
+                                setRatePerDay(e)
+                            }}
+                            value={ratePerDay} />
+                    </View>
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Want to add a discount? ( optional )</Text>
+                    {createDiscountView()}
+                    {/* <FlatList
+                        numColumns={2}
+                        data={AnimalCategories}
+                        contentContainerStyle={{ marginTop: 0 }}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity style={{
+                                    backgroundColor: isSelectService(item) ? '#FFC081' : '#F5F5F5',
+                                    borderRadius: 10,
+                                    marginTop: 10,
+                                    flex: 1,
+                                    height: 40,
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginStart: (index % 2) === 0 ? 0 : 10,
+                                }} onPress={() => addAnimalCategory({
+                                    type: item,
+                                    isSelect: animalCategory.length === 0 ? true : !isSelectService(item),
+                                    index: index
+                                })}>
+
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={14}
+                                        fontSize={16}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: Colors.appBgColor
+                                        }}>{item}
+                                    </AutoSizeText>
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(item) => item.id}
+
+                    /> */}
+
+                </View>
+
+
+            </View>
+        )
+    }
+
+    function createDiscountView() {
+        return (
+            <View style={{
+                ...styles.boxcontainer,
+                padding: 0,
+                paddingStart: 15, paddingEnd: 15,
+                height: 200
+            }}>
+
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    fontSize: 14, fontFamily: Fonts.type.base,
+                    marginBottom: 15, marginTop: 15
+                }}>Booking Period</Text>
+                <View style={{
+                    ...styles.boxcontainer,
+                    flexDirection: 'row', padding: 0, alignItems: 'center',
+                    paddingStart: 15, paddingEnd: 30,
+                    height: 40
+                }}>
+
+                    <View style={{ backgroundColor: '#464646', height: 20, width: 1 }} />
+
+                    <TextInput placeholder="" style={{
+                        ...styles.styleTextInput,
+                        flex: 0.3,
+                        paddingStart:10
+                    }}
+                        maxLength={75}
+                        autoCapitalize='none'
+                        keyboardType="numeric"
+                        onChangeText={(e) => {
+                            setValueBookingPeriod(e)
+                        }}
+                        value={valueBookingPeriod} />
+
+                    <View style={{
+                        flexDirection: 'row', padding: 0,
+                        alignItems: 'center',
+                        flex: 0.7
+                    }}>
+
+                        <ModalDropdown
+                            style={{
+                                justifyContent: 'center', alignItems: 'center',
+                                paddingStart: 15,
+                                borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+
+                            }}
+                            defaultValue={bookingPeriod}
+                            textStyle={{
+                                ...styles.bottomSheetHeader,
+                                fontSize: 14,
+                                color: '#464646',
+                                width: '100%',
+                            }}
+
+                            dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '50%', marginStart: -15 }}
+                            dropdownTextStyle={{
+                                ...styles.bottomSheetHeader,
+                                fontSize: 14,
+                                color: '#464646',
+                                paddingStart:15,
+                                backgroundColor: 'white'
+                            }}
+                            onSelect={(index) => {
+                                setBookingPeriod(arrBookingPeriod[index])
+                            }}
+                            defaultIndex={0}
+                            options={arrBookingPeriod} />
+
+                        <Image source={Icons.icon_ios_arrow_down} />
+
+                    </View>
+                </View>
+
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    fontSize: 14, fontFamily: Fonts.type.base,
+                    marginBottom: 15, marginTop: 15
+                }}>Booking Period</Text>
+                <View style={{
+                    ...styles.boxcontainer,
+                    flexDirection: 'row', padding: 0, alignItems: 'center',
+                    paddingStart: 15, paddingEnd: 30,
+                    height: 40
+                }}>
+
+                    <View style={{ backgroundColor: '#464646', height: 20, width: 1 }} />
+
+                    <TextInput placeholder="" style={{
+                        ...styles.styleTextInput,
+                        flex: 0.3,
+                        paddingStart: 10
+                    }}
+                        maxLength={75}
+                        autoCapitalize='none'
+                        keyboardType="numeric"
+                        onChangeText={(e) => {
+                            setValueBookingPeriod(e)
+                        }}
+                        value={valueBookingPeriod} />
+
+                    <View style={{
+                        flexDirection: 'row', padding: 0,
+                        alignItems: 'center',
+                        flex: 0.7
+                    }}>
+
+                        <ModalDropdown
+                            style={{
+                                justifyContent: 'center', alignItems: 'center',
+                                paddingStart: 15,
+                                borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+
+                            }}
+                            defaultValue={bookingPeriod}
+                            textStyle={{
+                                ...styles.bottomSheetHeader,
+                                fontSize: 14,
+                                color: '#464646',
+                                width: '100%',
+                            }}
+
+                            dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '50%', marginStart: -15 }}
+                            dropdownTextStyle={{
+                                ...styles.bottomSheetHeader,
+                                fontSize: 14,
+                                color: '#464646',
+                                paddingStart: 15,
+                                backgroundColor: 'white'
+                            }}
+                            onSelect={(index) => {
+                                setBookingPeriod(arrBookingPeriod[index])
+                            }}
+                            defaultIndex={0}
+                            options={arrBookingPeriod} />
+
+                        <Image source={Icons.icon_ios_arrow_down} />
+
+                    </View>
+                </View>
 
             </View>
         )
@@ -485,7 +947,7 @@ function AddNewServiceView(props) {
 
 
 
-    
+
 
     {/******************** COMMON COMPONENTS ******************** */ }
     function getServiceType(isShowThird) {
@@ -1001,7 +1463,7 @@ function AddNewServiceView(props) {
     {/******************** COMMON COMPONENTS ******************** */ }
 
     {/******************** PET TRAINING ******************** */ }
-  
+
     function getRecurringProgram() {
 
         return (
@@ -1553,7 +2015,7 @@ function AddNewServiceView(props) {
         }
         setAddNonRecurringClass(tmp);
     }
-   
+
     function isDaySelect(item) {
 
         console.log("day select-->", selectWeekFrequency.length + "-" + item);
@@ -1567,12 +2029,42 @@ function AddNewServiceView(props) {
 
 
     {/******************** PET TRAINING ******************** */ }
-   
+
     function getAnimalCategory(type) {
         return DATA.find((x) => {
             return x.name.toLowerCase() === type.toLowerCase()
         });
     }
+
+    {/******************** TRANSPORTATION ******************** */ }
+
+    function isSelectService(item) {
+
+        let tmp = animalCategory;
+        let itemService = tmp.find(e => e.type === item);
+        if (itemService) {
+            return itemService.isSelect;
+        } else {
+            return false;
+        }
+    }
+
+    function addAnimalCategory(e) {
+        let tmp = animalCategory;
+        if (tmp.length === 0) { tmp.push(e); }
+        else {
+            let itemService = tmp.find(item => item.type === e.type);
+            if (itemService) {
+                tmp.splice(tmp.indexOf(itemService), 1);
+            } else {
+                tmp.push(e);
+            }
+
+        }
+        SetAnimalCategory(result => [...result, tmp]);
+    }
+
+    {/******************** UPDATE SERVICES W.R.T ANIMAL TYPE ******************** */ }
 
     function updateServiceValues(item) {
 
@@ -1586,6 +2078,10 @@ function AddNewServiceView(props) {
                 break;
 
             case 'Transportation':
+                setVehicleTypeIndex(item ? item.vehicleType : 0);
+                setRegNumber((item ? item.regNum : ''))
+                setRentPerMile(item ? item.rentPerMile : '')
+                SetAnimalCategory(item ? item.transportAnimalType : [])
                 break;
 
             case 'Pet Training':

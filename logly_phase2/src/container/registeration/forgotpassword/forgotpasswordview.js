@@ -12,9 +12,10 @@ const keyboardVerticalOffset = Platform.OS === 'ios' ? 0 : 0
 
 function ForgotPasswordView(props) {
     const { backScreen, openVerificationCodeScreen,
-        userEmail, setEmail } = props;
+        userEmail, setEmail, sendCodePhone } = props;
+    const [serviceTypeIndex, setServiceTypeIndex] = useState(0);
 
-  
+
     return (
         <ScrollView keyboardShouldPersistTaps='handled'>
             <KeyboardAvoidingView
@@ -53,35 +54,10 @@ function ForgotPasswordView(props) {
                             fontFamily: Fonts.type.bold, color: 'black'
                         }}>Reset your Password</Text>
 
-                        <Text style={{
-                            ...styles.generalTxt,
-                            fontSize: 20, textAlign: 'center', paddingStart: 10,
-                            paddingEnd: 10, paddingBottom: 60
-
-                        }}>Please enter the registered email
-                            address below.</Text>
-
-                        <View style={{
-                            ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 0,
-                            paddingBottom: 0, alignItems: 'center'
-                        }}>
-
-                            <Image source={Icons.icon_email} />
-                            <TextInput placeholder="Email" style={{
-                                ...styles.styleTextInput,
-                                marginStart: 10,
-                                flex: 1,
-
-
-                            }}
-                                autoCapitalize='none'
-                                keyboardType="email-address"
-                                onChangeText={(e) => setEmail(e)}
-                                value={userEmail} />
-                        </View>
-
+                        {sendCodePhone.email.length>0 ? getSendCodeView() : getForgetPasswordView()}
+                        
                         <TouchableOpacity
-                            onPress={(e) => openVerificationCodeScreen(e)}
+                            onPress={(e) => openVerificationCodeScreen(serviceTypeIndex)}
                             style={{
                                 ...styles.styleButtons, alignSelf: 'flex-end', marginTop: 20
                             }}>
@@ -100,6 +76,66 @@ function ForgotPasswordView(props) {
         </ScrollView>
 
     );
+
+    function getForgetPasswordView(){
+        return(
+            <View>
+                <Text style={{
+                    ...styles.generalTxt,
+                    fontSize: 20, textAlign: 'center', paddingStart: 10,
+                    paddingEnd: 10, paddingBottom: 60
+
+                }}>Please enter the registered email
+                    address below.</Text>
+
+                <View style={{
+                    ...styles.boxcontainer, flexDirection: 'row', padding: 20, paddingTop: 0,
+                    paddingBottom: 0, alignItems: 'center',
+                    marginBottom:30
+                }}>
+
+                    <Image source={Icons.icon_email} />
+                    <TextInput placeholder="Email" style={{
+                        ...styles.styleTextInput,
+                        marginStart: 10,
+                        flex: 1,
+
+
+                    }}
+                        autoCapitalize='none'
+                        keyboardType="email-address"
+                        onChangeText={(e) => setEmail(e)}
+                        value={userEmail} />
+                </View>
+            </View>
+        )
+    }
+
+    function getSendCodeView() {
+        return (
+            <View marginTop={25}>
+                <Text style={{
+                    ...styles.generalTxt,
+                    fontSize: 20, textAlign: 'center', paddingStart: 10,
+                    paddingEnd: 10, paddingBottom: 50
+
+                }}>How do you want to get the code to reset your password?</Text>
+
+                <TouchableOpacity style={{ flexDirection: 'row',alignItems:'center' }} onPress={() => { setServiceTypeIndex(0) }}>
+                    <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
+                    <Image source={Icons.icon_blue_email} style={{ marginStart: 15, marginEnd: 15, marginTop: 0 }} />
+                    <Text style={{ ...styles.generalTxt,fontSize:18,paddingTop:15}}>{sendCodePhone.email}</Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center',marginTop:25,marginBottom:50 }} onPress={() => { setServiceTypeIndex(1) }}>
+                    <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
+                    <Image source={Icons.icon_blue_mobile} style={{ marginStart: 15, marginEnd: 15, marginTop: 0 }} />
+                    <Text style={{ ...styles.generalTxt, fontSize: 18, paddingTop:15 }}>{sendCodePhone.phone}</Text>
+                </TouchableOpacity>
+
+            </View>
+        )
+    }
 }
 
 const styles = StyleSheet.create({

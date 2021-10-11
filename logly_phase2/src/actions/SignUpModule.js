@@ -189,9 +189,10 @@ export const userVerifyCode = (data1) => dispatch => {
 
         dispatch(EnableLoader());
 
-        axios.post(`${baseUrl}/user/verifyByCode`,
+        axios.post(`${baseUrl}/user/verifySmsMobile`,
             {
-                code: data1,
+                "mobile": data1.email,
+                "smscode": data1.phone
             }
         )
             .then(response => {
@@ -230,6 +231,49 @@ export const resendVerifyCode = (data1) => dispatch => {
         dispatch(EnableLoader());
 
         axios.post(`${baseUrl}/user/resendCodeVerification`,
+            {
+                email: data1,
+            }
+        )
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                    resolve(true)
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const resendEmailSmsCodes = (data1) => dispatch => {
+
+    console.log("fields-->", data1);
+
+    return new Promise((resolve) => {
+
+        dispatch(EnableLoader());
+
+        axios.post(`${baseUrl}/user/resendVerificationCodes`,
             {
                 email: data1,
             }

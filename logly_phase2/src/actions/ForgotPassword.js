@@ -18,9 +18,49 @@ export const userForgotPassword = (data1) => dispatch => {
 
         dispatch(EnableLoader());
 
-        axios.post(`${baseUrl}/user/forgetpassword`,
+        axios.post(`${baseUrl}/user/forgetpassword2`,
             {
                 email: data1,
+            }
+        )
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ email: response.data.data.email, phone: response.data.data.phone});
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const userForgotSendSms = (data1) => dispatch => {
+
+    console.log("fields-->", data1);
+
+    return new Promise((resolve) => {
+
+        dispatch(EnableLoader());
+
+        axios.post(`${baseUrl}/user/forgetpasswordphone`,
+            {
+                phone: data1,
             }
         )
             .then(response => {

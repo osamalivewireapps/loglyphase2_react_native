@@ -11,8 +11,8 @@ import { connect } from 'react-redux';
 import { CHARITY_ID, INDIVIDUAL, PET_LOVER_ID } from '../../../constants';
 import { Colors, Fonts, Images } from '../../../theme';
 import VerificationCodeView from './verificationcodeview';
-import { userVerifyCode, resendVerifyCode } from './../../../actions/SignUpModule';
-import { userVerifyForgotCode } from './../../../actions/ForgotPassword';
+import { userVerifyCode, resendVerifyCode, resendEmailSmsCodes } from './../../../actions/SignUpModule';
+import { userVerifyForgotCode, userForgotSendSms } from './../../../actions/ForgotPassword';
 import { VERIFY_CODE } from '../../../actions/ActionTypes';
 import utils from '../../../utils';
 import DataHandler from '../../../utils/DataHandler';
@@ -23,6 +23,7 @@ class VerificationCodeController extends Component {
         super(props);
         this.state = {
             pinCode: '',
+            pinSmsCode: '',
             pinCodeLength: 6,
         }
     }
@@ -33,9 +34,13 @@ class VerificationCodeController extends Component {
             this.userObject = JSON.parse(value);
         });
     }
-   
+
     setPinCode(code) {
         this.setState({ pinCode: code })
+    }
+
+    setPinSMSCode(code) {
+        this.setState({ pinSmsCode: code })
     }
 
     enterNewPasswordScreen(e) {
@@ -45,15 +50,15 @@ class VerificationCodeController extends Component {
             utils.topAlertError("Please enter code..")
         } else {
             if (!this.props.route.params.isChangePassword) {
-                this.props.userVerifyCode(this.state.pinCode).then((response)=>{
+                this.props.userVerifyCode({ email: this.state.pinCode, phone: this.state.pinSmsCode }).then((response) => {
                     if (this.props.route.params.accountType === INDIVIDUAL || this.props.route.params.accountType === CHARITY_ID)
                         this.props.navigation.navigate('ThanksRegistration');
                     else
                         this.props.navigation.navigate('BusAccountPackages', { showBack: false, packageId: this.userObject.packageType });
                 });
-            }else{
+            } else {
                 this.props.userVerifyForgotCode(this.state.pinCode).then((response) => {
-                    this.props.navigation.navigate('ChangePassword', { pinCode: this.state.pinCode})
+                    this.props.navigation.navigate('ChangePassword', { pinCode: this.state.pinCode })
                 });
             }
         }
@@ -78,18 +83,35 @@ class VerificationCodeController extends Component {
         this.props.navigation.pop();
     }
 
-    resendVerificationCode(){
-        this.props.resendVerifyCode(this.props.route.params.email).then(()=>{
-            
-        });
+    resendVerificationCode() {
+        if (this.props.route.params.isChangePassword) {
+            if (this.props.route.params.email)
+                this.props.resendVerifyCode(this.props.route.params.email).then(() => {
+                });
+            else {
+                this.props.userForgotSendSms(this.props.route.params.phone).then(() => {
+                });
+            }
+        } else {
+            this.props.resendEmailSmsCodes(this.props.route.params.email).then(() => {
+            });
+        }
     }
 
     render() {
         return (
             <VerificationCodeView
-                pinLength  = {this.state.pinCodeLength}
+                routeEmail={this.props.route.params.email}
+                isRegisterCodeVerification={!this.props.route.params.isChangePassword ? true : false}
+                pinLength={this.state.pinCodeLength}
+
                 verificationCode={this.state.pinCode}
                 setPinCode={(e) => this.setPinCode(e)}
+
+                verificationSmsCode={this.state.pinSmsCode}
+                setPinSMSCode={(e) => this.setPinSMSCode(e)}
+
+
                 openEnterPasswordScreen={(e) => this.enterNewPasswordScreen(e)}
                 backScreen={(e) => { this.goingBack(e) }}
                 resendCode={(e) => this.resendVerificationCode(e)} />
@@ -106,6 +128,8 @@ const mapDispatchToProps = dispatch => ({
     userVerifyCode: (data) => dispatch(userVerifyCode(data)),
     resendVerifyCode: (data) => dispatch(resendVerifyCode(data)),
     userVerifyForgotCode: (data) => dispatch(userVerifyForgotCode(data)),
+    userForgotSendSms: (data) => dispatch(userForgotSendSms(data)),
+    resendEmailSmsCodes: (data) => dispatch(resendEmailSmsCodes(data)),
 });
 
 

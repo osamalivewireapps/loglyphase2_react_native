@@ -13,6 +13,7 @@ import Util from "../../../utils";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
+import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 
 
 function BusProfileView(props) {
@@ -275,10 +276,18 @@ function BusProfileView(props) {
                         flex: 1,
                         justifyContent: 'flex-start'
                     }}>
+                    <Calendar
+                        enableSwipeMonths={true}
+                        
+                        markedDates={{
+                            '2021-10-10': { selectedColor: 'red',selected:true },
+                        }}
+                    />
 
                     <View style={{
                         ...styles.boxcontainer,
                         height: 50,
+                        marginTop:15,
                         flexDirection: 'row', alignItems: 'center',
                         shadowColor: validateHolidays ? 'black' : 'darkred',
                         shadowOpacity: validateHolidays ? 0.25 : 1,
@@ -304,6 +313,8 @@ function BusProfileView(props) {
                             }
                             value={valueHolidays} />
                     </View>
+
+                   
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',

@@ -30,15 +30,8 @@ function TeamSetupView(props) {
     const [mode, setMode] = useState('');
     const [valueEndBusTiming, setValueEndBusTiming] = useState('');
     const [isStartBusTiming, setIsStartBusTiming] = useState(false);
-
-    // const [valueStartTiming, setValueStartTiming] = useState('');
-    // const [valueEndTiming, setValueEndTiming] = useState('');
-    // const [isStartTiming, setIsStartTiming] = useState(true);
-    // const [show, setShow] = useState(false);
+    const [serviceTypeIndex, setServiceTypeIndex] = useState(0);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
-    const [valueHolidays, setValueHolidays] = useState('');
-    const [valueTaxPercentage, setValueTaxPercentage] = useState('');
-    const [validateHolidays, setValidateHolidays] = useState(true);
 
 
     const sheetRef = React.useRef(null);
@@ -63,18 +56,13 @@ function TeamSetupView(props) {
                         <Text style={{ ...styles.generalTxt2, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => backScreen(e)}>
-                        <Text style={{ ...styles.generalTxt2, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
-                        <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
-
-                    </TouchableOpacity>
                 </View>
                 <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
                 <Text style={{ ...styles.generalTxt2, marginTop: 10, textAlign: 'center' }}>Manage team members</Text>
             </View>
 
 
-            <View style={{ marginTop: -60 }}>
+            <View style={{ marginTop: -60,height:60}}>
                 <ImageBackground
                     style={{
                         backgroundColor: 'white',
@@ -87,7 +75,6 @@ function TeamSetupView(props) {
                     }}
 
                 />
-
             </View>
 
             <ScrollView keyboardShouldPersistTaps={true}>
@@ -96,21 +83,54 @@ function TeamSetupView(props) {
 
                 <View style={{
                     padding: 30,
+                    paddingTop:0,
                     alignItems: 'center',
                     alignItems: 'flex-start',
-                    flex: 1
-
+                    flex: 1,
+           
                 }}>
+
+                    <TouchableOpacity style={{
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: 10,
+                        marginTop: 20,
+                        flex: 1,
+                        height: 50,
+                        paddingStart: 25,
+                        paddingEnd: 25,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        flexDirection: 'row'
+                    }} onPress={() => {
+                        setCloseBottonSheet(true)
+                    }
+                    }>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={14}
+                            fontSize={16}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: 'black',
+                                textAlign: 'left',
+                                width: '100%',
+                            }}>Add another member
+                        </AutoSizeText>
+                        <Image source={Icons.icon_awesome_plus} />
+                    </TouchableOpacity>
+
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         marginTop: 35, width: '100%'
-                    }} onPress={() => { setCloseBottonSheet(true) }}>
+                    }} onPress={() => { }}>
                         <Text style={{
                             fontSize: 22, textAlign: 'center', padding: 10,
                             paddingStart: 127, paddingEnd: 127,
                             paddingTop: 15, paddingBottom: 15,
                             ...styles.generalTxt
-                        }}>NEXT</Text>
+                        }}>FINISH</Text>
                     </TouchableOpacity>
 
                     {isBottonSheetVisible ? sheetRef.current.open() : null}
@@ -274,36 +294,7 @@ function TeamSetupView(props) {
 
                     {getWeeklyRecurring()}
                     {getBusTiming()}
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 20,
-                        flex: 1,
-                        height: 50,
-                        paddingStart: 25,
-                        paddingEnd: 25,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row'
-                    }} onPress={() => {
-                        setCloseBottonSheet(true)
-                    }
-                    }>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: 'black',
-                                textAlign: 'left',
-                                width: '100%',
-                            }}>Add a new Services
-                        </AutoSizeText>
-                        <Image source={Icons.icon_awesome_plus} />
-                    </TouchableOpacity>
+                    {getServiceType(true)}
 
                    
 
@@ -377,7 +368,7 @@ function TeamSetupView(props) {
                     ...styles.bottomSheetHeader,
                     marginTop: 25, marginStart: 10,
                     marginBottom: 10
-                }}>Days of the week *</Text>
+                }}>Work Days</Text>
                 <FlatList
                     numColumns={4}
                     contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
@@ -549,6 +540,28 @@ function TeamSetupView(props) {
         )
     }
 
+    function getServiceType(isShowThird) {
+
+        return (<View marginTop={15}>
+            <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Service Type *</Text>
+            <View flexDirection='row' marginTop={15} style={{ justifyContent: 'space-between', width: isShowThird ? '90%' : '60%' }}>
+                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(0) }}>
+                    <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
+                    <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>On-Site</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(1) }}>
+                    <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
+                    <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Off-Site</Text>
+                </TouchableOpacity>
+                {isShowThird ?
+                    <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(2) }}>
+                        <Image source={serviceTypeIndex === 2 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
+                        <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Both</Text>
+                    </TouchableOpacity> : null
+                }
+            </View>
+        </View>)
+    }
 
     function setPhoneNo(text) {
         let tmp = "";

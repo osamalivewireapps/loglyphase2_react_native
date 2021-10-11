@@ -7,12 +7,13 @@
 import OtpInputs from 'react-native-otp-inputs';
 import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, { useState } from 'react';
-import { Platform,TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput } from 'react-native';
+import { Platform, TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
 
 function VerificationCodeView(props) {
     const { backScreen, openEnterPasswordScreen, pinLength,
-        verificationCode, setPinCode, resendCode } = props;
+        verificationCode, setPinCode, resendCode, isRegisterCodeVerification,
+        verificationSmsCode, setPinSMSCode, routeEmail } = props;
 
 
     return (
@@ -35,6 +36,7 @@ function VerificationCodeView(props) {
                     <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                 </TouchableOpacity>
             </View>
+            <ScrollView keyboardShouldPersistTaps={true}>
             <View style={{
                 marginStart: 30,
                 marginEnd: 30, alignItems: 'center',
@@ -50,36 +52,75 @@ function VerificationCodeView(props) {
 
                 <Text style={{
                     ...styles.generalTxt,
-                    fontSize: 20, textAlign: 'center', paddingStart: 10,
+                    fontSize: 16, textAlign: 'center', paddingStart: 10,
                     paddingEnd: 10, paddingBottom: 60
 
-                }}>Please check your email. We sent you a verification code.</Text>
+                }}>{isRegisterCodeVerification ? 'Please check your Email and Phone. We sent you a verification code.' : 'Please check your email. We sent you a verification code.'}</Text>
+                <View style={{flexDirection:'row',alignItems:'flex-end'}}>
+                    <Text style={{
+                        ...styles.generalTxt,
+                        fontSize: 16, textAlign: 'center', 
+                        paddingEnd:20
 
-                <OtpInputs
-                    defaultValue={verificationCode}
-                    autofillFromClipboard={true}
-                    handleChange={(code) => setPinCode(code)}
-                    numberOfInputs={pinLength}
-                    style={{
-                        width: '100%', height: 45, paddingStart: 0,
-                        justifyContent:'center',
-                        paddingEnd: 0, flexDirection: 'row', color: 'black',
+                    }}>
+                            {isRegisterCodeVerification ? 'Email Code:' : (routeEmail?'Email Code:':'Phone Code:')}
+                    </Text>
+                    <OtpInputs
+                        defaultValue={verificationCode}
+                        autofillFromClipboard={true}
+                        handleChange={(code) => setPinCode(code)}
+                        numberOfInputs={pinLength}
+                        style={{
+                            height: 45, paddingStart: 0,
+                            justifyContent: 'center',
+                            paddingEnd: 0, flexDirection: 'row', color: 'black',
 
-                    }}
-                    focusStyles={styles.borderStyleHighLighted}
-                    keyboardType="numbers-and-punctuation"
-                    inputStyles={{ textAlign: 'center' }}
-                    inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3,paddingTop:(Platform.OS === "ios" ? 12 : 0)}}
+                        }}
+                        focusStyles={styles.borderStyleHighLighted}
+                        keyboardType="numbers-and-punctuation"
+                        inputStyles={{ textAlign: 'center' }}
+                        inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3, paddingTop: (Platform.OS === "ios" ? 12 : 0) }}
 
-                />
+                    />
+                </View>
+
+                {isRegisterCodeVerification ?
+                    <View style={{ flexDirection: 'row', alignItems: 'flex-end',marginTop:20 }}>
+                        <Text style={{
+                            ...styles.generalTxt,
+                            fontSize: 16, textAlign: 'center',
+                            paddingEnd: 20
+
+                        }}>
+                            Phone Code:
+                        </Text>
+                    <OtpInputs
+                        defaultValue={verificationSmsCode}
+                        autofillFromClipboard={true}
+                        handleChange={(code) => setPinSMSCode(code)}
+                        numberOfInputs={pinLength}
+                            style={{
+                                height: 45, paddingStart: 0,
+                                justifyContent: 'center',
+                                paddingEnd: 0, flexDirection: 'row', color: 'black',
+
+                            }}
+                        focusStyles={styles.borderStyleHighLighted}
+                        keyboardType="numbers-and-punctuation"
+                        inputStyles={{ textAlign: 'center' }}
+                        inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3, paddingTop: (Platform.OS === "ios" ? 12 : 0) }}
+
+                    /></View>
+                    : <View />}
 
                 <TouchableOpacity onPress={(e) => resendCode()}>
                     <Text style={{
                         ...styles.generalTxt,
-                        marginTop: 20,
+                        marginTop: 40,
                         fontSize: 22, textAlign: 'center', paddingStart: 30,
                         paddingEnd: 30, color: 'green',
-              
+                        marginBottom:20
+
                     }}>Resend Verification Code</Text>
                 </TouchableOpacity>
 
@@ -98,7 +139,7 @@ function VerificationCodeView(props) {
 
 
             </View>
-
+            </ScrollView>
         </View>
     );
 }
@@ -141,22 +182,22 @@ const styles = StyleSheet.create({
     },
 
     borderStyleHighLighted: {
-        borderColor: "#03DAC6",
+        borderBottomColor: "#03DAC6",
 
     },
 
     underlineStyleBase: {
-        width: 40,
+        width: 30,
         height: 45,
         borderWidth: 1,
-        borderColor: 'black',
-        borderRadius: 10,
+        borderColor: 'white',
+        borderBottomColor:'black',
         color: 'black',
-        fontSize:18,
+        fontSize: 18,
     },
 
     underlineStyleHighLighted: {
-        borderColor: "#03DAC6",
+        borderBottomColor: "#03DAC6",
     },
 });
 
