@@ -79,6 +79,11 @@ const arrBookingPeriod = [
     'Year(s)',
 ]
 
+const arrDisType = [
+    'Amount',
+    'Percentage',
+]
+
 const AnimalCategories = ["Dog", "Cat", "Horse", "Parrot", "Deer", "Rabbit"];
 
 function AddNewServiceView(props) {
@@ -136,7 +141,8 @@ function AddNewServiceView(props) {
     const [validateRatePerDay, setValidateRatePerDay] = useState(true);
     const [ratePerDay, setRatePerDay] = useState('');
     const [bookingPeriod, setBookingPeriod] = useState(arrBookingPeriod[0]);
-    const [valueBookingPeriod,setValueBookingPeriod]=useState('0')
+    const [discountType, setDiscountType] = useState(arrDisType[0]);
+    const [valueBookingPeriod, setValueBookingPeriod] = useState('0')
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled'>
@@ -731,80 +737,13 @@ function AddNewServiceView(props) {
                 ...styles.boxcontainer,
                 padding: 0,
                 paddingStart: 15, paddingEnd: 15,
-                height: 200
+                height: 300
             }}>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
                     fontSize: 14, fontFamily: Fonts.type.base,
-                    marginBottom: 15, marginTop: 15
-                }}>Booking Period</Text>
-                <View style={{
-                    ...styles.boxcontainer,
-                    flexDirection: 'row', padding: 0, alignItems: 'center',
-                    paddingStart: 15, paddingEnd: 30,
-                    height: 40
-                }}>
-
-                    <View style={{ backgroundColor: '#464646', height: 20, width: 1 }} />
-
-                    <TextInput placeholder="" style={{
-                        ...styles.styleTextInput,
-                        flex: 0.3,
-                        paddingStart:10
-                    }}
-                        maxLength={75}
-                        autoCapitalize='none'
-                        keyboardType="numeric"
-                        onChangeText={(e) => {
-                            setValueBookingPeriod(e)
-                        }}
-                        value={valueBookingPeriod} />
-
-                    <View style={{
-                        flexDirection: 'row', padding: 0,
-                        alignItems: 'center',
-                        flex: 0.7
-                    }}>
-
-                        <ModalDropdown
-                            style={{
-                                justifyContent: 'center', alignItems: 'center',
-                                paddingStart: 15,
-                                borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
-
-                            }}
-                            defaultValue={bookingPeriod}
-                            textStyle={{
-                                ...styles.bottomSheetHeader,
-                                fontSize: 14,
-                                color: '#464646',
-                                width: '100%',
-                            }}
-
-                            dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '50%', marginStart: -15 }}
-                            dropdownTextStyle={{
-                                ...styles.bottomSheetHeader,
-                                fontSize: 14,
-                                color: '#464646',
-                                paddingStart:15,
-                                backgroundColor: 'white'
-                            }}
-                            onSelect={(index) => {
-                                setBookingPeriod(arrBookingPeriod[index])
-                            }}
-                            defaultIndex={0}
-                            options={arrBookingPeriod} />
-
-                        <Image source={Icons.icon_ios_arrow_down} />
-
-                    </View>
-                </View>
-
-                <Text style={{
-                    ...styles.bottomSheetHeader,
-                    fontSize: 14, fontFamily: Fonts.type.base,
-                    marginBottom: 15, marginTop: 15
+                    marginBottom: 15, marginTop: 15, marginStart: 5
                 }}>Booking Period</Text>
                 <View style={{
                     ...styles.boxcontainer,
@@ -868,6 +807,102 @@ function AddNewServiceView(props) {
                     </View>
                 </View>
 
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    fontSize: 14, fontFamily: Fonts.type.base,
+                    marginBottom: 15, marginTop: 15, marginStart: 5
+                }}>Discount Type</Text>
+                <View style={{
+                    ...styles.boxcontainer,
+                    flexDirection: 'row', padding: 0, alignItems: 'center',
+                    paddingStart: 15, paddingEnd: 30,
+                    height: 40
+                }}>
+
+
+                    <View style={{
+                        flexDirection: 'row', padding: 0,
+                        alignItems: 'center',
+                        flex: 1
+                    }}>
+
+                        <ModalDropdown
+                            style={{
+                                justifyContent: 'center', alignItems: 'center',
+                                borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+
+                            }}
+                            defaultValue={discountType}
+                            textStyle={{
+                                ...styles.bottomSheetHeader,
+                                fontSize: 14,
+                                color: '#464646',
+                                width: '100%',
+                                textAlign: 'left',
+                            }}
+
+                            dropdownStyle={{ height: 80, marginTop: 20, backgroundColor: 'white', width: '78%', marginStart: -30 }}
+                            dropdownTextStyle={{
+                                ...styles.bottomSheetHeader,
+                                fontSize: 14,
+                                color: '#464646',
+                                paddingStart: 15,
+                                backgroundColor: 'white'
+                            }}
+                            onSelect={(index) => {
+                                setDiscountType(arrDisType[index])
+                            }}
+                            defaultIndex={0}
+                            options={arrDisType} />
+
+                        <Image source={Icons.icon_ios_arrow_down} />
+
+                    </View>
+                </View>
+
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    fontSize: 14, fontFamily: Fonts.type.base,
+                    marginBottom: 15, marginTop: 25,marginStart:5,
+                }}>Discount Value</Text>
+
+                <View style={{
+                    flexDirection: 'row', padding: 0, alignItems: 'center',
+                    height: 40, width: '100%'
+                }}
+                >
+
+
+                    <View style={{
+                        ...styles.boxcontainer,
+                        padding: 0, alignItems: 'center',
+                        paddingStart: 15, paddingEnd: 30,
+                        height: 40, justifyContent: 'center',
+                        flex: 0.3
+                    }}>
+                        <Text style={{
+                            ...styles.styleTextInput,
+                        }}>
+                            $
+                        </Text>
+                    </View>
+
+                    <View flex={0.2} />
+                    <TouchableOpacity style={{
+                        ...styles.styleButtons, flex: 0.6,
+                        borderWidth:1,
+                       borderRadius:10,borderColor:Colors.appBgColor,
+                       backgroundColor:'white'
+                    }} onPress={() => { clickNextBtn() }}>
+                        <Text style={{
+                            ...styles.generalTxt,
+                            padding:10,
+                            color:Colors.appBgColor,
+                            fontSize: 14, textAlign: 'center',
+                            
+                        }}>Add Discount</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
