@@ -15,6 +15,10 @@ class AddNewServices extends Component {
         };
     }
 
+    componentDidMount() {
+        this.setState({ arrServices: [] })
+    }
+
     addServices(e) {
 
         let tmp = this.state.arrServices;
@@ -37,10 +41,16 @@ class AddNewServices extends Component {
         this.props.forwardScreen();
     }
 
-   
+    delTrainingProgram(e) {
+        let tmp = this.state.arrServices;
+        tmp.splice(e, 1);
+        this.setState({ arrServices: tmp })
+    }
+
     render() {
         return (<AddNewServiceView
             animalType={this.props.type}
+            delTrainingProgram={(e) => this.delTrainingProgram(e)}
             clickNextBtn={(e) => { this.clickNextBtn(e) }}
             wholeServices={this.state.arrServices}
             addServices={(e) => { this.addServices(e) }}

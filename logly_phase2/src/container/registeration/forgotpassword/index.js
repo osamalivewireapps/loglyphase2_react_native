@@ -20,10 +20,15 @@ class ForgotPasswordController extends Component {
             sendCodePhone: {
                 email: '',
                 phone: '',
+                formattedEmail: '',
+                formattedPhone: ''
             },
         }
     }
 
+    componentDidMount(){
+        this.getFormatedEmail('osama@liveirelabs.co')
+    }
 
     codeScreen(e) {
 
@@ -38,10 +43,15 @@ class ForgotPasswordController extends Component {
 
         if (this.state.sendCodePhone.email.length === 0) {
             this.props.userForgotPassword(this.state.email).then((e) => {
+
+                let tmpEmailFormatted = this.getFormatedEmail(e.email);
+                let tmpPhoneFormatted = this.getFormatedPhone(e.phone);
                 this.setState({
                     sendCodePhone: {
-                        email: 'Send code via email\n' + e.email,
-                        phone: 'Send code via phone\n' + e.phone
+                        email: e.email,
+                        phone: e.phone,
+                        formattedEmail: 'Send code via email\n' + tmpEmailFormatted,
+                        formattedPhone: 'Send code via phone\n' + tmpPhoneFormatted,
                     }
                 });
             })
@@ -53,7 +63,7 @@ class ForgotPasswordController extends Component {
                 });
 
             } else {
-                let tmpPhone = this.state.sendCodePhone.phone.substring(this.state.sendCodePhone.phone.lastIndexOf('\n')+1, this.state.sendCodePhone.phone.length);
+                let tmpPhone = this.state.sendCodePhone.phone;
                 this.props.userForgotSendSms(tmpPhone).then(() => {
 
                     this.props.navigation.navigate('VerificationCode', { phone: tmpPhone, isChangePassword: true });
@@ -61,6 +71,34 @@ class ForgotPasswordController extends Component {
             }
 
         }
+    }
+
+    getFormatedEmail(email) {
+
+        if (email.length === 0)
+            return '';
+        let sub1 = email.substring(1, email.lastIndexOf('@')-1);
+        let middle = email.substring(email.lastIndexOf('@') - 1, email.lastIndexOf('@')+2)
+        let sub2 = email.substring(email.lastIndexOf('@')+3, email.lastIndexOf('.')-1);
+        let middle2 = email.substring(email.lastIndexOf('.') - 1, email.length)
+        let sum = email[0] + this.getSpecificSteriks(sub1) + middle + this.getSpecificSteriks(sub2) + middle2
+        return sum;
+    }
+
+    getSpecificSteriks(str) {
+
+        let sterik = '';
+        str.split('').map(() => {
+            sterik = sterik + '*';
+        })
+        return sterik;
+    }
+
+    getFormatedPhone(phone) {
+        if (phone && phone.length > 0)
+            return phone.substring(0, 2) + "********" + phone.substring(phone.length - 2, phone.length);
+        else
+            return '';
     }
 
     setEmail(e) {

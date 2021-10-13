@@ -55,6 +55,10 @@ class AccountSetup extends Component {
         }
     }
 
+    skipBtn() {
+        this.props.navigation.navigate('BusProfileSetup')
+    }
+
     nextScreen(e) {
         if (this.state.pageNumber === this.state.stackComp.length-1) {
             this.props.navigation.navigate('BusProfileSetup');
@@ -65,6 +69,7 @@ class AccountSetup extends Component {
 
     render() {
         return (<AccountSetupView
+            skipBtn = {(e)=>{this.skipBtn(e)}}
             pageNumber={this.state.pageNumber}
             nextScreen={(e) => { this.nextScreen(e) }}
             addStack={(e) => { this.addStack(e) }}

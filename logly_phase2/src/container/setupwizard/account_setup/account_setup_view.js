@@ -16,7 +16,7 @@ import AddNewServices from "../add_new_services";
 
 function AccountSetupView(props) {
 
-    const { backScreen, stackComp, addStack, pageNumber, nextScreen } = props;
+    const { backScreen, stackComp, addStack, pageNumber, nextScreen, skipBtn } = props;
     let arrComp = stackComp;
     const pagerRef = useRef(null);
     const handlePageChange = pageNumber => {
@@ -53,11 +53,28 @@ function AccountSetupView(props) {
                         <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => backScreen(e)}>
+                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => skipBtn(e)}>
                         <Text style={{ ...styles.generalTxt, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
                         <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
 
                     </TouchableOpacity>
+                </View>
+
+                <View
+                    marginTop={20} marginBottom={10}
+                    flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
+                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>1</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
+                    <View style={{ borderColor: 'white', borderWidth: 1, borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: 14 }}>2</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
+                    <View style={{ borderColor: 'white', borderWidth: 1, borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: 14 }}>3</Text>
+                    </View>
+
                 </View>
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: 10, textAlign: 'center' }}>Select your offered services</Text>

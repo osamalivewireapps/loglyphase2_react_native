@@ -5,7 +5,7 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import React, { useState } from "react";
-import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions, ImageBackground } from "react-native";
+import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions, ImageBackground, Modal } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { Fonts, Colors, Icons } from "../../../theme";
@@ -13,11 +13,16 @@ import Util from "../../../utils";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
+import TeamListing from "./team_listing";
 
 
 function TeamSetupView(props) {
 
-    const { backScreen, clickNextButton } = props;
+    const { backScreen, clickNextButton,
+        delMember, addMember, wholeServices } = props;
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [btnLabel, setBtnLabel] = useState(false);
     const [selectWeekFrequency, setSelectWeekFrequency] = useState([]);
     const [valueName, setValueName] = useState('');
     const [validateName, setValidateName] = useState(true);
@@ -32,7 +37,8 @@ function TeamSetupView(props) {
     const [isStartBusTiming, setIsStartBusTiming] = useState(false);
     const [serviceTypeIndex, setServiceTypeIndex] = useState(0);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
-
+    const [arrIndex, setArrIndex] = useState(0);
+    const [currentObj, setCurrentObj] = useState({})
 
     const sheetRef = React.useRef(null);
 
@@ -57,12 +63,29 @@ function TeamSetupView(props) {
                     </TouchableOpacity>
 
                 </View>
+
+                <View
+                    marginTop={20} marginBottom={10}
+                    flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
+                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>1</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'white', width: 30, height: 1,marginStart:5,marginEnd:5 }} />
+                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>2</Text>
+                    </View>
+                    <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5}} />
+                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>3</Text>
+                    </View>
+
+                </View>
                 <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
-                <Text style={{ ...styles.generalTxt2, marginTop: 10, textAlign: 'center' }}>Manage team members</Text>
+                <Text style={{ ...styles.generalTxt2, marginTop: 20, textAlign: 'center' }}>Manage team members</Text>
             </View>
 
 
-            <View style={{ marginTop: -60,height:60}}>
+            <View style={{ marginTop: -70, height: 60 }}>
                 <ImageBackground
                     style={{
                         backgroundColor: 'white',
@@ -77,83 +100,197 @@ function TeamSetupView(props) {
                 />
             </View>
 
-            <ScrollView keyboardShouldPersistTaps={true}>
+            {isBottonSheetVisible ? sheetRef.current.open() : null}
+            <RBSheet
+                ref={sheetRef}
+                height={Dimensions.get('screen').height - 130}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        borderRadius: 30
+                    }
+                }}
+                onClose={() => setCloseBottonSheet(false)}
+            >
+                {showBottomSheet()}
+            </RBSheet>
 
-
-
+            {wholeServices.length > 0 ?
                 <View style={{
-                    padding: 30,
-                    paddingTop:0,
-                    alignItems: 'center',
-                    alignItems: 'flex-start',
-                    flex: 1,
-           
+                    justifyContent: 'flex-end',
+                    paddingBottom: 30,
+                    flex: 1
                 }}>
 
-                    <TouchableOpacity style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 20,
-                        flex: 1,
-                        height: 50,
-                        paddingStart: 25,
-                        paddingEnd: 25,
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flexDirection: 'row'
-                    }} onPress={() => {
-                        setCloseBottonSheet(true)
-                    }
-                    }>
+                    <ScrollView
+                        keyboardShouldPersistTaps={true}>
 
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: 'black',
-                                textAlign: 'left',
-                                width: '100%',
-                            }}>Add another member
-                        </AutoSizeText>
-                        <Image source={Icons.icon_awesome_plus} />
-                    </TouchableOpacity>
 
+
+                        <View style={{
+                            padding: 30,
+                            paddingTop: 0,
+                            alignItems: 'center',
+                            alignItems: 'flex-start',
+                            flex: 1,
+                        }}>
+
+                            {wholeServices.length > 0 ?
+
+
+                                <TeamListing
+                                    wholeServices={wholeServices}
+                                    delTrainingProgram={(e) => {
+                                        setModalVisible(true)
+                                        setCurrentObj(e)
+                                    }}
+                                    updateServiceValues={(e) => {
+                                        setBtnLabel(true)
+                                        setCloseBottonSheet(true)
+                                        updateServiceValues(e)
+                                    }} /> :
+                                null}
+
+                            <TouchableOpacity style={{
+                                backgroundColor: '#F5F5F5',
+                                borderRadius: 10,
+                                marginTop: 20,
+                                flex: 1,
+                                height: 50,
+                                paddingStart: 25,
+                                paddingEnd: 25,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flexDirection: 'row'
+                            }} onPress={() => {
+                                setBtnLabel(false)
+                                updateServiceValues(null);
+                                setCloseBottonSheet(true)
+                            }
+                            }>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={14}
+                                    fontSize={16}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: 'black',
+                                        textAlign: 'left',
+                                        width: '100%',
+                                    }}>Add another member
+                                </AutoSizeText>
+                                <Image source={Icons.icon_awesome_plus} />
+                            </TouchableOpacity>
+
+
+
+
+                        </View>
+                    </ScrollView>
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
-                        marginTop: 35, width: '100%'
+                        marginTop: 35, width: '85%', alignSelf: 'center'
                     }} onPress={() => { }}>
                         <Text style={{
                             fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingStart: 127, paddingEnd: 127,
                             paddingTop: 15, paddingBottom: 15,
                             ...styles.generalTxt
                         }}>FINISH</Text>
                     </TouchableOpacity>
-
-                    {isBottonSheetVisible ? sheetRef.current.open() : null}
-                    <RBSheet
-                        ref={sheetRef}
-                        height={Dimensions.get('screen').height - 130}
-                        openDuration={250}
-                        customStyles={{
-                            container: {
-                                borderRadius: 30
-                            }
-                        }}
-                        onClose={() => setCloseBottonSheet(false)}
-                    >
-                        {showBottomSheet()}
-                    </RBSheet>
                 </View>
-            </ScrollView>
-
-
-
+                : <TouchableOpacity style={{
+                    ...styles.styleButtons, flex: 0,
+                    marginTop: 35, width: '80%',
+                    alignSelf: 'center',
+                    backgroundColor: 'white',
+                    borderWidth: 1,
+                    borderRadius: 15,
+                    borderColor: Colors.appBgColor
+                }} onPress={() => {
+                    setCloseBottonSheet(true)
+                }}>
+                    <Text style={{
+                        fontSize: 22, textAlign: 'center', padding: 10,
+                        paddingTop: 15, paddingBottom: 15,
+                        ...styles.generalTxt,
+                        color: Colors.appBgColor
+                    }}>Add a Team Member</Text>
+                </TouchableOpacity>}
+            {modalVisible ? showCondPopUp() : null}
         </View>
     )
+
+    function showCondPopUp(e) {
+
+
+
+        return (
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={{ ...styles.centeredView }}>
+                    <View style={{ ...styles.modalView }}>
+                        <TouchableOpacity
+                            style={{ alignSelf: 'flex-end', position: 'absolute', top: 15, right: 15 }}
+                            onPress={() => {
+                                setModalVisible(!modalVisible)
+                            }}
+                        >
+                            <Image source={Icons.icon_close} style={{ height: 10, width: 10 }} />
+                        </TouchableOpacity>
+                        <Text style={{
+                            ...styles.generalTxt, color: '#585858',
+                            marginTop: 20,
+                            fontFamily: Fonts.type.base, textAlign: 'center'
+                        }}>Are you sure you want to delete this service?</Text>
+                        <TouchableOpacity style={{
+                            ...styles.styleButtons, flex: 0,
+                            width: '80%', alignSelf: 'center',
+                            marginTop: 35, backgroundColor: Colors.appBgColor
+                        }}
+                            onPress={() => {
+                                setModalVisible(!modalVisible)
+                                delMember(currentObj)
+                            }}>
+                            <Text style={{
+                                ...styles.generalTxt,
+                                fontFamily: Fonts.type.base,
+                                fontSize: 20, textAlign: 'center',
+                                paddingStart: 50, paddingEnd: 50,
+                                paddingTop: 10, paddingBottom: 10,
+
+                            }}>Delete</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{
+                            ...styles.styleButtons, flex: 0,
+                            width: '40%', alignSelf: 'center',
+                            marginTop: 15, backgroundColor: 'white'
+                        }} onPress={() => {
+                            setModalVisible(!modalVisible)
+                        }}>
+                            <Text style={{
+                                ...styles.generalTxt,
+                                fontFamily: Fonts.type.base,
+                                color: 'black',
+                                fontSize: 18, textAlign: 'center', padding: 10,
+                                paddingTop: 5, paddingBottom: 5,
+
+                            }}>Cancel</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            </Modal>
+        )
+
+    }
+
 
     //////////////////// BOTTOM SHEET /////////////
     function showBottomSheet() {
@@ -296,7 +433,7 @@ function TeamSetupView(props) {
                     {getBusTiming()}
                     {getServiceType(true)}
 
-                   
+
 
 
 
@@ -308,7 +445,11 @@ function TeamSetupView(props) {
                     }}
                         onPress={() => {
                             setTimeout(() => {
-
+                                addMember({
+                                    name: valueName,
+                                    email: valueEmail,
+                                    id: arrIndex,
+                                })
                                 sheetRef.current.close()
                             }, 200)
                         }}>
@@ -319,7 +460,7 @@ function TeamSetupView(props) {
                             fontSize: 22, textAlign: 'center', padding: 10,
                             paddingTop: 5, paddingBottom: 5,
 
-                        }}>Add</Text>
+                        }}>{!btnLabel ? 'Add' : 'Save'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{
@@ -341,22 +482,6 @@ function TeamSetupView(props) {
 
 
             </ScrollView>
-
-            //     {/* <ScrollView keyboardShouldPersistTaps='handled'>
-            //         <View
-            //             style={{
-            //                 backgroundColor: 'white',
-            //                 padding: 30,
-            //                 height: '100%',
-            //                 flex: 1,
-            //                 justifyContent: 'flex-start'
-            //             }}> */}
-
-
-            //     // </View>
-            //     // </ScrollView>
-            //     //    )
-            // }
         )
     }
 
@@ -583,6 +708,14 @@ function TeamSetupView(props) {
         setPhone(tmp)
         setValidatePhone(Util.isValidPhone(tmp))
     }
+
+    function updateServiceValues(item) {
+        setArrIndex(item ? item.id : wholeServices.length)
+        setValueName(item ? item.name : '')
+        setValidateName(item ? setValidateName(Util.isLengthGreater(item.name)) : true);
+        setValueEmail(item ? item.email : '');
+        setValidateEmail(item ? setValidateEmail(Util.isEmailValid(item.email)) : true);
+    }
 }
 
 const styles = StyleSheet.create({
@@ -634,8 +767,8 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(255,255,255,0.7)'
     },
     modalView: {
-        width: Dimensions.get("screen").width,
-        height: 350,
+        width: Dimensions.get("screen").width - 50,
+        height: 250,
         margin: 10,
         borderRadius: 20,
         backgroundColor: 'white',

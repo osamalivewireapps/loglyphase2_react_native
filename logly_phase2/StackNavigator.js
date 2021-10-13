@@ -1,3 +1,4 @@
+/* eslint-disable jsx-quotes */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { connect } from 'react-redux';
@@ -47,7 +48,7 @@ function StackNavigator(props) {
           <Stack.Screen name="ServicesSetup" component={ServicesSetup} />
           <Stack.Screen name='AccountSetup' component={AccountSetup}/>
           <Stack.Screen name='BusProfileSetup' component={BusProfileSetup} />
-          <Stack.Screen name='BusProfile' component={BusProfile}/>
+          <Stack.Screen name='BusProfile' component={BusProfile} />
           <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup}/>
           <Stack.Screen name='TeamSetup' component={TeamSetup} />
         </Stack.Navigator>

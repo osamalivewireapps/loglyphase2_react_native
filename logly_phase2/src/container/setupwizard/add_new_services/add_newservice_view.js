@@ -17,6 +17,7 @@ import ModalDropdown from "react-native-modal-dropdown";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment, { duration } from "moment";
 import Util from "../../../utils";
+import ServicesListing from "./services_listing";
 
 const DATA = [
     {
@@ -88,7 +89,7 @@ const AnimalCategories = ["Dog", "Cat", "Horse", "Parrot", "Deer", "Rabbit"];
 
 function AddNewServiceView(props) {
     const { animalType, clickNextBtn,
-        wholeServices, addServices
+        wholeServices, addServices, delTrainingProgram
     } = props;
 
     const sheetRef = React.useRef(null);
@@ -125,6 +126,7 @@ function AddNewServiceView(props) {
     const [addNonRecurringClass, setAddNonRecurringClass] = useState([]);
     const [nonRecurrIndex, setNonRecurrIndex] = useState(0);
     const [showDate, setShowDate] = useState(false)
+    const [btnLabel,setBtnLabel] = useState(false);
 
     ///////////////// TRANSPORTATION /////////////////
     const [validateRegNumber, setValidateRegNumber] = useState(true);
@@ -143,6 +145,17 @@ function AddNewServiceView(props) {
     const [bookingPeriod, setBookingPeriod] = useState(arrBookingPeriod[0]);
     const [discountType, setDiscountType] = useState(arrDisType[0]);
     const [valueBookingPeriod, setValueBookingPeriod] = useState('0')
+    const [arrPetBoardingDiscount, setArrPetBoardingDiscount] = useState([]);
+    const [modalDiscountVisible, setModalDiscountVisible] = useState(false);
+    const [currPetBoardDisIndex, setCurrPetBoardDisIndex] = useState(0);
+
+    //////////////////// BREEDING ////////////////////
+    const [areaConsultancy, setAreaConsultancy] = useState('')
+
+    //////////////////// PET WALKING ////////////////////
+    const [coverageArea, setCoverageArea] = useState('')
+    const [validateCoverageArea, setValidateCoverageArea] = useState(true);
+    const [valueBufferTime, setValueBufferTime] = useState(arrDuration[0]);
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled'>
@@ -194,6 +207,7 @@ function AddNewServiceView(props) {
                     alignItems: 'center',
                     flexDirection: 'row'
                 }} onPress={() => {
+                    setBtnLabel(false)
                     updateServiceValues(null);
                     setCloseBottonSheet(true)
                 }
@@ -209,7 +223,7 @@ function AddNewServiceView(props) {
                             color: 'black',
                             textAlign: 'left',
                             width: '100%',
-                        }}>Add a new Services
+                        }}>{getServiceProviderName()}
                     </AutoSizeText>
                     <Image source={Icons.icon_awesome_plus} />
                 </TouchableOpacity>
@@ -231,41 +245,18 @@ function AddNewServiceView(props) {
                         modalVisible ? createClassProgram() : null
                     }
                 </RBSheet>
-                {wholeServices.length > 0 ? <FlatList
-                    data={wholeServices}
-                    renderItem={({ item, index }) => {
-                        console.log("item-->", item);
-                        return (
-                            <TouchableOpacity style={{
-                                backgroundColor: '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 20,
-                                flex: 1,
-                                height: 50,
-                                justifyContent: 'center',
-                                alignItems: 'center',
+                {wholeServices.length > 0 ?
 
-                            }} onPress={() => {
-                                updateServiceValues(item)
-                                setCloseBottonSheet(true)
-                            }}>
 
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
-                                    mode={ResizeTextMode.max_lines}
-                                    style={{
-                                        ...styles.generalTxt,
-                                        color: Colors.appBgColor
-                                    }}>{item.programName}
-                                </AutoSizeText>
-                            </TouchableOpacity>
-                        )
-                    }}
-                    keyExtractor={(item) => item.id}
-
-                /> : null}
+                    <ServicesListing wholeServices={wholeServices}
+                        delTrainingProgram={(e) => { delTrainingProgram(e) }}
+                        type={animalType}
+                        updateServiceValues={(e) => {
+                            setBtnLabel(true)
+                            setCloseBottonSheet(true)
+                            updateServiceValues(e)
+                        }} /> :
+                    null}
 
                 <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0,
@@ -366,6 +357,15 @@ function AddNewServiceView(props) {
                                 regNum: regNumber,
                                 rentPerMile: rentPerMile,
                                 transportAnimalType: animalCategory,
+                                packageName: packageName,
+                                ratePerDay: ratePerDay,
+                                bookingPeriod: bookingPeriod,
+                                discountType: discountType,
+                                valueBookingPeriod: valueBookingPeriod,
+                                arrPetBoardingDiscount: arrPetBoardingDiscount,
+                                areaConsultancy: areaConsultancy,
+                                covergaeArea: coverageArea,
+                                valueBufferTime: valueBufferTime
                             })
                             sheetRef.current.close()
                         }, 200)
@@ -377,7 +377,7 @@ function AddNewServiceView(props) {
                             fontSize: 22, textAlign: 'center', padding: 10,
                             paddingTop: 5, paddingBottom: 5,
 
-                        }}>Add</Text>
+                        }}>{!btnLabel?'Add':'Save'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{
@@ -413,6 +413,13 @@ function AddNewServiceView(props) {
 
             case 'Pet Boarding':
                 return getPetBoardingView();
+
+            case 'Breeding':
+                return getBreedingView();
+
+            default:
+                return getPetWalkingView();
+
 
         }
     }
@@ -601,6 +608,115 @@ function AddNewServiceView(props) {
         )
     }
 
+    {/** Pet Walking ******/ }
+    function getPetWalkingView() {
+
+        return (
+            <View
+                style={{
+                    backgroundColor: 'white',
+                    padding: 30,
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    height: '100%',
+                    flex: 1,
+                    justifyContent: 'flex-start'
+                }}
+            >
+                <View style={{
+                }}>
+
+                    {getServiceType(false)}
+                    {getServiceName()}
+
+                    {getDuration(props)}
+                    <View style={{
+                        marginTop: 20,
+                    }}>
+
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginBottom: 5, marginTop: 0,
+                            marginStart: 5
+                        }}>Buffer Time *</Text>
+                        <View style={{
+                            ...styles.boxcontainer, flexDirection: 'row', padding: 0,
+                            alignItems: 'center',
+                            backgroundColor: '#F5F5F5',
+                        }}>
+
+                            <ModalDropdown
+                                style={{
+                                    backgroundColor: '#F5F5F5', width: '92%', height: 50,
+                                    borderTopLeftRadius: 30, borderTopRightRadius: 30,
+                                    justifyContent: 'center', alignItems: 'center',
+                                    paddingStart: 15,
+                                    borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+
+                                }}
+                                defaultValue={valueBufferTime}
+                                textStyle={{
+                                    ...styles.bottomSheetHeader,
+                                    fontSize: 14,
+                                    color: 'black',
+                                    width: '100%',
+                                }}
+
+                                dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '85%', marginStart: -15 }}
+                                dropdownTextStyle={{
+                                    ...styles.bottomSheetHeader,
+                                    fontSize: 14,
+                                    color: 'black',
+                                    backgroundColor: 'white'
+                                }}
+                                onSelect={(item) => {
+                                    setValueBufferTime(arrDuration[item])
+                                }}
+                                defaultIndex={0}
+                                options={arrDuration} />
+
+                            <Image source={Icons.icon_ios_arrow_down} />
+
+                        </View>
+                    </View>
+                    {getOnSitePrice(props)}
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 20
+                    }}>Coverage Areas *</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        shadowColor: validateCoverageArea ? 'black' : 'darkred',
+                        shadowOpacity: validateCoverageArea ? 0.25 : 1,
+                        flexDirection: 'row', padding: 0, alignItems: 'center',
+                        paddingStart: 15, paddingEnd: 15,
+                    }}>
+
+
+                        <TextInput placeholder="Enter Zip Code" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+
+                        }}
+                            maxLength={75}
+                            autoCapitalize='none'
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setCoverageArea(e)
+                                setValidateCoverageArea(Util.isLengthGreater(e))
+                            }}
+                            value={coverageArea} />
+                    </View>
+
+
+                </View>
+
+
+            </View>
+        )
+    }
+
     {/** Pet Boarding */ }
     function getPetBoardingView() {
 
@@ -686,43 +802,131 @@ function AddNewServiceView(props) {
                         marginTop: 15
                     }}>Want to add a discount? ( optional )</Text>
                     {createDiscountView()}
-                    {/* <FlatList
-                        numColumns={2}
-                        data={AnimalCategories}
+                    {modalDiscountVisible ? createDiscountModal() : null}
+                    <FlatList
+                        data={arrPetBoardingDiscount}
                         contentContainerStyle={{ marginTop: 0 }}
                         renderItem={({ item, index }) => {
+
                             return (
                                 <TouchableOpacity style={{
-                                    backgroundColor: isSelectService(item) ? '#FFC081' : '#F5F5F5',
+                                    backgroundColor: '#F0ECFF',
                                     borderRadius: 10,
                                     marginTop: 10,
                                     flex: 1,
                                     height: 40,
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginStart: (index % 2) === 0 ? 0 : 10,
-                                }} onPress={() => addAnimalCategory({
-                                    type: item,
-                                    isSelect: animalCategory.length === 0 ? true : !isSelectService(item),
-                                    index: index
-                                })}>
+                                    flexDirection: 'row',
+                                }} onPress={() => {
+                                    setCurrPetBoardDisIndex(item.id)
+                                    setValueBookingPeriod(item.bookingperiod.substring(0, item.bookingperiod.lastIndexOf(" ")))
+                                    setBookingPeriod(item.bookingperiod.substring(item.bookingperiod.lastIndexOf(" ") + 1, item.bookingperiod.length))
+                                    setDiscountType(item.discountType)
+                                    setModalDiscountVisible(true)
+                                }}>
 
                                     <AutoSizeText
                                         numberOfLines={1}
-                                        minFontSize={14}
-                                        fontSize={16}
+                                        minFontSize={12}
+                                        fontSize={14}
                                         mode={ResizeTextMode.max_lines}
                                         style={{
                                             ...styles.generalTxt,
+                                            fontSize: 14,
+                                            flex: 0.3,
+                                            textAlign: 'center',
                                             color: Colors.appBgColor
-                                        }}>{item}
+                                        }}>{item.bookingperiod}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={12}
+                                        fontSize={14}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: Colors.appBgColor,
+                                            flex: 0.4,
+                                            textAlign: 'center',
+                                            fontSize: 14
+                                        }}>{item.discountType}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={12}
+                                        fontSize={14}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: Colors.appBgColor,
+                                            flex: 0.3,
+                                            textAlign: 'center',
+                                            fontSize: 14
+                                        }}>10$
                                     </AutoSizeText>
                                 </TouchableOpacity>
                             )
                         }}
                         keyExtractor={(item) => item.id}
 
-                    /> */}
+                    />
+
+                </View>
+
+
+            </View>
+        )
+    }
+
+    {/** Breeding ******/ }
+    function getBreedingView() {
+
+        return (
+            <View
+                style={{
+                    backgroundColor: 'white',
+                    padding: 30,
+                    paddingTop: 20,
+                    paddingBottom: 20,
+                    height: '100%',
+                    flex: 1,
+                    justifyContent: 'flex-start'
+                }}
+            >
+                <View style={{
+                }}>
+
+                    {getServiceType(props, true)}
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginBottom: 5, marginStart: 5,
+                        marginTop: 15
+                    }}>Areas of Consultancy </Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        flexDirection: 'row', padding: 0, alignItems: 'center',
+                        paddingStart: 15, paddingEnd: 15,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+
+                        }}
+                            maxLength={75}
+                            autoCapitalize='none'
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setAreaConsultancy(e)
+                            }}
+                            value={areaConsultancy} />
+                    </View>
+                    {getDuration(props)}
+                    {getOnSitePrice(props)}
+
 
                 </View>
 
@@ -732,6 +936,7 @@ function AddNewServiceView(props) {
     }
 
     function createDiscountView() {
+
         return (
             <View style={{
                 ...styles.boxcontainer,
@@ -863,7 +1068,7 @@ function AddNewServiceView(props) {
                 <Text style={{
                     ...styles.bottomSheetHeader,
                     fontSize: 14, fontFamily: Fonts.type.base,
-                    marginBottom: 15, marginTop: 25,marginStart:5,
+                    marginBottom: 15, marginTop: 25, marginStart: 5,
                 }}>Discount Value</Text>
 
                 <View style={{
@@ -890,22 +1095,57 @@ function AddNewServiceView(props) {
                     <View flex={0.2} />
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0.6,
-                        borderWidth:1,
-                       borderRadius:10,borderColor:Colors.appBgColor,
-                       backgroundColor:'white'
-                    }} onPress={() => { clickNextBtn() }}>
+                        borderWidth: 1,
+                        borderRadius: 10, borderColor: Colors.appBgColor,
+                        backgroundColor: 'white'
+                    }} onPress={() => {
+                        let tmp = {
+                            id: modalDiscountVisible ? currPetBoardDisIndex : arrPetBoardingDiscount.length,
+                            bookingperiod: (valueBookingPeriod + " " + bookingPeriod),
+                            discountType: discountType,
+                            discountValue: '10%'
+                        }
+                        addPetBoardingDiscount(tmp)
+                        setModalDiscountVisible(false)
+
+                    }}>
                         <Text style={{
                             ...styles.generalTxt,
-                            padding:10,
-                            color:Colors.appBgColor,
+                            padding: 10,
+                            color: Colors.appBgColor,
                             fontSize: 14, textAlign: 'center',
-                            
+
                         }}>Add Discount</Text>
                     </TouchableOpacity>
                 </View>
             </View>
         )
     }
+
+    function createDiscountModal() {
+
+        return (
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalDiscountVisible}
+                onRequestClose={() => {
+                    setModalDiscountVisible(false)
+                }}
+
+            >
+
+                <View style={{ ...styles.centeredView }}>
+                    <View style={styles.modalView}>
+                        {createDiscountView()}
+                    </View>
+
+                </View>
+            </Modal>
+        )
+
+    }
+
 
     {/** Pet Training */ }
     function getPetTraining() {
@@ -1722,9 +1962,8 @@ function AddNewServiceView(props) {
                                         marginTop: 5,
                                         height: 50,
                                         width: '100%',
+                                        flexDirection: 'row'
 
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
                                     }} onPress={() => {
                                         setShowDate(false)
                                         setNonRecurrIndex(item.id)
@@ -1735,16 +1974,74 @@ function AddNewServiceView(props) {
                                     }
                                     }>
 
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={14}
-                                            fontSize={16}
-                                            mode={ResizeTextMode.max_lines}
+                                        <View
                                             style={{
-                                                ...styles.generalTxt,
-                                                color: Colors.appBgColor
-                                            }}>{item.date}
-                                        </AutoSizeText>
+                                                height: '100%', backgroundColor: Colors.appBgColor,
+                                                borderRadius: 10,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                flex: 0.2
+                                            }} >
+
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={16}
+                                                fontSize={30}
+                                                mode={ResizeTextMode.max_lines}
+                                                style={{
+                                                    ...styles.generalTxt,
+                                                    fontFamily: Fonts.type.bold,
+                                                    color: 'white'
+                                                }}>{item.date ? moment(item.date).format("D") : ''}
+                                            </AutoSizeText>
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={10}
+                                                fontSize={12}
+                                                mode={ResizeTextMode.max_lines}
+                                                style={{
+                                                    ...styles.generalTxt,
+                                                    includeFontPadding: false,
+                                                    fontFamily: Fonts.type.base,
+                                                    marginTop: -5,
+                                                    color: 'white'
+                                                }}>{item.date ? moment(item.date).format("MMM") : ''}
+                                            </AutoSizeText>
+
+
+                                        </View>
+                                        <View style={{
+                                            flex: 1,
+                                            justifyContent: 'center'
+                                        }}>
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={14}
+                                                fontSize={16}
+                                                mode={ResizeTextMode.max_lines}
+                                                style={{
+                                                    ...styles.generalTxt,
+                                                    fontFamily: Fonts.type.base,
+                                                    paddingStart: 10,
+                                                    paddingEnd: 10,
+                                                    color: '#585858'
+                                                }}>Pet Walking
+                                            </AutoSizeText>
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={14}
+                                                fontSize={16}
+                                                mode={ResizeTextMode.max_lines}
+                                                style={{
+                                                    ...styles.generalTxt,
+                                                    fontFamily: Fonts.type.base,
+                                                    paddingStart: 10,
+                                                    paddingEnd: 10,
+                                                    color: '#585858'
+                                                }}>12:00 pm
+                                            </AutoSizeText>
+                                        </View>
+
                                     </TouchableOpacity>
                                 )
                             }}
@@ -2099,6 +2396,23 @@ function AddNewServiceView(props) {
         SetAnimalCategory(result => [...result, tmp]);
     }
 
+    {/******************** PET BOARDING ******************** */ }
+
+
+    function addPetBoardingDiscount(e) {
+        let tmp = arrPetBoardingDiscount;
+        if (tmp.length > 0) {
+            let itemService = tmp.find(item => item.id === e.id);
+            if (itemService) {
+                tmp = tmp.map(x => (x.id === e.id ? { ...e } : x));
+                setArrPetBoardingDiscount(tmp);
+                return
+            }
+        }
+        setArrPetBoardingDiscount([...tmp, e]);
+
+    }
+
     {/******************** UPDATE SERVICES W.R.T ANIMAL TYPE ******************** */ }
 
     function updateServiceValues(item) {
@@ -2108,7 +2422,6 @@ function AddNewServiceView(props) {
         switch (animalType) {
             case 'Pet Grooming':
             case 'Veterinary':
-                setServiceName(item ? item.serviceName : '')
                 setDuration(item ? item.serviceDuration : '')
                 break;
 
@@ -2131,17 +2444,26 @@ function AddNewServiceView(props) {
                 break;
 
             case 'Pet Walking / Sitting':
+                setCoverageArea(item ? item.covergaeArea : '');
+                setValueBufferTime(item ? item.valueBufferTime : arrDuration[0]);
                 break;
 
             case 'Breeding':
+                setAreaConsultancy(item ? item.areaConsultancy : '')
                 break;
 
             case 'Pet Boarding':
+                setPackageName(item ? item.packageName : '');
+                setRatePerDay(item ? item.ratePerDay : '');
+                setBookingPeriod(item ? item.bookingPeriod : '');
+                setDiscountType(item ? item.discountType : '');
+                setArrPetBoardingDiscount(item ? item.arrPetBoardingDiscount : []);
                 break;
         }
     }
 
     function commonUpdateValues(item) {
+        setServiceName(item ? item.serviceName : '')
         setServiceTypeIndex(item ? item.serviceTypeIndex : 0);
         setDesc(item ? item.desc : '')
         setArrIndex(item ? item.id : wholeServices.length)
@@ -2151,8 +2473,31 @@ function AddNewServiceView(props) {
         setValidateDesc(item ? Util.isLengthGreater(item.desc) : true)
         setValidateOnSite(item ? Util.isGraterThanZero(item.onSitePrice) : true)
         setValidateOffSite(item ? Util.isGraterThanZero(item.offSitePrice) : true)
+        setValidateServiceName(item ? Util.isGraterThanZero(item.serviceName) : true)
         setRecurEndDate(item ? item.recurEndDate : '')
         setRecurStartDate(item ? item.recurStartDate : '')
+    }
+
+    function getServiceProviderName() {
+        switch (animalType) {
+            case 'Pet Walking / Sitting':
+            case 'Veterinary':
+            case 'Pet Grooming':
+                return 'Add a new Service';
+
+            case 'Pet Training':
+                return 'Add Training Program';
+
+            case 'Transportation':
+                return 'Add a Vehicle';
+
+            case 'Pet Boarding':
+                return 'Add a Package';
+
+            case 'Breeding':
+                return 'Areas of Consultancy'
+
+        }
     }
 }
 const styles = StyleSheet.create({

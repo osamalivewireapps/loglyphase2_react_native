@@ -75,7 +75,7 @@ class LoginController extends Component {
                     alert("Login Successfully");
                 }
                 else if (response.status === 400) {
-                    if (!response.message.startsWith("Email")) {
+                    if (!response.message.startsWith("Email") && !response.message.startsWith("Incorrect")) {
                         if (DataHandler.saveUserObject(JSON.stringify(response.userData))) {
                             this.props.navigation.navigate("VerificationCode", { isForgotPassword: false, accountType: response.userData.packageType, email: response.userData.email });
                         }
