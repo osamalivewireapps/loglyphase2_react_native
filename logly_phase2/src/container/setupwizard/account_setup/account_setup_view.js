@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
@@ -12,23 +13,24 @@ import ChooseServices from "../services";
 import ViewPager from '@react-native-community/viewpager';
 import AnimalCategories from "../animals_category";
 import AddNewServices from "../add_new_services";
+import DataHandler from "../../../utils/DataHandler";
+import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
 
 
 function AccountSetupView(props) {
 
-    const { backScreen, stackComp, addStack, pageNumber, nextScreen, skipBtn } = props;
+    const { accountType,backScreen, stackComp, addStack, pageNumber, nextScreen, skipBtn } = props;
+    
     let arrComp = stackComp;
+    
     const pagerRef = useRef(null);
-    const handlePageChange = pageNumber => {
-        pagerRef.current.setPage(pageNumber);
-    };
-
+    
     useEffect(() => {
-
         setTimeout(()=>{
             pagerRef.current.setPage(pageNumber)
 
         },0);
+
     });
 
    
@@ -52,14 +54,15 @@ function AccountSetupView(props) {
                         <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
                         <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                     </TouchableOpacity>
-
+                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING?
                     <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => skipBtn(e)}>
                         <Text style={{ ...styles.generalTxt, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
                         <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
 
-                    </TouchableOpacity>
+                    </TouchableOpacity>:<View/>}
                 </View>
 
+                {accountType === BUS_SER_PROVIDER ?
                 <View
                     marginTop={20} marginBottom={10}
                     flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
@@ -75,7 +78,7 @@ function AccountSetupView(props) {
                         <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: 14 }}>3</Text>
                     </View>
 
-                </View>
+                </View>:<View/>}
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: 10, textAlign: 'center' }}>Select your offered services</Text>
             </View>

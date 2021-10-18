@@ -13,4 +13,4 @@ export {
     PasswordResetController
 } from './container/registeration';
 
-export { TeamSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup} from './container/setupwizard'
+export { HomeScreen,BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup} from './container/setupwizard'

@@ -50,7 +50,7 @@ function ServicesListing(props) {
             }}>
 
                 <Image 
-                style={{width:10}}
+                style={{width:15,height:15}}
                 source={isSelectService(index) ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow} />
                 <AutoSizeText
                     numberOfLines={1}

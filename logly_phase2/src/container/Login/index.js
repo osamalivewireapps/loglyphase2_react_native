@@ -14,6 +14,7 @@ import utils from '../../utils';
 import LoginView from './loginview';
 import { userLoginRequest } from '../../actions/LoginModule';
 import DataHandler from '../../utils/DataHandler';
+import { BUS_LISTING, BUSINESS, INDIVIDUAL, PET_LOVER, BUS_SER_PROVIDER } from '../../constants';
 
 class LoginController extends Component {
 
@@ -60,10 +61,11 @@ class LoginController extends Component {
     loginAccount() {
 
         //TEMPORARY..
-        if(true){
-            this.props.navigation.navigate("WelcomeRegistration");
-            return
-        }
+        // if(true){
+        //     DataHandler.saveAccountType(BUS_SER_PROVIDER);
+        //     this.props.navigation.navigate("WelcomeRegistration");
+        //     return
+        // }
 
         if (this._validateForm()) {
 
@@ -72,7 +74,8 @@ class LoginController extends Component {
                 console.log("login-->", response);
 
                 if (response.status === 200) {
-                    alert("Login Successfully");
+                    DataHandler.saveAccountType(response.accountType);
+                    this.props.navigation.navigate("WelcomeRegistration");
                 }
                 else if (response.status === 400) {
                     if (!response.message.startsWith("Email") && !response.message.startsWith("Incorrect")) {

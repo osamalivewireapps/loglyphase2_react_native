@@ -5,6 +5,8 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import React, { Component } from "react";
+import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
+import DataHandler from "../../../utils/DataHandler";
 import AccountSetupView from "./account_setup_view";
 
 class AccountSetup extends Component {
@@ -18,8 +20,13 @@ class AccountSetup extends Component {
                     name: 'pick service only'
                 }
             ],
-            pageNumber: 0
+            pageNumber: 0,
+            accountType: ''
         };
+
+        DataHandler.getAccountType().then((value) => {
+            this.setState({ accountType: value });
+        });
     }
 
     addStack(e) {
@@ -32,11 +39,14 @@ class AccountSetup extends Component {
         })
         //ANIMALS ONLY..
         e.forEach(element => {
-            tmp.push({
-                type: 'Animal',
-                name: element.type
-            })
+            if (element.type !== 'Transportation') {
+                tmp.push({
+                    type: 'Animal',
+                    name: element.type
+                })
+            }
         });
+
 
         //SERVICES ONLY..
         e.forEach(element => {
@@ -60,7 +70,7 @@ class AccountSetup extends Component {
     }
 
     nextScreen(e) {
-        if (this.state.pageNumber === this.state.stackComp.length-1) {
+        if (this.state.pageNumber === this.state.stackComp.length - 1) {
             this.props.navigation.navigate('BusProfileSetup');
             return;
         }
@@ -69,7 +79,8 @@ class AccountSetup extends Component {
 
     render() {
         return (<AccountSetupView
-            skipBtn = {(e)=>{this.skipBtn(e)}}
+            accountType={this.state.accountType}
+            skipBtn={(e) => { this.skipBtn(e) }}
             pageNumber={this.state.pageNumber}
             nextScreen={(e) => { this.nextScreen(e) }}
             addStack={(e) => { this.addStack(e) }}

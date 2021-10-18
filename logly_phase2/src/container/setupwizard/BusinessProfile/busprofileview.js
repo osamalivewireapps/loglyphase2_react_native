@@ -15,6 +15,7 @@ import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { LocaleConfig } from 'react-native-calendars';
+import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
 
 
 function BusProfileView(props) {
@@ -28,7 +29,8 @@ function BusProfileView(props) {
     };
     LocaleConfig.defaultLocale = 'en';
 
-    const { backScreen, clickNextButton } = props;
+    const { isServiceEnabled,backScreen, clickNextButton, accountType } = props;
+
     const [valueDesc, setDesc] = useState('');
     const [validateDesc, setValidateDesc] = useState(true);
     const [selectWeekFrequency, setSelectWeekFrequency] = useState([]);
@@ -66,8 +68,6 @@ function BusProfileView(props) {
     };
 
 
-
-
     return (
         <View style={{ flex: 1, backgroundColor: Colors.appBgColor }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -87,13 +87,11 @@ function BusProfileView(props) {
                         <Text style={{ ...styles.generalTxt2, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(e)}>
-                        <Text style={{ ...styles.generalTxt2, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
-                        <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
-
-                    </TouchableOpacity>
+                    {accountType === BUS_LISTING ? (!isServiceEnabled ? <View /> : getSkipBtn()) :
+                        getSkipBtn()
+                    }
                 </View>
-
+                {accountType === BUS_SER_PROVIDER?
                 <View
                     marginTop={20} marginBottom={10}
                     flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
@@ -109,8 +107,8 @@ function BusProfileView(props) {
                         <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: 14 }}>3</Text>
                     </View>
 
-                </View>
-                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
+                </View>:<View/>}
+                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>{accountType === BUS_SER_PROVIDER ?"Account Setup":'Business Details'}</Text>
                 <Text style={{ ...styles.generalTxt2, marginTop: 10, textAlign: 'center' }}>Please setup your business profile</Text>
             </View>
 
@@ -209,15 +207,15 @@ function BusProfileView(props) {
                     {getClassTiming()}
                     <View style={{
                         marginTop: 15,
-                        flex:1
+                        flex: 1
                     }}>
                         <View style={{
                             backgroundColor: '#F5F5F5',
                             justifyContent: 'flex-start',
                             alignItems: 'flex-start',
                             borderRadius: 10,
-                            width:'99%',
-                            paddingBottom:10
+                            width: '99%',
+                            paddingBottom: 10
                         }}>
                             <TouchableOpacity style={{
                                 backgroundColor: '#F5F5F5',
@@ -261,12 +259,12 @@ function BusProfileView(props) {
                                                 borderRadius: 10,
                                                 height: 50,
                                                 marginTop: 5,
-                                                marginStart:15,
-                                                width:Dimensions.get('screen').width-90,
+                                                marginStart: 15,
+                                                width: Dimensions.get('screen').width - 90,
                                                 flexDirection: 'row'
 
                                             }} onPress={() => {
-                                                markedDates=item.markedDate
+                                                markedDates = item.markedDate
                                                 setIndexHoliday(item.id)
                                                 setValueHolidays(item.holiday)
                                                 setCloseBottonSheet(true)
@@ -405,6 +403,16 @@ function BusProfileView(props) {
         </View>
     )
 
+    function getSkipBtn(){
+        return(
+            <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(e)}>
+                <Text style={{ ...styles.generalTxt2, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
+                <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
+
+            </TouchableOpacity>
+        )
+    }
+
     function setHolidays(e) {
 
         let tmp = addHolidays;
@@ -488,7 +496,7 @@ function BusProfileView(props) {
                     }}
                         onPress={() => {
                             setTimeout(() => {
-                                setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected,markedDate:markedDates });
+                                setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
                                 sheetRef.current.close()
                             }, 200)
                         }}>

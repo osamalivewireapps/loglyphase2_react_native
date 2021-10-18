@@ -3,6 +3,7 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import React, { Component } from "react";
+import DataHandler from "../../../utils/DataHandler";
 import TeamSetupView from "./teamsetup_view";
 
 class TeamSetup extends React.Component {
@@ -10,8 +11,13 @@ class TeamSetup extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            arrServices: []
+            arrServices: [],
+            accountType: ''
         };
+
+        DataHandler.getAccountType().then((value) => {
+            this.setState({ accountType: value });
+        });
     }
 
     componentDidMount() {
@@ -23,7 +29,7 @@ class TeamSetup extends React.Component {
     }
 
     clickNextButton() {
-        this.props.navigation.navigate('TeamMemberSetup')
+        this.props.navigation.navigate('HomeScreen')
     }
 
     addMember(e) {
@@ -52,6 +58,7 @@ class TeamSetup extends React.Component {
 
     render() {
         return (<TeamSetupView
+            accountType={this.state.accountType}
             delMember={(e) => this.delMember(e)}
             addMember={(e)=>{this.addMember(e)}}
             wholeServices={this.state.arrServices}

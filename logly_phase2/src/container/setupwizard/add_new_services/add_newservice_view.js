@@ -1213,7 +1213,7 @@ function AddNewServiceView(props) {
                     {recurringProgramIndex === 0 ? getRecurringProgram() : getNonRecurringProgram()}
 
 
-                </View>
+                </View>      
 
 
             </View>

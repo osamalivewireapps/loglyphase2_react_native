@@ -22,12 +22,12 @@ export const userLoginRequest = (data1) => (dispatch) => {
         )
             .then(response => {
 
-                console.log("response-->", response);
+                console.log("response-->", response.data.data.user.packageType);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
                     dispatch({ type: USERLOGIN, payload: response.data.data });
-                    resolve({ status: response.data.status });
+                    resolve({ status: response.data.status, accountType: response.data.data.user.packageType });
                 }
                 else {
                     setTimeout(() => {

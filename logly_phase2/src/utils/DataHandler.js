@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import AsyncStorage from '@react-native-community/async-storage';
-import { userObject, userPreferences } from './../constants'
+import { userObject, userPreferences, accountType, BUS_SERVICES } from './../constants'
 
 export default class DataHandler {
 
@@ -21,6 +21,54 @@ export default class DataHandler {
             let value = await AsyncStorage.getItem(userObject);
             if (value !== null) {
                 console.log("DataHandler=>getUserObject---->", value);
+                return value;
+            }
+
+        } catch (error) {
+            console.log("saving error is", error);
+        }
+    }
+
+    static async saveAccountType(type) {
+        console.log("accountType--->", accountType);
+        try {
+            await AsyncStorage.setItem(accountType, type);
+            return true;
+        } catch (error) {
+            console.log("saving error is", error);
+            return false;
+        }
+    }
+
+    static async getAccountType() {
+        try {
+            let value = await AsyncStorage.getItem(accountType);
+            if (value !== null) {
+                console.log("accountType---->", value);
+                return value;
+            }
+
+        } catch (error) {
+            console.log("saving error is", error);
+        }
+    }
+
+    static async saveBusListing(type) {
+        console.log("accountType--->", accountType);
+        try {
+            await AsyncStorage.setItem(BUS_SERVICES, type);
+            return true;
+        } catch (error) {
+            console.log("saving error is", error);
+            return false;
+        }
+    }
+
+    static async getBusListing() {
+        try {
+            let value = await AsyncStorage.getItem(BUS_SERVICES);
+            if (value !== null) {
+                console.log("accountType---->", value);
                 return value;
             }
 

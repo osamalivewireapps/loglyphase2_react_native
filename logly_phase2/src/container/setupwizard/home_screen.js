@@ -14,7 +14,7 @@ import { BUSINESS, BUS_LISTING, BUS_SER_PROVIDER, CHARITY_ID, INDIVIDUAL } from 
 import { Colors, Fonts, Images } from '../../theme';
 import DataHandler from '../../utils/DataHandler';
 
-class WelcomeRegistration extends Component {
+class HomeScreen extends Component {
 
     constructor(props) {
         super(props);
@@ -30,43 +30,23 @@ class WelcomeRegistration extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: Colors.appBgColor, justifyContent: 'center', alignItems: 'center' }}>
 
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginBottom: 10 }}>Welcome !</Text>
-                <Text style={{ ...styles.generalTxt, margin: 20, textAlign: 'center' }}>To get started, Please complete your account setup</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginBottom: 0 }}>Home Screen</Text>
+                <Text style={{ ...styles.generalTxt, margin: 0, textAlign: 'center' }}></Text>
                 <TouchableOpacity onPress={() => {
-                    this.switchToServicesScreen();
+                    this.props.navigation.navigate("Login");
                 }}>
-                    <Image source={Images.img_btn_forward} marginTop={80} />
+                    <Image source={Images.img_btn_forward} marginTop={0} />
                 </TouchableOpacity>
             </View>
         )
     }
 
-    switchToServicesScreen() {
-        switch (this.accountType) {
-
-            case BUS_LISTING:
-                this.props.navigation.navigate("BusListing");
-                break;
-
-            case CHARITY_ID:
-            case BUSINESS:
-                this.props.navigation.navigate("BusProfileSetup");
-                break
-
-            case INDIVIDUAL:
-                this.props.navigation.navigate("AnimalInfo");
-                break;
-
-            default:
-                this.props.navigation.navigate("ServicesSetup");
-                break;
-        }
-    }
+    
 }
 
 
 
-export default WelcomeRegistration;
+export default HomeScreen;
 
 const styles = StyleSheet.create({
 

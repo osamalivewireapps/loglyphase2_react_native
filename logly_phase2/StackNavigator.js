@@ -11,7 +11,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {
-  PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
+  HomeScreen,BusListing,ProductInfo,AnimalInfo,PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
@@ -51,6 +51,11 @@ function StackNavigator(props) {
           <Stack.Screen name='BusProfile' component={BusProfile} />
           <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup}/>
           <Stack.Screen name='TeamSetup' component={TeamSetup} />
+          <Stack.Screen name='BusListing' component={BusListing} />
+          <Stack.Screen name='ProductInfo' component={ProductInfo} />
+          <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
+          <Stack.Screen name='HomeScreen' component={HomeScreen}/>
+
         </Stack.Navigator>
       </NavigationContainer>
     </Loader>

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 //import {Colors} from './../theme'
 // export const TIME_ZONE = (-1 * new Date().getTimezoneOffset()) / 60;
 export const APP_URL = '';
@@ -53,12 +54,62 @@ export const REFRESH_DATA = 'refresh';
 
 export const userObject = 'userObject';
 export const userPreferences = 'userPreferences';
+export const accountType = 'accountType';
+export const BUS_SERVICES = 'bus_services';
+
+export const TYPES_OF_SERVICES = [
+    {
+        name: 'Pet Grooming',
+        url: require('../assets/Images/img_pet_grooming/img_pet_grooming.png'),
+        bg: '#39A8D6',
+        id: 1,
+    },
+    {
+        name: 'Veterinary',
+        url: require('../assets/Images/img_veterinary/img_veterinary.png'),
+        bg: '#45D685',
+        id: 2,
+    },
+    {
+        name: 'Transportation',
+        url: require('../assets/Images/img_transportation/img_transportation.png'),
+        bg: '#E6A32F',
+        id: 3,
+    },
+    {
+        name: 'Pet Training',
+        url: require('../assets/Images/img_pet_training/img_pet_training.png'),
+        bg: '#C737AF',
+        id: 4,
+    },
+    {
+        name: 'Pet Walking / Sitting',
+        url: require('../assets/Images/img_pet_walking/img_pet_walking.png'),
+        bg: '#32288B',
+        id: 5,
+    },
+    {
+        name: 'Breeding',
+        url: require('../assets/Images/img_breeding/img_breeding.png'),
+        bg: '#E58C45',
+        id: 6,
+    },
+    {
+        name: 'Pet Boarding',
+        url: require('../assets/Images/img_pet_boarding/img_pet_boarding.png'),
+        bg: '#C90F22',
+        id: 7,
+    }
+];
 
 export const PET_LOVER = "PET_LOVER";
 export const CHARITY_ACCOUNT = "CHARITY_ACCOUNT";
 export const PET_LOVER_ID = "5fac021fbd5c030e375233ad";
 export const CHARITY_ID = "5fd18456787db01efbd05fab";
 export const INDIVIDUAL = "Individual";
+export const BUS_LISTING = "Business Listing";
+export const BUS_SER_PROVIDER = "Business Service Provider";
+export const BUSINESS = "Business";
 
 
 export const TERMS = "terms";

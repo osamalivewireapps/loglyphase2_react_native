@@ -1,11 +1,13 @@
+/* eslint-disable no-trailing-spaces */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-dupe-keys */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-unused-vars */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { useState } from "react";
-import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions, ImageBackground, Modal } from "react-native";
+import React, { useState, useEffect } from "react";
+import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions, ImageBackground, Modal, Keyboard } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { Fonts, Colors, Icons } from "../../../theme";
@@ -14,12 +16,15 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
 import TeamListing from "./team_listing";
+import DataHandler from "../../../utils/DataHandler";
+import { BUS_SER_PROVIDER } from "../../../constants";
 
 
 function TeamSetupView(props) {
 
-    const { backScreen, clickNextButton,
+    const { accountType, backScreen, clickNextButton,
         delMember, addMember, wholeServices } = props;
+
 
     const [modalVisible, setModalVisible] = useState(false);
     const [btnLabel, setBtnLabel] = useState(false);
@@ -62,24 +67,31 @@ function TeamSetupView(props) {
                         <Text style={{ ...styles.generalTxt2, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
                     </TouchableOpacity>
 
-                </View>
+                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(e)}>
+                        <Text style={{ ...styles.generalTxt2, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
+                        <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
 
-                <View
-                    marginTop={20} marginBottom={10}
-                    flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
-                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>1</Text>
-                    </View>
-                    <View style={{ backgroundColor: 'white', width: 30, height: 1,marginStart:5,marginEnd:5 }} />
-                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>2</Text>
-                    </View>
-                    <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5}} />
-                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>3</Text>
-                    </View>
+                    </TouchableOpacity>
 
                 </View>
+
+                {accountType === BUS_SER_PROVIDER ?
+                    <View
+                        marginTop={20} marginBottom={10}
+                        flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
+                        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>1</Text>
+                        </View>
+                        <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
+                        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>2</Text>
+                        </View>
+                        <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
+                        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>3</Text>
+                        </View>
+
+                    </View> : <View />}
                 <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
                 <Text style={{ ...styles.generalTxt2, marginTop: 20, textAlign: 'center' }}>Manage team members</Text>
             </View>
@@ -192,7 +204,7 @@ function TeamSetupView(props) {
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         marginTop: 35, width: '85%', alignSelf: 'center'
-                    }} onPress={() => { }}>
+                    }} onPress={() => { clickNextButton() }}>
                         <Text style={{
                             fontSize: 22, textAlign: 'center', padding: 10,
                             paddingTop: 15, paddingBottom: 15,
@@ -433,11 +445,6 @@ function TeamSetupView(props) {
                     {getBusTiming()}
                     {getServiceType(true)}
 
-
-
-
-
-
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
@@ -481,9 +488,11 @@ function TeamSetupView(props) {
                 </View>
 
 
-            </ScrollView>
+            </ScrollView >
         )
     }
+
+
 
     ////////////////////  WEEK UI //////////////////
     function getWeeklyRecurring() {
@@ -709,6 +718,8 @@ function TeamSetupView(props) {
         setValidatePhone(Util.isValidPhone(tmp))
     }
 
+
+   
     function updateServiceValues(item) {
         setArrIndex(item ? item.id : wholeServices.length)
         setValueName(item ? item.name : '')
