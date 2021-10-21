@@ -120,7 +120,17 @@ function LoginView(props) {
                     }}>NEXT</Text>
                 </TouchableOpacity>
 
-                <View style={{
+                <TouchableOpacity style={{
+                    ...styles.styleButtons, flex: 0,marginTop:10
+                }} onPress={(e) => openRegisterScreen(e)}>
+                    <Text style={{
+                        fontSize: 22, textAlign: 'center', padding: 10,
+                        paddingTop: 15, paddingBottom: 15,
+                        ...styles.generalTxt
+                    }}>NEW TO LOGLY</Text>
+                </TouchableOpacity>
+
+                {/* <View style={{
                     flex: 1, alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row'
 
                 }}>
@@ -142,10 +152,10 @@ function LoginView(props) {
 
                             }}>Register Here</Text>
                     </TouchableOpacity>
-                </View>
+                </View> */}
                 <View style={{
-                    flex: 1, alignItems: 'flex-start', justifyContent: 'center', flexDirection: 'row',
-                    marginTop: 10
+                    flex: 1, alignItems: 'flex-end', justifyContent: 'center', flexDirection: 'row',
+                    marginTop: 10,paddingBottom:20
 
                 }}>
                     {/* <Text

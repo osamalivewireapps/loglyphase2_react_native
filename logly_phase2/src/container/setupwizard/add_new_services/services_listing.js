@@ -34,7 +34,7 @@ function ServicesListing(props) {
 
     function getViewExceptPetTraining(item, index) {
         return (
-            <TouchableOpacity style={{
+            <View style={{
                 backgroundColor: isSelectService(index) ? '#FFC081' : '#F5F5F5',
                 borderRadius: 10,
                 marginTop: 10,
@@ -45,13 +45,16 @@ function ServicesListing(props) {
                 paddingStart: 15,
                 paddingEnd: 15
 
-            }} onPress={() => {
-                addServices(index)
             }}>
 
-                <Image 
-                style={{width:15,height:15}}
-                source={isSelectService(index) ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow} />
+                <TouchableOpacity
+                    style={{ width: 25, height: 25, alignItems: 'center', justifyContent: 'center' }}
+                    onPress={() => {
+                        addServices(index)
+                    }}>
+                    <Image
+                        source={isSelectService(index) ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow} />
+                </TouchableOpacity>
                 <AutoSizeText
                     numberOfLines={1}
                     minFontSize={14}
@@ -94,7 +97,8 @@ function ServicesListing(props) {
                     </View> : <View flex={1} />}
 
                 <TouchableOpacity
-                    flex={0.1}
+                    style={{ width:20,height:20, alignItems: 'center',justifyContent:'center'}}
+
                     onPress={() => {
                         setEditShow(index)
                     }}>
@@ -105,7 +109,7 @@ function ServicesListing(props) {
                 }}>
                     <Image source={Icons.icon_three_colons} />
                 </TouchableOpacity> */}
-            </TouchableOpacity>
+            </View>
         )
     }
 
@@ -192,32 +196,32 @@ function ServicesListing(props) {
                     </AutoSizeText>
                 </View>
 
-                {isEditShow===index?
-                <View style={{ height: 55, flex: 0.18, marginTop: 0, marginBottom: 0, justifyContent: 'center', alignItems: 'center' }}>
-                    <ImageBackground source={Images.img_popup_services} style={{ position: 'absolute', height: '100%', width: '100%' }} />
-                    <TouchableOpacity
-                        flex={0.1}
-                        onPress={() => {
-                            setEditShow(-1)
-                            updateServiceValues(item)
-                        }}>
-                        <Image source={Icons.icon_services_edit} style={{ marginEnd: 2 }} />
-                    </TouchableOpacity>
-                    <View style={{
-                        width: '50%', height: 0.5,
-                        backgroundColor: '#585858',
-                        marginEnd: 5,
-                        marginTop: 8, marginBottom: 8
-                    }} />
-                    <TouchableOpacity
-                        flex={0.1}
-                        onPress={() => {
-                            setEditShow(-1)
-                            delTrainingProgram(index)
-                        }}>
-                        <Image source={Icons.icon_services_delete} style={{ marginEnd: 5 }} />
-                    </TouchableOpacity>
-                    </View> : <View flex={0.18}/>}
+                {isEditShow === index ?
+                    <View style={{ height: 55, flex: 0.18, marginTop: 0, marginBottom: 0, justifyContent: 'center', alignItems: 'center' }}>
+                        <ImageBackground source={Images.img_popup_services} style={{ position: 'absolute', height: '100%', width: '100%' }} />
+                        <TouchableOpacity
+                            flex={0.1}
+                            onPress={() => {
+                                setEditShow(-1)
+                                updateServiceValues(item)
+                            }}>
+                            <Image source={Icons.icon_services_edit} style={{ marginEnd: 2 }} />
+                        </TouchableOpacity>
+                        <View style={{
+                            width: '50%', height: 0.5,
+                            backgroundColor: '#585858',
+                            marginEnd: 5,
+                            marginTop: 8, marginBottom: 8
+                        }} />
+                        <TouchableOpacity
+                            flex={0.1}
+                            onPress={() => {
+                                setEditShow(-1)
+                                delTrainingProgram(index)
+                            }}>
+                            <Image source={Icons.icon_services_delete} style={{ marginEnd: 5 }} />
+                        </TouchableOpacity>
+                    </View> : <View flex={0.18} />}
 
                 <TouchableOpacity
                     flex={0.16}
@@ -225,7 +229,7 @@ function ServicesListing(props) {
                         setEditShow(index)
                     }}>
                     <Image
-                source={Icons.icon_three_colons} />
+                        source={Icons.icon_three_colons} />
                 </TouchableOpacity>
             </TouchableOpacity>
         )

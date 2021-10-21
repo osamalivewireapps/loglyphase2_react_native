@@ -110,7 +110,7 @@ function TeamListing(props) {
                     </View> : <View flex={0.18} />}
 
                 <TouchableOpacity
-                    flex={0.16}
+                    style={{ width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}
                     onPress={() => {
                         setEditShow(index)
                     }}>
