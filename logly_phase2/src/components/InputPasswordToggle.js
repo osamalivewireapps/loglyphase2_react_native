@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { View, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import PropTypes from 'prop-types';
 import Icons from '../theme/Icons';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 
 export default function InputPasswordToggle({ style, inputStyle, icon, iconColor, iconSize, ...rest }, ref) {
@@ -19,6 +20,7 @@ export default function InputPasswordToggle({ style, inputStyle, icon, iconColor
                     setVisible(!visible);
                 }}>
                 <Image
+                    style={{ height: verticalScale(10), width: moderateScale(15) }}
                     source={visible ? Icons.icon_open_eye : Icons.icon_close_eye} />
             </TouchableOpacity>
         </View>

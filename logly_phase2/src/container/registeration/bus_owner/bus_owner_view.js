@@ -16,7 +16,7 @@ import { CHARITY_ID } from '../../../constants';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { Keyboard } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
-
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function BusinessOwnerView(props) {
 
@@ -40,7 +40,8 @@ function BusinessOwnerView(props) {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
-            <ScrollView keyboardShouldPersistTaps='handled'>
+            <ScrollView
+                keyboardShouldPersistTaps='handled'>
                 <KeyboardAvoidingView
                     behavior={Platform.OS === "ios" ? "padding" : null}
 
@@ -49,51 +50,53 @@ function BusinessOwnerView(props) {
                         style={{
                             backgroundColor: Colors.appBgColor,
                             height: Dimensions.get('screen').height / 5,
-                            padding: 20,
-                            paddingStart: 40,
-                            paddingTop: 30,
+                            padding: verticalScale(20),
+                            paddingStart: moderateScale(40),
+                            paddingTop: verticalScale(30),
                             flex: 0
                         }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                            <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                            <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                            <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                            <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                         </TouchableOpacity>
-                        <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 25, marginTop: 10 }}>
+                        <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10) }}>
                             {accountType.toLowerCase().startsWith("charity") ? "Charity / Non Profit" : "Business Owner"}
                         </Text>
 
-                        <Text style={{ ...styles.generalTxt, marginTop: Platform.OS === 'ios' ? 0 : 10 }}>Add your business details below</Text>
+                        <Text style={{ ...styles.generalTxt, marginTop: Platform.OS === 'ios' ? 0 : verticalScale(10) }}>Add your business details below</Text>
                     </View>
                     <View
                         style={{
-                            borderTopLeftRadius: Platform.OS === 'ios' ? 20 : 30,
-                            borderTopRightRadius: Platform.OS === 'ios' ? 20 : 30,
-                            marginTop: Platform.OS === 'ios' ? -10 : -25,
+                            borderTopLeftRadius: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(30),
+                            borderTopRightRadius: Platform.OS === 'ios' ? moderateScale(20) : moderateScale(30),
+                            marginTop: Platform.OS === 'ios' ? verticalScale(-15) : verticalScale(-25),
                             backgroundColor: 'white',
-                            paddingStart: 30,
-                            paddingEnd: 30,
+                            paddingStart: moderateScale(30),
+                            paddingEnd: moderateScale(30),
                             flex: 1,
-                            paddingBottom: 30
+                            paddingBottom: moderateScale(30)
 
                         }}
                     >
                         <View style={{
-                            marginTop: 35,
+                            marginTop: moderateScale(35),
                             flex: 9
 
 
                         }}>
 
                             <Text style={{
-                                ...styles.generalTxt, color: 'black', fontSize: 15,
-                                marginBottom: 5, marginStart: 5
+                                ...styles.generalTxt, color: 'black',
+                                fontSize: moderateScale(15),
+                                marginBottom: verticalScale(5),
+                                marginStart: verticalScale(5)
                             }}>Business Name</Text>
                             <View style={{
                                 ...styles.boxcontainer,
                                 flexDirection: 'row', padding: 0, alignItems: 'center',
                                 shadowColor: validateBusName ? 'black' : 'darkred',
                                 shadowOpacity: validateBusName ? 0.25 : 1,
-                                paddingStart: 15, paddingEnd: 15,
+                                paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                             }}>
 
 
@@ -110,22 +113,26 @@ function BusinessOwnerView(props) {
                             </View>
 
                             <Text style={{
-                                ...styles.generalTxt, color: 'black', fontSize: 15,
-                                marginBottom: 5, marginStart: 5,marginTop: 25,
+                                ...styles.generalTxt, color: 'black',
+                                fontSize: moderateScale(15),
+                                marginBottom: verticalScale(5),
+                                marginStart: verticalScale(5),
+                                marginTop: verticalScale(25),
                             }}>Business Phone</Text>
 
                             <View style={{
                                 ...styles.boxcontainer,
                                 shadowColor: validatePhone ? 'black' : 'darkred',
                                 shadowOpacity: validatePhone ? 0.25 : 1,
-                                flexDirection: 'row', padding: 15, paddingTop: 0,
+                                flexDirection: 'row',
+                                padding: verticalScale(15), paddingTop: 0,
                                 paddingBottom: 0, alignItems: 'center'
                             }}>
 
                                 <TextInput style={{
                                     ...styles.styleTextInput,
                                     flex: 1,
-                                    marginEnd: 10,
+                                    marginEnd: moderateScale(10),
 
                                 }}
                                     maxLength={12}
@@ -136,8 +143,11 @@ function BusinessOwnerView(props) {
                             </View>
 
                             <Text style={{
-                                ...styles.generalTxt, color: 'black', fontSize: 15,
-                                marginBottom: 5, marginStart: 5, marginTop: 25
+                                ...styles.generalTxt, color: 'black',
+                                fontSize: moderateScale(15),
+                                marginBottom: verticalScale(5),
+                                marginStart: verticalScale(5),
+                                marginTop: verticalScale(25),
                             }}>No.of.Employees</Text>
                             <View style={{
                                 ...styles.boxcontainer, flexDirection: 'row', padding: 0,
@@ -149,26 +159,34 @@ function BusinessOwnerView(props) {
 
                                 <ModalDropdown
                                     style={{
-                                        backgroundColor: 'white', width: '92%', height: 50,
-                                        borderTopLeftRadius: 30, borderTopRightRadius: 30,
+                                        backgroundColor: 'white', width: '92%',
+                                        height: moderateScale(40),
+                                        borderTopLeftRadius: moderateScale(30), 
+                                        borderTopRightRadius: moderateScale(30),
                                         justifyContent: 'center', alignItems: 'center',
-                                        paddingTop: 25, paddingStart: 15,
-                                        borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
+                                        paddingTop: verticalScale(28), 
+                                        paddingStart: moderateScale(15),
+                                        borderBottomLeftRadius: moderateScale(30), 
+                                        borderBottomRightRadius: moderateScale(30),
 
                                     }}
                                     defaultValue={"Select No.of.Employees"}
                                     textStyle={{
                                         ...styles.innerText,
-                                        fontSize: 16,
+                                        fontSize: moderateScale(16),
                                         color: 'black',
                                         width: '100%',
-                                        height: 50,
+                                        height: moderateScale(50),
                                     }}
 
-                                    dropdownStyle={{ backgroundColor: 'white', width: '85%', marginStart: -15 }}
+                                    dropdownStyle={{ backgroundColor: 'white', 
+                                    width: '84%',
+                                    marginStart: moderateScale(-15) ,
+                                        marginTop: moderateScale(-10)
+                                    }}
                                     dropdownTextStyle={{
                                         ...styles.innerText,
-                                        fontSize: 16,
+                                        fontSize: moderateScale(16),
                                         color: 'black',
                                         backgroundColor: 'white'
                                     }}
@@ -178,16 +196,20 @@ function BusinessOwnerView(props) {
                                     defaultIndex={0}
                                     options={arrEmpStength} />
 
-                                <Image source={Icons.icon_ios_arrow_down} />
+                                <Image source={Icons.icon_ios_arrow_down} style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                             </View>
 
                             <Text style={{
-                                ...styles.generalTxt, color: 'black', fontSize: 15,
-                                marginBottom: 5, marginStart: 5, marginTop: 25,
+                                ...styles.generalTxt, color: 'black',
+                                fontSize: moderateScale(15),
+                                marginBottom: verticalScale(5),
+                                marginStart: verticalScale(5),
+                                marginTop: verticalScale(25),
                             }}>Website (Optional)</Text>
                             <View style={{
-                                ...styles.boxcontainer, flexDirection: 'row', paddingStart: 15, paddingEnd: 15,
+                                ...styles.boxcontainer, flexDirection: 'row',
+                                paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                                 alignItems: 'center',
                                 shadowColor: validateBusURL ? 'black' : 'darkred',
                                 shadowOpacity: validateBusURL ? 0.25 : 1,
@@ -206,17 +228,24 @@ function BusinessOwnerView(props) {
                                     value={urlBus} />
                             </View>
 
-                            <TouchableOpacity style={{ marginStart: 5,flexDirection: 'row',marginTop: 20}}
-                                onPress={() => { setModalVisible(!modalVisible);}}
+                            <TouchableOpacity style={{
+                                marginStart: moderateScale(5),
+                                flexDirection: 'row',
+                                marginTop: verticalScale(20)
+                            }}
+                                onPress={() => { setModalVisible(!modalVisible); }}
                             >
-                                
+
 
                                 <Text style={{
-                                    ...styles.generalTxt, color: 'black', fontSize: 16,
-                                    marginStart: 5, fontFamily: Fonts.type.base,marginEnd:5
+                                    ...styles.generalTxt, color: 'black',
+                                    fontSize: moderateScale(16),
+                                    marginStart: moderateScale(5),
+                                    fontFamily: Fonts.type.base,
+                                    marginEnd: moderateScale(5)
                                 }}>{accountType.toLowerCase().startsWith("charity") ? "Please Attach the 501-C form." : "Verify Identity"}
                                 </Text>
-                                <Image source={Icons.icon_info} style={{ alignSelf: 'center' }} />
+                                <Image source={Icons.icon_info} resizeMode='contain' style={{ alignSelf: 'center', height: verticalScale(13), width: moderateScale(12.5) }} />
                             </TouchableOpacity>
                             {fileName ?
                                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -225,12 +254,14 @@ function BusinessOwnerView(props) {
 
                                         <AutoSizeText
                                             numberOfLines={1}
-                                            minFontSize={14}
-                                            fontSize={14}
+                                            minFontSize={moderateScale(14)}
+                                            fontSize={moderateScale(14)}
                                             mode={ResizeTextMode.max_lines}
                                             style={{
-                                                ...styles.generalTxt, color: 'black', fontSize: 14,
-                                                marginStart: 5, marginTop: 5
+                                                ...styles.generalTxt, color: 'black',
+                                                fontSize: moderateScale(14),
+                                                marginStart: moderateScale(5),
+                                                marginTop: verticalScale(5)
 
                                             }}>{fileName}
                                         </AutoSizeText>
@@ -238,14 +269,17 @@ function BusinessOwnerView(props) {
 
                                         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                             <Text style={{
-                                                ...styles.generalTxt, color: 'black', fontSize: 12,
-                                                marginStart: 5, marginTop: 0, textAlign: 'center', height: '100%'
+                                                ...styles.generalTxt,
+                                                color: 'black',
+                                                fontSize: moderateScale(12),
+                                                marginStart: moderateScale(5),
+                                                marginTop: 0, textAlign: 'center', height: '100%'
                                             }}>Completed</Text>
-                                            <Image source={Icons.icon_feather_check_circle} marginStart={5} />
+                                            <Image source={Icons.icon_feather_check_circle} marginStart={moderateScale(5)} />
                                         </View>
                                     </View>
                                     <TouchableOpacity onPress={() => deleteFile()}>
-                                        <Image source={Icons.icon_material_delete} marginStart={5} />
+                                        <Image source={Icons.icon_material_delete} marginStart={moderateScale(5)} />
                                     </TouchableOpacity>
                                 </View>
                                 : <View />}
@@ -258,18 +292,22 @@ function BusinessOwnerView(props) {
                             {!fileName ?
                                 (<TouchableOpacity style={{
                                     ...styles.styleAttachButtons,
-                                    marginBottom: 5, marginTop: 15, padding: 8,
-                                    width: '60%', justifyContent: 'center', alignItems: 'center',
+                                    marginBottom: moderateScale(5),
+                                    marginTop: verticalScale(15),
+                                    padding: moderateScale(8),
+                                    width: moderateScale(180), justifyContent: 'center',
+                                    alignItems: 'center',
                                     flexDirection: 'row'
                                 }}
                                     onPress={() => { openDocumetFolder() }}
                                 >
-                                    <Image source={Icons.icon_attach_file} />
+                                    <Image source={Icons.icon_attach_file} style={{ height: verticalScale(15), width: moderateScale(8) }} />
                                     <Text style={{
                                         ...styles.generalTxt,
                                         textAlign: 'center',
-                                        marginStart: 10,
-                                        color: Colors.appBgColor, fontSize: 16,
+                                        marginStart: moderateScale(10),
+                                        color: Colors.appBgColor,
+                                        fontSize: moderateScale(16),
 
                                     }}>
                                         {accountType.toLowerCase().startsWith("charity") ? "Attach" : "Attach Photo"}
@@ -288,9 +326,11 @@ function BusinessOwnerView(props) {
                                     ...styles.styleButtons, marginTop: 25,
                                 }}>
                                 <Text style={{
-                                    fontSize: 22, textAlign: 'center', padding: 10,
+                                    fontSize: 22, textAlign: 'center',
                                     paddingStart: 117, paddingEnd: 117,
-                                    paddingTop: 15, paddingBottom: 15,
+                                    padding: verticalScale(10),
+                                    paddingTop: verticalScale(10),
+                                    paddingBottom: verticalScale(10),
                                     ...styles.generalTxt
                                 }}>NEXT</Text>
                             </TouchableOpacity>
@@ -306,18 +346,24 @@ function BusinessOwnerView(props) {
                 onRequestClose={() => {
                     setModalVisible(!modalVisible);
                 }}
-                
+
             >
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
                         <TouchableOpacity
-                            style={{ alignSelf: 'flex-end', position: 'absolute', top: 15, right: 15 }}
+                            style={{ alignSelf: 'flex-end', position: 'absolute', top: moderateScale(15), right: moderateScale(15) }}
                             onPress={() => setModalVisible(!modalVisible)}
                         >
-                            <Image source={Icons.icon_close} style={{height:10,width:10}} />
+                            <Image source={Icons.icon_close} style={{
+                                height: moderateScale(10),
+                                width: moderateScale(10)
+                            }} />
                         </TouchableOpacity>
-                        <Text style={{ ...styles.generalTxt, color: 'black', fontSize: 16, textAlign: 'center' }}>{getInfoTxt(accountType)}</Text>
-                        
+                        <Text style={{
+                            ...styles.generalTxt, color: 'black',
+                            fontSize: moderateScale(16), textAlign: 'center'
+                        }}>{getInfoTxt(accountType)}</Text>
+
                     </View>
                 </View>
             </Modal>
@@ -325,9 +371,9 @@ function BusinessOwnerView(props) {
     );
 }
 
-function getInfoTxt(accountType){
+function getInfoTxt(accountType) {
     if (accountType.toLowerCase().startsWith("charity"))
-    return "501-C form must be uploaded (now or later) to verify Non-Profit status and get Logly Software for Free. This will also qualify your Non-Profit for other Logly Non-Profit Platform benefits."
+        return "501-C form must be uploaded (now or later) to verify Non-Profit status and get Logly Software for Free. This will also qualify your Non-Profit for other Logly Non-Profit Platform benefits."
     else
         return "To help fight fraud and Scammers, we request Business Owner to hold their Driver's License next to their face, take and upload picture to verify identity.\nBy doing this step your business will automatically get a verified by Logly badge.  If you decide not to do this step, your business will be subject to other verification steps by Logly before your business is deemed verified."
 }
@@ -338,64 +384,65 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(40),
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 40,
-        marginTop: 5
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(40),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: 'black'
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30)
     },
     styleAttachButtons: {
         borderColor: Colors.appBgColor,
-        borderWidth: 1,
-        paddingLeft: 5,
-        paddingEnd: 5,
-        borderRadius: 30,
+        borderWidth: moderateScale(1),
+        paddingLeft: moderateScale(5),
+        paddingEnd: moderateScale(5),
+        borderRadius: moderateScale(30),
         backgroundColor: 'white',
     },
     centeredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
+        marginTop: verticalScale(22),
         backgroundColor: 'rgba(0,0,0,0.5)'
     },
     modalView: {
-        width: Dimensions.get("screen").width-50,
-        margin: 10,
-        borderRadius: 20,
+        width: Dimensions.get("screen").width - 50,
+        margin: moderateScale(10),
+        borderRadius: moderateScale(20),
         backgroundColor: 'white',
-        padding: 30,
+        padding: moderateScale(30),
         // alignItems: "center",
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2
+            height: moderateScale(2)
         },
         shadowOpacity: 0.25,
-        shadowRadius: 4,
+        shadowRadius: moderateScale(4),
         elevation: 5
     },
     button: {
-        borderRadius: 20,
-        padding: 10,
-        elevation: 2
+        borderRadius: moderateScale(20),
+        padding: moderateScale(10),
+        elevation: verticalScale(2)
     },
     buttonOpen: {
         backgroundColor: "#F194FF",
@@ -404,7 +451,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#2196F3",
     },
     modalText: {
-        marginBottom: 15,
+        marginBottom: verticalScale(15),
         textAlign: "center"
     }
 });

@@ -27,7 +27,8 @@ class BusProfile extends React.Component {
         });
     }
     backScreen() {
-        this.props.navigation.navigate('Login');
+        //this.props.navigation.navigate('Login');
+        this.props.navigation.pop(2);
     }
 
     clickNextButton() {

@@ -32,6 +32,7 @@ function StackNavigator(props) {
           ...horizontalAnimation
 
         }}>
+          
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
           <Stack.Screen name="Login" component={LoginController} />

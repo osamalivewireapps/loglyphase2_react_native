@@ -58,8 +58,12 @@ class AccountSetup extends Component {
         this.setState({ stackComp: tmp, pageNumber: 1 })
     }
     goingBack(e) {
-        if (this.state.pageNumber === 0)
-            this.props.navigation.navigate('Login');
+        if (this.state.pageNumber === 0) {
+            if (this.state.accountType === BUS_SER_PROVIDER)
+                this.props.navigation.pop(3);
+            else
+                this.props.navigation.pop();
+        }
         else {
             this.setState({ pageNumber: this.state.pageNumber - 1 })
         }

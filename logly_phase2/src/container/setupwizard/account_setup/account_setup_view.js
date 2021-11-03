@@ -15,6 +15,7 @@ import AnimalCategories from "../animals_category";
 import AddNewServices from "../add_new_services";
 import DataHandler from "../../../utils/DataHandler";
 import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 
 function AccountSetupView(props) {
@@ -42,45 +43,45 @@ function AccountSetupView(props) {
             <View
                 style={{
                     backgroundColor: Colors.appBgColor,
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30,
-                    padding: 20,
-                    paddingStart: 40,
-                    paddingTop: 40,
+                    borderBottomLeftRadius: moderateScale(20),
+                    borderBottomRightRadius: moderateScale(20),
+                    padding: verticalScale(20),
+                    paddingStart: moderateScale(40),
+                    paddingTop: verticalScale(30),
                     flex: 0
                 }}>
                 <View flexDirection='row' width='100%'>
-                    <TouchableOpacity style={{ flexDirection: 'row', width: '80%' }} onPress={(e) => backScreen(e)}>
-                        <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                        <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <TouchableOpacity style={{ flexDirection: 'row',width: '80%' }} onPress={(e) => backScreen(e)}>
+                        <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                        <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-1) }}>Back</Text>
                     </TouchableOpacity>
                     {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING?
                     <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => skipBtn(e)}>
-                        <Text style={{ ...styles.generalTxt, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
-                        <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
+                            <Text style={{ ...styles.generalTxt, fontSize: moderateScale(18), marginStart: moderateScale(5), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-8) }}>Skip</Text>
+                            <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0, height: verticalScale(12), width: moderateScale(48) }} resizeMode='contain' />
 
                     </TouchableOpacity>:<View/>}
                 </View>
 
                 {accountType === BUS_SER_PROVIDER ?
                 <View
-                    marginTop={20} marginBottom={10}
+                        marginTop={verticalScale(20)} marginBottom={verticalScale(10)}
                     flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
-                    <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>1</Text>
+                        <View style={{ backgroundColor: 'white', borderRadius: moderateScale(50), height: moderateScale(25), width: moderateScale(25), justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: moderateScale(14) }}>1</Text>
                     </View>
-                    <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
-                    <View style={{ borderColor: 'white', borderWidth: 1, borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: 14 }}>2</Text>
+                        <View style={{ backgroundColor: 'white', width: moderateScale(30), height: verticalScale(1), marginStart: moderateScale(5), marginEnd: moderateScale(5) }} />
+                        <View style={{ borderColor: 'white', borderWidth: moderateScale(1), borderRadius: moderateScale(50), height: moderateScale(25), width: moderateScale(25), justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: moderateScale(14) }}>2</Text>
                     </View>
-                    <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
-                    <View style={{ borderColor: 'white', borderWidth: 1, borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                        <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: 14 }}>3</Text>
+                        <View style={{ backgroundColor: 'white', width: moderateScale(30), height: verticalScale(1), marginStart: moderateScale(5), marginEnd: moderateScale(5) }} />
+                        <View style={{ borderColor: 'white', borderWidth: moderateScale(1), borderRadius: moderateScale(50), height: moderateScale(25), width: moderateScale(25), justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: 'white', fontSize: moderateScale(14) }}>3</Text>
                     </View>
 
                 </View>:<View/>}
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: 10, textAlign: 'center' }}>Select your offered services</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>Account Setup</Text>
+                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10), textAlign: 'center' }}>Select animal categories you deal with</Text>
             </View>
             <ViewPager style={{ flex: 1 }} scrollEnabled={false} ref={pagerRef}>
                 {arrComp.length > 1 ? arrComp.map((value, index) => {
@@ -115,29 +116,30 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(40),
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 40
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(40),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(18),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: '#585858',
         width: '100%'
 
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor, borderRadius: moderateScale(30)
     }
 });
 

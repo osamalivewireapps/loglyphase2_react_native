@@ -7,6 +7,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, { useState } from 'react';
 import { TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function PasswordResetView(props) {
     const { backScreen, openLoginScreen } = props;
@@ -29,28 +30,35 @@ function PasswordResetView(props) {
 
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back1} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
             </View>
             <View style={{
-                marginStart: 30,
-                marginEnd: 30, alignItems: 'center',
+                marginStart: moderateScale(30),
+                marginEnd: moderateScale(30), alignItems: 'center',
                 height: '100%'
             }}>
 
-                <Image source={Icons.icon_check_circle} />
+                <Image 
+                    style={{ height: verticalScale(50), 
+                    width: moderateScale(50) }}
+                resizeMode="contain"
+                source={Icons.icon_check_circle} />
 
                 <Text style={{
-                    fontSize: 28, textAlign: 'center', padding: 10,
-                    paddingTop: 25, paddingBottom: 25,
+                    fontSize: moderateScale(28), textAlign: 'center', padding: moderateScale(10),
+                    paddingTop: verticalScale(25), paddingBottom: verticalScale(25),
                     fontFamily: Fonts.type.bold, color: 'black'
                 }}>Password Reset Successfully</Text>
 
                 <Text style={{
                     ...styles.generalTxt,
-                    fontSize: 20, textAlign: 'center', paddingStart: 10,
-                    paddingEnd: 10, paddingBottom: 60
+                    fontSize: moderateScale(20), 
+                    textAlign: 'center', 
+                    paddingStart: moderateScale(10),
+                    paddingEnd: moderateScale(10), 
+                    paddingBottom: verticalScale(60)
 
                 }}>You have successfully reset your password. Please use your new password to login.</Text>
 
@@ -61,8 +69,8 @@ function PasswordResetView(props) {
                         ...styles.styleButtons, alignSelf: 'flex-end', marginTop: 50
                     }}>
                     <Text style={{
-                        fontSize: 22, textAlign: 'center', padding: 10,
-                        paddingTop: 15, paddingBottom: 15,
+                        fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                         ...styles.generalTxt, color: 'white'
                     }}>LOGIN</Text>
                 </TouchableOpacity>
@@ -92,18 +100,20 @@ const styles = StyleSheet.create({
     },
     generalTxt: {
         color: 'black',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
-        color: '#585858'
-    },
-    styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30,
+        fontSize: moderateScale(16),
+        color: '#585858',
         width: '100%',
     },
+    styleButtons: {
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30),
+        width: '100%',
+    }
 
 });
 

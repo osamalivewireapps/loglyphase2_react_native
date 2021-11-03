@@ -11,6 +11,7 @@ import { ScrollView } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import CollapsibleSection from '../../../components/CollapsibleSection';
 import { INDIVIDUAL } from '../../../constants';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function BusAccountPackagesView(props) {
 
@@ -26,19 +27,19 @@ function BusAccountPackagesView(props) {
             <View
                 style={{
                     backgroundColor: Colors.appBgColor,
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30,
-                    padding: 20,
-                    paddingStart: 40,
-                    paddingTop: 40,
+                    borderBottomLeftRadius: moderateScale(20),
+                    borderBottomRightRadius: moderateScale(20),
+                    padding: verticalScale(20),
+                    paddingStart: moderateScale(40),
+                    paddingTop: verticalScale(40),
                     flex: 0
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{packageId === INDIVIDUAL ? "Pet Lover" : packageId}</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: 10, fontSize: 16 }}>We provide Premium Business tools needed to run and scale your business, while saving time, money and building incredible trust with your clients
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10) }}>{packageId === INDIVIDUAL ? "Pet Lover" : packageId}</Text>
+                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10) }}>We provide Premium Business tools needed to run and scale your business, while saving time, money and building incredible trust with your clients
                 </Text>
             </View>
 
@@ -46,9 +47,9 @@ function BusAccountPackagesView(props) {
             {packageId !== INDIVIDUAL ? (
                 <ScrollView>
                     <View style={{
-                        flex: 8, marginStart: 20,
-                        marginEnd: 20,
-                        marginTop: 15
+                        flex: 8, marginStart: moderateScale(20),
+                        marginEnd: moderateScale(20),
+                        marginTop: verticalScale(15)
                     }}>
 
 
@@ -58,14 +59,15 @@ function BusAccountPackagesView(props) {
                         <TouchableOpacity
                             onPress={() => btnConfirmPress()}
                             style={{
-                                backgroundColor: Colors.appBgColor, borderRadius: 30,
-                                flex: 0, marginTop: 25,
-                                marginStart: 10, marginEnd: 10
+                                backgroundColor: Colors.appBgColor, borderRadius: moderateScale(30),
+                                flex: 0, marginTop: verticalScale(25),
+                                marginStart: moderateScale(10), marginEnd: moderateScale(10)
                             }}>
                             <Text style={{
-                                fontSize: 22, textAlign: 'center', padding: 10,
-                                paddingStart: 117, paddingEnd: 117,
-                                paddingTop: 15, paddingBottom: 15,
+                                fontSize: 22, textAlign: 'center', padding: verticalScale(10),
+                                paddingStart: 127, paddingEnd: 127,
+                                paddingTop: verticalScale(10),
+                                paddingBottom: verticalScale(10),
                                 ...styles.generalTxt
                             }}>{btnTxt}</Text>
                         </TouchableOpacity>
@@ -76,7 +78,7 @@ function BusAccountPackagesView(props) {
                     justifyContent:'center'
 
                 }}>
-                    <Text style={{ ...styles.generalTxt, color: 'black',textAlign: 'center',fontSize:30,fontFamily:Fonts.type.bold}}>{getFreeTxt()}</Text>
+                    <Text style={{ ...styles.generalTxt, color: 'black',textAlign: 'center',fontSize:moderateScale(30),fontFamily:Fonts.type.bold}}>{getFreeTxt()}</Text>
                 </View>
                 )}
 
@@ -110,19 +112,19 @@ function renderCollapsibleItem(item, index, packagesAmount, props) {
 
                     style={{
                         ...styles.boxcontainer,
-                        padding: 15, alignItems: 'center',
-                        height: 80, flexDirection: 'row',
-                        paddingEnd: 20
+                        padding: moderateScale(15), alignItems: 'center',
+                        height: verticalScale(70), flexDirection: 'row',
+                        paddingEnd: moderateScale(20)
                     }}>
                     <Text style={{
                         ...styles.generalTxt,
-                        fontFamily: Fonts.type.bold, fontSize: 22,
+                        fontFamily: Fonts.type.bold, fontSize: moderateScale(22),
                         color: 'black',
-                        paddingLeft: 20,
+                        paddingLeft: moderateScale(20),
                         flex: 9,
 
                     }}>{item}</Text>
-                    <Image source={Icons.icon_ios_arrow_down} style={{
+                    <Image source={Icons.icon_ios_arrow_down} style={{height:verticalScale(5),width:moderateScale(8)
                     }} />
 
                 </View>
@@ -145,7 +147,7 @@ function getAccountView(listData, packageType, outerId, props) {
 
                 style={{
                     ...styles.boxcontainer,
-                    padding: 15, justifyContent: 'center',
+                    padding: moderateScale(15), justifyContent: 'center',
                     backgroundColor: index === 0 ? '#FFEBEB' : (index > 0 ? '#FEFADC' : '#9EFF87')
 
                 }}>
@@ -158,21 +160,23 @@ function getAccountView(listData, packageType, outerId, props) {
                                 innerId: index
                             })}>
                             <Image
+                                style={{ height: verticalScale(10), width: moderateScale(10) }}
                                 source={(props.accountPackage.outerIndex === outerId &&
                                     props.accountPackage.innerId === index) ? Icons.icon_check_paackage :
                                     Icons.icon_uncheck_paackage} />
                         </TouchableOpacity> :
 
                         <View />}
+
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={14}
-                        fontSize={14}
+                        minFontSize={moderateScale(14)}
+                        fontSize={moderateScale(14)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
-                            marginStart: 5,
-                            marginEnd: 10, color: 'black',
+                            marginStart: moderateScale(5),
+                            marginEnd: moderateScale(10), color: 'black',
                             fontFamily: Fonts.type.bold
 
                         }}>{data.name}</AutoSizeText>
@@ -183,8 +187,8 @@ function getAccountView(listData, packageType, outerId, props) {
                 <Text
                     style={{
                         ...styles.generalTxt,
-                        fontSize: 12,
-                        marginTop: 10,
+                        fontSize: moderateScale(12),
+                        marginTop: verticalScale(10),
                         color: 'black',
 
                     }}>{getFormattedTxt(data, props.packageId)}</Text>
@@ -201,7 +205,7 @@ function getAccountView(listData, packageType, outerId, props) {
                         ...styles.generalTxt,
                         fontFamily: Fonts.type.bold,
                         color: Colors.appBgColor,
-                        fontSize: 12, padding: 4,
+                        fontSize: moderateScale(12), padding: moderateScale(4),
 
                     }}>{packageType.toLowerCase() === "lifetime" ? "$ " + data.lifetimePrice + "/ lifetime" : (packageType === "Monthly" ? " $" + data.monthlyPrice + "/ month" : " $" + data.yearlyPrice + "/ year")}</Text>
                 </TouchableOpacity>
@@ -229,21 +233,22 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        elevation: 5,
+        elevation: verticalScale(5),
         backgroundColor: 'white',
-        borderRadius: 10,
-        marginStart: 10,
-        marginEnd: 10,
-        marginBottom: 10,
-        marginTop: 10,
+        borderRadius: moderateScale(10),
+        marginStart: moderateScale(10),
+        marginEnd: moderateScale(10),
+        marginBottom: verticalScale(10),
+        marginTop: verticalScale(10),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
@@ -253,10 +258,10 @@ const styles = StyleSheet.create({
     },
     styleButtons: {
         borderColor: Colors.appBgColor,
-        borderWidth: 1,
-        paddingLeft: 5,
-        paddingEnd: 5,
-        borderRadius: 30,
+        borderWidth: moderateScale(1),
+        paddingLeft: moderateScale(5),
+        paddingEnd: moderateScale(5),
+        borderRadius: moderateScale(30),
         backgroundColor: 'white',
     }
 });

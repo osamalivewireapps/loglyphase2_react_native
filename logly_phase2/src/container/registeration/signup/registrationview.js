@@ -18,6 +18,8 @@ import { FlatList } from 'react-native-gesture-handler';
 import { Keyboard } from 'react-native';
 import { POLICY, TERMS } from '../../../constants';
 import KeyboardShift from '../../../components/KeyboardShift';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
 
 
 const keyboardVerticalOffset = Platform.OS === 'ios' ? 30 : 0;
@@ -101,19 +103,19 @@ function RegistrationView(props) {
             <View
                 style={{
                     backgroundColor: Colors.appBgColor,
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30,
-                    padding: 20,
-                    paddingStart: 40,
-                    paddingTop: 40,
+                    borderBottomLeftRadius: moderateScale(20),
+                    borderBottomRightRadius: moderateScale(20),
+                    padding: verticalScale(20),
+                    paddingStart: moderateScale(40),
+                    paddingTop: verticalScale(40),
                     flex: 0
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back} style={{ marginTop: 0 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>Register Account</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Please fill the details below</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10) }}>Register Account</Text>
+                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10) }}>Please fill the details below</Text>
             </View>
             <ScrollView
                 ref={scroll}
@@ -124,23 +126,26 @@ function RegistrationView(props) {
                     // keyboardVerticalOffset={keyboardVerticalOffset}
                 >
                     <View style={{
-                        flex: 8, marginStart: 30, marginTop: 15,
-                        marginEnd: 30
+                        flex: 8, 
+                        marginStart: moderateScale(30),
+                        marginEnd: moderateScale(30),
+                        marginTop: verticalScale(15),
                     }}>
 
                         <View style={{
                             ...styles.boxcontainer,
 
-                            flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center',
+                            flexDirection: 'row', padding: moderateScale(20), 
+                            paddingTop: 0, paddingBottom: 0, alignItems: 'center',
                             shadowColor: validateName ? 'black' : 'darkred',
                             shadowOpacity: validateName ? 0.25 : 1
                         }}>
 
-                            <Image source={Icons.icon_user} />
+                            <Image source={Icons.icon_user} style={{ height: moderateScale(15), width: moderateScale(15) }}/>
                             <TextInput placeholder="Name" style={{
                                 ...styles.styleTextInput,
-                                marginStart: 10,
-                                paddingEnd: 20,
+                                marginStart: moderateScale(10),
+                                paddingEnd: moderateScale(20)
                             }}
                                 maxLength={75}
                                 autoCapitalize='none'
@@ -152,18 +157,18 @@ function RegistrationView(props) {
 
                         <View style={{
                             ...styles.boxcontainer,
-                            marginTop: 15, flexDirection: 'row', padding: 20,
+                            marginTop: verticalScale(15), flexDirection: 'row', padding: moderateScale(20),
                             paddingTop: 0, paddingBottom: 0, alignItems: 'center',
                             shadowColor: validateEmail ? 'black' : 'darkred',
                             shadowOpacity: validateEmail ? 0.25 : 1
                         }}>
 
-                            <Image source={Icons.icon_email} />
+                            <Image source={Icons.icon_email} style={{ height: moderateScale(10), width: moderateScale(15) }}/>
                             <TextInput placeholder="Email" style={{
                                 ...styles.styleTextInput,
-                                marginStart: 10,
+                                marginStart: moderateScale(10),
                                 flex: 1,
-                                marginEnd: 10,
+                                marginEnd: moderateScale(10),
 
                             }}
                                 autoCapitalize='none'
@@ -176,16 +181,16 @@ function RegistrationView(props) {
                             ...styles.boxcontainer,
                             shadowColor: validatePhone ? 'black' : 'darkred',
                             shadowOpacity: validatePhone ? 0.25 : 1,
-                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0,
+                            marginTop: verticalScale(15), flexDirection: 'row', padding: moderateScale(20), paddingTop: 0,
                             paddingBottom: 0, alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_phone} />
+                            <Image source={Icons.icon_phone} style={{ height: moderateScale(15), width: moderateScale(15) }}/>
                             <TextInput placeholder="Cell Phone" style={{
                                 ...styles.styleTextInput,
-                                marginStart: 10,
+                                marginStart: moderateScale(10),
                                 flex: 1,
-                                marginEnd: 10,
+                                marginEnd: moderateScale(10),
 
                             }}
                                 maxLength={12}
@@ -199,10 +204,12 @@ function RegistrationView(props) {
                             ...styles.boxcontainer,
                             shadowColor: validateState ? 'black' : 'darkred',
                             shadowOpacity: validateState ? 0.25 : 1,
-                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                            marginTop: verticalScale(15), flexDirection: 'row', 
+                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0, 
+                            alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_state} />
+                            <Image source={Icons.icon_state} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }}/>
                             <TextInput placeholder="Select State"
                                 ref={inputEl}
                                 autoCapitalize='none'
@@ -225,9 +232,9 @@ function RegistrationView(props) {
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
-                                    marginStart: 10,
+                                    marginStart: moderateScale(10),
                                     flex: 8,
-                                    marginEnd: 10,
+                                    marginEnd: moderateScale(10),
 
                                 }}
                                 keyboardType="default"
@@ -241,7 +248,7 @@ function RegistrationView(props) {
 
                                 }}
                             >
-                                <Image source={Icons.icon_ios_arrow_down} />
+                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }}/>
                             </TouchableOpacity>
 
 
@@ -249,11 +256,11 @@ function RegistrationView(props) {
 
                         {(isVisible) ? <View style={{
                             width: '100%',
-                            marginTop: 10,
+                            marginTop: verticalScale(10),
                             ...styles.boxcontainer,
-                            height: 150,
+                            height: moderateScale(150),
                             shadowRadius: 4,
-                            borderRadius: 10,
+                            borderRadius: moderateScale(10),
                             zIndex: 1
 
                         }}>
@@ -272,10 +279,10 @@ function RegistrationView(props) {
                                             <View >
                                                 <Text style={{
                                                     ...styles.generalTxt, borderColor: 'black',
-                                                    borderWidth: 0, width: '100%', padding: 10,
-                                                    borderRadius: 10, marginTop: 0,
+                                                    borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                                    borderRadius: moderateScale(10), marginTop: 0,
                                                     backgroundColor: 'white',
-                                                    color: 'black', fontSize: 14
+                                                    color: 'black', fontSize: moderateScale(14)
 
                                                 }}>{item.item.name}</Text>
                                             </View>
@@ -290,11 +297,12 @@ function RegistrationView(props) {
                             ...styles.boxcontainer,
                             shadowColor: validateCity ? 'black' : 'darkred',
                             shadowOpacity: validateCity ? 0.25 : 1,
-                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0,
-                            paddingBottom: 0, alignItems: 'center',
+                            marginTop: verticalScale(15), flexDirection: 'row',
+                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                            alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_city} />
+                            <Image source={Icons.icon_city} style={{ height: moderateScale(10), width: moderateScale(15) }}/>
                             <TextInput placeholder="Select City"
                                 ref={inputCity}
                                 autoCapitalize='none'
@@ -322,9 +330,9 @@ function RegistrationView(props) {
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
-                                    marginStart: 10,
+                                    marginStart: moderateScale(10),
                                     flex: 8,
-                                    marginEnd: 10
+                                    marginEnd: moderateScale(10)
 
                                 }}
                                 keyboardType="default"
@@ -339,18 +347,18 @@ function RegistrationView(props) {
 
                                 }}
                             >
-                                <Image source={Icons.icon_ios_arrow_down} />
+                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }}/>
                             </TouchableOpacity>
                         </View>
 
                         {(isCityVisible) ? <View style={{
                             zIndex: 1,
                             width: '100%',
-                            marginTop: 10,
+                            marginTop: verticalScale(10),
                             ...styles.boxcontainer,
-                            height: 150,
+                            height: moderateScale(150),
                             shadowRadius: 4,
-                            borderRadius: 10
+                            borderRadius: moderateScale(10)
 
                         }}>
                             <FlatList
@@ -368,10 +376,11 @@ function RegistrationView(props) {
                                             <View >
                                                 <Text style={{
                                                     ...styles.generalTxt, borderColor: 'black',
-                                                    borderWidth: 0, width: '100%', padding: 10,
-                                                    borderRadius: 10, marginTop: 0,
+                                                    borderWidth: 0, width: '100%', 
+                                                    padding: moderateScale(10),
+                                                    borderRadius: moderateScale(10), marginTop: 0,
                                                     backgroundColor: 'white',
-                                                    color: 'black', fontSize: 14
+                                                    color: 'black', fontSize: moderateScale(14)
 
                                                 }}>{item.item.name}</Text>
                                             </View>
@@ -385,10 +394,12 @@ function RegistrationView(props) {
                             ...styles.boxcontainer,
                             shadowColor: validateZipCode ? 'black' : 'darkred',
                             shadowOpacity: validateZipCode ? 0.25 : 1,
-                            marginTop: 15, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                            marginTop: verticalScale(15), flexDirection: 'row',
+                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                            alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_zipcode} />
+                            <Image source={Icons.icon_zipcode} style={{ height: moderateScale(16), width: moderateScale(15) }}/>
 
                             <TextInput placeholder="Zip Code"
                                 ref={inputZipCode}
@@ -420,9 +431,9 @@ function RegistrationView(props) {
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
-                                    marginStart: 10,
+                                    marginStart: moderateScale(10),
                                     flex: 8,
-                                    marginEnd: 10,
+                                    marginEnd: moderateScale(10),
                                 }}
                                 maxLength={5}
                                 autoCapitalize='none'
@@ -437,17 +448,17 @@ function RegistrationView(props) {
 
                                 }}
                             >
-                                <Image source={Icons.icon_ios_arrow_down} />
+                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }}/>
                             </TouchableOpacity>
                         </View>
                         {(isZipVisible) ? <View style={{
                             zIndex: 1,
                             width: '100%',
-                            marginTop: 10,
+                            marginTop: verticalScale(10),
                             ...styles.boxcontainer,
-                            height: 150,
+                            height: moderateScale(150),
                             shadowRadius: 4,
-                            borderRadius: 10
+                            borderRadius: moderateScale(10)
 
                         }}>
                             <FlatList
@@ -465,10 +476,11 @@ function RegistrationView(props) {
                                             <View >
                                                 <Text style={{
                                                     ...styles.generalTxt, borderColor: 'black',
-                                                    borderWidth: 0, width: '100%', padding: 10,
-                                                    borderRadius: 10, marginTop: 0,
+                                                    borderWidth: 0, width: '100%',
+                                                    padding: moderateScale(10),
+                                                    borderRadius: moderateScale(10), marginTop: 0,
                                                     backgroundColor: 'white',
-                                                    color: 'black', fontSize: 14
+                                                    color: 'black', fontSize: moderateScale(14)
 
                                                 }}>{item.item.zipcode}</Text>
                                             </View>
@@ -482,14 +494,16 @@ function RegistrationView(props) {
                             ...styles.boxcontainer, flexDirection: 'row',
                             shadowColor: validatePassword ? 'black' : 'darkred',
                             shadowOpacity: validatePassword ? 0.25 : 1,
-                            marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                            marginTop: verticalScale(15),
+                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                            alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_lock} />
+                            <Image source={Icons.icon_lock} style={{ height: moderateScale(17), width: moderateScale(15) }}/>
                             <InputPasswordToggle
                                 inputStyle={{
                                     ...styles.styleTextInput,
-                                    marginStart: 10
+                                    marginStart: moderateScale(10)
                                 }}
                                 onPressIn={() => {
                                     setIsVisible(false);
@@ -510,8 +524,8 @@ function RegistrationView(props) {
 
                         <View style={{
                             flexDirection: 'row',
-                            marginTop: 25, alignItems: 'center',
-                            paddingStart: 15,
+                            marginTop: verticalScale(25), alignItems: 'center',
+                            paddingStart: moderateScale(15),
                             paddingEnd: 0
                         }}>
 
@@ -527,28 +541,29 @@ function RegistrationView(props) {
                             <Text
                                 numberOfLines={1}
                                 style={{
-                                    ...styles.generalTxt, fontSize: 14, color: 'black',
+                                    ...styles.generalTxt, fontSize: moderateScale(14), color: 'black',
                                     textAlign: 'center'
                                 }}>
                                 {/* <Text> */}
                                 I accept the </Text>
-                            <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(TERMS)}>
+                            <TouchableOpacity style={{ marginTop: verticalScale(-2) }} onPress={(e) => openPolicyScreen(TERMS)}>
                                 <Text
                                     style={{
-                                        ...styles.generalTxt, fontSize: 14,
+                                        ...styles.generalTxt, fontSize: moderateScale(14),
                                         textDecorationLine: 'underline',
                                         color: Colors.appBgColor,
                                     }}>Terms of Use</Text>
                             </TouchableOpacity>
                             <Text style={{
-                                ...styles.generalTxt, fontSize: 14, color: 'black',
+                                ...styles.generalTxt, fontSize: moderateScale(14), color: 'black',
                                 textAlign: 'center'
                             }}> and </Text>
-                            <TouchableOpacity style={{ marginTop: -2 }} onPress={(e) => openPolicyScreen(POLICY)}>
+                            <TouchableOpacity style={{ marginTop:verticalScale(-2)}} onPress={(e) => openPolicyScreen(POLICY)}>
                                 <Text
                                     style={{
                                         textDecorationLine: 'underline',
-                                        color: Colors.appBgColor
+                                        color: Colors.appBgColor,
+                                        fontSize: moderateScale(14)
                                     }}>Privacy Policy</Text>
                             </TouchableOpacity>
                             {/* </Text> */}
@@ -559,11 +574,13 @@ function RegistrationView(props) {
                         <TouchableOpacity
                             onPress={() => openRegisterAccount()}
                             style={{
-                                ...styles.styleButtons, flex: 0, marginTop: 25
+                                ...styles.styleButtons, flex: 0, marginTop: verticalScale(25)
                             }}>
                             <Text style={{
-                                fontSize: 22, textAlign: 'center', padding: 10,
-                                paddingTop: 15, paddingBottom: 15,
+                                fontSize: moderateScale(22), textAlign: 'center',
+                                padding: verticalScale(10),
+                                paddingTop: verticalScale(10),
+                                paddingBottom: verticalScale(10),
                                 ...styles.generalTxt
                             }}>CONTINUE</Text>
                         </TouchableOpacity>
@@ -586,28 +603,31 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(40),
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 40
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(40),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: '#585858',
         width: '100%'
+
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30)
     },
     container: {
         flex: 1,

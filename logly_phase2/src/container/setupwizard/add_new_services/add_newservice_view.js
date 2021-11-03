@@ -18,6 +18,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment, { duration } from "moment";
 import Util from "../../../utils";
 import ServicesListing from "./services_listing";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const DATA = [
     {
@@ -126,7 +127,7 @@ function AddNewServiceView(props) {
     const [addNonRecurringClass, setAddNonRecurringClass] = useState([]);
     const [nonRecurrIndex, setNonRecurrIndex] = useState(0);
     const [showDate, setShowDate] = useState(false)
-    const [btnLabel,setBtnLabel] = useState(false);
+    const [btnLabel, setBtnLabel] = useState(false);
 
     ///////////////// TRANSPORTATION /////////////////
     const [validateRegNumber, setValidateRegNumber] = useState(true);
@@ -159,50 +160,53 @@ function AddNewServiceView(props) {
 
     return (
         <ScrollView keyboardShouldPersistTaps='handled'>
-            <View style={{ flex: 1, paddingStart: 30, paddingEnd: 30, paddingBottom: 30 }}>
+            <View style={{ flex: 1, paddingStart: moderateScale(30), paddingEnd: moderateScale(30), paddingBottom: moderateScale(30) }}>
 
 
                 <View style={{
                     backgroundColor: getAnimalCategory(animalType).bg,
-                    borderRadius: 10,
+                    borderRadius: moderateScale(10),
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingStart: 20,
-                    paddingEnd: 10,
-                    marginTop: 35,
-                    marginBottom: 15,
-                    height: 100,
+                    paddingStart: moderateScale(20),
+                    paddingEnd: moderateScale(10),
+                    marginTop: verticalScale(35),
+                    marginBottom: verticalScale(15),
+                    height: verticalScale(100),
                     justifyContent: 'flex-end'
 
                 }} >
 
                     <View flex={7}  >
-                        <Text style={{ ...styles.generalTxt, fontSize: 14 }} >Please Select the Animal Categories for </Text>
+                        <Text style={{ ...styles.generalTxt, fontSize: moderateScale(14) }} >Add Packages for </Text>
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={16}
-                            fontSize={18}
+                            minFontSize={moderateScale(16)}
+                            fontSize={moderateScale(18)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt, textAlign: 'left',
+
                                 color: (getAnimalCategory(animalType).name.toLowerCase().includes('pet walking') ||
                                     getAnimalCategory(animalType).name.toLowerCase().includes('breeding') ||
-                                    getAnimalCategory(animalType).name.toLowerCase().includes('boarding')) ? 'white' : 'black', marginTop: 10,
+                                    getAnimalCategory(animalType).name.toLowerCase().includes('boarding')) ? 'white' : 'black',
+
+                                marginTop: verticalScale(10),
                             }}>{getAnimalCategory(animalType).name.toString().toUpperCase()}
                         </AutoSizeText>
                     </View>
-                    <Image source={getAnimalCategory(animalType).url} flex={3} resizeMode='contain' />
+                    <Image source={getAnimalCategory(animalType).url} flex={3} resizeMode='contain' style={{ height: verticalScale(60), width: moderateScale(60) }} />
                 </View>
 
                 <TouchableOpacity style={{
                     backgroundColor: '#F5F5F5',
-                    borderRadius: 10,
-                    marginTop: 20,
+                    borderRadius: moderateScale(10),
+                    marginTop: verticalScale(20),
                     flex: 1,
-                    height: 50,
-                    paddingStart: 25,
-                    paddingEnd: 25,
+                    height: verticalScale(50),
+                    paddingStart: moderateScale(25),
+                    paddingEnd: moderateScale(25),
                     justifyContent: 'center',
                     alignItems: 'center',
                     flexDirection: 'row'
@@ -215,8 +219,8 @@ function AddNewServiceView(props) {
 
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={14}
-                        fontSize={16}
+                        minFontSize={moderateScale(14)}
+                        fontSize={moderateScale(16)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
@@ -225,17 +229,19 @@ function AddNewServiceView(props) {
                             width: '100%',
                         }}>{getServiceProviderName()}
                     </AutoSizeText>
-                    <Image source={Icons.icon_awesome_plus} />
+                    <Image source={Icons.icon_awesome_plus}
+                        resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15) }}
+                    />
                 </TouchableOpacity>
 
                 {isBottonSheetVisible ? sheetRef.current.open() : null}
                 <RBSheet
                     ref={sheetRef}
-                    height={Dimensions.get('screen').height - 130}
+                    height={Dimensions.get('screen').height - moderateScale(130)}
                     openDuration={250}
                     customStyles={{
                         container: {
-                            borderRadius: 30
+                            borderRadius: moderateScale(30)
                         }
                     }}
                     onClose={() => setCloseBottonSheet(false)}
@@ -260,12 +266,11 @@ function AddNewServiceView(props) {
 
                 <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0,
-                    marginTop: 35
+                    marginTop: verticalScale(35)
                 }} onPress={() => { clickNextBtn() }}>
                     <Text style={{
-                        fontSize: 22, textAlign: 'center', padding: 10,
-                        paddingStart: 127, paddingEnd: 127,
-                        paddingTop: 15, paddingBottom: 15,
+                        fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                         ...styles.generalTxt
                     }}>NEXT</Text>
                 </TouchableOpacity>
@@ -289,21 +294,21 @@ function AddNewServiceView(props) {
                 }
 
                 <View style={{
-                    padding: 30,
+                    padding: moderateScale(30),
                     paddingTop: 0,
                 }}>
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
                         marginTop: 0
                     }}>Description</Text>
                     <View style={{
                         ...styles.boxcontainer,
-                        height: 100,
+                        height: verticalScale(100),
                         flexDirection: 'row', alignItems: 'center',
                         shadowColor: validateDesc ? 'black' : 'darkred',
                         shadowOpacity: validateDesc ? 0.25 : 1,
-                        padding: 15,
+                        padding: moderateScale(15),
                     }}>
 
 
@@ -312,8 +317,8 @@ function AddNewServiceView(props) {
                             flex: 1,
                             textAlign: 'left',
                             textAlignVertical: "top",
-                            height: 100,
-                            paddingTop: 15
+                            height: verticalScale(100),
+                            paddingTop: verticalScale(15)
                         }}
                             underlineColorAndroid='transparent'
                             require={true}
@@ -332,7 +337,7 @@ function AddNewServiceView(props) {
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
-                        marginTop: 75, backgroundColor: '#FFC081'
+                        marginTop: verticalScale(45), backgroundColor: '#FFC081'
                     }} onPress={() => {
                         setTimeout(() => {
                             addServices({
@@ -374,23 +379,23 @@ function AddNewServiceView(props) {
                             ...styles.generalTxt,
                             fontFamily: Fonts.type.base,
                             color: Colors.appBgColor,
-                            fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingTop: 5, paddingBottom: 5,
+                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(5), paddingBottom: verticalScale(5),
 
-                        }}>{!btnLabel?'Add':'Save'}</Text>
+                        }}>{!btnLabel ? 'Add' : 'Save'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
-                        marginTop: 15, backgroundColor: 'white'
+                        marginTop: verticalScale(15), backgroundColor: 'white'
                     }} onPress={() => { sheetRef.current.close() }}>
                         <Text style={{
                             ...styles.generalTxt,
                             fontFamily: Fonts.type.base,
                             color: 'black',
-                            fontSize: 18, textAlign: 'center', padding: 10,
-                            paddingTop: 5, paddingBottom: 5,
+                            fontSize: moderateScale(18), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(5), paddingBottom: verticalScale(5),
 
                         }}>Cancel</Text>
                     </TouchableOpacity>
@@ -431,9 +436,9 @@ function AddNewServiceView(props) {
             <View
                 style={{
                     backgroundColor: 'white',
-                    padding: 30,
-                    paddingTop: 20,
-                    paddingBottom: 20,
+                    padding: moderateScale(30),
+                    paddingTop: verticalScale(20),
+                    paddingBottom: verticalScale(20),
                     height: '100%',
                     flex: 1,
                     justifyContent: 'flex-start'
@@ -463,9 +468,9 @@ function AddNewServiceView(props) {
             <View
                 style={{
                     backgroundColor: 'white',
-                    padding: 30,
-                    paddingTop: 20,
-                    paddingBottom: 20,
+                    padding: moderateScale(30),
+                    paddingTop: verticalScale(20),
+                    paddingBottom: verticalScale(20),
                     height: '100%',
                     flex: 1,
                     justifyContent: 'flex-start'
@@ -475,24 +480,29 @@ function AddNewServiceView(props) {
                 }}>
 
                     <View>
-                        <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Vehicle Type *</Text>
-                        <View flexDirection='row' marginTop={15} style={{ justifyContent: 'space-between', width: '90%' }}>
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(0) }}>
-                                <ImageBackground style={vehicleTypeIndex === 0 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 65 } : ''} />
-                                <Image source={Icons.icon_truck} />
+                        <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Vehicle Type *</Text>
+                        <View flexDirection='row' marginTop={verticalScale(15)} style={{ justifyContent: 'space-between', width: '100%' }}>
+                            <TouchableOpacity style={{ flex: moderateScale(2.5), flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(0) }}>
+                                <ImageBackground style={vehicleTypeIndex === 0 ? { ...styles.boxcontainer, position: 'absolute', height: verticalScale(60), width: '100%' } : ''} />
+                                <Image source={Icons.icon_truck}
+                                    resizeMode='contain'
+                                    style={{ height: verticalScale(50), width: '100%' }} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(1) }}>
-                                <ImageBackground style={vehicleTypeIndex === 1 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 65 } : ''} />
-                                <Image source={Icons.icon_pickup} marginTop={5} />
+                            <TouchableOpacity style={{ marginStart: moderateScale(10), flex: moderateScale(2.5), flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(1) }}>
+                                <ImageBackground style={vehicleTypeIndex === 1 ? { ...styles.boxcontainer, position: 'absolute', height: verticalScale(60), width: '100%' } : ''} />
+                                <Image source={Icons.icon_pickup} marginTop={verticalScale(5)} resizeMode='contain'
+                                    style={{ height: verticalScale(50), width: '100%' }} />
                             </TouchableOpacity>
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(2) }}>
-                                <ImageBackground style={vehicleTypeIndex === 2 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 65 } : ''} />
-                                <Image source={Icons.icon_car} marginTop={5} />
+                            <TouchableOpacity style={{ marginStart: moderateScale(10), flex: moderateScale(2.5), flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(2) }}>
+                                <ImageBackground style={vehicleTypeIndex === 2 ? { ...styles.boxcontainer, position: 'absolute', height: verticalScale(60), width: '100%' } : ''} />
+                                <Image source={Icons.icon_car} marginTop={verticalScale(5)} resizeMode='contain'
+                                    style={{ height: verticalScale(50), width: '100%' }} />
                             </TouchableOpacity>
 
-                            <TouchableOpacity style={{ flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(3) }}>
-                                <ImageBackground style={vehicleTypeIndex === 3 ? { ...styles.boxcontainer, position: 'absolute', height: 60, width: 80 } : ''} />
-                                <Image source={Icons.icon_motorbike} marginTop={5} />
+                            <TouchableOpacity style={{ marginStart: moderateScale(10), flex: moderateScale(2.5), flexDirection: 'row', justifyContent: 'center' }} onPress={() => { setVehicleTypeIndex(3) }}>
+                                <ImageBackground style={vehicleTypeIndex === 3 ? { ...styles.boxcontainer, position: 'absolute', height: verticalScale(60), width: '100%' } : ''} />
+                                <Image source={Icons.icon_motorbike} marginTop={verticalScale(5)} resizeMode='contain'
+                                    style={{ height: verticalScale(50), width: '100%' }} />
                             </TouchableOpacity>
 
                         </View>
@@ -502,15 +512,15 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Registration Number *</Text>
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
                         shadowColor: validateRegNumber ? 'black' : 'darkred',
                         shadowOpacity: validateRegNumber ? 0.25 : 1,
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -531,15 +541,15 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Rent Per Mile *</Text>
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
                         shadowColor: validateRentPerMile ? 'black' : 'darkred',
                         shadowOpacity: validateRentPerMile ? 0.25 : 1,
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -560,8 +570,8 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Animal Type *</Text>
                     <FlatList
                         numColumns={2}
@@ -571,13 +581,13 @@ function AddNewServiceView(props) {
                             return (
                                 <TouchableOpacity style={{
                                     backgroundColor: isSelectService(item) ? '#FFC081' : '#F5F5F5',
-                                    borderRadius: 10,
-                                    marginTop: 10,
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
                                     flex: 1,
-                                    height: 40,
+                                    height: verticalScale(40),
                                     justifyContent: 'center',
                                     alignItems: 'center',
-                                    marginStart: (index % 2) === 0 ? 0 : 10,
+                                    marginStart: (index % 2) === 0 ? 0 : moderateScale(10),
                                 }} onPress={() => addAnimalCategory({
                                     type: item,
                                     isSelect: animalCategory.length === 0 ? true : !isSelectService(item),
@@ -586,8 +596,8 @@ function AddNewServiceView(props) {
 
                                     <AutoSizeText
                                         numberOfLines={1}
-                                        minFontSize={14}
-                                        fontSize={16}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
                                         mode={ResizeTextMode.max_lines}
                                         style={{
                                             ...styles.generalTxt,
@@ -615,9 +625,9 @@ function AddNewServiceView(props) {
             <View
                 style={{
                     backgroundColor: 'white',
-                    padding: 30,
-                    paddingTop: 20,
-                    paddingBottom: 20,
+                    padding: moderateScale(30),
+                    paddingTop: verticalScale(20),
+                    paddingBottom: verticalScale(20),
                     height: '100%',
                     flex: 1,
                     justifyContent: 'flex-start'
@@ -631,42 +641,45 @@ function AddNewServiceView(props) {
 
                     {getDuration(props)}
                     <View style={{
-                        marginTop: 20,
+                        marginTop: verticalScale(20),
                     }}>
 
                         <Text style={{
                             ...styles.bottomSheetHeader,
-                            marginBottom: 5, marginTop: 0,
-                            marginStart: 5
+                            marginBottom: verticalScale(5), marginTop: 0,
+                            marginStart: moderateScale(5)
                         }}>Buffer Time *</Text>
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row', padding: 0,
                             alignItems: 'center',
-                            backgroundColor: '#F5F5F5',
+                            backgroundColor: 'white',
                         }}>
 
                             <ModalDropdown
                                 style={{
-                                    backgroundColor: '#F5F5F5', width: '92%', height: 50,
-                                    borderTopLeftRadius: 30, borderTopRightRadius: 30,
+                                    width: '94%',
+                                    height: verticalScale(40),
                                     justifyContent: 'center', alignItems: 'center',
-                                    paddingStart: 15,
-                                    borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
-
+                                    paddingStart: moderateScale(15),
                                 }}
                                 defaultValue={valueBufferTime}
                                 textStyle={{
                                     ...styles.bottomSheetHeader,
-                                    fontSize: 14,
+                                    fontSize: moderateScale(14),
                                     color: 'black',
                                     width: '100%',
                                 }}
 
-                                dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '85%', marginStart: -15 }}
+                                dropdownStyle={{
+                                    marginTop: verticalScale(20),
+                                    backgroundColor: 'white', width: Dimensions.get('screen').width - moderateScale(60),
+                                    marginStart: moderateScale(-16)
+                                }}
                                 dropdownTextStyle={{
                                     ...styles.bottomSheetHeader,
-                                    fontSize: 14,
+                                    fontSize: moderateScale(14),
                                     color: 'black',
+                                    margin: moderateScale(5),
                                     backgroundColor: 'white'
                                 }}
                                 onSelect={(item) => {
@@ -675,22 +688,22 @@ function AddNewServiceView(props) {
                                 defaultIndex={0}
                                 options={arrDuration} />
 
-                            <Image source={Icons.icon_ios_arrow_down} />
+                            <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                         </View>
                     </View>
                     {getOnSitePrice(props)}
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 20
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(20)
                     }}>Coverage Areas *</Text>
                     <View style={{
                         ...styles.boxcontainer,
                         shadowColor: validateCoverageArea ? 'black' : 'darkred',
                         shadowOpacity: validateCoverageArea ? 0.25 : 1,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -724,9 +737,9 @@ function AddNewServiceView(props) {
             <View
                 style={{
                     backgroundColor: 'white',
-                    padding: 30,
-                    paddingTop: 20,
-                    paddingBottom: 20,
+                    padding: moderateScale(30),
+                    paddingTop: verticalScale(20),
+                    paddingBottom: verticalScale(20),
                     height: '100%',
                     flex: 1,
                     justifyContent: 'flex-start'
@@ -740,15 +753,15 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Package Name *</Text>
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
                         shadowColor: validatePackageName ? 'black' : 'darkred',
                         shadowOpacity: validatePackageName ? 0.25 : 1,
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -769,15 +782,15 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Rate Per Day *</Text>
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
                         shadowColor: validateRatePerDay ? 'black' : 'darkred',
                         shadowOpacity: validateRatePerDay ? 0.25 : 1,
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -798,8 +811,8 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Want to add a discount? ( optional )</Text>
                     {createDiscountView()}
                     {modalDiscountVisible ? createDiscountModal() : null}
@@ -811,10 +824,10 @@ function AddNewServiceView(props) {
                             return (
                                 <TouchableOpacity style={{
                                     backgroundColor: '#F0ECFF',
-                                    borderRadius: 10,
-                                    marginTop: 10,
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
                                     flex: 1,
-                                    height: 40,
+                                    height: verticalScale(40),
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     flexDirection: 'row',
@@ -828,41 +841,41 @@ function AddNewServiceView(props) {
 
                                     <AutoSizeText
                                         numberOfLines={1}
-                                        minFontSize={12}
-                                        fontSize={14}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
                                         mode={ResizeTextMode.max_lines}
                                         style={{
                                             ...styles.generalTxt,
-                                            fontSize: 14,
-                                            flex: 0.3,
+                                            fontSize: moderateScale(14),
+                                            flex: moderateScale(0.3),
                                             textAlign: 'center',
                                             color: Colors.appBgColor
                                         }}>{item.bookingperiod}
                                     </AutoSizeText>
                                     <AutoSizeText
                                         numberOfLines={1}
-                                        minFontSize={12}
-                                        fontSize={14}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
                                         mode={ResizeTextMode.max_lines}
                                         style={{
                                             ...styles.generalTxt,
                                             color: Colors.appBgColor,
-                                            flex: 0.4,
+                                            flex: moderateScale(0.4),
                                             textAlign: 'center',
-                                            fontSize: 14
+                                            fontSize: moderateScale(14)
                                         }}>{item.discountType}
                                     </AutoSizeText>
                                     <AutoSizeText
                                         numberOfLines={1}
-                                        minFontSize={12}
-                                        fontSize={14}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
                                         mode={ResizeTextMode.max_lines}
                                         style={{
                                             ...styles.generalTxt,
                                             color: Colors.appBgColor,
-                                            flex: 0.3,
+                                            flex: moderateScale(0.3),
                                             textAlign: 'center',
-                                            fontSize: 14
+                                            fontSize: moderateScale(14)
                                         }}>10$
                                     </AutoSizeText>
                                 </TouchableOpacity>
@@ -886,9 +899,9 @@ function AddNewServiceView(props) {
             <View
                 style={{
                     backgroundColor: 'white',
-                    padding: 30,
-                    paddingTop: 20,
-                    paddingBottom: 20,
+                    padding: moderateScale(30),
+                    paddingTop: verticalScale(20),
+                    paddingBottom: verticalScale(20),
                     height: '100%',
                     flex: 1,
                     justifyContent: 'flex-start'
@@ -901,13 +914,13 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5,
-                        marginTop: 15
+                        marginBottom: verticalScale(5), marginStart: moderateScale(5),
+                        marginTop: verticalScale(15)
                     }}>Areas of Consultancy </Text>
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -941,28 +954,29 @@ function AddNewServiceView(props) {
             <View style={{
                 ...styles.boxcontainer,
                 padding: 0,
-                paddingStart: 15, paddingEnd: 15,
-                height: 300
+                paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
+                height: verticalScale(300)
             }}>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    fontSize: 14, fontFamily: Fonts.type.base,
-                    marginBottom: 15, marginTop: 15, marginStart: 5
+                    fontSize: moderateScale(14), fontFamily: Fonts.type.base,
+                    marginBottom: verticalScale(15), marginTop: verticalScale(15), marginStart: moderateScale(5)
                 }}>Booking Period</Text>
                 <View style={{
                     ...styles.boxcontainer,
-                    flexDirection: 'row', padding: 0, alignItems: 'center',
-                    paddingStart: 15, paddingEnd: 30,
-                    height: 40
+                    flexDirection: 'row', 
+                    padding: 0, alignItems: 'center',
+                    paddingStart: moderateScale(15), paddingEnd: moderateScale(30),
+                    height: verticalScale(40)
                 }}>
 
-                    <View style={{ backgroundColor: '#464646', height: 20, width: 1 }} />
+                    <View style={{ backgroundColor: '#464646', height: verticalScale(20), width: moderateScale(1) }} />
 
-                    <TextInput placeholder="" style={{
+                    <TextInput placeholder="0" style={{
                         ...styles.styleTextInput,
-                        flex: 0.3,
-                        paddingStart: 10
+                        flex: 0.1,
+                        textAlign:'center',
                     }}
                         maxLength={75}
                         autoCapitalize='none'
@@ -973,32 +987,38 @@ function AddNewServiceView(props) {
                         value={valueBookingPeriod} />
 
                     <View style={{
-                        flexDirection: 'row', padding: 0,
+                        flexDirection: 'row', 
+                        padding: 0,
                         alignItems: 'center',
-                        flex: 0.7
+                        flex:0.9
                     }}>
 
                         <ModalDropdown
                             style={{
+                                width: '100%',
+                                height: verticalScale(40),
                                 justifyContent: 'center', alignItems: 'center',
-                                paddingStart: 15,
-                                borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
-
+                                paddingStart: moderateScale(15),
                             }}
                             defaultValue={bookingPeriod}
                             textStyle={{
                                 ...styles.bottomSheetHeader,
-                                fontSize: 14,
+                                fontSize: moderateScale(14),
                                 color: '#464646',
                                 width: '100%',
                             }}
 
-                            dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '50%', marginStart: -15 }}
+                            dropdownStyle={{
+                                width: '70%',
+                                marginTop: verticalScale(25),
+                                backgroundColor: 'white',
+                                marginStart: moderateScale(-15)
+                            }}
                             dropdownTextStyle={{
                                 ...styles.bottomSheetHeader,
-                                fontSize: 14,
-                                color: '#464646',
-                                paddingStart: 15,
+                                fontSize: moderateScale(14),
+                                color: 'black',
+                                margin: moderateScale(5),
                                 backgroundColor: 'white'
                             }}
                             onSelect={(index) => {
@@ -1007,21 +1027,21 @@ function AddNewServiceView(props) {
                             defaultIndex={0}
                             options={arrBookingPeriod} />
 
-                        <Image source={Icons.icon_ios_arrow_down} />
+                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
                 </View>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    fontSize: 14, fontFamily: Fonts.type.base,
-                    marginBottom: 15, marginTop: 15, marginStart: 5
+                    fontSize: moderateScale(14), fontFamily: Fonts.type.base,
+                    marginBottom: verticalScale(15), marginTop: verticalScale(15), marginStart: moderateScale(5)
                 }}>Discount Type</Text>
                 <View style={{
                     ...styles.boxcontainer,
                     flexDirection: 'row', padding: 0, alignItems: 'center',
-                    paddingStart: 15, paddingEnd: 30,
-                    height: 40
+                    paddingStart: moderateScale(15), paddingEnd: moderateScale(30),
+                    height: verticalScale(40)
                 }}>
 
 
@@ -1033,25 +1053,29 @@ function AddNewServiceView(props) {
 
                         <ModalDropdown
                             style={{
+                                width: '100%',
                                 justifyContent: 'center', alignItems: 'center',
-                                borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
-
+                      
                             }}
                             defaultValue={discountType}
                             textStyle={{
                                 ...styles.bottomSheetHeader,
-                                fontSize: 14,
-                                color: '#464646',
+                                fontSize: moderateScale(14),
+                                color: 'black',
                                 width: '100%',
-                                textAlign: 'left',
                             }}
 
-                            dropdownStyle={{ height: 80, marginTop: 20, backgroundColor: 'white', width: '78%', marginStart: -30 }}
+                            dropdownStyle={{
+                                marginTop: verticalScale(25),
+                                backgroundColor: 'white',
+                                width: Dimensions.get('screen').width - moderateScale(88),
+                                marginStart: moderateScale(-16)
+                            }}
                             dropdownTextStyle={{
                                 ...styles.bottomSheetHeader,
-                                fontSize: 14,
-                                color: '#464646',
-                                paddingStart: 15,
+                                fontSize: moderateScale(14),
+                                color: 'black',
+                                margin: moderateScale(5),
                                 backgroundColor: 'white'
                             }}
                             onSelect={(index) => {
@@ -1060,20 +1084,20 @@ function AddNewServiceView(props) {
                             defaultIndex={0}
                             options={arrDisType} />
 
-                        <Image source={Icons.icon_ios_arrow_down} />
+                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
                 </View>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    fontSize: 14, fontFamily: Fonts.type.base,
-                    marginBottom: 15, marginTop: 25, marginStart: 5,
+                    fontSize: moderateScale(14), fontFamily: Fonts.type.base,
+                    marginBottom: verticalScale(15), marginTop: verticalScale(25), marginStart: moderateScale(5),
                 }}>Discount Value</Text>
 
                 <View style={{
                     flexDirection: 'row', padding: 0, alignItems: 'center',
-                    height: 40, width: '100%'
+                    height: verticalScale(40), width: '100%'
                 }}
                 >
 
@@ -1081,8 +1105,8 @@ function AddNewServiceView(props) {
                     <View style={{
                         ...styles.boxcontainer,
                         padding: 0, alignItems: 'center',
-                        paddingStart: 15, paddingEnd: 30,
-                        height: 40, justifyContent: 'center',
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(30),
+                        height: verticalScale(40), justifyContent: 'center',
                         flex: 0.3
                     }}>
                         <Text style={{
@@ -1096,7 +1120,7 @@ function AddNewServiceView(props) {
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0.6,
                         borderWidth: 1,
-                        borderRadius: 10, borderColor: Colors.appBgColor,
+                        borderRadius: moderateScale(10), borderColor: Colors.appBgColor,
                         backgroundColor: 'white'
                     }} onPress={() => {
                         let tmp = {
@@ -1111,9 +1135,9 @@ function AddNewServiceView(props) {
                     }}>
                         <Text style={{
                             ...styles.generalTxt,
-                            padding: 10,
+                            padding: moderateScale(10),
                             color: Colors.appBgColor,
-                            fontSize: 14, textAlign: 'center',
+                            fontSize: moderateScale(14), textAlign: 'center',
 
                         }}>Add Discount</Text>
                     </TouchableOpacity>
@@ -1154,9 +1178,9 @@ function AddNewServiceView(props) {
             <View
                 style={{
                     backgroundColor: 'white',
-                    padding: 30,
-                    paddingTop: 20,
-                    paddingBottom: 20,
+                    padding: moderateScale(30),
+                    paddingTop: verticalScale(20),
+                    paddingBottom: verticalScale(20),
                     height: '100%',
                     flex: 1,
                     justifyContent: 'flex-start'
@@ -1169,14 +1193,14 @@ function AddNewServiceView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginBottom: 5, marginStart: 5, marginTop: 15,
+                        marginBottom: verticalScale(5), marginStart: 5, marginTop: verticalScale(moderateScale(15)),
                     }}>Program Name *</Text>
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', padding: 0, alignItems: 'center',
                         shadowColor: validateProgramName ? 'black' : 'darkred',
                         shadowOpacity: validateProgramName ? 0.25 : 1,
-                        paddingStart: 15, paddingEnd: 15,
+                        paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                     }}>
 
 
@@ -1195,16 +1219,16 @@ function AddNewServiceView(props) {
                             value={programName} />
                     </View>
                     {getOnSitePrice(props)}
-                    <View marginTop={15} marginStart={10}>
+                    <View marginTop={verticalScale(15)} marginStart={moderateScale(10)}>
                         <Text style={styles.bottomSheetHeader}>Recurring Program *</Text>
-                        <View flexDirection='row' marginTop={15} style={{ justifyContent: 'space-between', width: '35%' }}>
+                        <View flexDirection='row' marginTop={verticalScale(15)} style={{ justifyContent: 'space-between', width: '35%' }}>
                             <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setRecurringProgramIndex(0); setValueStartTiming(''); setValueEndTiming('') }}>
-                                <Image source={recurringProgramIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                                <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Yes</Text>
+                                <Image source={recurringProgramIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                                <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Yes</Text>
                             </TouchableOpacity>
                             <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setRecurringProgramIndex(1); setValueStartTiming(''); setValueEndTiming('') }}>
-                                <Image source={recurringProgramIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                                <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>No</Text>
+                                <Image source={recurringProgramIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                                <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>No</Text>
                             </TouchableOpacity>
 
                         </View>
@@ -1213,7 +1237,7 @@ function AddNewServiceView(props) {
                     {recurringProgramIndex === 0 ? getRecurringProgram() : getNonRecurringProgram()}
 
 
-                </View>      
+                </View>
 
 
             </View>
@@ -1229,19 +1253,19 @@ function AddNewServiceView(props) {
 
         return (<View>
             <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Service Type *</Text>
-            <View flexDirection='row' marginTop={15} style={{ justifyContent: 'space-between', width: isShowThird ? '90%' : '60%' }}>
+            <View flexDirection='row' marginTop={verticalScale(15)} style={{ justifyContent: 'space-between', width: isShowThird ? '90%' : '60%' }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(0) }}>
-                    <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                    <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>On-Site</Text>
+                    <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                    <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>On-Site</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(1) }}>
-                    <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                    <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Off-Site</Text>
+                    <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                    <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Off-Site</Text>
                 </TouchableOpacity>
                 {isShowThird ?
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(2) }}>
-                        <Image source={serviceTypeIndex === 2 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                        <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Both</Text>
+                        <Image source={serviceTypeIndex === 2 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                        <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Both</Text>
                     </TouchableOpacity> : null
                 }
             </View>
@@ -1252,19 +1276,19 @@ function AddNewServiceView(props) {
 
         return (
             <View style={{
-                marginTop: 15,
+                marginTop: verticalScale(15),
             }}>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginBottom: 5, marginStart: 5
+                    marginBottom: verticalScale(5), marginStart: moderateScale(5)
                 }}>Service Name *</Text>
                 <View style={{
                     ...styles.boxcontainer,
                     flexDirection: 'row', padding: 0, alignItems: 'center',
                     shadowColor: validateServiceName ? 'black' : 'darkred',
                     shadowOpacity: validateServiceName ? 0.25 : 1,
-                    paddingStart: 15, paddingEnd: 15,
+                    paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                 }}>
 
 
@@ -1290,44 +1314,48 @@ function AddNewServiceView(props) {
 
         return (
             <View style={{
-                marginTop: 15,
+                marginTop: verticalScale(15),
             }}>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginBottom: 5, marginTop: 0,
-                    marginStart: 5
+                    marginBottom: verticalScale(5), marginTop: 0,
+                    marginStart: moderateScale(5)
                 }}>Select Duration *</Text>
                 <View style={{
                     ...styles.boxcontainer, flexDirection: 'row', padding: 0,
                     alignItems: 'center',
                     shadowColor: validateDuration ? 'black' : 'darkred',
                     shadowOpacity: validateDuration ? 0.25 : 1,
-                    backgroundColor: '#F5F5F5'
+                    backgroundColor: 'white'
                 }}>
 
                     <ModalDropdown
                         style={{
-                            backgroundColor: '#F5F5F5', width: '92%', height: 50,
-                            borderTopLeftRadius: 30, borderTopRightRadius: 30,
+                            width: '94%',
+                            height: verticalScale(40),
                             justifyContent: 'center', alignItems: 'center',
-                            paddingStart: 15,
-                            borderBottomLeftRadius: 30, borderBottomRightRadius: 30,
-
+                            paddingStart: moderateScale(15),
+                    
                         }}
                         defaultValue={valueDuration}
                         textStyle={{
                             ...styles.bottomSheetHeader,
-                            fontSize: 14,
+                            fontSize: moderateScale(14),
                             color: 'black',
                             width: '100%',
                         }}
 
-                        dropdownStyle={{ marginTop: 20, backgroundColor: 'white', width: '85%', marginStart: -15 }}
+                        dropdownStyle={{
+                            marginTop: verticalScale(20),
+                            backgroundColor: 'white', width: Dimensions.get('screen').width - moderateScale(60),
+                            marginStart: moderateScale(-16)
+                        }}
                         dropdownTextStyle={{
                             ...styles.bottomSheetHeader,
-                            fontSize: 14,
+                            fontSize: moderateScale(14),
                             color: 'black',
+                            margin: moderateScale(5),
                             backgroundColor: 'white'
                         }}
                         onSelect={(item) => {
@@ -1336,7 +1364,7 @@ function AddNewServiceView(props) {
                         defaultIndex={0}
                         options={arrDuration} />
 
-                    <Image source={Icons.icon_ios_arrow_down} />
+                    <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                 </View>
             </View>
@@ -1346,26 +1374,29 @@ function AddNewServiceView(props) {
 
     function getOnSitePrice() {
         return (
-            <View flexDirection='row' marginTop={20}>
+            <View flexDirection='row' marginTop={verticalScale(20)}>
 
                 {serviceTypeIndex === 0 || serviceTypeIndex === 2 ?
-                    <View flex={5}>
+                    <View flex={moderateScale(5)}>
                         <Text style={{
                             ...styles.bottomSheetHeader,
-                            marginBottom: 5, marginStart: 5
+                            marginBottom: verticalScale(5), marginStart: moderateScale(5)
                         }}>On-Site Price *</Text>
                         <View style={{
                             ...styles.boxcontainer,
                             flexDirection: 'row', padding: 0, alignItems: 'center',
                             shadowColor: validateOnSite ? 'black' : 'darkred',
                             shadowOpacity: validateOnSite ? 0.25 : 1,
-                            paddingStart: 15, paddingEnd: 15,
+                            paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                         }}>
 
-
-                            <TextInput placeholder="" style={{
+                            <Text style={{
+                                ...styles.prefix,
+                                flex: 0.01,
+                            }}>$</Text>
+                            <TextInput placeholder="0" style={{
                                 ...styles.styleTextInput,
-                                flex: 1,
+                                flex: 1
 
                             }}
                                 maxLength={75}
@@ -1380,21 +1411,26 @@ function AddNewServiceView(props) {
                         </View>
                     </View> : null}
                 {serviceTypeIndex === 1 || serviceTypeIndex === 2 ?
-                    <View flex={5} marginStart={serviceTypeIndex === 1 ? 0 : 20}>
+                    <View flex={moderateScale(5)} marginStart={serviceTypeIndex === 1 ? 0 : moderateScale(20)}>
                         <Text style={{
                             ...styles.bottomSheetHeader,
-                            marginBottom: 5, marginStart: 5
+                            marginBottom: verticalScale(5), marginStart: moderateScale(5)
                         }}>Off-Site Price *</Text>
                         <View style={{
                             ...styles.boxcontainer,
                             flexDirection: 'row', padding: 0, alignItems: 'center',
                             shadowColor: validateOffSite ? 'black' : 'darkred',
                             shadowOpacity: validateOffSite ? 0.25 : 1,
-                            paddingStart: 15, paddingEnd: 15,
+                            paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                         }}>
 
 
-                            <TextInput placeholder="" style={{
+                            <Text style={{
+                                ...styles.prefix,
+                                flex: 0.01,
+                            }}>$</Text>
+
+                            <TextInput placeholder="0" style={{
                                 ...styles.styleTextInput,
                                 flex: 1,
 
@@ -1423,10 +1459,10 @@ function AddNewServiceView(props) {
                     ...styles.boxcontainer,
                     // shadowColor: validateState ? 'black' : 'darkred',
                     // shadowOpacity: validateState ? 0.25 : 1,
-                    marginTop: 25, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                    marginTop: verticalScale(25), flexDirection: 'row', padding: moderateScale(20), paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                 }}>
 
-                    <Image source={Icons.icon_blue_real_estate_agency} />
+                    <Image source={Icons.icon_blue_real_estate_agency} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     <TextInput placeholder="Select State"
                         // ref={inputEl}
                         autoCapitalize='none'
@@ -1449,9 +1485,9 @@ function AddNewServiceView(props) {
                         }}
                         style={{
                             ...styles.styleTextInput,
-                            marginStart: 10,
-                            flex: 8,
-                            marginEnd: 10,
+                            marginStart: moderateScale(10),
+                            flex: moderateScale(8),
+                            marginEnd: moderateScale(10),
 
                         }}
                         keyboardType="default"
@@ -1462,7 +1498,7 @@ function AddNewServiceView(props) {
 
                         }}
                     >
-                        <Image source={Icons.icon_ios_arrow_down} />
+                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: moderateScale(5), width: moderateScale(8) }} />
                     </TouchableOpacity>
 
 
@@ -1470,11 +1506,11 @@ function AddNewServiceView(props) {
 
                 {(isVisible) ? <View style={{
                     width: '100%',
-                    marginTop: 10,
+                    marginTop: verticalScale(10),
                     ...styles.boxcontainer,
-                    height: 150,
-                    shadowRadius: 4,
-                    borderRadius: 10,
+                    height: verticalScale(150),
+                    shadowRadius: moderateScale(4),
+                    borderRadius: moderateScale(10),
                     zIndex: 1
 
                 }}>
@@ -1493,10 +1529,10 @@ function AddNewServiceView(props) {
                                     <View >
                                         <Text style={{
                                             ...styles.generalTxt, borderColor: 'black',
-                                            borderWidth: 0, width: '100%', padding: 10,
-                                            borderRadius: 10, marginTop: 0,
+                                            borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                            borderRadius: moderateScale(10), marginTop: 0,
                                             backgroundColor: 'white',
-                                            color: 'black', fontSize: 14
+                                            color: 'black', fontSize: moderateScale(14)
 
                                         }}>{item.item.name}</Text>
                                     </View>
@@ -1511,11 +1547,11 @@ function AddNewServiceView(props) {
                     ...styles.boxcontainer,
                     // shadowColor: validateCity ? 'black' : 'darkred',
                     // shadowOpacity: validateCity ? 0.25 : 1,
-                    marginTop: 25, flexDirection: 'row', padding: 20, paddingTop: 0,
+                    marginTop: verticalScale(25), flexDirection: 'row', padding: moderateScale(20), paddingTop: 0,
                     paddingBottom: 0, alignItems: 'center',
                 }}>
 
-                    <Image source={Icons.icon_blue_awesome_city} />
+                    <Image source={Icons.icon_blue_awesome_city} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     <TextInput placeholder="Select City"
                         //ref={inputCity}
                         autoCapitalize='none'
@@ -1543,9 +1579,9 @@ function AddNewServiceView(props) {
                         }}
                         style={{
                             ...styles.styleTextInput,
-                            marginStart: 10,
+                            marginStart: moderateScale(10),
                             flex: 8,
-                            marginEnd: 10
+                            marginEnd: moderateScale(10)
 
                         }}
                         keyboardType="default"
@@ -1559,18 +1595,18 @@ function AddNewServiceView(props) {
 
                         }}
                     >
-                        <Image source={Icons.icon_ios_arrow_down} />
+                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: moderateScale(5), width: moderateScale(8) }} />
                     </TouchableOpacity>
                 </View>
 
                 {(isCityVisible) ? <View style={{
                     zIndex: 1,
                     width: '100%',
-                    marginTop: 10,
+                    marginTop: verticalScale(10),
                     ...styles.boxcontainer,
-                    height: 150,
-                    shadowRadius: 4,
-                    borderRadius: 10
+                    height: verticalScale(150),
+                    shadowRadius: moderateScale(4),
+                    borderRadius: moderateScale(10)
 
                 }}>
                     <FlatList
@@ -1588,10 +1624,10 @@ function AddNewServiceView(props) {
                                     <View >
                                         <Text style={{
                                             ...styles.generalTxt, borderColor: 'black',
-                                            borderWidth: 0, width: '100%', padding: 10,
-                                            borderRadius: 10, marginTop: 0,
+                                            borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                            borderRadius: moderateScale(10), marginTop: 0,
                                             backgroundColor: 'white',
-                                            color: 'black', fontSize: 14
+                                            color: 'black', fontSize: moderateScale(14)
 
                                         }}>{item.item.name}</Text>
                                     </View>
@@ -1605,10 +1641,10 @@ function AddNewServiceView(props) {
                     ...styles.boxcontainer,
                     //shadowColor: validateZipCode ? 'black' : 'darkred',
                     //shadowOpacity: validateZipCode ? 0.25 : 1,
-                    marginTop: 25, flexDirection: 'row', padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                    marginTop: verticalScale(25), flexDirection: 'row', padding: moderateScale(20), paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                 }}>
 
-                    <Image source={Icons.icon_blue_postalcode} />
+                    <Image source={Icons.icon_blue_postalcode} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
 
                     <TextInput placeholder="Zip Code"
                         //ref={inputZipCode}
@@ -1640,9 +1676,9 @@ function AddNewServiceView(props) {
                         }}
                         style={{
                             ...styles.styleTextInput,
-                            marginStart: 10,
-                            flex: 8,
-                            marginEnd: 10,
+                            marginStart: moderateScale(10),
+                            flex: moderateScale(8),
+                            marginEnd: moderateScale(10),
                         }}
                         maxLength={5}
                         keyboardType="number-pad"
@@ -1656,17 +1692,17 @@ function AddNewServiceView(props) {
 
                         }}
                     >
-                        <Image source={Icons.icon_ios_arrow_down} />
+                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: moderateScale(5), width: moderateScale(8) }} />
                     </TouchableOpacity>
                 </View>
                 {(isZipVisible) ? <View style={{
                     zIndex: 1,
                     width: '100%',
-                    marginTop: 10,
+                    marginTop: verticalScale(10),
                     ...styles.boxcontainer,
-                    height: 150,
-                    shadowRadius: 4,
-                    borderRadius: 10
+                    height: verticalScale(150),
+                    shadowRadius: moderateScale(4),
+                    borderRadius: moderateScale(10)
 
                 }}>
                     <FlatList
@@ -1684,10 +1720,10 @@ function AddNewServiceView(props) {
                                     <View >
                                         <Text style={{
                                             ...styles.generalTxt, borderColor: 'black',
-                                            borderWidth: 0, width: '100%', padding: 10,
-                                            borderRadius: 10, marginTop: 0,
+                                            borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                            borderRadius: moderateScale(10), marginTop: 0,
                                             backgroundColor: 'white',
-                                            color: 'black', fontSize: 14
+                                            color: 'black', fontSize: moderateScale(14)
 
                                         }}>{item.item.zipcode}</Text>
                                     </View>
@@ -1707,14 +1743,14 @@ function AddNewServiceView(props) {
             <View>
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginBottom: 5, marginStart: 5, marginTop: 15,
+                    marginBottom: verticalScale(5), marginStart: moderateScale(5), marginTop: verticalScale(15),
                 }}>Address *</Text>
                 <View style={{
                     ...styles.boxcontainer,
                     flexDirection: 'row', padding: 0, alignItems: 'center',
                     shadowColor: validateAddress ? 'black' : 'darkred',
                     shadowOpacity: validateAddress ? 0.25 : 1,
-                    paddingStart: 15, paddingEnd: 15,
+                    paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                 }}>
 
 
@@ -1743,13 +1779,13 @@ function AddNewServiceView(props) {
 
         return (
             <View style={{
-                marginTop: 15,
-                marginLeft: -5
+                marginTop: verticalScale(15),
+                marginLeft: moderateScale(-5)
             }}>
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginBottom: 5, marginStart: 5
+                    marginBottom: verticalScale(5), marginStart: moderateScale(5)
                 }}>Class Frequency *</Text>
                 <FlatList
                     numColumns={3}
@@ -1759,10 +1795,10 @@ function AddNewServiceView(props) {
                         return (
                             <TouchableOpacity style={{
                                 backgroundColor: selectFrequency === index ? '#FFC081' : '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 5,
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
                                 flex: 1,
-                                height: 50,
+                                height: verticalScale(40),
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginStart: index === 0 ? 0 : 8,
@@ -1772,8 +1808,8 @@ function AddNewServiceView(props) {
 
                                 <AutoSizeText
                                     numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,
@@ -1798,7 +1834,7 @@ function AddNewServiceView(props) {
     function getClassTiming() {
 
         return (
-            <View marginTop={15} >
+            <View marginTop={verticalScale(15)} >
                 {show ?
                     (isStartTiming ?
                         <DateTimePickerModal
@@ -1818,7 +1854,7 @@ function AddNewServiceView(props) {
                             isVisible={show}
                             mode={mode}
                             date={valueEndTiming ? new Date(valueEndTiming) : new Date()}
-                            minimumDate={valueStartTiming ? new Date(valueStartTiming) : ''}
+                            //minimumDate={valueStartTiming ? new Date(valueStartTiming) : ''}
                             onConfirm={(time) => {
                                 console.log('end-timing', time)
                                 setValueEndTiming(time);
@@ -1830,19 +1866,19 @@ function AddNewServiceView(props) {
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginStart: 5
+                    marginStart: moderateScale(5)
                 }}>Class Timing *</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
                         flex: 1,
-                        height: 50,
+                        height: verticalScale(40),
                         flexDirection: 'row',
-                        padding: 15,
-                        justifyContent: 'center',
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
                         alignItems: 'center',
                         marginStart: 0,
                     }} onPress={() => {
@@ -1853,27 +1889,28 @@ function AddNewServiceView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
                                 color: '#777777',
-                                flex: 7,
-                            }}>Start {valueStartTiming ? moment(valueStartTiming).format('hh:mm') : ''}
+                                paddingEnd: moderateScale(5),
+                                flex: moderateScale(7),
+                            }}>Start {valueStartTiming ? moment(valueStartTiming).format('hh:mm A') : ''}
                         </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
+                        <Image source={Icons.icon_blue_clock} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
                         flex: 1,
-                        height: 50,
-                        padding: 15,
-                        justifyContent: 'center',
+                        height: verticalScale(40),
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
                         alignItems: 'center',
-                        marginStart: 10,
+                        marginStart: moderateScale(10),
                         flexDirection: 'row'
                     }} onPress={() => {
                         setIsStartTiming(false)
@@ -1883,16 +1920,16 @@ function AddNewServiceView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
                                 color: '#777777',
-                                flex: 7,
-                            }}>End {valueEndTiming ? moment(valueEndTiming).format('hh:mm') : ""}
+                                flex: moderateScale(7),
+                            }}>End {valueEndTiming ? moment(valueEndTiming).format('hh:mm A') : ""}
                         </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
+                        <Image source={Icons.icon_blue_clock} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     </TouchableOpacity>
 
 
@@ -1906,23 +1943,23 @@ function AddNewServiceView(props) {
 
         return (
             <View style={{
-                marginTop: 15,
-                marginLeft: -5,
+                marginTop: verticalScale(15),
+                marginLeft: moderateScale(-5),
             }}>
 
                 <View style={{
                     backgroundColor: '#F5F5F5',
                     justifyContent: 'flex-start',
                     alignItems: 'flex-start',
-                    paddingBottom: 10,
-                    paddingTop: 10,
-                    borderRadius: 10
+                    paddingBottom: verticalScale(10),
+                    paddingTop: verticalScale(10),
+                    borderRadius: moderateScale(10)
                 }}>
                     <TouchableOpacity style={{
-                        borderRadius: 10,
-                        paddingStart: 25,
-                        paddingEnd: 25,
-                        height: 30,
+                        borderRadius: moderateScale(10),
+                        paddingStart: moderateScale(25),
+                        paddingEnd: moderateScale(25),
+                        height: verticalScale(25),
                         justifyContent: 'center',
                         alignItems: 'center',
                         flexDirection: 'row'
@@ -1938,8 +1975,8 @@ function AddNewServiceView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.bottomSheetHeader,
@@ -1947,20 +1984,24 @@ function AddNewServiceView(props) {
                                 width: '100%',
                             }}>Add Class
                         </AutoSizeText>
-                        <Image source={Icons.icon_awesome_plus} />
+                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(12), width: moderateScale(12) }} />
                     </TouchableOpacity>
                     {addNonRecurringClass.length > 0 ?
                         <FlatList
                             nestedScrollEnabled={true}
-                            contentContainerStyle={{ paddingStart: 10, paddingEnd: 10, width: Dimensions.get('screen').width - 55 }}
+                            contentContainerStyle={{
+                                paddingStart: moderateScale(10),
+                                paddingEnd: moderateScale(10),
+                                width: Dimensions.get('screen').width - moderateScale(55)
+                            }}
                             data={addNonRecurringClass}
                             renderItem={({ item, index }) => {
                                 return (
                                     <TouchableOpacity style={{
                                         backgroundColor: 'white',
-                                        borderRadius: 10,
-                                        marginTop: 5,
-                                        height: 50,
+                                        borderRadius: moderateScale(10),
+                                        marginTop: verticalScale(5),
+                                        height: verticalScale(50),
                                         width: '100%',
                                         flexDirection: 'row'
 
@@ -1976,17 +2017,18 @@ function AddNewServiceView(props) {
 
                                         <View
                                             style={{
-                                                height: '100%', backgroundColor: Colors.appBgColor,
-                                                borderRadius: 10,
+                                                height: '100%',
+                                                backgroundColor: Colors.appBgColor,
+                                                borderRadius: moderateScale(10),
                                                 justifyContent: 'center',
                                                 alignItems: 'center',
-                                                flex: 0.2
+                                                flex: 0.2,
                                             }} >
 
                                             <AutoSizeText
                                                 numberOfLines={1}
-                                                minFontSize={16}
-                                                fontSize={30}
+                                                minFontSize={moderateScale(16)}
+                                                fontSize={moderateScale(30)}
                                                 mode={ResizeTextMode.max_lines}
                                                 style={{
                                                     ...styles.generalTxt,
@@ -1996,14 +2038,14 @@ function AddNewServiceView(props) {
                                             </AutoSizeText>
                                             <AutoSizeText
                                                 numberOfLines={1}
-                                                minFontSize={10}
-                                                fontSize={12}
+                                                minFontSize={moderateScale(10)}
+                                                fontSize={moderateScale(12)}
                                                 mode={ResizeTextMode.max_lines}
                                                 style={{
                                                     ...styles.generalTxt,
                                                     includeFontPadding: false,
                                                     fontFamily: Fonts.type.base,
-                                                    marginTop: -5,
+                                                    marginTop: verticalScale(-5),
                                                     color: 'white'
                                                 }}>{item.date ? moment(item.date).format("MMM") : ''}
                                             </AutoSizeText>
@@ -2016,27 +2058,27 @@ function AddNewServiceView(props) {
                                         }}>
                                             <AutoSizeText
                                                 numberOfLines={1}
-                                                minFontSize={14}
-                                                fontSize={16}
+                                                minFontSize={moderateScale(14)}
+                                                fontSize={moderateScale(16)}
                                                 mode={ResizeTextMode.max_lines}
                                                 style={{
                                                     ...styles.generalTxt,
                                                     fontFamily: Fonts.type.base,
-                                                    paddingStart: 10,
-                                                    paddingEnd: 10,
+                                                    paddingStart: moderateScale(10),
+                                                    paddingEnd: moderateScale(10),
                                                     color: '#585858'
                                                 }}>Pet Walking
                                             </AutoSizeText>
                                             <AutoSizeText
                                                 numberOfLines={1}
-                                                minFontSize={14}
-                                                fontSize={16}
+                                                minFontSize={moderateScale(14)}
+                                                fontSize={moderateScale(16)}
                                                 mode={ResizeTextMode.max_lines}
                                                 style={{
                                                     ...styles.generalTxt,
                                                     fontFamily: Fonts.type.base,
-                                                    paddingStart: 10,
-                                                    paddingEnd: 10,
+                                                    paddingStart: moderateScale(10),
+                                                    paddingEnd: moderateScale(10),
                                                     color: '#585858'
                                                 }}>12:00 pm
                                             </AutoSizeText>
@@ -2059,7 +2101,7 @@ function AddNewServiceView(props) {
             <View>
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginTop: 15, marginStart: 10
+                    marginTop: verticalScale(15), marginStart: moderateScale(10)
                 }}>Days of the week *</Text>
                 <FlatList
                     numColumns={4}
@@ -2069,21 +2111,21 @@ function AddNewServiceView(props) {
                         return (
                             <TouchableOpacity style={{
                                 backgroundColor: isDaySelect(item) ? '#FFC081' : '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 5,
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
                                 width: Dimensions.get('screen').width / 5,
-                                height: 40,
+                                height: verticalScale(40),
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginStart: 5,
+                                marginStart: moderateScale(5),
                             }} onPress={() => setWeekFrequency(
                                 { day: item }
                             )}>
 
                                 <AutoSizeText
                                     numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,
@@ -2147,18 +2189,19 @@ function AddNewServiceView(props) {
                         />) : null}
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginTop: 15, marginStart: 5
+                    marginTop: verticalScale(15), marginStart: moderateScale(5)
                 }}>Monthly Date *</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
                         flex: 1,
-                        height: 50,
+                        height: verticalScale(40),
                         flexDirection: 'row',
-                        padding: 15,
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginStart: 0,
@@ -2171,8 +2214,8 @@ function AddNewServiceView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
@@ -2180,18 +2223,19 @@ function AddNewServiceView(props) {
                                 flex: 7,
                             }}> Date {recurStartDate}
                         </AutoSizeText>
-                        <Image source={Icons.icon_material_date_range} />
+                        <Image source={Icons.icon_material_date_range} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
                         flex: 1,
-                        height: 50,
-                        padding: 15,
+                        height: verticalScale(40),
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginStart: 10,
+                        marginStart: moderateScale(10),
                         flexDirection: 'row'
                     }} onPress={() => {
                         setMode('date');
@@ -2201,8 +2245,8 @@ function AddNewServiceView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
@@ -2210,7 +2254,7 @@ function AddNewServiceView(props) {
                                 flex: 7,
                             }}> End {recurEndDate}
                         </AutoSizeText>
-                        <Image source={Icons.icon_material_date_range} />
+                        <Image source={Icons.icon_material_date_range} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     </TouchableOpacity>
 
 
@@ -2253,21 +2297,20 @@ function AddNewServiceView(props) {
 
                         <Text style={{
                             ...styles.bottomSheetHeader,
-                            marginStart: 5
+                            marginStart: moderateScale(5)
                         }}>Class Date *</Text>
 
 
                         <TouchableOpacity style={{
                             backgroundColor: '#F5F5F5',
-                            borderRadius: 10,
-                            marginTop: 5,
-                            height: 50,
+                            borderRadius: moderateScale(10),
+                            marginTop: verticalScale(5),
                             flexDirection: 'row',
-                            padding: 15,
+                            padding: moderateScale(15),
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginStart: 0,
-                            marginBottom: 20
+                            marginBottom: verticalScale(20)
                         }} onPress={() => {
                             setMode('date')
                             setShowDate(true);
@@ -2275,16 +2318,16 @@ function AddNewServiceView(props) {
 
                             <AutoSizeText
                                 numberOfLines={1}
-                                minFontSize={14}
-                                fontSize={16}
+                                minFontSize={moderateScale(14)}
+                                fontSize={moderateScale(16)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
                                     ...styles.generalTxt,
                                     color: '#777777',
-                                    flex: 7,
+                                    flex: moderateScale(7),
                                 }}>Date {classDate}
                             </AutoSizeText>
-                            <Image source={Icons.icon_material_date_range} />
+                            <Image source={Icons.icon_material_date_range} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                         </TouchableOpacity>
 
                         {getClassTiming()}
@@ -2292,7 +2335,7 @@ function AddNewServiceView(props) {
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             width: '40%', alignSelf: 'center',
-                            marginTop: 45, backgroundColor: '#FFC081'
+                            marginTop: verticalScale(45), backgroundColor: '#FFC081'
                         }} onPress={() => {
                             setNonRecurringClassItem({ id: nonRecurrIndex, date: classDate, startTiming: valueStartTiming, endTiming: valueEndTiming });
                             setModalVisible(false)
@@ -2301,8 +2344,8 @@ function AddNewServiceView(props) {
                                 ...styles.generalTxt,
                                 fontFamily: Fonts.type.base,
                                 color: Colors.appBgColor,
-                                fontSize: 22, textAlign: 'center', padding: 10,
-                                paddingTop: 5, paddingBottom: 5,
+                                fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                                paddingTop: verticalScale(5), paddingBottom: verticalScale(5),
 
                             }}>Add</Text>
                         </TouchableOpacity>
@@ -2310,14 +2353,14 @@ function AddNewServiceView(props) {
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             width: '40%', alignSelf: 'center',
-                            marginTop: 15, backgroundColor: 'white'
+                            marginTop: verticalScale(15), backgroundColor: 'white'
                         }} onPress={() => { setModalVisible(false) }}>
                             <Text style={{
                                 ...styles.generalTxt,
                                 fontFamily: Fonts.type.base,
                                 color: 'black',
-                                fontSize: 18, textAlign: 'center', padding: 10,
-                                paddingTop: 5, paddingBottom: 5,
+                                fontSize: moderateScale(18), textAlign: 'center', padding: moderateScale(10),
+                                paddingTop: verticalScale(5), paddingBottom: verticalScale(5),
 
                             }}>Cancel</Text>
                         </TouchableOpacity>
@@ -2473,7 +2516,7 @@ function AddNewServiceView(props) {
         setValidateDesc(item ? Util.isLengthGreater(item.desc) : true)
         setValidateOnSite(item ? Util.isGraterThanZero(item.onSitePrice) : true)
         setValidateOffSite(item ? Util.isGraterThanZero(item.offSitePrice) : true)
-        setValidateServiceName(item ? Util.isGraterThanZero(item.serviceName) : true)
+        setValidateServiceName(item ? Util.isLengthGreater(item.serviceName) : true)
         setRecurEndDate(item ? item.recurEndDate : '')
         setRecurStartDate(item ? item.recurStartDate : '')
     }
@@ -2506,58 +2549,65 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
-        backgroundColor: '#F5F5F5',
-        elevation: 5,
-        borderRadius: 10,
-        marginTop: 2
+        height: moderateScale(48),
+        backgroundColor: 'white',
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(10),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 22,
+        fontSize: moderateScale(22),
         fontFamily: Fonts.type.medium
     },
     bottomSheetHeader: {
         color: '#464646',
-        fontSize: 16,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.medium
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 14,
+        fontSize: moderateScale(14),
         color: '#464646',
         width: '100%'
 
     },
+    prefix: {
+        fontFamily: Fonts.type.base,
+        fontSize: moderateScale(14),
+        paddingHorizontal: moderateScale(10),
+        color: '#464646',
+        width: '100%'
+    },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor, borderRadius: moderateScale(30)
     },
     centeredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
+        marginTop: verticalScale(22),
         backgroundColor: 'rgba(255,255,255,0.7)'
     },
     modalView: {
         width: Dimensions.get("screen").width,
-        height: 350,
-        margin: 10,
-        borderRadius: 20,
+        height: verticalScale(350),
+        margin: moderateScale(10),
+        borderRadius: moderateScale(20),
         backgroundColor: 'white',
-        padding: 30,
+        padding: moderateScale(30),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2
+            height: verticalScale(2)
         },
         shadowOpacity: 0.25,
         shadowRadius: 4,
-        elevation: 5
+        elevation: verticalScale(5)
     },
 });
 

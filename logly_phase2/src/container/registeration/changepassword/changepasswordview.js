@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { KeyboardAvoidingView, ScrollView, TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput } from 'react-native';
 import InputPasswordToggle from '../../../components/InputPasswordToggle';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function ChangePasswordView(props) {
     const { backScreen, openpasswordResetScreen,
@@ -36,35 +37,38 @@ function ChangePasswordView(props) {
 
                         }}>
                         <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                            <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                            <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: -5 }}>Back</Text>
+                            <Image source={Icons.icon_arrow_back1} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                            <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                         </TouchableOpacity>
                     </View>
                     <View style={{
-                        marginStart: 30,
-                        marginEnd: 30, alignItems: 'center',
+                        marginStart: moderateScale(30),
+                        marginEnd: moderateScale(30), alignItems: 'center',
                         height: '100%'
                     }}>
 
-                        <Image source={Images.img_new_password} />
+                        <Image 
+                        resizeMode='contain'
+                            style={{ height: verticalScale(120), width: moderateScale(100) }}
+                        source={Images.img_new_password} />
 
                         <Text style={{
-                            fontSize: 28, textAlign: 'center', padding: 10,
-                            paddingTop: 25, paddingBottom: 25,
+                            fontSize: moderateScale(28), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(25), paddingBottom: verticalScale(25),
                             fontFamily: Fonts.type.bold, color: 'black'
                         }}>Enter New Password</Text>
 
 
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row',
-                            marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                            marginTop: verticalScale(15), padding: moderateScale(20), paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_lock} />
+                            <Image source={Icons.icon_lock} style={{ height: moderateScale(17), width: moderateScale(15) }} />
                             <InputPasswordToggle
                                 inputStyle={{
                                     ...styles.styleTextInput,
-                                    marginStart: 10
+                                    marginStart: moderateScale(10)
                                 }}
                                 autoCapitalize='none'
                                 placeholder="New Password"
@@ -75,14 +79,14 @@ function ChangePasswordView(props) {
 
                         <View style={{
                             ...styles.boxcontainer, flexDirection: 'row',
-                            marginTop: 15, padding: 20, paddingTop: 0, paddingBottom: 0, alignItems: 'center'
+                            marginTop: verticalScale(15), padding: moderateScale(20), paddingTop: 0, paddingBottom: 0, alignItems: 'center'
                         }}>
 
-                            <Image source={Icons.icon_lock} />
+                            <Image source={Icons.icon_lock} style={{ height: moderateScale(17), width: moderateScale(15) }} />
                             <InputPasswordToggle
                                 inputStyle={{
                                     ...styles.styleTextInput,
-                                    marginStart: 10
+                                    marginStart: moderateScale(10)
                                 }}
                                 maxLength={30}
                                 autoCapitalize='none'
@@ -94,11 +98,11 @@ function ChangePasswordView(props) {
                         <TouchableOpacity
                             onPress={(e) => openpasswordResetScreen(e)}
                             style={{
-                                ...styles.styleButtons, alignSelf: 'flex-end', marginTop: 20
+                                ...styles.styleButtons, alignSelf: 'flex-end', marginTop: verticalScale(20)
                             }}>
                             <Text style={{
-                                fontSize: 22, textAlign: 'center', padding: 10,
-                                paddingTop: 15, paddingBottom: 15,
+                                fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                                paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                                 ...styles.generalTxt, color: 'white'
                             }}>UPDATE</Text>
                         </TouchableOpacity>
@@ -117,29 +121,30 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(40),
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 40,
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(40),
         width: '100%'
     },
     generalTxt: {
         color: 'black',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: '#585858',
-        flex: 8
+        width: '100%',
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30,
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30),
         width: '100%',
     }
 });

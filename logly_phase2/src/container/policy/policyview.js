@@ -6,6 +6,7 @@ import React from 'react';
 import { View, SafeAreaView, TouchableOpacity, Text, Image, StyleSheet, Platform } from 'react-native';
 import { Colors, Fonts, Icons } from '../../theme';
 import { WebView } from 'react-native-webview';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 
 function PolicyView(props) {
@@ -19,18 +20,18 @@ function PolicyView(props) {
             <View
                 style={{
                     backgroundColor: Colors.appBgColor,
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30,
-                    padding: 20,
-                    paddingStart: 40,
-                    paddingTop: 40,
+                    borderBottomLeftRadius: moderateScale(20),
+                    borderBottomRightRadius: moderateScale(20),
+                    padding: verticalScale(20),
+                    paddingStart: moderateScale(40),
+                    paddingTop: verticalScale(40),
                     flex: 0
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back} style={{ marginTop: 0 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>{header}</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10) }}>{header}</Text>
                 
             </View>
             <WebView source={{ uri: (header.startsWith("Terms of Use") ? 'https://logly.us/terms' :'https://logly.us/policy') }} />
@@ -44,18 +45,18 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(40),
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 40
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(40)
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {

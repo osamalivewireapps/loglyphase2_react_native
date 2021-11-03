@@ -13,6 +13,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BUSINESS, BUS_LISTING, BUS_SER_PROVIDER, CHARITY_ID, INDIVIDUAL } from '../../constants';
 import { Colors, Fonts, Images } from '../../theme';
 import DataHandler from '../../utils/DataHandler';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 class WelcomeRegistration extends Component {
 
@@ -30,12 +31,15 @@ class WelcomeRegistration extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: Colors.appBgColor, justifyContent: 'center', alignItems: 'center' }}>
 
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginBottom: 10 }}>Welcome !</Text>
-                <Text style={{ ...styles.generalTxt, margin: 20, textAlign: 'center' }}>To get started, Please complete your account setup</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginBottom: verticalScale(10) }}>Welcome !</Text>
+                <Text style={{ ...styles.generalTxt, margin: moderateScale(20), textAlign: 'center' }}>To get started, Please complete{"\n"}your account setup</Text>
                 <TouchableOpacity onPress={() => {
                     this.switchToServicesScreen();
                 }}>
-                    <Image source={Images.img_btn_forward} marginTop={80} />
+                    <Image 
+                    resizeMode="contain"
+                    style={{height:verticalScale(90),width:moderateScale(90)}}
+                    source={Images.img_btn_forward} marginTop={verticalScale(80)} />
                 </TouchableOpacity>
             </View>
         )
@@ -74,28 +78,30 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(40),
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 40
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(40),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(18),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: '#585858',
-        width: '100%'
+        width: '100%',
 
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30)
     }
 });

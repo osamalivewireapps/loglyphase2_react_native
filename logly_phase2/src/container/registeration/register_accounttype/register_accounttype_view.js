@@ -12,6 +12,7 @@ import { ScrollView } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { backgroundColor } from 'styled-system';
 import { INDIVIDUAL } from '../../../constants';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function RegistrationAccountTypeView(props) {
 
@@ -25,24 +26,25 @@ function RegistrationAccountTypeView(props) {
             <View
                 style={{
                     backgroundColor: Colors.appBgColor,
-                    borderBottomLeftRadius: 30,
-                    borderBottomRightRadius: 30,
-                    padding: 20,
-                    paddingStart: 40,
-                    paddingTop: 40,
+                    borderBottomLeftRadius: moderateScale(20),
+                    borderBottomRightRadius: moderateScale(20),
+                    padding: verticalScale(20),
+                    paddingStart: moderateScale(40),
+                    paddingTop: verticalScale(40),
                     flex: 0
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10 }}>Register Account</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: 10 }}>Please fill the details below</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10) }}>Register Account</Text>
+                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10) }}>Please fill the details below</Text>
             </View>
             <ScrollView>
                 <View style={{
-                    flex: 8, marginStart: 30,
-                    marginEnd: 30, marginBottom: 30
+                    flex: 8,
+                    marginStart: moderateScale(30),
+                    marginEnd: moderateScale(30), marginBottom: verticalScale(30)
                 }}>
 
                     {getAccountView(accTypeSelection, listAccountType, openBusPackages, accountTypeSelection)}
@@ -50,12 +52,13 @@ function RegistrationAccountTypeView(props) {
                     <TouchableOpacity
                         onPress={() => openBusOwner()}
                         style={{
-                            ...styles.styleButtons, flex: 0, marginTop: 25
+                            ...styles.styleButtons, flex: 0, marginTop: verticalScale(10)
                         }}>
                         <Text style={{
-                            fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingStart: 117, paddingEnd: 117,
-                            paddingTop: 15, paddingBottom: 15,
+                            fontSize: 22, textAlign: 'center',
+                            padding: verticalScale(10),
+                            paddingTop: verticalScale(10),
+                            paddingBottom: verticalScale(10),
                             ...styles.generalTxt
                         }}>NEXT</Text>
                     </TouchableOpacity>
@@ -85,9 +88,9 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
 
                 style={{
                     ...styles.boxcontainer,
-                    padding: 15, justifyContent: 'center',
-                    backgroundColor: getRowColor(index)
-
+                    padding: moderateScale(15), justifyContent: 'center',
+                    backgroundColor: getRowColor(index),
+                    marginTop: verticalScale(10)
                 }}>
 
                 <View style={{
@@ -97,17 +100,17 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                 }}>
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={18}
-                        fontSize={18}
+                        minFontSize={moderateScale(18)}
+                        fontSize={moderateScale(18)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
                             fontFamily: Fonts.type.bold,
-                            marginEnd: 10, color: 'black',
-                            fontSize: 1,
+                            marginEnd: moderateScale(10), color: 'black',
+                            fontSize: moderateScale(1),
                             flex: 9
 
-                        }}>{data.type === "Individual"?"Pet Lover":data.type}</AutoSizeText>
+                        }}>{data.type === "Individual" ? "Pet Lover" : data.type}</AutoSizeText>
 
 
                     {accountTypeSelection.isSelectedIndex === index ?
@@ -117,9 +120,12 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
 
                             <Text style={{
                                 ...styles.generalTxt,
-                                fontSize: 13, color: 'green'
+                                fontSize: moderateScale(13), color: 'green'
                             }}>Selected </Text>
-                            <Image source={Icons.icon_check_circle_green} marginTop={1} />
+                            <Image
+                                resizeMode='contain'
+                                style={{ height: verticalScale(12.75), width: moderateScale(14) }}
+                                source={Icons.icon_check_circle_green} marginTop={verticalScale(1)} />
 
                         </View>)
                         :
@@ -130,8 +136,8 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                 <Text
                     style={{
                         ...styles.generalTxt,
-                        fontSize: 14,
-                        marginTop: 10,
+                        fontSize: moderateScale(14),
+                        marginTop: verticalScale(10),
                         color: 'black',
 
                     }}>{data.description}</Text>
@@ -139,30 +145,31 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                 <Text
                     style={{
                         ...styles.generalTxt,
-                        fontSize: 14,
-                        marginTop: 10,
+                        fontSize: moderateScale(14),
+                        marginTop: verticalScale(10),
                         color: 'black',
 
                     }}>Starting at</Text>
 
                 <View style={{
-                    flexDirection: 'row', alignItems: 'center', marginTop: 2, width: '100%'
+                    flexDirection: 'row', alignItems: 'center', marginTop: verticalScale(2), width: '100%'
                 }}>
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={18}
-                        fontSize={18}
+                        minFontSize={moderateScale(18)}
+                        fontSize={moderateScale(18)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
                             flex: 6,
-                            fontFamily: Fonts.type.bold, fontSize: 22,
-                            marginEnd: 10, color: 'black',
+                            fontFamily: Fonts.type.bold,
+                            fontSize: moderateScale(22),
+                            marginEnd: verticalScale(10), color: 'black',
 
                         }}>
-                        {(data.type === "Individual" || data.type.startsWith("Charity"))?"Free":"$"+data.minprice}
+                        {(data.type === "Individual" || data.type.startsWith("Charity")) ? "Free" : "$" + data.minprice}
                         {/* {data.priceMethod === 'Monthly & Yearly' ? data.monthlyPrice + "/Month" : (data.lifetimePrice ? data.lifetimePrice + " Lifetime" : "Lifetime")} */}
-                        </AutoSizeText>
+                    </AutoSizeText>
 
 
                     <TouchableOpacity
@@ -175,11 +182,11 @@ function getAccountView(accTypeSelection, listData, openBusPackages, accountType
                         <Text style={{
                             textAlign: 'center',
                             ...styles.generalTxt,
-                            fontSize: 14, padding: 5,
+                            fontSize: moderateScale(14), padding: moderateScale(5),
 
                         }}>View Details</Text>
                     </TouchableOpacity>
-                    
+
 
                 </View>
 
@@ -197,27 +204,29 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
         backgroundColor: 'white',
-        elevation: 5,
-        borderRadius: 10,
-        marginTop: 20,
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(10)
     },
     generalTxt: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
-        color: '#585858'
+        fontSize: moderateScale(16),
+        color: '#585858',
+        width: '100%'
+
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30)
     }
 });
 

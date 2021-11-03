@@ -18,7 +18,7 @@ import RBSheet from "react-native-raw-bottom-sheet";
 import TeamListing from "./team_listing";
 import DataHandler from "../../../utils/DataHandler";
 import { BUS_SER_PROVIDER } from "../../../constants";
-
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function TeamSetupView(props) {
 
@@ -55,21 +55,21 @@ function TeamSetupView(props) {
             <View
                 style={{
                     backgroundColor: Colors.appBgColor,
-                    padding: 20,
-                    paddingStart: 40,
-                    paddingTop: 40,
+                    padding: moderateScale(20),
+                    paddingStart: moderateScale(40),
+                    paddingTop: verticalScale(40),
                     flex: 0,
-                    paddingBottom: 75
+                    paddingBottom: verticalScale(75)
                 }}>
                 <View flexDirection='row' width='100%'>
                     <TouchableOpacity style={{ flexDirection: 'row', width: '80%' }} onPress={(e) => backScreen(e)}>
-                        <Image source={Icons.icon_arrow_back} style={{ marginTop: 2 }} />
-                        <Text style={{ ...styles.generalTxt2, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                        <Image source={Icons.icon_arrow_back} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                        <Text style={{ ...styles.generalTxt2, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-1) }}>Back</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(e)}>
-                        <Text style={{ ...styles.generalTxt2, marginStart: 5, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Skip</Text>
-                        <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0 }} />
+                        <Text style={{ ...styles.generalTxt2, marginStart: moderateScale(5), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-8) }}>Skip</Text>
+                        <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0, height: verticalScale(12), width: moderateScale(48) }} resizeMode='contain' />
 
                     </TouchableOpacity>
 
@@ -77,33 +77,33 @@ function TeamSetupView(props) {
 
                 {accountType === BUS_SER_PROVIDER ?
                     <View
-                        marginTop={20} marginBottom={10}
+                        marginTop={verticalScale(20)} marginBottom={verticalScale(10)}
                         flexDirection='row' width='100%' justifyContent='center' alignItems='center'>
-                        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>1</Text>
+                        <View style={{ backgroundColor: 'white', borderRadius: moderateScale(50), height: moderateScale(25), width: moderateScale(25), justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: moderateScale(14) }}>1</Text>
                         </View>
-                        <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
-                        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>2</Text>
+                        <View style={{ backgroundColor: 'white', width: moderateScale(30), height: verticalScale(1), marginStart: moderateScale(5), marginEnd: moderateScale(5) }} />
+                        <View style={{ backgroundColor: 'white', borderRadius: moderateScale(50), height: moderateScale(25), width: moderateScale(25), justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: moderateScale(14) }}>2</Text>
                         </View>
-                        <View style={{ backgroundColor: 'white', width: 30, height: 1, marginStart: 5, marginEnd: 5 }} />
-                        <View style={{ backgroundColor: 'white', borderRadius: 50, height: 25, width: 25, justifyContent: 'center', alignItems: 'center' }}>
-                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: 14 }}>3</Text>
+                        <View style={{ backgroundColor: 'white', width: moderateScale(30), height: verticalScale(1), marginStart: moderateScale(5), marginEnd: moderateScale(5) }} />
+                        <View style={{ backgroundColor: 'white', borderRadius: moderateScale(50), height: moderateScale(25), width: moderateScale(25), justifyContent: 'center', alignItems: 'center' }}>
+                            <Text style={{ ...styles.generalTxt2, color: Colors.appBgColor, fontSize: moderateScale(14) }}>3</Text>
                         </View>
 
                     </View> : <View />}
-                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: 30, marginTop: 10, textAlign: 'center' }}>Account Setup</Text>
-                <Text style={{ ...styles.generalTxt2, marginTop: 20, textAlign: 'center' }}>Manage team members</Text>
+                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>Account Setup</Text>
+                <Text style={{ ...styles.generalTxt2, marginTop: verticalScale(20), textAlign: 'center' }}>Manage team members</Text>
             </View>
 
 
-            <View style={{ marginTop: -70, height: 60 }}>
+            <View style={{ marginTop: verticalScale(-70), height: verticalScale(60) }}>
                 <ImageBackground
                     style={{
                         backgroundColor: 'white',
-                        borderTopStartRadius: 30,
-                        borderTopEndRadius: 30,
-                        marginTop: 40,
+                        borderTopStartRadius: moderateScale(30),
+                        borderTopEndRadius: moderateScale(30),
+                        marginTop: moderateScale(40),
                         width: Dimensions.get('window').width,
                         height: Dimensions.get('window').height,
                         position: 'absolute'
@@ -115,11 +115,11 @@ function TeamSetupView(props) {
             {isBottonSheetVisible ? sheetRef.current.open() : null}
             <RBSheet
                 ref={sheetRef}
-                height={Dimensions.get('screen').height - 130}
+                height={Dimensions.get('screen').height - moderateScale(130)}
                 openDuration={250}
                 customStyles={{
                     container: {
-                        borderRadius: 30
+                        borderRadius: moderateScale(30)
                     }
                 }}
                 onClose={() => setCloseBottonSheet(false)}
@@ -130,7 +130,7 @@ function TeamSetupView(props) {
             {wholeServices.length > 0 ?
                 <View style={{
                     justifyContent: 'flex-end',
-                    paddingBottom: 30,
+                    paddingBottom: moderateScale(30),
                     flex: 1
                 }}>
 
@@ -140,7 +140,7 @@ function TeamSetupView(props) {
 
 
                         <View style={{
-                            padding: 30,
+                            padding: moderateScale(30),
                             paddingTop: 0,
                             alignItems: 'center',
                             alignItems: 'flex-start',
@@ -165,12 +165,12 @@ function TeamSetupView(props) {
 
                             <TouchableOpacity style={{
                                 backgroundColor: '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 20,
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(20),
                                 flex: 1,
-                                height: 50,
-                                paddingStart: 25,
-                                paddingEnd: 25,
+                                height: verticalScale(45),
+                                paddingStart: moderateScale(25),
+                                paddingEnd: moderateScale(25),
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 flexDirection: 'row'
@@ -183,8 +183,8 @@ function TeamSetupView(props) {
 
                                 <AutoSizeText
                                     numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,
@@ -193,7 +193,7 @@ function TeamSetupView(props) {
                                         width: '100%',
                                     }}>Add another member
                                 </AutoSizeText>
-                                <Image source={Icons.icon_awesome_plus} />
+                                <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                             </TouchableOpacity>
 
 
@@ -203,29 +203,29 @@ function TeamSetupView(props) {
                     </ScrollView>
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
-                        marginTop: 35, width: '85%', alignSelf: 'center'
+                        marginTop: verticalScale(35), width: '85%', alignSelf: 'center'
                     }} onPress={() => { clickNextButton() }}>
                         <Text style={{
-                            fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingTop: 15, paddingBottom: 15,
+                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                             ...styles.generalTxt
                         }}>FINISH</Text>
                     </TouchableOpacity>
                 </View>
                 : <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0,
-                    marginTop: 35, width: '80%',
+                    marginTop: verticalScale(35), width: '80%',
                     alignSelf: 'center',
                     backgroundColor: 'white',
-                    borderWidth: 1,
-                    borderRadius: 15,
+                    borderWidth: moderateScale(1),
+                    borderRadius: moderateScale(15),
                     borderColor: Colors.appBgColor
                 }} onPress={() => {
                     setCloseBottonSheet(true)
                 }}>
                     <Text style={{
-                        fontSize: 22, textAlign: 'center', padding: 10,
-                        paddingTop: 15, paddingBottom: 15,
+                        fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                         ...styles.generalTxt,
                         color: Colors.appBgColor
                     }}>Add a Team Member</Text>
@@ -249,22 +249,25 @@ function TeamSetupView(props) {
                 <View style={{ ...styles.centeredView }}>
                     <View style={{ ...styles.modalView }}>
                         <TouchableOpacity
-                            style={{ alignSelf: 'flex-end', position: 'absolute', top: 15, right: 15 }}
+                            style={{
+                                alignSelf: 'flex-end', position: 'absolute',
+                                top: 15, right: 15
+                            }}
                             onPress={() => {
                                 setModalVisible(!modalVisible)
                             }}
                         >
-                            <Image source={Icons.icon_close} style={{ height: 10, width: 10 }} />
+                            <Image source={Icons.icon_close} style={{ height: verticalScale(10), width: moderateScale(10) }} />
                         </TouchableOpacity>
                         <Text style={{
                             ...styles.generalTxt, color: '#585858',
-                            marginTop: 20,
+                            marginTop: verticalScale(20),
                             fontFamily: Fonts.type.base, textAlign: 'center'
                         }}>Are you sure you want to delete this service?</Text>
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             width: '80%', alignSelf: 'center',
-                            marginTop: 35, backgroundColor: Colors.appBgColor
+                            marginTop: verticalScale(35), backgroundColor: Colors.appBgColor
                         }}
                             onPress={() => {
                                 setModalVisible(!modalVisible)
@@ -273,9 +276,9 @@ function TeamSetupView(props) {
                             <Text style={{
                                 ...styles.generalTxt,
                                 fontFamily: Fonts.type.base,
-                                fontSize: 20, textAlign: 'center',
-                                paddingStart: 50, paddingEnd: 50,
-                                paddingTop: 10, paddingBottom: 10,
+                                fontSize: moderateScale(20), textAlign: 'center',
+                                paddingStart: moderateScale(50), paddingEnd: moderateScale(50),
+                                paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
 
                             }}>Delete</Text>
                         </TouchableOpacity>
@@ -283,7 +286,7 @@ function TeamSetupView(props) {
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             width: '40%', alignSelf: 'center',
-                            marginTop: 15, backgroundColor: 'white'
+                            marginTop: verticalScale(15), backgroundColor: 'white'
                         }} onPress={() => {
                             setModalVisible(!modalVisible)
                         }}>
@@ -291,8 +294,8 @@ function TeamSetupView(props) {
                                 ...styles.generalTxt,
                                 fontFamily: Fonts.type.base,
                                 color: 'black',
-                                fontSize: 18, textAlign: 'center', padding: 10,
-                                paddingTop: 5, paddingBottom: 5,
+                                fontSize: moderateScale(18), textAlign: 'center', padding: moderateScale(10),
+                                paddingTop: verticalScale(5), paddingBottom: verticalScale(5),
 
                             }}>Cancel</Text>
                         </TouchableOpacity>
@@ -314,7 +317,7 @@ function TeamSetupView(props) {
 
 
                 <View style={{
-                    padding: 30,
+                    padding: moderateScale(30),
                     alignItems: 'center',
                     alignItems: 'flex-start',
                     flex: 1
@@ -323,38 +326,39 @@ function TeamSetupView(props) {
 
                     <View style={{
                         backgroundColor: '#F4F4F4', alignSelf: 'center',
-                        height: 90, width: 90, borderRadius: 100,
+                        height: moderateScale(90), width: moderateScale(90), borderRadius: moderateScale(100),
                         justifyContent: 'center',
                         alignItems: 'center',
-                        paddingTop: 10
+                        paddingTop: verticalScale(10)
                     }}>
 
-                        <Image source={Icons.icon_awesome_plus} />
+                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
                                 color: Colors.appBgColor,
                                 textAlign: 'center',
                                 width: '100%',
-                            }}>Logo
+                            }}>Photo
                         </AutoSizeText>
 
                     </View>
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginStart: 5, marginTop: 15, marginBottom: 5
+                        marginStart: moderateScale(5),
+                        marginTop: verticalScale(15),
+                        marginBottom: verticalScale(5)
                     }}>Name</Text>
                     <View style={{
                         ...styles.boxcontainer,
-                        height: 50,
                         flexDirection: 'row', alignItems: 'center',
                         shadowColor: validateName ? 'black' : 'darkred',
                         shadowOpacity: validateName ? 0.25 : 1,
-                        padding: 15,
+                        padding: moderateScale(15),
                     }}>
 
 
@@ -378,15 +382,15 @@ function TeamSetupView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginStart: 5, marginTop: 25, marginBottom: 5
+                        marginStart: moderateScale(5),
+                        marginTop: verticalScale(25), marginBottom: verticalScale(5)
                     }}>Email</Text>
                     <View style={{
                         ...styles.boxcontainer,
-                        height: 50,
                         flexDirection: 'row', alignItems: 'center',
                         shadowColor: validateEmail ? 'black' : 'darkred',
                         shadowOpacity: validateEmail ? 0.25 : 1,
-                        padding: 15,
+                        padding: moderateScale(15),
                     }}>
 
 
@@ -411,23 +415,26 @@ function TeamSetupView(props) {
 
                     <Text style={{
                         ...styles.bottomSheetHeader,
-                        marginStart: 5, marginTop: 25, marginBottom: 5
+                        marginStart: moderateScale(5),
+                        marginTop: verticalScale(25),
+                        marginBottom: verticalScale(5)
                     }}>Phone</Text>
                     <View style={{
                         ...styles.boxcontainer,
-                        height: 50,
                         flexDirection: 'row', alignItems: 'center',
                         shadowColor: validatePhone ? 'black' : 'darkred',
                         shadowOpacity: validatePhone ? 0.25 : 1,
-                        padding: 15,
+                        padding: moderateScale(15),
                     }}>
 
 
-                        <TextInput placeholder="" style={{
-                            ...styles.styleTextInput,
-                            flex: 1,
-                            textAlign: 'left',
-                        }}
+                        <TextInput
+                            maxLength={12}
+                            placeholder="" style={{
+                                ...styles.styleTextInput,
+                                flex: 1,
+                                textAlign: 'left',
+                            }}
                             underlineColorAndroid='transparent'
                             require={true}
                             numberOfLines={1}
@@ -448,7 +455,8 @@ function TeamSetupView(props) {
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
-                        marginTop: 75, backgroundColor: '#FFC081'
+                        marginTop: verticalScale(45),
+                        backgroundColor: '#FFC081'
                     }}
                         onPress={() => {
                             setTimeout(() => {
@@ -464,8 +472,9 @@ function TeamSetupView(props) {
                             ...styles.generalTxt,
                             fontFamily: Fonts.type.base,
                             color: Colors.appBgColor,
-                            fontSize: 22, textAlign: 'center', padding: 10,
-                            paddingTop: 5, paddingBottom: 5,
+                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(5),
+                            paddingBottom: verticalScale(5),
 
                         }}>{!btnLabel ? 'Add' : 'Save'}</Text>
                     </TouchableOpacity>
@@ -473,14 +482,16 @@ function TeamSetupView(props) {
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
-                        marginTop: 15, backgroundColor: 'white'
+                        marginTop: verticalScale(15),
+                        backgroundColor: 'white'
                     }} onPress={() => { sheetRef.current.close() }}>
                         <Text style={{
                             ...styles.generalTxt,
                             fontFamily: Fonts.type.base,
                             color: 'black',
-                            fontSize: 18, textAlign: 'center', padding: 10,
-                            paddingTop: 5, paddingBottom: 5,
+                            fontSize: moderateScale(18), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(5),
+                            paddingBottom: verticalScale(5),
 
                         }}>Cancel</Text>
                     </TouchableOpacity>
@@ -488,7 +499,7 @@ function TeamSetupView(props) {
                 </View>
 
 
-            </ScrollView >
+            </ScrollView>
         )
     }
 
@@ -497,11 +508,12 @@ function TeamSetupView(props) {
     ////////////////////  WEEK UI //////////////////
     function getWeeklyRecurring() {
         return (
-            <View height={150}>
+            <View height={verticalScale(150)}>
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginTop: 25, marginStart: 10,
-                    marginBottom: 10
+                    marginTop: verticalScale(25),
+                    marginStart: moderateScale(10),
+                    marginBottom: verticalScale(10)
                 }}>Work Days</Text>
                 <FlatList
                     numColumns={4}
@@ -511,21 +523,21 @@ function TeamSetupView(props) {
                         return (
                             <TouchableOpacity style={{
                                 backgroundColor: isDaySelect(item) ? '#FFC081' : '#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 5,
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
                                 width: Dimensions.get('screen').width / 5,
-                                height: 40,
+                                height: verticalScale(40),
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginStart: 5,
+                                marginStart: moderateScale(5),
                             }} onPress={() => setWeekFrequency(
                                 { day: item }
                             )}>
 
                                 <AutoSizeText
                                     numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,
@@ -570,7 +582,7 @@ function TeamSetupView(props) {
     function getBusTiming() {
 
         return (
-            <View marginTop={15} style={{ width: '100%' }}>
+            <View marginTop={verticalScale(15)} style={{ width: '100%' }}>
                 {showBusTimings ?
                     (isStartBusTiming ?
                         <DateTimePickerModal
@@ -590,7 +602,7 @@ function TeamSetupView(props) {
                             isVisible={showBusTimings}
                             mode={mode}
                             date={valueEndBusTiming ? new Date(valueEndBusTiming) : new Date()}
-                            minimumDate={valueStartBusTiming ? new Date(valueStartBusTiming) : ''}
+                            //minimumDate={valueStartBusTiming ? new Date(valueStartBusTiming) : ''}
                             onConfirm={(time) => {
                                 console.log('end-timing', time)
                                 setValueEndBusTiming(time);
@@ -602,18 +614,19 @@ function TeamSetupView(props) {
 
                 <Text style={{
                     ...styles.bottomSheetHeader,
-                    marginStart: 5
+                    marginStart: moderateScale(5)
                 }}>Work Timing *</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
                         flex: 1,
-                        height: 50,
+                        height: moderateScale(40),
                         flexDirection: 'row',
-                        padding: 15,
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
                         justifyContent: 'center',
                         alignItems: 'center',
                         marginStart: 0,
@@ -625,27 +638,29 @@ function TeamSetupView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
                                 color: '#777777',
+                                paddingEnd: moderateScale(5),
                                 flex: 7,
-                            }}>Start {valueStartBusTiming ? moment(valueStartBusTiming).format('hh:mm') : ''}
+                            }}>Start {valueStartBusTiming ? moment(valueStartBusTiming).format('hh:mm A') : ''}
                         </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
+                        <Image source={Icons.icon_blue_clock} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     </TouchableOpacity>
                     <TouchableOpacity style={{
                         backgroundColor: '#F5F5F5',
-                        borderRadius: 10,
-                        marginTop: 5,
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
                         flex: 1,
-                        height: 50,
-                        padding: 15,
+                        height: moderateScale(40),
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
                         justifyContent: 'center',
                         alignItems: 'center',
-                        marginStart: 10,
+                        marginStart: moderateScale(10),
                         flexDirection: 'row'
                     }} onPress={() => {
                         setIsStartBusTiming(false)
@@ -655,16 +670,16 @@ function TeamSetupView(props) {
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={14}
-                            fontSize={16}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
                             mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
                                 color: '#777777',
                                 flex: 7,
-                            }}>End {valueEndBusTiming ? moment(valueEndBusTiming).format('hh:mm') : ""}
+                            }}>End {valueEndBusTiming ? moment(valueEndBusTiming).format('hh:mm A') : ""}
                         </AutoSizeText>
-                        <Image source={Icons.icon_blue_clock} />
+                        <Image source={Icons.icon_blue_clock} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
                     </TouchableOpacity>
 
 
@@ -676,21 +691,21 @@ function TeamSetupView(props) {
 
     function getServiceType(isShowThird) {
 
-        return (<View marginTop={15}>
-            <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Service Type *</Text>
-            <View flexDirection='row' marginTop={15} style={{ justifyContent: 'space-between', width: isShowThird ? '90%' : '60%' }}>
+        return (<View marginTop={verticalScale(15)}>
+            <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Service Type *</Text>
+            <View flexDirection='row' marginTop={verticalScale(15)} style={{ justifyContent: 'space-between', width: isShowThird ? '90%' : '60%' }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(0) }}>
-                    <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                    <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>On-Site</Text>
+                    <Image source={serviceTypeIndex === 0 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                    <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>On-Site</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(1) }}>
-                    <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                    <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Off-Site</Text>
+                    <Image source={serviceTypeIndex === 1 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                    <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Off-Site</Text>
                 </TouchableOpacity>
                 {isShowThird ?
                     <TouchableOpacity style={{ flexDirection: 'row' }} onPress={() => { setServiceTypeIndex(2) }}>
-                        <Image source={serviceTypeIndex === 2 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} />
-                        <Text style={{ ...styles.bottomSheetHeader, marginStart: 5 }}>Both</Text>
+                        <Image source={serviceTypeIndex === 2 ? Icons.icon_servicetype_checked : Icons.icon_servicetype_unchecked} resizeMode='contain' style={{ height: verticalScale(16), width: moderateScale(16) }} />
+                        <Text style={{ ...styles.bottomSheetHeader, marginStart: moderateScale(5) }}>Both</Text>
                     </TouchableOpacity> : null
                 }
             </View>
@@ -719,7 +734,7 @@ function TeamSetupView(props) {
     }
 
 
-   
+
     function updateServiceValues(item) {
         setArrIndex(item ? item.id : wholeServices.length)
         setValueName(item ? item.name : '')
@@ -735,63 +750,64 @@ const styles = StyleSheet.create({
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: moderateScale(2),
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
-        height: 50,
+        height: moderateScale(48),
         backgroundColor: '#F5F5F5',
-        elevation: 5,
-        borderRadius: 10,
-        marginTop: 2
+        elevation: verticalScale(5),
+        borderRadius: moderateScale(10),
+        marginTop: verticalScale(2),
+        width: '100%'
     },
     generalTxt: {
         color: 'white',
-        fontSize: 22,
+        fontSize: moderateScale(22),
         fontFamily: Fonts.type.medium
     },
     generalTxt2: {
         color: 'white',
-        fontSize: 18,
+        fontSize: moderateScale(18),
         fontFamily: Fonts.type.base
     },
     bottomSheetHeader: {
         color: '#464646',
-        fontSize: 16,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.medium
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 14,
+        fontSize: moderateScale(14),
         color: '#464646',
         width: '100%'
 
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor, borderRadius: moderateScale(30)
     },
     centeredView: {
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        marginTop: 22,
+        marginTop: verticalScale(22),
         backgroundColor: 'rgba(255,255,255,0.7)'
     },
     modalView: {
-        width: Dimensions.get("screen").width - 50,
-        height: 250,
-        margin: 10,
-        borderRadius: 20,
+        width: Dimensions.get("screen").width - moderateScale(50),
+        height: verticalScale(250),
+        margin: moderateScale(10),
+        borderRadius: moderateScale(20),
         backgroundColor: 'white',
-        padding: 30,
+        padding: moderateScale(30),
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2
+            height: verticalScale(2)
         },
         shadowOpacity: 0.25,
-        shadowRadius: 4,
-        elevation: 5
+        shadowRadius: moderateScale(4),
+        elevation: moderateScale(5)
     },
 });
 

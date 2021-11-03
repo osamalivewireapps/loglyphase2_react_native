@@ -8,7 +8,7 @@ import React, { useState } from 'react';
 import { StyleSheet, FlatList, TouchableOpacity, View, Image, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { Fonts, Colors, Icons, Images } from '../../../theme';
-
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const vehicleData = ['Truck', 'PickUp', 'Car', 'MotorBike']
 
@@ -35,74 +35,92 @@ function ServicesListing(props) {
     function getViewExceptPetTraining(item, index) {
         return (
             <View style={{
-                backgroundColor: isSelectService(index) ? '#FFC081' : '#F5F5F5',
-                borderRadius: 10,
-                marginTop: 10,
+                backgroundColor: '#F5F5F5',//isSelectService(index) ? '#FFC081' : '#F5F5F5',
+                borderRadius: moderateScale(10),
+                marginTop: verticalScale(10),
                 flex: 1,
-                height: 50,
+                height: verticalScale(50),
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingStart: 15,
-                paddingEnd: 15
+                paddingStart: moderateScale(15),
+                paddingEnd: moderateScale(15)
 
             }}>
 
-                <TouchableOpacity
-                    style={{ width: 25, height: 25, alignItems: 'center', justifyContent: 'center' }}
+                {/* <TouchableOpacity
+                    style={{ width: moderateScale(25), height: verticalScale(25), alignItems: 'center', justifyContent: 'center' }}
                     onPress={() => {
                         addServices(index)
                     }}>
                     <Image
-                        source={isSelectService(index) ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow} />
-                </TouchableOpacity>
+                        source={isSelectService(index) ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
+                        resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15) }}
+                    />
+                </TouchableOpacity> */}
                 <AutoSizeText
                     numberOfLines={1}
-                    minFontSize={14}
-                    fontSize={16}
+                    minFontSize={moderateScale(14)}
+                    fontSize={moderateScale(16)}
                     mode={ResizeTextMode.max_lines}
                     style={{
                         ...styles.generalTxt,
                         width: '76%',
-                        paddingStart: 10,
-                        paddingEnd: 10,
+                        paddingEnd: moderateScale(10),
                         color: Colors.appBgColor
                     }}>{getServiceName(item)}
                 </AutoSizeText>
 
                 {isEditShow === index ?
-                    <View style={{ height: 55, flex: 1, marginTop: 0, marginBottom: 0, justifyContent: 'center', alignItems: 'center' }}>
-                        <ImageBackground source={Images.img_popup_services} style={{ position: 'absolute', height: '100%', width: '100%' }} />
+                    <View style={{
+                        height: verticalScale(55),
+                        flex: moderateScale(1),
+                        marginTop: 0, marginBottom: 0,
+                        justifyContent: 'center',
+                        alignItems: 'center'
+                    }}>
+                        <ImageBackground source={Images.img_popup_services}
+                            style={{
+                                position: 'absolute', height: '100%',
+                                width: '100%'
+                            }} />
                         <TouchableOpacity
-                            flex={0.1}
+                            flex={moderateScale(0.1)}
                             onPress={() => {
                                 setEditShow(-1)
                                 updateServiceValues(item)
                             }}>
-                            <Image source={Icons.icon_services_edit} style={{ marginEnd: 2 }} />
+                            <Image source={Icons.icon_services_edit}
+                                resizeMode='contain' style={{ marginEnd: moderateScale(2), height: verticalScale(15), width: moderateScale(15) }}
+
+                            />
                         </TouchableOpacity>
                         <View style={{
-                            width: '50%', height: 0.5,
+                            width: '50%', 
+                            height: verticalScale(0.5),
                             backgroundColor: '#585858',
-                            marginEnd: 5,
-                            marginTop: 8, marginBottom: 8
+                            marginEnd: moderateScale(5),
+                            marginTop: verticalScale(8), 
+                            marginBottom: verticalScale(8)
                         }} />
                         <TouchableOpacity
-                            flex={0.1}
+                            flex={moderateScale(0.1)}
                             onPress={() => {
                                 setEditShow(-1)
                                 delTrainingProgram(index)
                             }}>
-                            <Image source={Icons.icon_services_delete} style={{ marginEnd: 5 }} />
+                            <Image source={Icons.icon_services_delete} resizeMode='contain' style={{ marginEnd: moderateScale(2), height: verticalScale(15), width: moderateScale(15) }} />
                         </TouchableOpacity>
                     </View> : <View flex={1} />}
 
                 <TouchableOpacity
-                    style={{ width:20,height:20, alignItems: 'center',justifyContent:'center'}}
+                    style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
 
                     onPress={() => {
                         setEditShow(index)
                     }}>
-                    <Image source={Icons.icon_three_colons} />
+                    <Image source={Icons.icon_three_colons}
+                        resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
+                    />
                 </TouchableOpacity>
                 {/* <TouchableOpacity onPress={() => {
                     updateServiceValues(item)
@@ -116,14 +134,14 @@ function ServicesListing(props) {
     function getPetTrainingItem(item, index) {
         return (
             <TouchableOpacity style={{
-                backgroundColor: isSelectService(index) ? '#FFC081' : '#F5F5F5',
-                borderRadius: 10,
-                marginTop: 10,
+                backgroundColor: '#F5F5F5',//backgroundColor: isSelectService(index) ? '#FFC081' : '#F5F5F5',
+                borderRadius: moderateScale(10),
+                marginTop: verticalScale(10),
                 flex: 1,
-                height: 60,
+                height: verticalScale(60),
                 flexDirection: 'row',
                 alignItems: 'center',
-                paddingEnd: 15
+                paddingEnd: moderateScale(15)
 
             }} onPress={() => {
                 addServices(index)
@@ -132,16 +150,16 @@ function ServicesListing(props) {
                 <View
                     style={{
                         height: '100%', backgroundColor: Colors.appBgColor,
-                        borderRadius: 10,
+                        borderRadius: moderateScale(10),
                         justifyContent: 'center',
                         alignItems: 'center',
-                        flex: 0.2
+                        flex: moderateScale(0.2)
                     }} >
 
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={16}
-                        fontSize={30}
+                        minFontSize={moderateScale(16)}
+                        fontSize={moderateScale(30)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
@@ -151,14 +169,14 @@ function ServicesListing(props) {
                     </AutoSizeText>
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={10}
-                        fontSize={12}
+                        minFontSize={moderateScale(10)}
+                        fontSize={moderateScale(12)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
                             includeFontPadding: false,
                             fontFamily: Fonts.type.base,
-                            marginTop: -5,
+                            marginTop: verticalScale(-5),
                             color: 'white'
                         }}>Oct
                     </AutoSizeText>
@@ -168,50 +186,57 @@ function ServicesListing(props) {
 
 
                 <View style={{
-                    flex: 0.7,
+                    flex: moderateScale(0.7),
                 }}>
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={14}
-                        fontSize={16}
+                        minFontSize={moderateScale(14)}
+                        fontSize={moderateScale(16)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
-                            paddingStart: 10,
-                            paddingEnd: 10,
+                            paddingStart: moderateScale(10),
+                            paddingEnd: moderateScale(10),
                             color: '#585858'
                         }}>{getServiceName(item)}
                     </AutoSizeText>
                     <AutoSizeText
                         numberOfLines={1}
-                        minFontSize={14}
-                        fontSize={16}
+                        minFontSize={moderateScale(14)}
+                        fontSize={moderateScale(16)}
                         mode={ResizeTextMode.max_lines}
                         style={{
                             ...styles.generalTxt,
-                            paddingStart: 10,
-                            paddingEnd: 10,
+                            paddingStart: moderateScale(10),
+                            paddingEnd: moderateScale(10),
                             color: '#585858'
                         }}>12:00 pm
                     </AutoSizeText>
                 </View>
 
                 {isEditShow === index ?
-                    <View style={{ height: 55, flex: 0.18, marginTop: 0, marginBottom: 0, justifyContent: 'center', alignItems: 'center' }}>
+                    <View style={{ 
+                        height: verticalScale(55), 
+                        flex: moderateScale(0.1), 
+                        marginTop: 0, 
+                        marginBottom: 0, 
+                        justifyContent: 'center', alignItems: 'center' }}>
                         <ImageBackground source={Images.img_popup_services} style={{ position: 'absolute', height: '100%', width: '100%' }} />
                         <TouchableOpacity
-                            flex={0.1}
+                            flex={moderateScale(0.1)}
                             onPress={() => {
                                 setEditShow(-1)
                                 updateServiceValues(item)
                             }}>
-                            <Image source={Icons.icon_services_edit} style={{ marginEnd: 2 }} />
+                            <Image source={Icons.icon_services_edit}
+                                resizeMode='contain'
+                                style={{ marginEnd: moderateScale(2), height: verticalScale(15), width: moderateScale(15) }} />
                         </TouchableOpacity>
                         <View style={{
-                            width: '50%', height: 0.5,
+                            width: '50%', height: verticalScale(0.5),
                             backgroundColor: '#585858',
-                            marginEnd: 5,
-                            marginTop: 8, marginBottom: 8
+                            marginEnd: moderateScale(5),
+                            marginTop: verticalScale(8), marginBottom: verticalScale(8)
                         }} />
                         <TouchableOpacity
                             flex={0.1}
@@ -219,17 +244,21 @@ function ServicesListing(props) {
                                 setEditShow(-1)
                                 delTrainingProgram(index)
                             }}>
-                            <Image source={Icons.icon_services_delete} style={{ marginEnd: 5 }} />
+                            <Image source={Icons.icon_services_delete}
+                                resizeMode='contain'
+                                style={{ marginEnd: moderateScale(5), height: verticalScale(15), width: moderateScale(15) }} />
                         </TouchableOpacity>
-                    </View> : <View flex={0.18} />}
+                    </View> : <View flex={moderateScale(0.18)} />}
 
                 <TouchableOpacity
-                    flex={0.16}
+                    flex={moderateScale(0.16)}
                     onPress={() => {
                         setEditShow(index)
                     }}>
                     <Image
-                        source={Icons.icon_three_colons} />
+                        source={Icons.icon_three_colons} resizeMode='contain'
+                        style={{ height: verticalScale(12), width: moderateScale(12) }}
+                    />
                 </TouchableOpacity>
             </TouchableOpacity>
         )
@@ -284,16 +313,16 @@ const styles = StyleSheet.create({
 
     generalTxt: {
         color: 'white',
-        fontSize: 22,
+        fontSize: moderateScale(22),
         fontFamily: Fonts.type.medium
     },
     bottomSheetHeader: {
         color: '#464646',
-        fontSize: 16,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.medium
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor, borderRadius: moderateScale(30)
     }
 
 });

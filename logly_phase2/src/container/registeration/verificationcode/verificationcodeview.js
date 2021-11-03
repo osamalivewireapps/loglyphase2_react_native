@@ -9,6 +9,7 @@ import OTPInputView from '@twotalltotems/react-native-otp-input';
 import React, { useState } from 'react';
 import { Platform, TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image, TextInput, ScrollView } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function VerificationCodeView(props) {
     const { backScreen, openEnterPasswordScreen, pinLength,
@@ -32,113 +33,116 @@ function VerificationCodeView(props) {
 
                 }}>
                 <TouchableOpacity style={{ flexDirection: 'row' }} onPress={(e) => backScreen(e)}>
-                    <Image source={Icons.icon_arrow_back1} style={{ marginTop: 2 }} />
-                    <Text style={{ ...styles.generalTxt, marginStart: 10, marginTop: Platform.OS === 'android' ? -5 : 0 }}>Back</Text>
+                    <Image source={Icons.icon_arrow_back1} style={{ marginTop: verticalScale(2), height: verticalScale(12), width: moderateScale(8) }} />
+                    <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
             </View>
             <ScrollView keyboardShouldPersistTaps={true}>
-            <View style={{
-                marginStart: 30,
-                marginEnd: 30, alignItems: 'center',
-                height: '100%'
-            }}>
+                <View style={{
+                    marginStart: moderateScale(30),
+                    marginEnd: moderateScale(30), alignItems: 'center',
+                    height: '100%'
+                }}>
 
 
-                <Text style={{
-                    fontSize: 28, textAlign: 'center', padding: 10,
-                    paddingTop: 25, paddingBottom: 25,
-                    fontFamily: Fonts.type.bold, color: 'black'
-                }}>Enter Verification Code</Text>
+                    <Text style={{
+                        fontSize: moderateScale(28), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: moderateScale(25), paddingBottom: moderateScale(25),
+                        fontFamily: Fonts.type.bold, color: 'black'
+                    }}>Enter Verification Code</Text>
 
-                <Text style={{
-                    ...styles.generalTxt,
-                    fontSize: 16, textAlign: 'center', paddingStart: 10,
-                    paddingEnd: 10, paddingBottom: 60
-
-                }}>{isRegisterCodeVerification ? 'Please check your Email and Phone. We sent you a verification code.' : 'Please check your email. We sent you a verification code.'}</Text>
-                <View style={{flexDirection:'row',alignItems:'flex-end'}}>
                     <Text style={{
                         ...styles.generalTxt,
-                        fontSize: 16, textAlign: 'center', 
-                        paddingEnd:20
+                        fontSize: moderateScale(16), textAlign: 'center',
+                        paddingStart: moderateScale(10),
+                        paddingEnd: moderateScale(10), 
+                        paddingBottom: verticalScale(60)
 
-                    }}>
-                            {isRegisterCodeVerification ? 'Email Code:' : (routeEmail?'Email Code:':'Phone Code:')}
-                    </Text>
-                    <OtpInputs
-                        defaultValue={verificationCode}
-                        autofillFromClipboard={true}
-                        handleChange={(code) => setPinCode(code)}
-                        numberOfInputs={pinLength}
-                        style={{
-                            height: 45, paddingStart: 0,
-                            justifyContent: 'center',
-                            paddingEnd: 0, flexDirection: 'row', color: 'black',
-
-                        }}
-                        focusStyles={styles.borderStyleHighLighted}
-                        keyboardType="numbers-and-punctuation"
-                        inputStyles={{ textAlign: 'center' }}
-                        inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3, paddingTop: (Platform.OS === "ios" ? 12 : 0) }}
-
-                    />
-                </View>
-
-                {isRegisterCodeVerification ?
-                    <View style={{ flexDirection: 'row', alignItems: 'flex-end',marginTop:20 }}>
+                    }}>{isRegisterCodeVerification ? 'Please check your Email and Phone. We sent you a verification code.' : 'Please check your email. We sent you a verification code.'}</Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
                         <Text style={{
                             ...styles.generalTxt,
-                            fontSize: 16, textAlign: 'center',
-                            paddingEnd: 20
+                            fontSize: moderateScale(16), textAlign: 'center',
+                            paddingEnd: moderateScale(20)
 
                         }}>
-                            Phone Code:
+                            {isRegisterCodeVerification ? 'Email Code:' : (routeEmail ? 'Email Code:' : 'Phone Code:')}
                         </Text>
-                    <OtpInputs
-                        defaultValue={verificationSmsCode}
-                        autofillFromClipboard={true}
-                        handleChange={(code) => setPinSMSCode(code)}
-                        numberOfInputs={pinLength}
+                        <OtpInputs
+                            defaultValue={verificationCode}
+                            autofillFromClipboard={true}
+                            handleChange={(code) => setPinCode(code)}
+                            numberOfInputs={pinLength}
                             style={{
-                                height: 45, paddingStart: 0,
+                                height: moderateScale(45), 
+                                paddingStart: 0,
                                 justifyContent: 'center',
                                 paddingEnd: 0, flexDirection: 'row', color: 'black',
 
                             }}
-                        focusStyles={styles.borderStyleHighLighted}
-                        keyboardType="numbers-and-punctuation"
-                        inputStyles={{ textAlign: 'center' }}
-                        inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: 3, paddingTop: (Platform.OS === "ios" ? 12 : 0) }}
+                            focusStyles={styles.borderStyleHighLighted}
+                            keyboardType="numbers-and-punctuation"
+                            inputStyles={{ textAlign: 'center',fontSize:moderateScale(16) }}
+                            inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: moderateScale(3), paddingTop: (Platform.OS === "ios" ? verticalScale(12) : 0) }}
 
-                    /></View>
-                    : <View />}
+                        />
+                    </View>
 
-                <TouchableOpacity onPress={(e) => resendCode()}>
-                    <Text style={{
-                        ...styles.generalTxt,
-                        marginTop: 40,
-                        fontSize: 22, textAlign: 'center', paddingStart: 30,
-                        paddingEnd: 30, color: 'green',
-                        marginBottom:20
+                    {isRegisterCodeVerification ?
+                        <View style={{ flexDirection: 'row', alignItems: 'flex-end', marginTop: 20 }}>
+                            <Text style={{
+                                ...styles.generalTxt,
+                                fontSize: moderateScale(16), textAlign: 'center',
+                                paddingEnd: moderateScale(20)
 
-                    }}>Resend Verification Code</Text>
-                </TouchableOpacity>
+                            }}>
+                                Phone Code:
+                            </Text>
+                            <OtpInputs
+                                defaultValue={verificationSmsCode}
+                                autofillFromClipboard={true}
+                                handleChange={(code) => setPinSMSCode(code)}
+                                numberOfInputs={pinLength}
+                                style={{
+                                    height: moderateScale(45), paddingStart: 0,
+                                    justifyContent: 'center',
+                                    paddingEnd: 0, flexDirection: 'row', color: 'black',
 
-                <TouchableOpacity
-                    onPress={() => openEnterPasswordScreen()}
-                    style={{
-                        ...styles.styleButtons, alignSelf: 'flex-end',
-                        marginTop: 20
-                    }}>
-                    <Text style={{
-                        fontSize: 22, textAlign: 'center', padding: 10,
-                        paddingTop: 15, paddingBottom: 15,
-                        ...styles.generalTxt, color: 'white'
-                    }}>CONTINUE</Text>
-                </TouchableOpacity>
+                                }}
+                                focusStyles={styles.borderStyleHighLighted}
+                                keyboardType="numbers-and-punctuation"
+                                inputStyles={{ textAlign: 'center', fontSize: moderateScale(16) }}
+                                inputContainerStyles={{ ...styles.underlineStyleBase, marginStart: moderateScale(3), paddingTop: (Platform.OS === "ios" ? verticalScale(12) : 0) }}
+
+                            /></View>
+                        : <View />}
+
+                    <TouchableOpacity onPress={(e) => resendCode()}>
+                        <Text style={{
+                            ...styles.generalTxt,
+                            marginTop: verticalScale(40),
+                            fontSize: moderateScale(22), textAlign: 'center', paddingStart: moderateScale(30),
+                            paddingEnd: moderateScale(30), color: 'green',
+                            marginBottom: verticalScale(20)
+
+                        }}>Resend Verification Code</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => openEnterPasswordScreen()}
+                        style={{
+                            ...styles.styleButtons, alignSelf: 'flex-end',
+                            marginTop: verticalScale(20)
+                        }}>
+                        <Text style={{
+                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
+                            ...styles.generalTxt, color: 'white'
+                        }}>CONTINUE</Text>
+                    </TouchableOpacity>
 
 
-            </View>
+                </View>
             </ScrollView>
         </View>
     );
@@ -162,23 +166,23 @@ const styles = StyleSheet.create({
     },
     generalTxt: {
         color: 'black',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
-        color: 'black',
-        textAlign: 'center',
-        backgroundColor: 'yellow'
+        fontSize: moderateScale(16),
+        color: '#585858',
+        width: '100%',
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30,
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30),
         width: '100%',
     },
     borderStyleBase: {
-        width: 30,
-        height: 45
+        width: moderateScale(30),
+        height: verticalScale(45)
     },
 
     borderStyleHighLighted: {
@@ -187,13 +191,13 @@ const styles = StyleSheet.create({
     },
 
     underlineStyleBase: {
-        width: 30,
-        height: 45,
-        borderWidth: 1,
+        width: moderateScale(30),
+        height: verticalScale(45),
+        borderWidth: moderateScale(1),
         borderColor: 'white',
-        borderBottomColor:'black',
+        borderBottomColor: 'black',
         color: 'black',
-        fontSize: 18,
+        fontSize: moderateScale(18),
     },
 
     underlineStyleHighLighted: {

@@ -14,6 +14,7 @@ import { Text, Image, SafeAreaView } from 'react-native'
 import { Colors, Fonts, Images } from '../../theme';
 import * as Animatable from 'react-native-animatable';
 import { DotsLoader} from 'react-native-indicator';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 class TeamMemberSetup extends Component {
 
@@ -45,12 +46,24 @@ class TeamMemberSetup extends Component {
                         onAnimationEnd={() => { this.props.navigation.navigate('TeamSetup')}}
                         style={{maxHeight: Dimensions.get('screen').height - Dimensions.get('screen').height / 2 }}>
                         <View style={{
-                            paddingTop: Dimensions.get('screen').height / 4,
-                            justifyContent: 'center', flexDirection: 'column', alignItems: 'center', maxHeight: Dimensions.get('screen').height - Dimensions.get('screen').height / 2
+                            paddingTop: Dimensions.get('screen').height / 3,
+                            justifyContent: 'center', flexDirection: 'column', alignItems: 'center',
+                            maxHeight: Dimensions.get('screen').height - Dimensions.get('screen').height / 2
                         }} >
-                            <Image source={Images.appBg} style={{ alignSelf: 'center', position: 'absolute', borderBottomLeftRadius: 60, borderBottomRightRadius: 60 }} />
-                            <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: 30, margin: 30, textAlign: 'center' }}>We are almost done... Let's add your team members now</Text>
-                            <DotsLoader size={15} color='white'/>
+                            <Image source={Images.appBg} style={{
+                                alignSelf: 'center',
+                                position: 'absolute', width: '100%',
+                                borderBottomLeftRadius: moderateScale(60),
+                                borderBottomRightRadius: moderateScale(60)
+                            }} />
+                            <Text style={{
+                                ...styles.generalTxt,
+                                fontFamily: Fonts.type.bold,
+                                fontSize: moderateScale(20),
+                                margin: moderateScale(30),
+                                textAlign: 'center'
+                            }}>We are almost done... Let's add your team members now</Text>
+                            <DotsLoader size={moderateScale(15)} color='white' />
                  
                         </View>
                     </Animatable.View> :

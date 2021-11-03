@@ -9,7 +9,8 @@ import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { FlatList, ScrollView } from "react-native-gesture-handler";
 import { backgroundColor } from "styled-system";
 import { Fonts, Colors, Icons } from '../../../theme';
-import _ from 'lodash'
+import _ from 'lodash';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const DATA = [
     {
@@ -63,29 +64,29 @@ function AnimalCategoryView(props) {
 
     return (
         <ScrollView>
-            <View style={{ flex: 1, paddingStart: 30, paddingEnd: 30, paddingBottom: 30 }}>
+            <View style={{ flex: 1, paddingStart: moderateScale(30), paddingEnd: moderateScale(30), paddingBottom: moderateScale(30) }}>
 
                 <View style={{
                     backgroundColor: getAnimalCategory(animalType).bg,
-                    borderRadius: 10,
+                    borderRadius: moderateScale(10),
                     flexDirection: 'row',
                     alignItems: 'center',
-                    paddingStart: 20,
-                    paddingEnd: 10,
-                    marginTop: 35,
-                    marginBottom: 15,
-                    height: 100,
+                    paddingStart: moderateScale(20),
+                    paddingEnd: moderateScale(10),
+                    marginTop: verticalScale(35),
+                    marginBottom: verticalScale(15),
+                    height: verticalScale(100),
                     justifyContent: 'flex-end'
 
                 }} >
 
                     <View flex={7}  >
-                        <Text style={{ ...styles.generalTxt, fontSize: 14 }} >Please Select the Animal Categories for </Text>
+                        <Text style={{ ...styles.generalTxt, fontSize: moderateScale(14) }} >Please Select the Animal Categories for </Text>
 
                         <AutoSizeText
                             numberOfLines={1}
-                            minFontSize={16}
-                            fontSize={18}
+                            minFontSize={moderateScale(16)}
+                            fontSize={moderateScale(18)}
                             mode={ResizeTextMode.max_lines}
                             style={{ ...styles.generalTxt, textAlign: 'left', 
                             
@@ -93,10 +94,10 @@ function AnimalCategoryView(props) {
                                     getAnimalCategory(animalType).name.toLowerCase().includes('breeding') ||
                                     getAnimalCategory(animalType).name.toLowerCase().includes('boarding')) ? 'white' : 'black',
                             
-                            marginTop: 10, }}>{getAnimalCategory(animalType).name.toString().toUpperCase()}
+                            marginTop: verticalScale(10), }}>{getAnimalCategory(animalType).name.toString().toUpperCase()}
                         </AutoSizeText>
                     </View>
-                    <Image source={getAnimalCategory(animalType).url} flex={3} resizeMode='contain' />
+                    <Image source={getAnimalCategory(animalType).url} flex={3} resizeMode='contain' style={{height:verticalScale(60),width:moderateScale(60)}}/>
                 </View>
                 <FlatList
                     numColumns={2}
@@ -106,13 +107,13 @@ function AnimalCategoryView(props) {
                         return (
                             <TouchableOpacity style={{
                                 backgroundColor: isSelectService(selectedServices, index, item) ?'#FFC081':'#F5F5F5',
-                                borderRadius: 10,
-                                marginTop: 20,
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(20),
                                 flex: 1,
-                                height: 50,
+                                height: verticalScale(45),
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                marginStart: (index % 2) === 0 ? 0 : 10,
+                                marginStart: (index % 2) === 0 ? 0 : moderateScale(10),
                             }} onPress={() => addServices({
                                 type: item,
                                 isSelect: selectedServices.length === 0 ? true : !isSelectService(selectedServices, index, item),
@@ -121,8 +122,8 @@ function AnimalCategoryView(props) {
 
                                 <AutoSizeText
                                     numberOfLines={1}
-                                    minFontSize={14}
-                                    fontSize={16}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(18)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,
@@ -138,12 +139,11 @@ function AnimalCategoryView(props) {
 
                 <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0,
-                    marginTop: 35
+                    marginTop: verticalScale(35)
                 }} onPress={() => { clickNextBtn()}}>
                     <Text style={{
-                        fontSize: 22, textAlign: 'center', padding: 10,
-                        paddingStart: 127, paddingEnd: 127,
-                        paddingTop: 15, paddingBottom: 15,
+                        fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                         ...styles.generalTxt
                     }}>NEXT</Text>
                 </TouchableOpacity>
@@ -173,18 +173,18 @@ const styles = StyleSheet.create({
 
     generalTxt: {
         color: 'white',
-        fontSize: 22,
+        fontSize: moderateScale(22),
         fontFamily: Fonts.type.medium
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
+        fontSize: moderateScale(16),
         color: '#585858',
         width: '100%'
 
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30
+        backgroundColor: Colors.appBgColor, borderRadius: moderateScale(30)
     }
 });
 

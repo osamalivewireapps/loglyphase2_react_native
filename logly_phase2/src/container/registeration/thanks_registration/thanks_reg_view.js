@@ -6,6 +6,7 @@
 import React from 'react';
 import { TouchableOpacity, View, SafeAreaView, Text, StyleSheet, Image } from 'react-native';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 function ThanksRegistrationView(props) {
     const { backScreen, loginScreen } = props;
@@ -14,9 +15,9 @@ function ThanksRegistrationView(props) {
         <View style={{
             flex: 1, backgroundColor: 'white', alignItems: 'center',
 
-            paddingStart: 30,
-            paddingBottom: 30,
-            paddingEnd: 30
+            paddingStart: moderateScale(30),
+            paddingBottom: moderateScale(30),
+            paddingEnd: moderateScale(30)
         }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
 
@@ -25,11 +26,12 @@ function ThanksRegistrationView(props) {
                 flex: 9, justifyContent: 'center'
             }}>
 
-                <Image source={Images.img_fireworks} />
+                <Image source={Images.img_fireworks} resizeMode="contain"
+                       style={{height:verticalScale(120),width:moderateScale(120)}} />
 
                 <Text style={{
-                    fontSize: 28, textAlign: 'center', padding: 10,
-                    paddingTop: 25, paddingBottom: 25,
+                    fontSize: moderateScale(28), textAlign: 'center', padding: moderateScale(10),
+                    paddingTop: verticalScale(25), paddingBottom: verticalScale(25),
                     fontFamily: Fonts.type.bold, color: 'black'
                 }}>Thank you for Registration</Text>
 
@@ -46,8 +48,8 @@ function ThanksRegistrationView(props) {
 
                 }}>
                 <Text style={{
-                    fontSize: 22, textAlign: 'center', padding: 10,
-                    paddingTop: 15, paddingBottom: 15,
+                    fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                    paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
                     ...styles.generalTxt, color: 'white'
                 }}>LOGIN</Text>
             </TouchableOpacity>
@@ -74,18 +76,20 @@ const styles = StyleSheet.create({
     },
     generalTxt: {
         color: 'black',
-        fontSize: 18,
+        fontSize: moderateScale(16),
         fontFamily: Fonts.type.base
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
-        fontSize: 16,
-        color: '#585858'
-    },
-    styleButtons: {
-        backgroundColor: Colors.appBgColor, borderRadius: 30,
+        fontSize: moderateScale(16),
+        color: '#585858',
         width: '100%',
     },
+    styleButtons: {
+        backgroundColor: Colors.appBgColor,
+        borderRadius: moderateScale(30),
+        width: '100%',
+    }
 
 });
 
