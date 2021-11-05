@@ -30,7 +30,7 @@ class TeamSetup extends React.Component {
     }
 
     clickNextButton() {
-        this.props.navigation.navigate('HomeScreen')
+        this.props.navigation.navigate('HomeDrawer')
     }
 
     addMember(e) {

@@ -45,4 +45,17 @@ const icon_awesome_blue_check_circle = require('../assets/icons/icon_awesome-che
 const icon_black_hollow = require('../assets/icons/icon_black_hollow/icon_black_hollow.png');
 const icon_services_delete = require('../assets/icons/icon_services_delete/icon_services_delete.png');
 const icon_services_edit = require('../assets/icons/icon_services_edit/icon_services_edit.png');
-export default { icon_services_edit,icon_services_delete,icon_black_hollow,icon_awesome_blue_check_circle,icon_blue_mobile,icon_blue_email,icon_car, icon_motorbike, icon_pickup, icon_truck,icon_three_colons,icon_material_date_range,icon_blue_postalcode,icon_blue_awesome_city,icon_blue_real_estate_agency,icon_blue_clock,icon_servicetype_checked,icon_servicetype_unchecked,icon_awesome_plus,icon_awesome_check_circle,icon_feather_arrow_right,icon_close,icon_info,icon_feather_check_circle,icon_material_delete,icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };
+const icon_burger_menu = require('../assets/icons/icon_burger_menu/icon_burger_menu.png');
+const icon_contacts = require('../assets/icons/icon_contacts/icon_contacts.png');
+const icon_crm = require('../assets/icons/icon_crm/icon_crm.png');
+const icon_qrcode = require('../assets/icons/icon_qrcode/icon_qrcode.png');
+const icon_edit_profile = require('../assets/icons/icon_edit_profile/icon_edit_profile.png');
+const icon_floating_btn = require('../assets/icons/icon_floating_btn/icon_floating_btn.png');
+const icon_groups = require('../assets/icons/icon_groups/icon_groups.png');
+const icon_notification = require('../assets/icons/icon_notification/icon_notification.png');
+const icon_search_home = require('../assets/icons/icon_search_home/icon_search_home.png');
+const icon_settings = require('../assets/icons/icon_settings/icon_settings.png');
+const icon_subs = require('../assets/icons/icon_subs/icon_subs.png');
+const icon_team_member = require('../assets/icons/icon_team_member/icon_team_member.png');
+const icon_logout = require('../assets/icons/icon_logout/icon_logout.png');
+export default { icon_logout,icon_team_member,icon_subs,icon_settings,icon_search_home,icon_qrcode,icon_notification,icon_groups,icon_floating_btn,icon_edit_profile,icon_crm,icon_contacts,icon_burger_menu,icon_services_edit,icon_services_delete,icon_black_hollow,icon_awesome_blue_check_circle,icon_blue_mobile,icon_blue_email,icon_car, icon_motorbike, icon_pickup, icon_truck,icon_three_colons,icon_material_date_range,icon_blue_postalcode,icon_blue_awesome_city,icon_blue_real_estate_agency,icon_blue_clock,icon_servicetype_checked,icon_servicetype_unchecked,icon_awesome_plus,icon_awesome_check_circle,icon_feather_arrow_right,icon_close,icon_info,icon_feather_check_circle,icon_material_delete,icon_uncheck_paackage,icon_check_paackage,icon_attach_file, icon_ios_arrow_down, icon_check_circle_green, icon_arrow_back, icon_dropdown_circle, icon_circle_right, icon_check_circle, icon_forgotpassword_lock, icon_arrow_back1, icon_arrow_back, icon_zipcode, icon_city, icon_state, icon_close_eye, icon_open_eye, icon_email, icon_lock, icon_user, icon_phone };

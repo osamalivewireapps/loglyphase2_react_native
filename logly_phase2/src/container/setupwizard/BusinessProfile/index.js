@@ -41,7 +41,7 @@ class BusProfile extends React.Component {
             this.props.navigation.navigate('TeamMemberSetup')
         }
         else
-            this.props.navigation.navigate('HomeScreen')
+            this.props.navigation.navigate('HomeDrawer')
 
     }
     render() {

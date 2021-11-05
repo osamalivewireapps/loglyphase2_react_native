@@ -1,17 +1,18 @@
+/* eslint-disable no-trailing-spaces */
 /* eslint-disable jsx-quotes */
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { connect } from 'react-redux';
 import React from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-
+import { createDrawerNavigator } from '@react-navigation/drawer';
 
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import {
-  HomeScreen,BusListing,ProductInfo,AnimalInfo,PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
+  HomeScreen, BusListing, ProductInfo, AnimalInfo, PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
@@ -19,6 +20,12 @@ import {
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
+import CustomDrawer from './src/container/home/drawer_content';
+import { Colors, Fonts, Icons } from './src/theme';
+import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { color } from 'react-native-reanimated';
+import { Image, Platform } from 'react-native';
+import DeviceInfo from 'react-native-device-info';
 
 
 function StackNavigator(props) {
@@ -43,23 +50,136 @@ function StackNavigator(props) {
           <Stack.Screen name="RegisterAccountType" component={RegistrationAccountTypeController} />
           <Stack.Screen name="BusAccountPackages" component={BusAccountPackagesController} />
           <Stack.Screen name="ThanksRegistration" component={ThanksRegistrationController} />
-          <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} /> 
+          <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} />
           <Stack.Screen name="PolicyScreen" component={PolicyController} />
           <Stack.Screen name="WelcomeRegistration" component={WelcomeRegistration} />
           <Stack.Screen name="ServicesSetup" component={ServicesSetup} />
-          <Stack.Screen name='AccountSetup' component={AccountSetup}/>
+          <Stack.Screen name='AccountSetup' component={AccountSetup} />
           <Stack.Screen name='BusProfileSetup' component={BusProfileSetup} />
           <Stack.Screen name='BusProfile' component={BusProfile} />
-          <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup}/>
+          <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup} />
           <Stack.Screen name='TeamSetup' component={TeamSetup} />
           <Stack.Screen name='BusListing' component={BusListing} />
           <Stack.Screen name='ProductInfo' component={ProductInfo} />
           <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
-          <Stack.Screen name='HomeScreen' component={HomeScreen}/>
+          <Stack.Screen name="HomeDrawer" component={homeDrawer} />
 
         </Stack.Navigator>
       </NavigationContainer>
     </Loader>
+  );
+}
+
+function homeDrawer() {
+  const Drawer = createDrawerNavigator();
+
+  const isTablet = DeviceInfo.isTablet();
+
+  return (
+    <Drawer.Navigator
+      drawerContent={props => <CustomDrawer {...props} />}
+      screenOptions={{
+        headerBackVisible: false, headerShown: false,
+        drawerType: 'front',
+        drawerStyle: {
+          width: '85%',
+        },
+        drawerActiveTintColor: Colors.appBgColor,
+        drawerInactiveTintColor: '#464646',
+        drawerItemStyle: { marginStart: moderateScale(30), marginBottom: isTablet?verticalScale(15):0 },
+        drawerActiveBackgroundColor: 'transparent',
+        drawerInActiveBackgroundColor: 'transparent',
+        ...horizontalAnimation
+
+      }}
+
+    >
+      <Drawer.Screen name='Groups' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18),
+        },
+
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_groups} r
+
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+      <Drawer.Screen name='Subscription' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_subs}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+      <Drawer.Screen name='Contacts' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_contacts}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+      <Drawer.Screen name='Settings' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_settings}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+          />),
+      }} />
+      <Drawer.Screen name='CRM' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_crm}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+          />),
+      }} />
+      <Drawer.Screen name='Team Member' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_team_member}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+
+    </Drawer.Navigator>
   );
 }
 

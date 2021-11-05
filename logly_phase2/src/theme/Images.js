@@ -9,4 +9,7 @@ const img_fireworks = require('../assets/Images/img_fireworks/img_fireworks.png'
 const img_btn_forward = require('../assets/Images/img_btn_forward/img_btn_forward.png');
 const img_popup_services = require('../assets/Images/img_popup_services/img_popup_services.png');
 const img_friend_sample = require('../assets/Images/img_friend_sample/img_friend_sample.png');
-export default { img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };
+const img_activity = require('../assets/Images/img_activity/img_activity.png');
+const img_donate = require('../assets/Images/img_donate/img_donate.png');
+const img_pet_profile = require('../assets/Images/img_pet_profile/img_pet_profile.png');
+export default { img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };

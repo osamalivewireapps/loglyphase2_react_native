@@ -1,6 +1,7 @@
 /* eslint-disable prettier/prettier */
 export { LoginController } from './container';
 export { PolicyController } from './container';
+export { HomeScreen} from './container';
 export {
     VerificationCodeController,
     ThanksRegistrationController,
@@ -13,4 +14,4 @@ export {
     PasswordResetController
 } from './container/registeration';
 
-export { HomeScreen,BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup} from './container/setupwizard'
+export { BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup} from './container/setupwizard'
