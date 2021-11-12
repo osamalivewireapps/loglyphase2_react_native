@@ -1,19 +1,20 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React,{Component} from 'react';
-import {View} from 'react-native';
+import React, { Component } from 'react';
+import { View } from 'react-native';
 import HomeView from './home_view';
 
-class HomeScreen extends Component{
+class HomeScreen extends Component {
 
-    constructor(props){
+    constructor(props) {
         super(props);
     }
 
-    render(){
-        return(<HomeView 
-            toggleDrawer = {this.props.navigation}
+    render() {
+        return (<HomeView
+            {...this.props}
+            toggleDrawer={this.props.navigation}
         />);
     }
 }

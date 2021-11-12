@@ -61,11 +61,11 @@ class LoginController extends Component {
     loginAccount() {
 
         //TEMPORARY..
-        if(true){
-            DataHandler.saveAccountType(BUS_LISTING);
-            this.props.navigation.navigate("WelcomeRegistration");
-            return
-        }
+        // if(true){
+        //     DataHandler.saveAccountType(BUS_LISTING);
+        //     this.props.navigation.navigate("WelcomeRegistration");
+        //     return
+        // }
 
         if (this._validateForm()) {
 

@@ -18,4 +18,6 @@ export {
 
 export {
     BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup
-} from './setupwizard'
+} from './setupwizard';
+
+export { InventoryDashBoard, RegisterPet, PetProfile, PetDetail} from './inventory_management';

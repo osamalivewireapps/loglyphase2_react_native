@@ -12,4 +12,8 @@ const img_friend_sample = require('../assets/Images/img_friend_sample/img_friend
 const img_activity = require('../assets/Images/img_activity/img_activity.png');
 const img_donate = require('../assets/Images/img_donate/img_donate.png');
 const img_pet_profile = require('../assets/Images/img_pet_profile/img_pet_profile.png');
-export default { img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };
+const img_reg_pet = require('../assets/Images/img_reg_pet/img_reg_pet.png');
+const img_inventory_home = require('../assets/Images/img_inventory_home/img_inventory_home.png');
+const sample_bird = require('../assets/Images/sample_bird/sample_bird.png');
+const img_bg_quickmenu = require('../assets/Images/img_bg_quickmenu/img_bg_quickmenu.png');
+export default { img_bg_quickmenu,sample_bird,img_inventory_home,img_reg_pet,img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };

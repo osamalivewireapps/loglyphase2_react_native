@@ -15,3 +15,4 @@ export {
 } from './container/registeration';
 
 export { BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup} from './container/setupwizard'
+export { InventoryDashBoard, RegisterPet, PetProfile, PetDetail} from './container/inventory_management';

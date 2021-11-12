@@ -16,7 +16,7 @@ import {
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
-  TeamSetup
+  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -26,6 +26,7 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { color } from 'react-native-reanimated';
 import { Image, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+
 
 
 function StackNavigator(props) {
@@ -39,6 +40,12 @@ function StackNavigator(props) {
           ...horizontalAnimation
 
         }}>
+        
+          <Stack.Screen name="HomeDrawer" component={homeDrawer} />
+          <Stack.Screen name="RegisterPet" component={RegisterPet} />
+          <Stack.Screen name="PetProfile" component={PetProfile} />
+          <Stack.Screen name="PetDetail" component={PetDetail} />
+          
           
           <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
@@ -62,8 +69,8 @@ function StackNavigator(props) {
           <Stack.Screen name='BusListing' component={BusListing} />
           <Stack.Screen name='ProductInfo' component={ProductInfo} />
           <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
-          <Stack.Screen name="HomeDrawer" component={homeDrawer} />
-
+          
+          <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
         </Stack.Navigator>
       </NavigationContainer>
     </Loader>
@@ -86,7 +93,7 @@ function homeDrawer() {
         },
         drawerActiveTintColor: Colors.appBgColor,
         drawerInactiveTintColor: '#464646',
-        drawerItemStyle: { marginStart: moderateScale(30), marginBottom: isTablet?verticalScale(15):0 },
+        drawerItemStyle: { marginStart: moderateScale(30), marginBottom: isTablet ? verticalScale(15) : 0 },
         drawerActiveBackgroundColor: 'transparent',
         drawerInActiveBackgroundColor: 'transparent',
         ...horizontalAnimation
@@ -174,6 +181,21 @@ function homeDrawer() {
             style={{
               height: verticalScale(20),
               width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+
+      <Drawer.Screen name='Setup Wizard' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_setup_wizard}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(30),
+              width: moderateScale(30)
             }}
 
           />),

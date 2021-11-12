@@ -22,7 +22,7 @@ export const userLoginRequest = (data1) => (dispatch) => {
         )
             .then(response => {
 
-                console.log("response-->", response.data.data.user.packageType);
+                console.log("response-->", response);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
