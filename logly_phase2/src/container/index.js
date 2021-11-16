@@ -2,8 +2,10 @@
 import LoginController from './Login';
 import PolicyController from './policy';
 import HomeScreen from './home';
+import SearchItem from './search_item';
+import DashBoard from './dashboard'
  
-export { LoginController, PolicyController, HomeScreen };
+export { LoginController, PolicyController, HomeScreen, SearchItem, DashBoard };
 export {
     VerificationCodeController,
     ThanksRegistrationController,

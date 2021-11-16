@@ -13,6 +13,7 @@ import DeviceInfo from 'react-native-device-info';
 import ViewPager from '@react-native-community/viewpager';
 import ActiveProfile from './ActiveProfile';
 import ArchiveProfile from './ArchiveProfile';
+import { CommonActions } from '@react-navigation/routers';
 
 function PetProfileView(props) {
 
@@ -36,8 +37,22 @@ function PetProfileView(props) {
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
-                        <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                        <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+                            <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
+                        </TouchableOpacity>
+                        <TouchableOpacity onPress={() => {
+                            const resetAction = CommonActions.reset({
+                                index: 1,
+                                routes: [{ name: "Splash" }, { name: "HomeDrawer" }],
+                            });
+
+                            props.navigation.dispatch(resetAction);
+
+                        }}>
+
+
+                            <Image source={Icons.icon_header_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        </TouchableOpacity>
                         <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </View>
 

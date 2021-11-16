@@ -95,7 +95,7 @@ function AboutPetView(props) {
 
             <View style={{ flexDirection: 'row', marginTop: verticalScale(10) }}>
 
-                <TouchableOpacity style={{
+                <View style={{
                     backgroundColor: isFeatured === 0 ? '#021C41' : '#F5F5F5',
                     borderRadius: moderateScale(5),
                     height: verticalScale(25),
@@ -120,9 +120,9 @@ function AboutPetView(props) {
                             fontFamily: Fonts.type.medium,
                         }}>Featured
                     </AutoSizeText>
-                </TouchableOpacity>
+                </View>
 
-                <TouchableOpacity style={{
+                <View style={{
                     backgroundColor: isFeatured === 1 ? '#021C41' : '#F5F5F5',
                     borderRadius: moderateScale(5),
                     height: verticalScale(25),
@@ -147,7 +147,7 @@ function AboutPetView(props) {
                             fontFamily: Fonts.type.medium,
                         }}>Public
                     </AutoSizeText>
-                </TouchableOpacity>
+                </View>
             </View>
 
             <Text

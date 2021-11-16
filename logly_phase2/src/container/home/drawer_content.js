@@ -29,7 +29,7 @@ import DeviceInfo from 'react-native-device-info';
 
 function CustomDrawer(props) {
 
-    const isTablet = DeviceInfo.isTablet;
+    const isTablet = DeviceInfo.isTablet();
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -51,7 +51,8 @@ function CustomDrawer(props) {
             </View>
             <DrawerContentScrollView {...props} style={{
                 flex: 0.5,
-                paddingTop:Platform.isPad?verticalScale(40):verticalScale(0)
+                paddingTop:isTablet?verticalScale(10):verticalScale(0),
+                paddingBottom:isTablet?0:verticalScale(80)
             }}
 
             >

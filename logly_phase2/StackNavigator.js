@@ -16,7 +16,7 @@ import {
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
-  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail
+  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -40,14 +40,15 @@ function StackNavigator(props) {
           ...horizontalAnimation
 
         }}>
-        
+
+          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="HomeDrawer" component={homeDrawer} />
           <Stack.Screen name="RegisterPet" component={RegisterPet} />
           <Stack.Screen name="PetProfile" component={PetProfile} />
           <Stack.Screen name="PetDetail" component={PetDetail} />
+          <Stack.Screen name='SearchItem' component={SearchItem} />
+          <Stack.Screen name='DashBoard' component={DashBoard} />
           
-          
-          <Stack.Screen name="Splash" component={SplashScreen} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
           <Stack.Screen name="Login" component={LoginController} />
           <Stack.Screen name="Registration" component={RegistrationController} />
@@ -69,7 +70,7 @@ function StackNavigator(props) {
           <Stack.Screen name='BusListing' component={BusListing} />
           <Stack.Screen name='ProductInfo' component={ProductInfo} />
           <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
-          
+
           <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
         </Stack.Navigator>
       </NavigationContainer>
@@ -101,6 +102,38 @@ function homeDrawer() {
       }}
 
     >
+
+      <Drawer.Screen name='Home' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18),
+        },
+
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_feather_home} r
+
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+
+      <Drawer.Screen name='DashBoard' component={DashBoard} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_material_dashboard}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
       <Drawer.Screen name='Groups' component={HomeScreen} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18),
@@ -195,11 +228,14 @@ function homeDrawer() {
             resizeMode='contain'
             style={{
               height: verticalScale(30),
-              width: moderateScale(30)
+              width: moderateScale(30),
+              marginStart:moderateScale(-10)
             }}
 
           />),
       }} />
+
+      
 
     </Drawer.Navigator>
   );

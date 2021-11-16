@@ -11,8 +11,8 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
-import { FloatingAction } from "react-native-floating-action";
 import DeviceInfo from 'react-native-device-info';
+import * as Animatable from 'react-native-animatable';
 
 
 function HomeView(props) {
@@ -95,18 +95,28 @@ function HomeView(props) {
             position: 5
         }
     ];
-    
-    
+
+
+    const rotateValueHolder = useRef(new Animated.Value(0)).current;
+
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
     const fadeIn = () => {
-        // Will change fadeAnim value to 1 in 5 seconds
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 5000
+            duration: 0
         }).start();
     };
-    
+
+    const fadeOut = () => {
+        Animated.timing(fadeAnim, {
+            toValue: 0,
+            duration: 0
+        }).start();
+    };
+
+
+
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -116,7 +126,9 @@ function HomeView(props) {
                 </TouchableOpacity>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
-                    <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+                        <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
+                    </TouchableOpacity>
                     <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                 </View>
@@ -356,23 +368,151 @@ function HomeView(props) {
             </ScrollView>
 
             {isShow ?
-                <TouchableOpacity
-                    onPress={() => setShow(false)}
+
+                <Animatable.View
+                    animation="slideInUp"
+                    duration={500}
+                    direction="alternate"
+                    easing='linear'
+                    onAnimationEnd={() => { }}
                     style={{
+                        position: 'absolute',
                         width: '100%',
+                        backgroundColor: Colors
+                            .appBgColor,
+                        justifyContent: 'center',
+                        alignItems: 'center',
                         height: '100%',
-                        position: 'absolute'
                     }}>
-
-                    <ImageBackground source={Images.img_bg_quickmenu}
-
+                    <TouchableOpacity
+                        onPress={() => setShow(false)}
                         style={{
                             width: '100%',
                             height: '100%',
-                        }}
-                    />
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
 
-                </TouchableOpacity> : <View />}
+                        <ImageBackground source={Images.img_bg_quickmenu}
+
+                            style={{
+                                width: '100%',
+                                height: '100%',
+                                position: 'absolute'
+                            }}
+                        />
+
+
+                        <Animated.View style={{
+                            width: '100%',
+                            height: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        }}>
+                            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+                                <Text style={{
+                                    ...styles.generalTxt,
+                                    color: 'white',
+                                    textAlign: 'center',
+                                    fontFamily: Fonts.type.bold,
+                                    fontSize: moderateScale(30),
+                                    marginBottom: moderateScale(30),
+                                }}>Quick Menu</Text>
+                                <View flexDirection='row' style={{
+                                }}>
+                                    {/* <Image source={Icons.icon_float_reg} resizeMode='contain'
+                                style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
+                                    <Text style={{
+                                        ...styles.generalTxt,
+                                        color: 'white',
+
+                                        fontFamily: Fonts.type.medium,
+                                        fontSize: moderateScale(20),
+                                    }}>Register Animal</Text></View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: moderateScale(30),
+
+                                }}>
+                                    {/* <Image source={Icons.icon_float_reg_products} resizeMode='contain'
+                            style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
+                                    <Text style={{
+                                        ...styles.generalTxt,
+                                        color: 'white',
+                                        textAlign: 'center',
+                                        fontFamily: Fonts.type.medium,
+                                        fontSize: moderateScale(20),
+                                    }}>Register Product</Text></View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: moderateScale(30),
+
+                                }}>
+                                    {/* <Image source={Icons.icon_float_book_sale} style={{
+                            marginStart: moderateScale(-50),
+                            height: moderateScale(20),
+                            width: moderateScale(20)
+                        }} /> */}
+                                    <Text style={{
+                                        ...styles.generalTxt,
+                                        color: 'white',
+
+                                        fontFamily: Fonts.type.medium,
+                                        fontSize: moderateScale(20),
+                                    }}>Register a Sale</Text></View>
+
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: moderateScale(30),
+
+                                }}>
+                                    {/* <Image source={Icons.icon_float_book_app} style={{
+                            marginStart: moderateScale(40),
+                            height: moderateScale(20),
+                            width: moderateScale(20)
+                        }} /> */}
+                                    <Text style={{
+                                        ...styles.generalTxt,
+                                        color: 'white',
+
+                                        fontFamily: Fonts.type.medium,
+                                        fontSize: moderateScale(20),
+                                    }}>Book an Appointment</Text></View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: moderateScale(30),
+
+                                }}>
+
+                                    {/* <Image source={Icons.icon_float_add_team}
+                            style={{
+                                marginStart: moderateScale(30),
+                                height: moderateScale(20),
+                                width: moderateScale(20)
+                            }}
+                            /> */}
+                                    <Text style={{
+                                        ...styles.generalTxt,
+                                        color: 'white',
+
+                                        fontFamily: Fonts.type.medium,
+                                        fontSize: moderateScale(20),
+                                    }}>Add a Team Member</Text></View>
+                            </View>
+                        </Animated.View>
+                    </TouchableOpacity>
+                </Animatable.View>
+
+                :
+
+                fadeOut()
+
+
+            }
 
             <TouchableOpacity
                 style={{
@@ -388,7 +528,7 @@ function HomeView(props) {
                 }}
                 onPress={() => {
                     setShow(!isShow)
-                    fadeIn()
+                    spinImage()
                 }}>
                 <Image backgroundColor={isShow ? '#F7C637' : Colors.appBgColor}
                     style={{
@@ -400,19 +540,20 @@ function HomeView(props) {
                     }}
 
                 />
-                <Animated.View style={{
-                    height: moderateScale(20),
-                    width: moderateScale(20),
-                }}>
-                    <Image source={Icons.icon_white_plus}
-                        style={{
-                            height: moderateScale(20),
-                            width: moderateScale(20),
-                        }}
+                <Animated.Image
+                    source={Icons.icon_white_plus}
+                    style={{
+                        height: moderateScale(20),
+                        width: moderateScale(20),
+                        transform: [{ rotate: isShow ? imgRotateClockWise() : imgRotateAntiClockWise() }]
+                    }}>
 
-                    />
-                </Animated.View>
+                </Animated.Image>
             </TouchableOpacity>
+            {fadeIn()}
+            {spinImage()}
+
+
             {/* <FloatingAction
                 actions={actions}
                 shadow={
@@ -436,8 +577,33 @@ function HomeView(props) {
             /> */}
 
         </View>
-    )
+    );
 
+    function spinImage() {
+        rotateValueHolder.setValue(0);
+        Animated.timing(rotateValueHolder, {
+            toValue: 1,
+            duration: 100,
+            easing: Easing.linear,
+            useNativeDriver: false,
+        }).start();
+    }
+
+    function imgRotateClockWise() {
+
+        return rotateValueHolder.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['0deg', '45deg'],
+        });
+    }
+
+    function imgRotateAntiClockWise() {
+
+        return rotateValueHolder.interpolate({
+            inputRange: [0, 1],
+            outputRange: ['45deg', '0deg'],
+        });
+    }
 }
 
 

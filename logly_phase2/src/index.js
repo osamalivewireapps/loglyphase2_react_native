@@ -1,7 +1,6 @@
 /* eslint-disable prettier/prettier */
-export { LoginController } from './container';
-export { PolicyController } from './container';
-export { HomeScreen} from './container';
+export { LoginController,PolicyController,HomeScreen, SearchItem, DashBoard} from './container';
+
 export {
     VerificationCodeController,
     ThanksRegistrationController,
