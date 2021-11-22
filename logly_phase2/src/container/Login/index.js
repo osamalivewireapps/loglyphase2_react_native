@@ -74,6 +74,7 @@ class LoginController extends Component {
                 console.log("login-->", response);
 
                 if (response.status === 200) {
+                    DataHandler.saveUserObject(JSON.stringify(response.userData));
                     DataHandler.saveAccountType(response.accountType);
                     this.props.navigation.navigate("WelcomeRegistration");
                 }
