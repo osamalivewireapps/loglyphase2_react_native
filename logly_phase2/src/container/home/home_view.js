@@ -21,7 +21,7 @@ function HomeView(props) {
     const isTablet = DeviceInfo.isTablet();
 
     const { toggleDrawer } = props;
-    const PET_ACTIVITY = [{ bg: Images.img_pet_profile, txt: 'Pet Profile' }, { bg: Images.img_activity, txt: 'Activity' }]
+    const PET_ACTIVITY = [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }]
     const actions = [
         {
             textStyle: {
@@ -156,7 +156,7 @@ function HomeView(props) {
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (index === 0) {
-                                            props.navigation.navigate('InventoryDashBoard')
+                                            props.navigation.navigate('PetProfile')
                                         }
                                     }}
                                     style={{

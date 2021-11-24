@@ -1,9 +1,8 @@
 /* eslint-disable prettier/prettier */
 import React from 'react'
 import { StyleSheet, View, Modal, ActivityIndicator, Platform } from 'react-native'
-import { connect } from 'react-redux';
 
-function Loader(props) {
+function AppLoader(props) {
 
 
     console.log("props--->", props.loader.isLoading)
@@ -53,8 +52,5 @@ function Loader(props) {
 
 
 
-const mapStateToProps = (state) => {
-    return { loader: state.loader };
-}
 
-export default connect(mapStateToProps)(Loader);
+export default AppLoader;

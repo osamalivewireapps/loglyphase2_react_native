@@ -10,10 +10,11 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
+import moment from 'moment';
 
 function ActiveProfile(props) {
 
-    const ACTIVE_ANIMALS = ["Zooes", "Zoo"];
+    const ACTIVE_ANIMALS = props.animalData;
     return (
         <View flex={1}>
             <FlatList
@@ -37,10 +38,11 @@ function ActiveProfile(props) {
                             <View style={{ flexDirection: 'row' }}>
                                 <Image
                                     resizeMode='contain'
-                                    source={Images.img_friend_sample}
+                                    source={item.image}
                                     style={{
-                                        height: moderateScale(68),
-                                        width: moderateScale(70),
+                                        backgroundColor:'white',
+                                        minHeight: moderateScale(68),
+                                        minWidth: moderateScale(70),
                                         borderRadius: Math.round((moderateScale(68) + moderateScale(70)) / 2)
                                     }} />
 
@@ -56,7 +58,7 @@ function ActiveProfile(props) {
                                         style={{
                                             ...styles.generalTxt,
                                             fontFamily: Fonts.type.bold,
-                                        }}>{item}
+                                        }}>{item.data.name}
                                     </AutoSizeText>
 
                                     <AutoSizeText
@@ -70,7 +72,7 @@ function ActiveProfile(props) {
                                             color: '#777777',
                                             width: '89%',
 
-                                        }}>Registeration Date : 12 Sep 2021
+                                        }}>Registeration Date : {moment(item.createdAt).format('DD MMM, YYYY')}
                                     </AutoSizeText>
                                 </View>
                             </View>
@@ -136,7 +138,7 @@ function ActiveProfile(props) {
                                         width: '33%',
                                         fontFamily:Fonts.type.medium
 
-                                    }}>Parrot
+                                    }}>{item.categoryName}
                                 </AutoSizeText>
                                 <AutoSizeText
                                     numberOfLines={1}
@@ -148,7 +150,7 @@ function ActiveProfile(props) {
                                         width: '53%',
                                         fontFamily: Fonts.type.medium
 
-                                    }}>Owner's Name
+                                    }}>{item.data.name}
                                 </AutoSizeText>
                                 <AutoSizeText
                                     numberOfLines={1}
@@ -160,7 +162,7 @@ function ActiveProfile(props) {
                                         width: '13%',
                                         fontFamily: Fonts.type.medium
 
-                                    }}>Alive
+                                    }}>{item.status}
                                 </AutoSizeText>
                             </View>
                         </TouchableOpacity>

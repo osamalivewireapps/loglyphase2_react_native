@@ -27,7 +27,7 @@ export const userLoginRequest = (data1) => (dispatch) => {
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
                     dispatch({ type: USERLOGIN, payload: response.data.data });
-                    resolve({ status: response.data.status, accountType: response.data.data.user.packageType });
+                    resolve({ status: response.data.status, accountType: response.data.data.subscriber.subscriptionId.packageType, loginResponse: response.data.data });
                 }
                 else {
                     setTimeout(() => {

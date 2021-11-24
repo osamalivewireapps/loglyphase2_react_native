@@ -6,7 +6,7 @@ import { userObject, userPreferences, accountType, BUS_SERVICES } from './../con
 export default class DataHandler {
 
     static async saveUserObject(userData) {
-        console.log("DataHandler->insert-data--->", userData);
+        console.log("DataHandler--->", userData);
         try {
             await AsyncStorage.setItem(userObject, userData);
             return true;
@@ -30,7 +30,7 @@ export default class DataHandler {
     }
 
     static async saveAccountType(type) {
-        console.log("accountType--->", accountType);
+        console.log("accountType--->", type);
         try {
             await AsyncStorage.setItem(accountType, type);
             return true;
@@ -43,6 +43,30 @@ export default class DataHandler {
     static async getAccountType() {
         try {
             let value = await AsyncStorage.getItem(accountType);
+            if (value !== null) {
+                console.log("accountType---->", value);
+                return value;
+            }
+
+        } catch (error) {
+            console.log("saving error is", error);
+        }
+    }
+
+    static async saveAuth(token) {
+        console.log("auth--->", token);
+        try {
+            await AsyncStorage.setItem("auth", token);
+            return true;
+        } catch (error) {
+            console.log("saving error is", error);
+            return false;
+        }
+    }
+
+    static async getAuth() {
+        try {
+            let value = await AsyncStorage.getItem("auth");
             if (value !== null) {
                 console.log("accountType---->", value);
                 return value;

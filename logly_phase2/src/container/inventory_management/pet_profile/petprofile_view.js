@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState } from 'react';
-import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import React, { useRef, useState, useEffect } from 'react';
+import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../../theme';
@@ -14,13 +15,37 @@ import ViewPager from '@react-native-community/viewpager';
 import ActiveProfile from './ActiveProfile';
 import ArchiveProfile from './ArchiveProfile';
 import { CommonActions } from '@react-navigation/routers';
+import moment from 'moment';
+import ImageBlurLoading from 'react-native-image-blur-loading';
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import { objectMethod } from '@babel/types';
+import { TextInput } from 'react-native';
 
 function PetProfileView(props) {
 
-    const pagerRef = useRef(null);
-    const [initialPg, setInitialPg] = useState(0);
+    const [searchTxt, setSearchTxt] = useState('');
+    const [animalList, setAnimalList] = useState([]);
 
     const isTablet = DeviceInfo.isTablet();
+
+    const { listAnimal } = props;
+
+
+    useEffect(() => {
+        if (listAnimal.length > 0) {
+            setAnimalList(props.animalData.filter((e) => {
+                return (e.data.name.toLowerCase().startsWith(searchTxt.toLowerCase()) || e.categoryName.toLowerCase().includes(searchTxt.toLowerCase()))
+            }))
+        }
+    }, [searchTxt]);
+
+    useEffect(() => {
+        if (listAnimal.length > 0) {
+            setAnimalList(listAnimal)
+        }
+    }, [listAnimal]);
+
+
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -86,61 +111,229 @@ function PetProfileView(props) {
             <ScrollView keyboardShouldPersistTaps={true}>
                 <View style={{ flex: 1, height: Dimensions.get('window').height }}>
 
-                    <View style={{
-                        ...styles.boxcontainer, margin: moderateScale(20),
-                        marginBottom: 0, width: '88%', flexDirection: 'row',
-                    }}>
+                    <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
+                        <View style={{
+                            width: '100%',
+                            flexDirection: 'row',
+                            alignItems: 'center'
+                        }}>
+                            <View style={{
+                                marginEnd: moderateScale(20),
+                                flex: 1, flexDirection: 'row', alignItems: 'center',
+                                justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                            }}>
 
-                        <TouchableOpacity
-                            style={{
-                                width: '50%',
-                                height: '100%',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: moderateScale(10),
-                                backgroundColor: initialPg === 0 ? '#FFC081' : 'transparent',
-                            }}
-                            onPress={() => {
-                                pagerRef.current.setPage(0)
-                                setInitialPg(0)
-                            }}>
-                            <Text style={{
-                                ...styles.generalTxt,
-                                fontFamily: Fonts.type.medium,
-                                color: Colors.appBgColor,
-                            }}>
-                                Active
-                            </Text>
-                        </TouchableOpacity>
+                                <TextInput
+                                    onChangeText={(e) => {
+                                        setSearchTxt(e)
+                                    }}
+                                    value={searchTxt}
+                                    placeholder='Search an animal'
+                                    numberOfLines={1}
+                                    keyboardType='default'
+                                    autoCapitalize='none'
+                                    style={{
+                                        keyboardShouldPersistTaps: true,
+                                        flex: 0.9,
+                                        height: verticalScale(40),
+                                        ...styles.generalTxt,
+                                        color: '#777777',
+                                        fontSize: moderateScale(14),
+                                    }} />
+                                <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
 
-                        <TouchableOpacity
-                            style={{
-                                width: '50%',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderRadius: moderateScale(10),
-                                backgroundColor: initialPg === 1 ? '#FFC081' : 'transparent',
-                            }}
-                            onPress={() => {
-                                pagerRef.current.setPage(1)
-                                setInitialPg(1)
-                            }}>
-                            <Text style={{
-                                ...styles.generalTxt,
-                                fontFamily: Fonts.type.medium,
-                                color: Colors.appBgColor,
-                            }}>
-                                Archive
-                            </Text>
-                        </TouchableOpacity>
+                            </View>
+
+                            <TouchableOpacity onPress={() => { props.navigation.navigate('FilterAnimal') }}>
+                                <Image source={Icons.icon_filter_list} resizeMode='contain' style={{ height: moderateScale(20), width: moderateScale(20) }} />
+                            </TouchableOpacity>
+
+                        </View>
                     </View>
-                    <ViewPager style={{ flex: 1 }}
-                        initialPage={initialPg}
-                        scrollEnabled={false} ref={pagerRef}>
-                        <ActiveProfile key={0} {...props} />
-                        <ArchiveProfile key={1} {...props}/>
+                   
+                    <View flex={1}>
+                        <FlatList
+                            numColumns={2}
+                            contentContainerStyle={{
+                                flex: 1, padding: moderateScale(25)
+                            }}
+                            data={animalList}
+                            renderItem={({ item, index }) => {
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            props.navigation.navigate('PetDetail');
+                                        }}
+                                        style={{
+                                            ...styles.boxcontainer,
+                                            marginTop: verticalScale(10),
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            marginEnd: (index % 2 === 0) ? (index === props.animalData.length - 1) ? 0 : verticalScale(10) : 0,
+                                            flex: 1,
+                                            height: isTablet ? verticalScale(160) : verticalScale(160),
+                                        }}>
 
-                    </ViewPager>
+                                        <View style={{
+                                            width: '100%',
+                                            flex: 1,
+                                            backgroundColor: 'white',
+                                            borderRadius: moderateScale(10),
+
+                                        }}>
+
+                                            <ImagePlaceholder
+                                                showActivityIndicator={false}
+                                                activityIndicatorProps={{
+                                                    size: 'small',
+                                                    color: '#777777',
+                                                }}
+                                                resizeMode='cover'
+                                                placeholderStyle={{
+                                                    width: '100%',
+                                                    height: moderateScale(120),
+                                                    borderRadius: moderateScale(10),
+                                                    borderBottomLeftRadius: 0,
+                                                    borderBottomRightRadius: 0,
+
+                                                }}
+                                                imgStyle={{
+                                                    borderRadius: moderateScale(10),
+                                                    borderBottomLeftRadius: 0,
+                                                    borderBottomRightRadius: 0,
+                                                    borderWidth: 1,
+                                                    borderColor: 'transparent'
+                                                }}
+
+                                                style={{
+                                                    borderRadius: moderateScale(10)
+                                                }}
+
+                                                src={item.image}
+                                                placeholder={Icons.icon_paw}
+                                            />
+
+
+                                            <View style={{
+                                                padding: moderateScale(5),
+                                                paddingTop: moderateScale(8),
+                                                paddingStart: moderateScale(8),
+                                                paddingEnd: moderateScale(8),
+                                                flexDirection: 'row',
+                                                alignItems: 'center'
+                                            }}>
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(15)}
+                                                    mode={ResizeTextMode.max_lines}
+                                                    style={{
+                                                        ...styles.generalTxt,
+                                                        fontFamily: Fonts.type.bold,
+                                                        color: '#464646',
+                                                        width: '60%',
+                                                        textAlign: 'left',
+                                                        textAlignVertical: 'center',
+                                                    }}>{item.data.name}
+                                                </AutoSizeText>
+
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(14)}
+                                                    mode={ResizeTextMode.max_lines}
+                                                    style={{
+                                                        ...styles.generalTxt,
+                                                        fontFamily: Fonts.type.medium,
+                                                        color: '#464646',
+                                                        width: '40%',
+                                                        textAlign: 'right'
+
+                                                    }}>{item.categoryName}
+                                                </AutoSizeText>
+                                            </View>
+                                            <View style={{
+                                                padding: moderateScale(5),
+                                                paddingTop: 0,
+                                                paddingStart: moderateScale(8),
+                                                paddingEnd: moderateScale(8),
+                                                flexDirection: 'row',
+                                                alignItems: 'center'
+                                            }}>
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(10)}
+                                                    fontSize={moderateScale(12)}
+                                                    mode={ResizeTextMode.max_lines}
+                                                    style={{
+                                                        ...styles.generalTxt,
+                                                        color: '#777777',
+                                                        width: '30%',
+                                                        textAlign: 'left',
+                                                    }}>Reg Date
+                                                </AutoSizeText>
+
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(10)}
+                                                    fontSize={moderateScale(12)}
+                                                    mode={ResizeTextMode.max_lines}
+                                                    style={{
+                                                        ...styles.generalTxt,
+                                                        color: '#777777',
+                                                        width: '70%',
+                                                        textAlign: 'right'
+
+                                                    }}>{moment(item.createdAt).format('DD MMM YYYY')}
+                                                </AutoSizeText>
+                                            </View>
+                                            <View style={{
+                                                padding: moderateScale(5),
+                                                paddingTop: 0,
+                                                paddingStart: moderateScale(8),
+                                                paddingEnd: moderateScale(8),
+                                                flexDirection: 'row',
+                                                alignItems: 'center'
+                                            }}>
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(10)}
+                                                    fontSize={moderateScale(12)}
+                                                    mode={ResizeTextMode.max_lines}
+                                                    style={{
+                                                        ...styles.generalTxt,
+                                                        color: '#777777',
+                                                        width: '30%',
+                                                        textAlign: 'left',
+                                                    }}>Status
+                                                </AutoSizeText>
+
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(10)}
+                                                    fontSize={moderateScale(12)}
+                                                    mode={ResizeTextMode.max_lines}
+                                                    style={{
+                                                        ...styles.generalTxt,
+                                                        color: '#464646',
+                                                        width: '70%',
+                                                        textAlign: 'right'
+
+                                                    }}>{item.status}
+                                                </AutoSizeText>
+                                            </View>
+
+                                        </View>
+
+
+
+                                    </TouchableOpacity>
+                                )
+                            }}
+
+                        />
+
+                    </View>
 
 
                 </View>
@@ -155,14 +348,14 @@ function PetProfileView(props) {
 const styles = StyleSheet.create({
 
     boxcontainer: {
-        shadowColor: 'transparent',
+        shadowColor: 'black',
         backgroundColor: '#F5F5F5',
 
         shadowOffset: {
             width: 0,
             height: moderateScale(2),
         },
-        shadowOpacity: 0.25,
+        shadowOpacity: 0.2,
         shadowRadius: 3.84,
         height: moderateScale(46),
         elevation: verticalScale(5),

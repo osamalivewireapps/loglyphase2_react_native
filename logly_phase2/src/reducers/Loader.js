@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 
 
-export default function (state = { isLoading: false }, action) {
+export default function (state = { isLoading: true }, action) {
     switch (action.type) {
         case 'ENABLE':
             return { isLoading: true };
