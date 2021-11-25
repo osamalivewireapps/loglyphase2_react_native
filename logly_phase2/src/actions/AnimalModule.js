@@ -93,14 +93,18 @@ export async function getAnimalBreed(catId){
                 console.log("response_animal_breed-->", response.data);
 
                 if (response.data.status === 200) {
-                    resolve({ animalBreed: response.data.data });
+                    setTimeout(() => {
+                        resolve({ animalBreed: response.data.data });
+                    }, timeOut);
+                    
                 }
                 else {
                     setTimeout(() => {
-                        utils.topAlertError(response.data.message);
+                        reject();
+                        utils.topAlertError("breed issues:"+response.data.message);
                     }, timeOut);
                 }
-                reject();
+                
             })
             .catch(error => {
 

@@ -13,6 +13,7 @@ import ModalDropdown from 'react-native-modal-dropdown';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 
 function DashBoardView(props) {
@@ -32,11 +33,11 @@ function DashBoardView(props) {
     ]
 
     const ANIMAL_STATES = [{
-        icon:Icons.icon_alive,category: 'Alive', value: '29', bg: '#FFE8D1', txtColor: '#E17B14'
+        icon: Icons.icon_alive, category: 'Alive', value: '29', bg: '#FFE8D1', txtColor: '#E17B14'
     },
-        { icon: Icons.icon_sick,category: 'Sick', value: '3', bg: '#DBE8FC', txtColor: '#0947AF' },
-        { icon: Icons.icon_dead,category: 'Dead', value: '2', bg: '#FED8DC', txtColor: '#BF323F' },
-        { icon: Icons.icon_preg,category: 'Pregnant', value: '4', bg: '#FFDCF8', txtColor: '#BC149A' }]
+    { icon: Icons.icon_sick, category: 'Sick', value: '3', bg: '#DBE8FC', txtColor: '#0947AF' },
+    { icon: Icons.icon_dead, category: 'Dead', value: '2', bg: '#FED8DC', txtColor: '#BF323F' },
+    { icon: Icons.icon_preg, category: 'Pregnant', value: '4', bg: '#FFDCF8', txtColor: '#BC149A' }]
 
 
     const PRODUCT_STATES = [{
@@ -50,6 +51,19 @@ function DashBoardView(props) {
     const [catType, setCatType] = useState(arrCategory[0])
     const fListRef = useRef(null);
     const fListMain = useRef(null);
+
+    const [items, setItems] = useState([
+        { label: arrCategory[0], value: arrCategory[0] },
+        { label: arrCategory[1], value: arrCategory[1] },
+        { label: arrCategory[2], value: arrCategory[2] },
+        { label: arrCategory[3], value: arrCategory[3] },
+        { label: arrCategory[4], value: arrCategory[4] },
+    ]);
+
+    const [items1, setItems1] = useState([
+        { label: arrInvType[0], value: arrInvType[0] },
+        { label: arrInvType[1], value: arrInvType[1] },
+    ]);
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'flex-start' }}>
@@ -81,43 +95,38 @@ function DashBoardView(props) {
                         ...styles.boxcontainer, flexDirection: 'row', padding: 0,
                         alignItems: 'center',
                         backgroundColor: '#F5F5F5',
-                        marginTop: verticalScale(30)
+                        marginTop: verticalScale(30),
+                        zIndex: 2
                     }}>
 
-                        <ModalDropdown
+                        <DropDownPicker
+                            showArrow={false}
+                            labelStyle={{
+                                fontSize: moderateScale(14),
+                                color: 'black',
+                                width: '100%',
+
+                            }}
+                            itemStyle={{
+                                width: '100%', justifyContent: 'flex-start'
+                            }}
+                            dropDownStyle={{ width: Dimensions.get('screen').width - moderateScale(50) }}
                             style={{
-                                width: '94%',
+                                width: Dimensions.get('screen').width - moderateScale(70),
                                 height: verticalScale(40),
+                                backgroundColor: 'transparent',
+                                borderColor: 'transparent',
                                 justifyContent: 'center', alignItems: 'center',
                                 paddingStart: moderateScale(15),
 
                             }}
-                            defaultValue={invType}
-                            textStyle={{
-                                ...styles.bottomSheetHeader,
-                                fontSize: moderateScale(14),
-                                color: 'black',
-                                width: '100%',
+                            placeholder={arrInvType[0]}
+                            items={items1}
+                            onChangeItem={(item) => {
+                                setInvType(item.value)
                             }}
-
-                            dropdownStyle={{
-                                marginTop: verticalScale(20),
-                                backgroundColor: 'white', width: Dimensions.get('screen').width - moderateScale(50),
-                                marginStart: moderateScale(-16),
-                                height: verticalScale(80)
-                            }}
-                            dropdownTextStyle={{
-                                fontSize: moderateScale(14),
-                                color: 'black',
-                                margin: moderateScale(5),
-                                backgroundColor: 'white'
-                            }}
-                            onSelect={(item) => {
-                                setInvType(arrInvType[item])
-                            }}
-                            defaultIndex={0}
-                            options={arrInvType} />
-
+                        />
+                   
                         <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
@@ -126,49 +135,38 @@ function DashBoardView(props) {
                         ...styles.boxcontainer, flexDirection: 'row', padding: 0,
                         alignItems: 'center',
                         backgroundColor: '#F5F5F5',
-                        marginTop: verticalScale(20)
+                        marginTop: verticalScale(20),
+                        zIndex: 1
                     }}>
 
-                        <ModalDropdown
+                        <DropDownPicker
+                            showArrow={false}
+                            itemStyle={{ width: '100%', justifyContent: 'flex-start' }}
+                            dropDownStyle={{ width: Dimensions.get('screen').width - moderateScale(50) }}
+                            zIndex={1000}
                             style={{
-                                width: '94%',
+                                width: Dimensions.get('screen').width - moderateScale(70),
                                 height: verticalScale(40),
+                                backgroundColor: 'transparent',
+                                borderColor: 'transparent',
                                 justifyContent: 'center', alignItems: 'center',
                                 paddingStart: moderateScale(15),
 
                             }}
-                            defaultValue={catType}
-                            textStyle={{
-                                ...styles.bottomSheetHeader,
-                                fontSize: moderateScale(14),
-                                color: 'black',
-                                width: '100%',
+                            placeholder={arrCategory[0]}
+                            items={items}
+                            onChangeItem={(item) => {
+                                setCatType(item.value)
                             }}
-
-                            dropdownStyle={{
-                                marginTop: verticalScale(20),
-                                backgroundColor: 'white', width: Dimensions.get('screen').width - moderateScale(50),
-                                marginStart: moderateScale(-16),
-                            }}
-                            dropdownTextStyle={{
-                                fontSize: moderateScale(14),
-                                color: 'black',
-                                margin: moderateScale(5),
-                                backgroundColor: 'white'
-                            }}
-                            onSelect={(item) => {
-                                setCatType(arrCategory[item])
-                            }}
-                            defaultIndex={0}
-                            options={arrCategory} />
-
+                        />
+                        
                         <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
 
                     {getTotalInventory()}
                     {catType === arrCategory[0] ? getAnimalStatus() : getSpecificDetail()}
-           
+
                 </View>
             </ScrollView>
 
@@ -188,7 +186,8 @@ function DashBoardView(props) {
                 padding: moderateScale(20),
                 alignItems: 'center',
                 marginTop: verticalScale(25),
-                borderRadius: moderateScale(10)
+                borderRadius: moderateScale(10),
+                zIndex: 0
             }}>
 
                 <Text style={{
@@ -223,14 +222,14 @@ function DashBoardView(props) {
                 key={'#'}
                 ref={fListMain}
                 numColumns={2}
-                data={invType === arrInvType[0]?ANIMAL_STATES:PRODUCT_STATES}
+                data={invType === arrInvType[0] ? ANIMAL_STATES : PRODUCT_STATES}
                 style={{
                     marginTop: verticalScale(20),
                 }}
-                onScrollToIndexFailed={(error)=>{
+                onScrollToIndexFailed={(error) => {
                     const offset = error.averageItemLength * error.index;
                     fListMain.current.scrollToOffset({ offset });
-                    setTimeout(() => fListMain.current.scrollToIndex({ index: error.index }), 1000);
+                    setTimeout(() => fListMain.current.scrollToIndex({ index: error.index }), 3000);
                 }}
                 renderItem={({ item, index }) => {
 
@@ -239,7 +238,7 @@ function DashBoardView(props) {
                             backgroundColor: item.bg,
                             borderRadius: moderateScale(10),
                             marginTop: verticalScale(10),
-                            height: isTablet ? verticalScale(135):verticalScale(105),
+                            height: isTablet ? verticalScale(135) : verticalScale(105),
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginEnd: (index % 2 === 0) ? verticalScale(10) : 0,
@@ -250,12 +249,12 @@ function DashBoardView(props) {
                         }}>
 
                             <View style={{
-                                flex:0.5,
-                                height:'100%',
-                                width:'100%',
-                                alignItems:'center',
-                                flexDirection:'row',
-                                padding:moderateScale(10)
+                                flex: 0.5,
+                                height: '100%',
+                                width: '100%',
+                                alignItems: 'center',
+                                flexDirection: 'row',
+                                padding: moderateScale(10)
                             }}>
                                 <AutoSizeText
                                     numberOfLines={2}
@@ -264,16 +263,17 @@ function DashBoardView(props) {
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         color: item.txtColor,
-                                        flex:0.7,
+                                        flex: 0.7,
                                         fontFamily: Fonts.type.medium,
                                         marginBottom: verticalScale(10)
                                     }}>{item.category}
                                 </AutoSizeText>
 
-                                <Image source={item.icon} resizeMode='contain' 
-                                style={{ 
-                                    flex:0.3,
-                                    height: verticalScale(20), width: moderateScale(20) }} />
+                                <Image source={item.icon} resizeMode='contain'
+                                    style={{
+                                        flex: 0.3,
+                                        height: verticalScale(20), width: moderateScale(20)
+                                    }} />
 
                             </View>
                             <AutoSizeText
@@ -282,7 +282,7 @@ function DashBoardView(props) {
                                 fontSize={moderateScale(32)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
-                                    flex:0.5,
+                                    flex: 0.5,
                                     fontFamily: Fonts.type.bold,
                                     color: item.txtColor,
                                     textAlign: 'center',
@@ -310,7 +310,7 @@ function DashBoardView(props) {
                 onScrollToIndexFailed={(error) => {
                     const offset = error.averageItemLength * error.index;
                     fListRef.current.scrollToOffset({ offset });
-                    setTimeout(() => fListRef.current.scrollToIndex({ index: error.index }), 2000);
+                    setTimeout(() => fListRef.current.scrollToIndex({ index: error.index }), 3000);
                 }}
                 data={arrSpecificAnimal}
                 style={{
@@ -320,15 +320,15 @@ function DashBoardView(props) {
 
                     return (
                         <View style={{
-                            backgroundColor:'#F5F5F5' ,
+                            backgroundColor: '#F5F5F5',
                             borderRadius: moderateScale(10),
                             marginTop: verticalScale(10),
                             height: verticalScale(50),
                             justifyContent: 'center',
                             alignItems: 'center',
-                            flexDirection:'row',
+                            flexDirection: 'row',
                             flex: 1,
-                            padding:moderateScale(10)
+                            padding: moderateScale(10)
 
                         }} onPress={() => {
 
@@ -346,11 +346,11 @@ function DashBoardView(props) {
                                 }}>{item}
                             </AutoSizeText>
 
-                          <View style={{flex:0.6,flexDirection:'row'}}>
+                            <View style={{ flex: 0.6, flexDirection: 'row' }}>
 
-                          <View style={{
-                              flex:2
-                          }}>
+                                <View style={{
+                                    flex: 2
+                                }}>
                                     <AutoSizeText
                                         numberOfLines={1}
                                         minFontSize={moderateScale(14)}
@@ -382,7 +382,7 @@ function DashBoardView(props) {
                                         }}>Alive
                                     </AutoSizeText>
 
-                          </View>
+                                </View>
                                 <View style={{
                                     flex: 2
                                 }}>
@@ -489,10 +489,10 @@ function DashBoardView(props) {
 
                                 </View>
 
-                          </View>
-                            
-                            
-                            
+                            </View>
+
+
+
                         </View>
 
                     );

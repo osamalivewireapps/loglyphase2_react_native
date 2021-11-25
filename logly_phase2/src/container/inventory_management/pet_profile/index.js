@@ -6,27 +6,61 @@ import { View } from 'react-native';
 import PetProfileView from './petprofile_view';
 import { getAnimals } from '../../../actions/AnimalModule';
 import { connect } from 'react-redux';
+import { values } from 'lodash';
 
 class PetProfile extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            animalType: 'Active',
-            animalList: []
+            animalList: [],
+            filterData: { animalType: 'Active', status: 'Alive', animalId: '' }
         };
     }
 
     componentDidMount() {
+        this.getAnimalList(this.state.filterData, false);
 
-        this.props.getAnimals(this.state.animalType).then((response) => {
-            this.setState({ animalList: response.payload });
+    }
 
+    applyFilter(e) {
+
+        if (e.animalType === this.state.filterData.animalType) {
+            this.filterAnimals(e)
+        } else {
+            this.getAnimalList(e, true)
+        }
+    }
+
+
+
+    render() {
+        return (<PetProfileView {...this.props}
+            listAnimal={this.state.animalList}
+            applyFilter={(e) => this.applyFilter(e)}
+            filterObj={this.state.filterData}
+        />);
+    }
+
+    getAnimalList(filterObject, isFilter) {
+        this.props.getAnimals(filterObject.animalType).then((response) => {
+            if (isFilter) {
+                this.filterAnimals(filterObject)
+            }
+            else {
+                this.setState({ animalList: response.payload });
+            }
         });
     }
 
-    render() {
-        return (<PetProfileView {...this.props} listAnimal={this.state.animalList} />);
+    filterAnimals(e) {
+
+        let tmp = this.props.animalData
+            .filter((value, index) => {
+                return ((value.status.toLowerCase() === e.status.toLowerCase()) && (e.animalId?value.categoryId._id === e.animalId:true))
+            });
+
+        this.setState({ animalList: tmp, filterData: e })
     }
 
 }

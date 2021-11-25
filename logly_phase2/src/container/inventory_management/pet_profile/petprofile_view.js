@@ -28,8 +28,9 @@ function PetProfileView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listAnimal } = props;
+    const { listAnimal, applyFilter, filterObj } = props;
 
+    console.log("animal1234--->", filterObj);
 
     useEffect(() => {
         if (listAnimal.length > 0) {
@@ -40,9 +41,9 @@ function PetProfileView(props) {
     }, [searchTxt]);
 
     useEffect(() => {
-        if (listAnimal.length > 0) {
+        //if (listAnimal.length > 0) {
             setAnimalList(listAnimal)
-        }
+        //}
     }, [listAnimal]);
 
 
@@ -144,7 +145,7 @@ function PetProfileView(props) {
 
                             </View>
 
-                            <TouchableOpacity onPress={() => { props.navigation.navigate('FilterAnimal') }}>
+                            <TouchableOpacity onPress={() => { props.navigation.navigate('FilterAnimal', { ...props, filterList: ((e) => applyFilter(e)), customFilters: filterObj}) }}>
                                 <Image source={Icons.icon_filter_list} resizeMode='contain' style={{ height: moderateScale(20), width: moderateScale(20) }} />
                             </TouchableOpacity>
 
