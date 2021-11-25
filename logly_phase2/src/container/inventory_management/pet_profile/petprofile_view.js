@@ -172,7 +172,7 @@ function PetProfileView(props) {
                                             alignItems: 'center',
                                             marginEnd: (index % 2 === 0) ? (index === props.animalData.length - 1) ? 0 : verticalScale(10) : 0,
                                             flex: 1,
-                                            height: isTablet ? verticalScale(160) : verticalScale(160),
+                                            height: isTablet ? verticalScale(195) : verticalScale(160),
                                         }}>
 
                                         <View style={{
@@ -339,6 +339,41 @@ function PetProfileView(props) {
 
                 </View>
             </ScrollView>
+
+            <TouchableOpacity
+                style={{
+                    height: moderateScale(50),
+                    width: moderateScale(50),
+                    alignSelf: 'flex-end',
+                    top: Dimensions.get('screen').height - moderateScale(80),
+                    right: moderateScale(20),
+                    position: 'absolute',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+
+                }}
+                onPress={() => {
+                    props.navigation.navigate('RegisterPet')
+                }}>
+                <Image backgroundColor={Colors.appBgColor}
+                    style={{
+                        height: moderateScale(50),
+                        width: moderateScale(50),
+                        borderRadius: moderateScale(50),
+                        position: 'absolute'
+
+                    }}
+
+                />
+                <Image
+                    source={Icons.icon_white_plus}
+                    style={{
+                        height: moderateScale(20),
+                        width: moderateScale(20),
+                    }}>
+
+                </Image>
+            </TouchableOpacity>
         </View>
 
     );

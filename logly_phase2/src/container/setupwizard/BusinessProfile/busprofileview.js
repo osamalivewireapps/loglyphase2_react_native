@@ -177,7 +177,7 @@ function BusProfileView(props) {
                             ...styles.bottomSheetHeader,
                             marginBottom: verticalScale(5), marginStart: moderateScale(5),
                             marginTop: 0
-                        }}>Description *</Text>
+                        }}>Business Info *</Text>
                         <View style={{
                             ...styles.boxcontainer,
                             height: verticalScale(100),
@@ -566,7 +566,7 @@ function BusProfileView(props) {
                     ...styles.bottomSheetHeader,
                     marginTop: verticalScale(25), marginStart: moderateScale(10),
                     marginBottom: moderateScale(10)
-                }}>Days of the week *</Text>
+                }}>Days Open *</Text>
                 <FlatList
                     numColumns={4}
                     contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
@@ -667,7 +667,7 @@ function BusProfileView(props) {
                 <Text style={{
                     ...styles.bottomSheetHeader,
                     marginStart: moderateScale(5)
-                }}>Business Timing *</Text>
+                }}>Operating Hours *</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{

@@ -21,7 +21,7 @@ function HomeView(props) {
     const isTablet = DeviceInfo.isTablet();
 
     const { toggleDrawer } = props;
-    const PET_ACTIVITY = [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }]
+    const PET_ACTIVITY = [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' } ,{ bg: Images.img_activity, txt: 'Activity' }]
     const actions = [
         {
             textStyle: {
@@ -178,7 +178,7 @@ function HomeView(props) {
                                         }} />
 
                                     <AutoSizeText
-                                        numberOfLines={1}
+                                        numberOfLines={2}
                                         minFontSize={moderateScale(14)}
                                         fontSize={moderateScale(16)}
                                         mode={ResizeTextMode.max_lines}

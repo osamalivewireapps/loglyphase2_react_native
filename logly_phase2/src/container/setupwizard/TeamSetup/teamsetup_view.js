@@ -615,7 +615,7 @@ function TeamSetupView(props) {
                 <Text style={{
                     ...styles.bottomSheetHeader,
                     marginStart: moderateScale(5)
-                }}>Work Timing *</Text>
+                }}>Work Schedule *</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{

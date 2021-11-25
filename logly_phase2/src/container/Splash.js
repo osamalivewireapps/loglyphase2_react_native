@@ -11,6 +11,7 @@ import { DisableLoader } from '../actions/LoaderProgress';
 import { Fonts, Images, Colors } from '../theme';
 import { hideLoaderOnly } from './../actions/SignUpModule';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { Pages } from 'react-native-pages';
 
 class SplashScreen extends React.Component {
     constructor(props) {
@@ -21,66 +22,129 @@ class SplashScreen extends React.Component {
     render() {
         return (
             <SafeAreaView>
-                <Image style={{ position: 'absolute', backgroundColor: Colors.appBgColor, height: Dimensions.get('screen').height, width: '100%' }} />
+                <Image style={{ position: 'absolute', backgroundColor: 'white', height: Dimensions.get('screen').height, width: '100%' }} />
 
                 <View style={{
                     height: '100%',
                     width: '100%',
-                    justifyContent: 'center', alignItems: 'center',
+                    alignItems: 'center',
                 }}>
-                    <View style={{ flex: 5, width: '100%' }}>
-                        <Image source={Images.img_animals}
+                    <View style={{ height: '15%', justifyContent: 'center' }}>
+                        <Image source={Images.img_logo_splash}
                             resizeMode='contain'
-                            style={{ height: '100%', width: '100%' }} />
+                            style={{height:'100%',width:moderateScale(160)}} />
                     </View>
-                    <View style={{
-                        width: '100%',
-                        flex: 3, justifyContent: 'center', alignItems: 'center',
+                    <Pages
+                        containerStyle={{ ...styles.viewPager,paddingBottom:verticalScale(10) }}
+                        indicatorColor={Colors.appBgColor}
+                    >
+                        <View style={{ flex:1,alignItems: 'center' }}>
+                            <Image source={Images.bg_splash1}
+                                resizeMode='contain'
+                                style={{height:'70%',width:'100%'}} />
+                            <Text style={{
+                                fontSize: moderateScale(22),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+                                paddingTop: verticalScale(20),
+                                fontFamily: Fonts.type.bold, color: '#464646'
+                            }}>Register your Pet</Text>
 
-                    }}>
-                        <Image source={Images.logo_logly_splash}
-                            resizeMode='contain'
-                            style={{ height: '50%', width: '80%' }} />
-                        <Text style={{
-                            fontSize: moderateScale(14), textAlign: 'center', marginTop: 0,
-                            fontFamily: Fonts.type.light, color: 'white', marginStart: moderateScale(60), marginEnd: moderateScale(60)
-                        }}>Share Your Love for Animals - Love Logged And Organized!</Text>
-                    </View>
+                            <Text style={{
+                                fontSize: moderateScale(13),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+
+                                fontFamily: Fonts.type.base, color: '#464646'
+                            }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, dolore magna aliquyam erat, sed diam voluptua.</Text>
+                        </View>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={Images.bg_splash2}
+                                resizeMode='contain'
+                                style={{ height: '70%', width:'100%' }}  />
+                            <Text style={{
+                                fontSize: moderateScale(22),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+                                paddingTop: verticalScale(20),
+                                fontFamily: Fonts.type.bold, color: '#464646'
+                            }}>Track your Pet Activity</Text>
+
+                            <Text style={{
+                                fontSize: moderateScale(13),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+
+                                fontFamily: Fonts.type.base, color: '#464646'
+                            }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, dolore magna aliquyam erat, sed diam voluptua.</Text>
+                        </View>
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={Images.bg_splash3}
+                                resizeMode='contain'
+                                style={{ height: '70%', width: '100%' }} />
+                            <Text style={{
+                                fontSize: moderateScale(22),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+                                paddingTop: verticalScale(20),
+                                fontFamily: Fonts.type.bold, color: '#464646'
+                            }}>Buy and Sell your Pet</Text>
+
+                            <Text style={{
+                                fontSize: moderateScale(13),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+
+                                fontFamily: Fonts.type.base, color: '#464646'
+                            }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, dolore magna aliquyam erat, sed diam voluptua.</Text>
+                        </View> 
+                    </Pages>
+
                     <View style={{
                         width: '85%',
-                        flex: 2, justifyContent: 'flex-end', marginBottom: verticalScale(10)
+                        height: '15%',
+                        marginTop:verticalScale(10),
+                        justifyContent: 'flex-end', marginBottom: verticalScale(10)
                     }}>
-                        <TouchableOpacity
-                            onPress={() => { this.props.navigation.navigate('Registration') }}
-                            style={{ marginTop: 0, backgroundColor: Colors.appYellow, borderRadius: moderateScale(20) }}>
-                            <Text style={{
-                                fontSize: moderateScale(22), textAlign: 'center',
-                                padding: moderateScale(10),
-                                fontFamily: Fonts.type.light, color: Colors.appBgColor
-                            }}>SIGNUP</Text>
-                        </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => { this.props.navigation.navigate('Login') }}
-                            style={{ marginTop: verticalScale(10), backgroundColor: 'white', borderRadius: moderateScale(20) }}>
+                            style={{ marginTop: 0, backgroundColor: Colors.appBgColor, borderRadius: moderateScale(20) }}>
                             <Text style={{
                                 fontSize: moderateScale(22), textAlign: 'center',
                                 padding: moderateScale(10),
 
-                                fontFamily: Fonts.type.light, color: Colors.appBgColor
-                            }}>LOGIN</Text>
+                                fontFamily: Fonts.type.base, color: 'white'
+                            }}>LOG IN</Text>
                         </TouchableOpacity>
+                        <TouchableOpacity
+                            onPress={() => { this.props.navigation.navigate('Registration') }}
+                            style={{ marginTop: verticalScale(10), backgroundColor: Colors.appYellow, borderRadius: moderateScale(20) }}>
+                            <Text style={{
+                                fontSize: moderateScale(22), textAlign: 'center',
+                                padding: moderateScale(10),
+                                fontFamily: Fonts.type.base, color: Colors.appBgColor
+                            }}>SIGN UP</Text>
+                        </TouchableOpacity>
+
+
                     </View>
-
-
                 </View>
-
 
 
             </SafeAreaView>);
     }
 }
 
+const styles = StyleSheet.create({
+    viewPager: {
+        height: '70%',
+        width: '100%',
+        flex: 1,
+
+
+    },
+});
 
 const mapDispatchToProps = dispatch => ({
     hideLoaderOnly: () => dispatch(hideLoaderOnly()),

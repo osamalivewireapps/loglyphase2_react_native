@@ -21,8 +21,8 @@ class LoginController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: 'faizan@livewireapps.com',//'osama@livewirelabs.co',
-            password: 'Lwa12345',
+            email: '',//'faizan@livewireapps.com',//'osama@livewirelabs.co',
+            password: '',//'Lwa12345',
             userEmail: true,
             userPassword: true,
             isCheckOnTerms: true
@@ -77,8 +77,7 @@ class LoginController extends Component {
                     DataHandler.saveAuth(response.loginResponse.token);
                     DataHandler.saveUserObject(JSON.stringify(response.loginResponse.user));
                     DataHandler.saveAccountType(response.accountType);
-                    //this.props.navigation.navigate("WelcomeRegistration");
-                    this.props.navigation.navigate("HomeDrawer");
+                    this.props.navigation.navigate("WelcomeRegistration", { name: response.loginResponse.user.name});
                 }
                 else if (response.status === 400) {
                     if (!response.message.startsWith("Email") && !response.message.startsWith("Incorrect")) {

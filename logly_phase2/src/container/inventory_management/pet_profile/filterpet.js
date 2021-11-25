@@ -39,13 +39,14 @@ function FilterAnimal(props) {
     const [value, setValue] = useState(null);
     const [items, setItems] = useState([]);
 
+    const isTablet = DeviceInfo.isTablet();
 
     useEffect(() => {
 
         setIsLoading(true);
         getAnimalCategories().then((response) => {
             setIsLoading(false);
-            
+
             setItems(response.animalCategory.map((value) => {
                 if (value.categoryId._id === customFilters.animalId)
                     setValue(value.categoryId.name);
@@ -108,7 +109,7 @@ function FilterAnimal(props) {
                     ...styles.boxcontainer,
                     flexDirection: 'row',
                     marginTop: verticalScale(15),
-                    height: verticalScale(35),
+                    height: isTablet ? verticalScale(40):verticalScale(35),
                 }}>
 
                     <TouchableOpacity
@@ -238,10 +239,11 @@ function FilterAnimal(props) {
                         itemStyle={{
                             width: '100%', justifyContent: 'flex-start'
                         }}
-                        dropDownStyle={{ width: Dimensions.get('screen').width - moderateScale(60) }}
+                        dropDownStyle={{
+                            width: Dimensions.get('screen').width - moderateScale(60)
+                        }}
                         style={{
                             width: Dimensions.get('screen').width - moderateScale(85),
-                            height: verticalScale(40),
                             backgroundColor: 'transparent',
                             borderColor: 'transparent',
                             justifyContent: 'center', alignItems: 'center',
@@ -255,7 +257,7 @@ function FilterAnimal(props) {
                         }}
                         placeholder={value ? value : "Select an item"}
                     />
-                    
+
                     <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                 </View>
@@ -347,7 +349,7 @@ function FilterAnimal(props) {
                     <Text
                         numberOfLines={1}
                         style={{
-                            fontSize: 22, textAlign: 'center',
+                            fontSize: moderateScale(22), textAlign: 'center',
                             padding: verticalScale(10),
                             fontFamily: Fonts.type.base,
                             color: '#464646',
@@ -357,7 +359,7 @@ function FilterAnimal(props) {
                     ...styles.styleButtons, flex: 0.6, justifyContent: 'center',
                 }} onPress={(e) => applyFilter(e)}>
                     <Text style={{
-                        fontSize: 22, textAlign: 'center',
+                        fontSize: moderateScale(22), textAlign: 'center',
                         ...styles.generalTxt,
                     }}>APPLY FILTER</Text>
                 </TouchableOpacity>
