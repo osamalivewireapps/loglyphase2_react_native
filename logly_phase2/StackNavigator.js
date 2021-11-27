@@ -41,7 +41,7 @@ function StackNavigator(props) {
 
         }}>
 
-          <Stack.Screen name="Splash" component={SplashScreen} />
+          <Stack.Screen name="Splash" component={SplashScreen} />  
           <Stack.Screen name="HomeDrawer" component={homeDrawer} />
           <Stack.Screen name="RegisterPet" component={RegisterPet} />
           <Stack.Screen name="PetProfile" component={PetProfile} />
@@ -135,6 +135,50 @@ function homeDrawer() {
 
           />),
       }} />
+
+      <Drawer.Screen name='CRM' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_crm}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+          />),
+      }} />
+      <Drawer.Screen name='Team Member' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_team_member}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+
+      <Drawer.Screen name='Contacts' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_contacts}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+
+          />),
+      }} />
+
       <Drawer.Screen name='Groups' component={HomeScreen} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18),
@@ -165,60 +209,9 @@ function homeDrawer() {
 
           />),
       }} />
-      <Drawer.Screen name='Contacts' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_contacts}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-      <Drawer.Screen name='Settings' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_settings}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-          />),
-      }} />
-      <Drawer.Screen name='CRM' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_crm}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-          />),
-      }} />
-      <Drawer.Screen name='Team Member' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_team_member}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
+      
+     
+     
 
       <Drawer.Screen name='Setup Wizard' component={HomeScreen} options={{
         drawerLabelStyle: {
@@ -236,6 +229,19 @@ function homeDrawer() {
           />),
       }} />
 
+      <Drawer.Screen name='Settings' component={HomeScreen} options={{
+        drawerLabelStyle: {
+          fontSize: moderateScale(18)
+        },
+        drawerIcon: ({ color }) => (
+          <Image source={Icons.icon_settings}
+            resizeMode='contain'
+            style={{
+              height: verticalScale(20),
+              width: moderateScale(20)
+            }}
+          />),
+      }} />
       
 
     </Drawer.Navigator>

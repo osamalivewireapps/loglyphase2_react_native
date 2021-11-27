@@ -18,7 +18,6 @@ import { CommonActions } from '@react-navigation/routers';
 import moment from 'moment';
 import ImageBlurLoading from 'react-native-image-blur-loading';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
-import { objectMethod } from '@babel/types';
 import { TextInput } from 'react-native';
 
 function PetProfileView(props) {

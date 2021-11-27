@@ -65,7 +65,6 @@ function BusAccountPackagesView(props) {
                             }}>
                             <Text style={{
                                 fontSize: 22, textAlign: 'center', padding: verticalScale(10),
-                                paddingStart: 127, paddingEnd: 127,
                                 paddingTop: verticalScale(10),
                                 paddingBottom: verticalScale(10),
                                 ...styles.generalTxt
@@ -160,7 +159,7 @@ function getAccountView(listData, packageType, outerId, props) {
                                 innerId: index
                             })}>
                             <Image
-                                style={{ height: verticalScale(10), width: moderateScale(10) }}
+                                style={{ height: verticalScale(10), width: moderateScale(12) }}
                                 source={(props.accountPackage.outerIndex === outerId &&
                                     props.accountPackage.innerId === index) ? Icons.icon_check_paackage :
                                     Icons.icon_uncheck_paackage} />

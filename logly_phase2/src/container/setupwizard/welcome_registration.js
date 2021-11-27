@@ -31,7 +31,7 @@ class WelcomeRegistration extends Component {
         return (
             <View style={{ flex: 1, backgroundColor: Colors.appBgColor, justifyContent: 'center', alignItems: 'center' }}>
 
-                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginBottom: verticalScale(10) }}>Welcome {this.props.route.params.name}!</Text>
+                <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginBottom: verticalScale(10),textAlign:'center' }}>Welcome {this.props.route.params.name}!</Text>
                 <Text style={{ ...styles.generalTxt, margin: moderateScale(20), textAlign: 'center' }}>To get started, Please complete{"\n"}your account setup</Text>
                 <TouchableOpacity onPress={() => {
                     this.switchToServicesScreen();
