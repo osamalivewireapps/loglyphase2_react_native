@@ -157,6 +157,8 @@ function HomeView(props) {
                                     onPress={() => {
                                         if (index === 0) {
                                             props.navigation.navigate('PetProfile')
+                                        } else if (index === 1){
+                                            props.navigation.navigate('ProductListing')
                                         }
                                     }}
                                     style={{

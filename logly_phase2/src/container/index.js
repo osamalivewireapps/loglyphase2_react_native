@@ -22,4 +22,4 @@ export {
     BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup
 } from './setupwizard';
 
-export { InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
+export { FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';

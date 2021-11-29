@@ -13,30 +13,30 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import ModalDropdown from 'react-native-modal-dropdown';
-import { getAnimalCategories} from '../../../actions/AnimalModule';
+import { getFormCategory } from '../../../actions/AnimalModule';
 import AppLoader from '../../../components/AppLoader';
 import DropDownPicker from 'react-native-dropdown-picker';
 
-function FilterAnimal(props) {
+function FilterProducts(props) {
 
     const { filterList, customFilters } = props.route.params;
 
 
-    const TABS = ["Alive", "Dead", "Sick", "Pregnant"];
-
-    const modalBreed = useRef(null);
-    const modalAnimal = useRef(null);
-
     const [initialPg, setInitialPg] = useState(customFilters.animalType === 'Active' ? 0 : 1);
-    const [tabsSelect, setTabsSelect] = useState(!customFilters.status ? -1 : TABS.findIndex((value) => value === customFilters.status));
-    const [arrCategory, setArrCategory] = useState([]);
-    const [breedId, setBreedId] = useState(null);
+
+    const [productList, setProductList] = useState([]);
+
+    //SUB PRODUCT
+    const [subProdId, setSubProdId] = useState(null);
+    const [listSubProd, setListSubProd] = useState([]);
+
+    //PRODUCT
     const [catId, setCatId] = useState(null);
-    const [listBreedType, setlistBreedType] = useState([]);
-    const [breedType, setBreedType] = useState();
     const [isLoad, setIsLoading] = useState(false);
 
     const [value, setValue] = useState(null);
+    const [value2, setValue2] = useState(null);
+
     const [items, setItems] = useState([]);
 
     const isTablet = DeviceInfo.isTablet();
@@ -44,12 +44,16 @@ function FilterAnimal(props) {
     useEffect(() => {
 
         setIsLoading(true);
-        getAnimalCategories().then((response) => {
+        getFormCategory('type=product').then((response) => {
             setIsLoading(false);
 
-            setItems(response.animalCategory.map((value) => {
-                if (value.categoryId._id === customFilters.animalId)
+            setProductList(response.formCategory);
+
+            setItems(response.formCategory.map((value) => {
+                if (value.categoryId._id === customFilters.productId){
                     setValue(value.categoryId.name);
+                    setCatId(value.categoryId._id)
+                }
                 return ({ label: value.categoryId.name, value: value.categoryId._id })
             }))
 
@@ -59,21 +63,24 @@ function FilterAnimal(props) {
 
     }, []);
 
-    // useEffect(() => {
-    //     if (!catId) {
-    //         return;
-    //     }
+    useEffect(() => {
+        if (!catId) {
+            return;
+        }
 
-    //     modalBreed.current.select(-1);
-    //     setIsLoading(true);
-    //     getFormCategory(catId).then((response) => {
-    //         setIsLoading(false);
-    //         setlistBreedType(response.animalBreed.categoryId.breeds);
-    //         setBreedType(response.animalBreed.categoryId.breeds[0].name);
-    //     }).catch(() => {
-    //         setIsLoading(false);
-    //     });
-    // }, [catId]);
+        
+        let productIndex =productList.findIndex((value) => {
+            return catId === value.categoryId._id
+        });
+
+        setValue2('')
+        
+        setListSubProd(productList[productIndex].categoryId.subCategories.map((value) => {
+            if (value.name === customFilters.subProdId)
+                setValue2(value.name);
+            return ({ label: value.name, value: value.name })
+        }))
+    }, [catId]);
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white', paddingBottom: verticalScale(30) }}>
@@ -109,7 +116,7 @@ function FilterAnimal(props) {
                     ...styles.boxcontainer,
                     flexDirection: 'row',
                     marginTop: verticalScale(15),
-                    height: isTablet ? verticalScale(40):verticalScale(35),
+                    height: isTablet ? verticalScale(40) : verticalScale(35),
                 }}>
 
                     <TouchableOpacity
@@ -154,60 +161,7 @@ function FilterAnimal(props) {
                     </TouchableOpacity>
                 </View>
 
-                <AutoSizeText
-                    numberOfLines={1}
-                    minFontSize={moderateScale(16)}
-                    fontSize={moderateScale(16)}
-                    mode={ResizeTextMode.max_lines}
-                    style={{
-                        color: '#464646',
-                        marginTop: verticalScale(25),
-                        fontFamily: Fonts.type.medium,
-                    }}>Health Status
-                </AutoSizeText>
 
-                <FlatList
-                    data={TABS}
-                    horizontal
-                    style={{
-                        marginTop: verticalScale(5),
-                        maxHeight: verticalScale(35),
-                    }}
-
-                    renderItem={({ item, index }) => {
-
-                        return (
-                            <TouchableOpacity style={{
-                                backgroundColor: tabsSelect === index ? '#503A9F' : 'white',
-                                borderRadius: moderateScale(10),
-                                marginTop: verticalScale(5),
-                                height: verticalScale(30),
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                borderColor: '#503A9F',
-                                borderWidth: 1,
-                                marginEnd: moderateScale(10),
-                            }} onPress={() => {
-                                setTabsSelect(index);
-                            }}>
-
-                                <Text
-                                    numberOfLines={1}
-                                    style={{
-                                        color: tabsSelect === index ? 'white' : '#464646',
-                                        textAlign: 'center',
-                                        fontSize: moderateScale(16),
-                                        fontFamily: Fonts.type.medium,
-                                        paddingStart: moderateScale(10),
-                                        paddingEnd: moderateScale(10),
-                                    }}>{item}
-                                </Text>
-                            </TouchableOpacity>
-
-                        );
-                    }}
-
-                />
 
                 <AutoSizeText
                     numberOfLines={1}
@@ -217,7 +171,64 @@ function FilterAnimal(props) {
                     style={{
                         color: '#464646',
                         marginTop: verticalScale(25),
-                    }}>Animal Category
+                    }}>Product Category
+                </AutoSizeText>
+
+               
+                <View style={{
+                    ...styles.boxcontainer, flexDirection: 'row', padding: 0,
+                    alignItems: 'center',
+                    backgroundColor: '#F5F5F5',
+                    zIndex:2,
+                    height: verticalScale(35),
+                    marginTop: verticalScale(10),
+                }}>
+
+                    <DropDownPicker
+                        showArrow={false}
+                        labelStyle={{
+                            fontSize: moderateScale(14),
+                            color: 'black',
+                            width: '100%',
+
+                        }}
+                        itemStyle={{
+                            width: '100%', justifyContent: 'flex-start'
+                        }}
+                        dropDownStyle={{
+                            width: Dimensions.get('screen').width - moderateScale(60)
+                        }}
+                        style={{
+                            width: Dimensions.get('screen').width - moderateScale(85),
+                            backgroundColor: 'transparent',
+                            borderColor: 'transparent',
+                            justifyContent: 'center', alignItems: 'center',
+                            paddingStart: moderateScale(15),
+
+                        }}
+                        items={items}
+                        onChangeItem={(item) => {
+                            setListSubProd([]);
+                            setCatId(item.value);
+                        }}
+                        placeholder={value ? value : "Select an item"}
+                    />
+
+                    <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
+
+                </View>
+
+                
+                <View style={{zIndex:1}}>
+                <AutoSizeText
+                    numberOfLines={1}
+                    minFontSize={moderateScale(12)}
+                    fontSize={moderateScale(14)}
+                    mode={ResizeTextMode.max_lines}
+                    style={{
+                        color: '#464646',
+                        marginTop: verticalScale(25),
+                    }}>Select Sub Category
                 </AutoSizeText>
 
                 <View style={{
@@ -250,93 +261,18 @@ function FilterAnimal(props) {
                             paddingStart: moderateScale(15),
 
                         }}
-                        items={items}
+                        items={listSubProd}
                         onChangeItem={(item) => {
-                            setlistBreedType([]);
-                            setCatId(item.value);
+                            setSubProdId(item.value);
                         }}
-                        placeholder={value ? value : "Select an item"}
+                        placeholder={value2 ? value2 : "Select an item"}
                     />
 
                     <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                 </View>
+                </View>
 
-                {/* <AutoSizeText
-                    numberOfLines={1}
-                    minFontSize={moderateScale(12)}
-                    fontSize={moderateScale(14)}
-                    mode={ResizeTextMode.max_lines}
-                    style={{
-                        color: '#464646',
-                        marginTop: verticalScale(25),
-                    }}>Breed
-                </AutoSizeText> */}
-
-                {/* <View style={{
-                    ...styles.boxcontainer, flexDirection: 'row', padding: 0,
-                    alignItems: 'center',
-                    backgroundColor: '#F5F5F5',
-                    height: verticalScale(35),
-                    marginTop: verticalScale(10),
-                }}>
-
-                    <ModalDropdown
-                        ref={modalBreed}
-                        style={{
-                            width: '94%',
-                            height: verticalScale(40),
-                            justifyContent: 'center', alignItems: 'center',
-                            paddingStart: moderateScale(15),
-
-                        }}
-                        defaultValue="Please select"
-                        textStyle={{
-                            fontSize: moderateScale(14),
-                            color: 'black',
-                            width: '100%',
-                        }}
-
-                        renderRow={(option) => {
-
-                            return (
-                                <Text style={{
-                                    fontSize: moderateScale(14),
-                                    padding: moderateScale(10),
-                                    color: 'black',
-                                    width: '100%',
-                                }}>
-                                    {option.name}
-                                </Text>
-
-
-                            );
-                        }}
-
-                        renderButtonText={(rowData) => {
-                            return rowData.name;
-                        }}
-
-                        dropdownStyle={{
-                            marginTop: verticalScale(20),
-                            backgroundColor: 'white', width: Dimensions.get('screen').width - moderateScale(50),
-                            marginStart: moderateScale(-16),
-                        }}
-                        dropdownTextStyle={{
-                            fontSize: moderateScale(14),
-                            color: 'black',
-                            margin: moderateScale(5),
-                            backgroundColor: 'white',
-                        }}
-                        onSelect={(index) => {
-                            setBreedId(listBreedType[index].value);
-                        }}
-                        //defaultIndex={0}
-                        options={listBreedType} />
-
-                    <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
-
-                </View> */}
             </View>
             <View style={{
                 padding: moderateScale(25),
@@ -368,17 +304,20 @@ function FilterAnimal(props) {
         </View>);
 
     function resetFilter() {
-        setTabsSelect(-1);
         setInitialPg(0);
+        filterList({
+            animalType: 'Active',
+            productId: '',
+            subProdId: ''
+        })
         props.navigation.pop()
     }
 
     function applyFilter() {
         filterList({
             animalType: initialPg === 0 ? 'Active' : 'Archieve',
-            status: TABS[tabsSelect],
-            animalId: catId,
-            breedId: breedId
+            productId: catId,
+            subProdId: subProdId
         })
         props.navigation.pop()
     }
@@ -419,4 +358,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FilterAnimal;
+export default FilterProducts;

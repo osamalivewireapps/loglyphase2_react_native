@@ -6,44 +6,38 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { TextInput,FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
-import ViewPager from '@react-native-community/viewpager';
-import ActiveProfile from './ActiveProfile';
-import ArchiveProfile from './ArchiveProfile';
 import { CommonActions } from '@react-navigation/routers';
 import moment from 'moment';
-import ImageBlurLoading from 'react-native-image-blur-loading';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
-import { TextInput } from 'react-native';
 
-function PetProfileView(props) {
+function ProductListingView(props) {
 
     const [searchTxt, setSearchTxt] = useState('');
-    const [animalList, setAnimalList] = useState([]);
+    const [productList, setProductList] = useState([]);
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listAnimal, applyFilter, filterObj } = props;
+    const { listProduct, applyFilter, filterObj } = props;
 
-    console.log("animal1234--->", filterObj);
-
+    
     useEffect(() => {
-        if (listAnimal.length > 0) {
-            setAnimalList(props.animalData.filter((e) => {
+        if (listProduct.length > 0) {
+            setProductList(props.productListing.filter((e) => {
                 return (e.data.name.toLowerCase().startsWith(searchTxt.toLowerCase()) || e.categoryName.toLowerCase().includes(searchTxt.toLowerCase()))
             }))
         }
     }, [searchTxt]);
 
     useEffect(() => {
-        //if (listAnimal.length > 0) {
-            setAnimalList(listAnimal)
+        //if (listProduct.length > 0) {
+        setProductList(listProduct)
         //}
-    }, [listAnimal]);
+    }, [listProduct]);
 
 
 
@@ -51,7 +45,7 @@ function PetProfileView(props) {
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <View style={{
-                backgroundColor: '#161D6E',
+                backgroundColor: '#C90F22',
                 borderBottomLeftRadius: moderateScale(30),
                 borderBottomRightRadius: moderateScale(30),
                 height: verticalScale(160)
@@ -100,10 +94,10 @@ function PetProfileView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        Pet Profile
+                        Products
 
                     </AutoSizeText>
-                    <Image source={Icons.icon_pet_profile} resizeMode='contain'
+                    <Image source={Icons.icon_header_regproduct} resizeMode='contain'
                         style={{ flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(60) }} />
                 </View>
 
@@ -128,7 +122,7 @@ function PetProfileView(props) {
                                         setSearchTxt(e)
                                     }}
                                     value={searchTxt}
-                                    placeholder='Search an animal'
+                                    placeholder='Search Products'
                                     numberOfLines={1}
                                     keyboardType='default'
                                     autoCapitalize='none'
@@ -144,32 +138,32 @@ function PetProfileView(props) {
 
                             </View>
 
-                            <TouchableOpacity onPress={() => { props.navigation.navigate('FilterAnimal', { ...props, filterList: ((e) => applyFilter(e)), customFilters: filterObj}) }}>
+                            <TouchableOpacity onPress={() => { props.navigation.navigate('FilterProducts', { ...props, filterList: ((e) => applyFilter(e)), customFilters: filterObj }) }}>
                                 <Image source={Icons.icon_filter_list} resizeMode='contain' style={{ height: moderateScale(20), width: moderateScale(20) }} />
                             </TouchableOpacity>
 
                         </View>
                     </View>
-                   
+
                     <View flex={1}>
                         <FlatList
                             numColumns={2}
                             contentContainerStyle={{
                                 flex: 1, padding: moderateScale(25)
                             }}
-                            data={animalList}
+                            data={productList}
                             renderItem={({ item, index }) => {
                                 return (
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('PetDetail',{id:item._id});
+                                            props.navigation.navigate('PetDetail', { id: item._id });
                                         }}
                                         style={{
                                             ...styles.boxcontainer,
                                             marginTop: verticalScale(10),
                                             justifyContent: 'center',
                                             alignItems: 'center',
-                                            marginEnd: (index % 2 === 0) ? (index === props.animalData.length - 1) ? 0 : verticalScale(10) : 0,
+                                            marginEnd: (index % 2 === 0) ? (index === props.productListing.length - 1) ? 0 : verticalScale(10) : 0,
                                             flex: 1,
                                             height: isTablet ? verticalScale(195) : verticalScale(160),
                                         }}>
@@ -415,4 +409,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default PetProfileView;
+export default ProductListingView;

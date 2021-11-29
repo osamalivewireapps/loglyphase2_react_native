@@ -15,6 +15,7 @@ import GalleryPetView from './gallery_pet';
 import HealthPetView from './health_pet';
 import FamilyTreePetView from './familytree_pet';
 import { CommonActions } from "@react-navigation/native";
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 function PetDetailView(props) {
 
@@ -34,19 +35,41 @@ function PetDetailView(props) {
                 borderBottomRightRadius: moderateScale(30),
                 height: !isTablet ? verticalScale(260) : verticalScale(320)
             }}>
-                <Image source={Images.sample_bird} resizeMode='cover'
-                    style={{
+           
+                <View style={{
+                    height: isTablet ? verticalScale(250) : verticalScale(200),
+                    width: '100%',
+                    position:'absolute'}}>
+                <ImagePlaceholder
+                    showActivityIndicator={false}
+                    activityIndicatorProps={{
+                        size: 'small',
+                        color: '#777777',
+                    }}
+                    resizeMode='cover'
+                    placeholderStyle={{
                         height: isTablet ? verticalScale(250) : verticalScale(200),
-                        width: '110%',
-                        marginStart: isTablet ? moderateScale(-25) : moderateScale(-20),
-                        position: 'absolute',
-                        borderBottomLeftRadius: moderateScale(50),
-                        borderBottomRightRadius: moderateScale(50),
+                        width: '100%',
+                        borderBottomLeftRadius: moderateScale(30),
+                        borderBottomRightRadius: moderateScale(30),
+
+                    }}
+                    imgStyle={{
+                        height: isTablet ? verticalScale(250) : verticalScale(200),
+                        width: '100%',
+                        borderBottomLeftRadius: moderateScale(30),
+                        borderBottomRightRadius: moderateScale(30),
                     }}
 
-                />
-                <View style={{
+                    style={{
 
+                    }}
+
+                    src={props.animalData.image}
+                    placeholder={Icons.icon_paw}
+                />
+                </View>
+                <View style={{
                     padding: moderateScale(25), flexDirection: 'row', flex: 1
                 }}>
                     <TouchableOpacity onPress={() => { props.navigation.pop() }}>
@@ -94,7 +117,7 @@ function PetDetailView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        Zooes
+                        {props.animalData.data.name}
 
                     </AutoSizeText>
                     <Image source={Icons.icon_edit_petprofile} resizeMode='contain'

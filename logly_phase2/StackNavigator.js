@@ -16,7 +16,7 @@ import {
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
-  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal
+  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -48,7 +48,8 @@ function StackNavigator(props) {
           <Stack.Screen name="PetDetail" component={PetDetail} />
           <Stack.Screen name='SearchItem' component={SearchItem} />
           <Stack.Screen name='DashBoard' component={DashBoard} />
-          
+          <Stack.Screen name='ProductListing' component={ProductListing} />
+          <Stack.Screen name='FilterProducts' component={FilterProducts} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
           <Stack.Screen name="Login" component={LoginController} />
           <Stack.Screen name="Registration" component={RegistrationController} />

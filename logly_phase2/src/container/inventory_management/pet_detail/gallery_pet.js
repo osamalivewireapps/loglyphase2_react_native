@@ -11,21 +11,58 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
+import { Pages } from 'react-native-pages';
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 function GalleryPetView(props) {
 
+    const { animalData, route } = props;
 
-   
     return (
         <View style={{
-            flexDirection:'column',
+            flexDirection: 'column',
             paddingStart: moderateScale(20),
-            height:Dimensions.get('screen').height/2,
-            justifyContent:'flex-end',
-            paddingBottom:verticalScale(30)
-            
+            height: Dimensions.get('screen').height / 2,
+            justifyContent: 'flex-end',
+            paddingBottom: verticalScale(30)
+
         }}>
-            
+
+            <Pages
+                containerStyle={{ flex: 1, paddingBottom: verticalScale(20) }}
+                indicatorColor={Colors.appBgColor}
+            >
+                {animalData.gallery.map((item, index) => {
+                    return (
+                        <View style={{ flex: 1, alignItems: 'center' }}>
+                            <ImagePlaceholder
+                                showActivityIndicator={false}
+                                activityIndicatorProps={{
+                                    size: 'small',
+                                    color: '#777777',
+                                }}
+                                resizeMode='cover'
+                                placeholderStyle={{
+                                    width: Dimensions.get('screen').width,
+
+                                }}
+                                imgStyle={{
+                                    width: Dimensions.get('screen').width,
+                                }}
+
+                                style={{
+
+                                }}
+
+                                src={item.filename}
+                                placeholder={Icons.icon_paw}
+                            />
+                        </View>
+                    )
+                })}
+
+
+            </Pages>
 
             <TouchableOpacity style={{
                 ...styles.styleButtons, flex: 0,

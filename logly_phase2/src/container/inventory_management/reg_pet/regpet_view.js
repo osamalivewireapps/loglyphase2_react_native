@@ -15,18 +15,13 @@ import { TextInput } from 'react-native-gesture-handler';
 import Util from '../../../utils';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
+import AppLoader from '../../../components/AppLoader';
+
 
 function RegisterPetView(props) {
 
-    const INV_DASHBOARD = [{ name: 'Pet Profile', bg: '#161D6E', icon: Icons.icon_pet_profile },
 
-
-    { name: 'Register Pet', bg: '#FFB531', icon: Images.img_reg_pet },
-    { name: 'Products', bg: '#097D3B', icon: Icons.icon_pet_profile },
-    { name: 'Register Products', bg: '#C90F22', icon: Icons.icon_pet_profile }];
-
-    const PET_CATEGORY = ["Horse", "Dog", "Cat", "Camel", "Camel", "Parrot", "Goat", "Chicken", "Rabbit", "Other Animal"];
-    const BREED = ["African Grey Parrot", "Andean Parakeet", "Australian King Parrot", "Aztec Parakeet", "bald Parrot", "black Lory", "Biak Lorikeet", "Barred Parakeet", "cape Parrot"];
+    const { isLoad, animalCategories, animalBreed, getAnimalBreed } = props;
 
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
     const [isCalSheetVisible, setCloseCalSheet] = useState(false)
@@ -59,6 +54,7 @@ function RegisterPetView(props) {
         }
     };
 
+    console.log("animalCategories1-->", animalCategories.length);
     const onDayPress = day => {
         setSelected(day.dateString);
     };
@@ -69,7 +65,7 @@ function RegisterPetView(props) {
                 backgroundColor: '#FFB531',
                 borderBottomLeftRadius: moderateScale(30),
                 borderBottomRightRadius: moderateScale(30),
-                height:verticalScale(200)
+                height: verticalScale(160)
             }}>
                 <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
                     <TouchableOpacity onPress={() => { props.navigation.pop() }}>
@@ -114,7 +110,7 @@ function RegisterPetView(props) {
             <ScrollView keyboardShouldPersistTaps={true}>
                 <View style={{ flex: 1 }}>
 
-                    
+
 
                     <View style={{
                         flex: 1,
@@ -148,7 +144,7 @@ function RegisterPetView(props) {
                                         fontFamily: Fonts.type.base,
                                         width: '97%'
                                     }}>
-                                    {petIndex >= 0 ? PET_CATEGORY[petIndex] : 'Select Pet Category'}
+                                    {petIndex > -1 ? animalCategories[petIndex].categoryId.name : 'Select Pet Category'}
 
                                 </AutoSizeText>
                                 <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
@@ -188,100 +184,240 @@ function RegisterPetView(props) {
 
                         {isCalSheetVisible ? sheetCalRef.current.open() : null}
 
-                        <View style={{
-                            backgroundColor: '#F4F4F4', alignSelf: 'center',
-                            height: moderateScale(90),
-                            width: moderateScale(90),
-                            borderRadius: moderateScale(100),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: verticalScale(20),
-                            marginBottom: verticalScale(10)
-                        }}>
+                        {petIndex > -1 ?
+                            <View>
+                                <View style={{
+                                    backgroundColor: '#F4F4F4', alignSelf: 'center',
+                                    height: moderateScale(90),
+                                    width: moderateScale(90),
+                                    borderRadius: moderateScale(100),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: verticalScale(20),
+                                    marginBottom: verticalScale(10)
+                                }}>
 
-                            <Image source={Icons.icon_awesome_plus} resizeMode='contain'
-                                style={{
-                                    height: verticalScale(10),
-                                    width: verticalScale(10)
-                                }} />
+                                    <Image source={Icons.icon_awesome_plus} resizeMode='contain'
+                                        style={{
+                                            height: verticalScale(10),
+                                            width: verticalScale(10)
+                                        }} />
 
-                        </View>
+                                </View>
 
-                        <AutoSizeText
-                            numberOfLines={2}
-                            minFontSize={moderateScale(14)}
-                            fontSize={moderateScale(16)}
-                            mode={ResizeTextMode.overflow_replacement}
-                            style={{
-                                color: '#464646',
-                                fontFamily: Fonts.type.medium,
-                                width: '100%',
-                                textAlign: 'center',
-                                marginBottom: verticalScale(10)
-                            }}>
-                            Add Animal Photo
+                                <AutoSizeText
+                                    numberOfLines={2}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
+                                    mode={ResizeTextMode.overflow_replacement}
+                                    style={{
+                                        color: '#464646',
+                                        fontFamily: Fonts.type.medium,
+                                        width: '100%',
+                                        textAlign: 'center',
+                                        marginBottom: verticalScale(10)
+                                    }}>
+                                    Add Animal Photo
 
-                        </AutoSizeText>
+                                </AutoSizeText>
 
-                        <View style={{
-                            ...styles.boxcontainer,
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validateName ? 'transparent' : 'darkred',
-                            shadowOpacity: validateName ? 0.25 : 1,
-                            padding: moderateScale(15),
-                        }}>
+                                <View style={{
+                                    ...styles.boxcontainer,
+                                    flexDirection: 'row', alignItems: 'center',
+                                    shadowColor: validateName ? 'transparent' : 'darkred',
+                                    shadowOpacity: validateName ? 0.25 : 1,
+                                    padding: moderateScale(15),
+                                }}>
 
 
-                            <TextInput placeholder="Enter Name" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                textAlign: 'left',
-                            }}
-                                underlineColorAndroid='transparent'
-                                require={true}
-                                numberOfLines={1}
-                                autoCapitalize='none'
-                                keyboardType="default"
-                                onChangeText={(e) => {
-                                    setValidateName(Util.isLengthGreater(e));
-                                    setValueName(e)
-                                }
-                                }
-                                value={valueName} />
-                        </View>
+                                    <TextInput placeholder="Enter Name" style={{
+                                        ...styles.styleTextInput,
+                                        flex: 1,
+                                        textAlign: 'left',
+                                    }}
+                                        underlineColorAndroid='transparent'
+                                        require={true}
+                                        numberOfLines={1}
+                                        autoCapitalize='none'
+                                        keyboardType="default"
+                                        onChangeText={(e) => {
+                                            setValidateName(Util.isLengthGreater(e));
+                                            setValueName(e)
+                                        }
+                                        }
+                                        value={valueName} />
+                                </View>
 
-                        <TouchableOpacity style={{
-                            ...styles.styleButtons, width: '100%',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(25),
-                            backgroundColor: 'white',
-                            borderWidth: moderateScale(1),
-                            padding: moderateScale(10),
-                            paddingBottom: verticalScale(10)
-                        }} onPress={() => { setCloseBreedSheet(true) }}>
-                            <Text style={{
-                                ...styles.generalTxt,
-                                textAlign: 'center', 
-                                paddingBottom:0,
-                                color: Colors.appBgColor
-                            }}>Select Breed</Text>
-                       
+                                <TouchableOpacity style={{
+                                    ...styles.styleButtons, width: '100%',
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(25),
+                                    backgroundColor: 'white',
+                                    borderWidth: moderateScale(1),
+                                    padding: moderateScale(10),
+                                    paddingBottom: verticalScale(10)
+                                }} onPress={() => { 
+                                    getAnimalBreed(animalCategories[petIndex].categoryId._id)
+                                    setCloseBreedSheet(true) }}>
+                                    <Text style={{
+                                        ...styles.generalTxt,
+                                        textAlign: 'center',
+                                        paddingBottom: 0,
+                                        color: Colors.appBgColor
+                                    }}>Select Breed</Text>
 
-                        <FlatList
-                            numColumns={2}
-                            contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
-                            data={listBreed}
-                            renderItem={({ item, index }) => {
-                                return (
+
+                                    <FlatList
+                                        numColumns={2}
+                                        contentContainerStyle={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+                                        data={listBreed}
+                                        renderItem={({ item, index }) => {
+                                            return (
+                                                <TouchableOpacity style={{
+                                                    backgroundColor: '#F5F5F5',
+                                                    borderRadius: moderateScale(10),
+                                                    marginTop: verticalScale(5),
+                                                    height: verticalScale(30),
+                                                    width: Dimensions.get('screen').width / 2.6,
+                                                    justifyContent: 'center',
+                                                    alignItems: 'center',
+                                                    marginStart: moderateScale(5),
+                                                }}>
+
+                                                    <AutoSizeText
+                                                        numberOfLines={1}
+                                                        minFontSize={moderateScale(14)}
+                                                        fontSize={moderateScale(16)}
+                                                        mode={ResizeTextMode.max_lines}
+                                                        style={{
+                                                            ...styles.generalTxt,
+                                                            color: '#464646',
+                                                            textAlign: 'center'
+                                                        }}>{item.name}
+                                                    </AutoSizeText>
+                                                </TouchableOpacity>
+                                            )
+                                        }}
+
+                                    />
+
+                                </TouchableOpacity>
+                                <RBSheet
+                                    ref={sheetBreedRef}
+                                    height={Dimensions.get('screen').height - moderateScale(130)}
+                                    openDuration={250}
+                                    customStyles={{
+                                        container: {
+                                            borderRadius: moderateScale(30)
+                                        }
+                                    }}
+                                    onClose={() => setCloseBreedSheet(false)}
+                                >
+                                    {showBreed()}
+                                </RBSheet>
+
+                                {isBreedSheetVisible ? sheetBreedRef.current.open() : null}
+
+                                <Text
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: '#464646',
+                                        fontFamily: Fonts.type.medium,
+                                        width: '100%',
+                                        textAlign: 'left',
+                                        marginTop: verticalScale(25),
+                                        marginBottom: verticalScale(10)
+                                    }}>
+
+                                    Select DOB
+                                </Text>
+
+                                <TouchableOpacity style={{
+                                    backgroundColor: '#F5F5F5',
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(0),
+                                    flex: 1,
+                                    width: '100%',
+                                    height: verticalScale(40),
+                                    flexDirection: 'row',
+                                    paddingStart: moderateScale(15),
+                                    paddingEnd: moderateScale(15),
+                                    alignItems: 'center',
+                                    marginStart: 0,
+                                }} onPress={() => {
+                                    setCloseCalSheet(true)
+                                }}>
+
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: '#464646',
+                                            paddingEnd: moderateScale(5),
+                                            flex: 7,
+                                        }}>{selected}
+                                    </AutoSizeText>
+                                    <Image source={Icons.icon_material_date_range} resizeMode='contain' style={{ height: verticalScale(13), width: verticalScale(13) }} />
+                                </TouchableOpacity>
+
+                                {getServiceType(false)}
+
+                                <View style={{
+                                    ...styles.boxcontainer,
+                                    height: verticalScale(100),
+                                    flexDirection: 'row', alignItems: 'center',
+                                    shadowColor: validateDesc ? 'transparent' : 'darkred',
+                                    shadowOpacity: validateDesc ? 0.25 : 1,
+                                    marginTop: verticalScale(25),
+                                }}>
+
+
+                                    <TextInput placeholder="Enter Notes" style={{
+                                        ...styles.styleTextInput,
+                                        flex: 1,
+                                        paddingTop: verticalScale(15),
+                                        padding: moderateScale(15),
+                                        textAlign: 'left',
+                                        height: verticalScale(100),
+                                    }}
+                                        underlineColorAndroid='transparent'
+                                        require={true}
+                                        multiline={true}
+                                        numberOfLines={50}
+                                        maxLength={75}
+                                        autoCapitalize='none'
+                                        keyboardType="default"
+                                        onChangeText={(e) => {
+                                            setValidateDesc(Util.isLengthGreater(e))
+                                            setDesc(e)
+                                        }
+                                        }
+                                        value={valueDesc} />
+                                </View>
+                                <Text style={{
+                                    marginTop: verticalScale(25),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                }}>Parents</Text>
+
+                                <View flexDirection='row' marginTop={0}>
+
                                     <TouchableOpacity style={{
                                         backgroundColor: '#F5F5F5',
                                         borderRadius: moderateScale(10),
                                         marginTop: verticalScale(5),
-                                        height: verticalScale(30),
-                                        width:Dimensions.get('screen').width/2.6,
-                                        justifyContent: 'center',
+                                        flex: 1,
+                                        height: verticalScale(40),
+                                        flexDirection: 'row',
+                                        paddingStart: moderateScale(15),
+                                        paddingEnd: moderateScale(15),
                                         alignItems: 'center',
-                                        marginStart: moderateScale(5),
+                                        marginStart: 0,
+                                    }} onPress={() => {
+
                                     }}>
 
                                         <AutoSizeText
@@ -292,245 +428,116 @@ function RegisterPetView(props) {
                                             style={{
                                                 ...styles.generalTxt,
                                                 color: '#464646',
-                                                textAlign:'center'
-                                            }}>{item}
+                                                paddingEnd: moderateScale(5),
+                                                flex: 7,
+                                            }}>Add Parent
                                         </AutoSizeText>
+                                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
                                     </TouchableOpacity>
-                                )
-                            }}
+                                    <TouchableOpacity style={{
+                                        backgroundColor: '#F5F5F5',
+                                        borderRadius: moderateScale(10),
+                                        marginTop: verticalScale(5),
+                                        flex: 1,
+                                        height: verticalScale(40),
+                                        paddingStart: moderateScale(15),
+                                        paddingEnd: moderateScale(15),
+                                        alignItems: 'center',
+                                        marginStart: moderateScale(10),
+                                        flexDirection: 'row'
+                                    }} onPress={() => {
+                                    }}>
 
-                        />
-
-                        </TouchableOpacity>
-                        <RBSheet
-                            ref={sheetBreedRef}
-                            height={Dimensions.get('screen').height - moderateScale(130)}
-                            openDuration={250}
-                            customStyles={{
-                                container: {
-                                    borderRadius: moderateScale(30)
-                                }
-                            }}
-                            onClose={() => setCloseBreedSheet(false)}
-                        >
-                            {showBreed()}
-                        </RBSheet>
-
-                        {isBreedSheetVisible ? sheetBreedRef.current.open() : null}
-
-                        <Text
-                            style={{
-                                ...styles.generalTxt,
-                                color: '#464646',
-                                fontFamily: Fonts.type.medium,
-                                width: '100%',
-                                textAlign: 'left',
-                                marginTop: verticalScale(25),
-                                marginBottom: verticalScale(10)
-                            }}>
-
-                            Select DOB
-                        </Text>
-
-                        <TouchableOpacity style={{
-                            backgroundColor: '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(0),
-                            flex: 1,
-                            width: '100%',
-                            height: verticalScale(40),
-                            flexDirection: 'row',
-                            paddingStart: moderateScale(15),
-                            paddingEnd: moderateScale(15),
-                            alignItems: 'center',
-                            marginStart: 0,
-                        }} onPress={() => {
-                            setCloseCalSheet(true)
-                        }}>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: '#464646',
-                                    paddingEnd: moderateScale(5),
-                                    flex: 7,
-                                }}>{selected}
-                            </AutoSizeText>
-                            <Image source={Icons.icon_material_date_range} resizeMode='contain' style={{ height: verticalScale(13), width: verticalScale(13) }} />
-                        </TouchableOpacity>
-
-                        {getServiceType(true)}
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            height: verticalScale(100),
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validateDesc ? 'transparent' : 'darkred',
-                            shadowOpacity: validateDesc ? 0.25 : 1,
-                            marginTop: verticalScale(25),
-                        }}>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(14)}
+                                            fontSize={moderateScale(16)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                color: '#464646',
+                                                flex: 7,
+                                            }}>Add Parent
+                                        </AutoSizeText>
+                                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                    </TouchableOpacity>
 
 
-                            <TextInput placeholder="Enter Notes" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                paddingTop: verticalScale(15),
-                                padding: moderateScale(15),
-                                textAlign: 'left',
-                                height: verticalScale(100),
-                            }}
-                                underlineColorAndroid='transparent'
-                                require={true}
-                                multiline={true}
-                                numberOfLines={50}
-                                maxLength={75}
-                                autoCapitalize='none'
-                                keyboardType="default"
-                                onChangeText={(e) => {
-                                    setValidateDesc(Util.isLengthGreater(e))
-                                    setDesc(e)
-                                }
-                                }
-                                value={valueDesc} />
-                        </View>
-                        <Text style={{
-                            marginTop: verticalScale(25),
-                            ...styles.generalTxt, color: '#464646',
-                            fontFamily: Fonts.type.medium,
-                        }}>Parents</Text>
+                                </View>
+                                <Text style={{
+                                    marginTop: verticalScale(25),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                }}>Child</Text>
 
-                        <View flexDirection='row' marginTop={0}>
+                                <TouchableOpacity style={{
+                                    backgroundColor: '#F5F5F5',
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(5),
+                                    flex: 0.5,
+                                    width: '50%',
+                                    height: verticalScale(40),
+                                    flexDirection: 'row',
+                                    paddingStart: moderateScale(15),
+                                    paddingEnd: moderateScale(15),
+                                    alignItems: 'center',
+                                    marginStart: 0,
+                                }} onPress={() => {
 
-                            <TouchableOpacity style={{
-                                backgroundColor: '#F5F5F5',
-                                borderRadius: moderateScale(10),
-                                marginTop: verticalScale(5),
-                                flex: 1,
-                                height: verticalScale(40),
-                                flexDirection: 'row',
-                                paddingStart: moderateScale(15),
-                                paddingEnd: moderateScale(15),
-                                alignItems: 'center',
-                                marginStart: 0,
-                            }} onPress={() => {
+                                }}>
 
-                            }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: '#464646',
+                                            paddingEnd: moderateScale(5),
+                                            flex: 7,
+                                        }}>Add Children
+                                    </AutoSizeText>
+                                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                </TouchableOpacity>
 
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(14)}
-                                    fontSize={moderateScale(16)}
-                                    mode={ResizeTextMode.max_lines}
-                                    style={{
-                                        ...styles.generalTxt,
-                                        color: '#464646',
-                                        paddingEnd: moderateScale(5),
-                                        flex: 7,
-                                    }}>Add Parent
-                                </AutoSizeText>
-                                <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                            </TouchableOpacity>
-                            <TouchableOpacity style={{
-                                backgroundColor: '#F5F5F5',
-                                borderRadius: moderateScale(10),
-                                marginTop: verticalScale(5),
-                                flex: 1,
-                                height: verticalScale(40),
-                                paddingStart: moderateScale(15),
-                                paddingEnd: moderateScale(15),
-                                alignItems: 'center',
-                                marginStart: moderateScale(10),
-                                flexDirection: 'row'
-                            }} onPress={() => {
-                            }}>
-
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(14)}
-                                    fontSize={moderateScale(16)}
-                                    mode={ResizeTextMode.max_lines}
-                                    style={{
-                                        ...styles.generalTxt,
-                                        color: '#464646',
-                                        flex: 7,
-                                    }}>Add Parent
-                                </AutoSizeText>
-                                <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                            </TouchableOpacity>
-
-
-                        </View>
-                        <Text style={{
-                            marginTop: verticalScale(25),
-                            ...styles.generalTxt, color: '#464646',
-                            fontFamily: Fonts.type.medium,
-                        }}>Child</Text>
-
-                        <TouchableOpacity style={{
-                            backgroundColor: '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(5),
-                            flex: 0.5,
-                            width: '50%',
-                            height: verticalScale(40),
-                            flexDirection: 'row',
-                            paddingStart: moderateScale(15),
-                            paddingEnd: moderateScale(15),
-                            alignItems: 'center',
-                            marginStart: 0,
-                        }} onPress={() => {
-
-                        }}>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: '#464646',
-                                    paddingEnd: moderateScale(5),
-                                    flex: 7,
-                                }}>Add Children
-                            </AutoSizeText>
-                            <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                        </TouchableOpacity>
+                            </View> : null}
                     </View>
 
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons, flex: 0,
-                        margin: verticalScale(25),
-                        backgroundColor: 'white',
-                        borderWidth: moderateScale(1),
-                        marginBottom: verticalScale(0)
-                    }} onPress={() => { }}>
-                        <Text style={{
-                            ...styles.generalTxt,
-                            fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
-                            paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
-                            color: Colors.appBgColor
-                        }}>Add Videos / Photos</Text>
-                    </TouchableOpacity>
+                    {petIndex > -1 ?
+                        <View>
+                            <TouchableOpacity style={{
+                                ...styles.styleButtons, flex: 0,
+                                margin: verticalScale(25),
+                                backgroundColor: 'white',
+                                borderWidth: moderateScale(1),
+                                marginBottom: verticalScale(0)
+                            }} onPress={() => { }}>
+                                <Text style={{
+                                    ...styles.generalTxt,
+                                    fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
+                                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+                                    color: Colors.appBgColor
+                                }}>Add Videos / Photos</Text>
+                            </TouchableOpacity>
 
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons, flex: 0,
-                        margin: verticalScale(25),
-                        marginTop: verticalScale(15)
-                    }} onPress={() => { }}>
-                        <Text style={{
-                            ...styles.generalTxt,
-                            fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
-                            paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+                            <TouchableOpacity style={{
+                                ...styles.styleButtons, flex: 0,
+                                margin: verticalScale(25),
+                                marginTop: verticalScale(15)
+                            }} onPress={() => { }}>
+                                <Text style={{
+                                    ...styles.generalTxt,
+                                    fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
+                                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
-                        }}>REGISTER</Text>
-                    </TouchableOpacity>
+                                }}>REGISTER</Text>
+                            </TouchableOpacity>
+                        </View> : null}
                 </View>
             </ScrollView>
+
+            <AppLoader loader={{ isLoading: isLoad }} />
         </View>
 
     );
@@ -584,12 +591,11 @@ function RegisterPetView(props) {
                         <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
                     <FlatList
-                        data={PET_CATEGORY}
+                        data={animalCategories}
                         contentContainerStyle={{
                             padding: moderateScale(30)
                         }}
                         renderItem={({ item, index }) => {
-                            console.log("item-->", item);
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
@@ -606,7 +612,7 @@ function RegisterPetView(props) {
                                             resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
                                         />
                                     </View>
-                                    <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item}</Text>
+                                    <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item.categoryId.name}</Text>
                                 </TouchableOpacity>
                             )
                         }}
@@ -631,12 +637,11 @@ function RegisterPetView(props) {
                         <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
                     <FlatList
-                        data={BREED}
+                        data={animalBreed}
                         contentContainerStyle={{
                             padding: moderateScale(30)
                         }}
                         renderItem={({ item, index }) => {
-                            console.log("item-->", item);
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
@@ -652,7 +657,7 @@ function RegisterPetView(props) {
                                         />
                                     </View>
                                     <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>
-                                        {item}
+                                        {item.name}
                                     </Text>
                                 </TouchableOpacity>
                             )
@@ -667,19 +672,17 @@ function RegisterPetView(props) {
 
     function selectBreed(e) {
         let tmp = listBreed;
-        let itemService = tmp.find(item => item === e);
+        let itemService = tmp.find(item => item._id === e._id);
         if (itemService) {
             tmp.splice(tmp.indexOf(itemService), 1);
         } else {
             tmp.push(e);
         }
-
         setListBreed([...tmp]);
     }
 
     function isBreedSelect(item) {
-
-        let itemService = listBreed.find(e => e === item);
+        let itemService = listBreed.find(e => e._id === item._id);
         if (itemService) {
             return true;
         } else {

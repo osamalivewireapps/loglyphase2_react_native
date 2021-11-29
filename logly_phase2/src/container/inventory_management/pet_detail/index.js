@@ -4,11 +4,17 @@
 import React, { Component } from 'react';
 import { View } from 'react-native';
 import PetDetailView from './pet_detailview';
+import { getAnimal} from '../../../actions/AnimalModule'
+import { connect } from 'react-redux';
 
 class PetDetail extends Component {
 
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount(){
+        this.props.getAnimal(this.props.route.params.id)
     }
 
     render() {
@@ -17,5 +23,18 @@ class PetDetail extends Component {
         />);
     }
 }
+const mapStateToProps = ({ animal }) => {
+    return {
+        animalData: animal.animalDetail,
+    };
+};
 
-export default PetDetail;
+const mapDispatchToProps = dispatch => ({
+    getAnimal: (data) => dispatch(getAnimal(data)),
+
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(PetDetail);

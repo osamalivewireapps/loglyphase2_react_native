@@ -5,34 +5,43 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
+import moment from 'moment';
 
 function AboutPetView(props) {
 
+    const { animalData,route } = props;
+
+
 
     const ANIMAL_BIO = [{
-        category: 'Animal Id', value: '6152c5', bg: '#FEDDDA', txtColor: '#D04621'
+        category: 'Animal Id', value: '', bg: '#FEDDDA', txtColor: '#D04621'
     },
-    { category: 'Breed', value: 'African Grey Parrot', bg: '#DED9FB', txtColor: '#5A40E2' },
-    { category: 'sex', value: 'Male', bg: '#C9F7F3', txtColor: '#03CDB8' },
-    { category: 'Animal Id', value: '6152c5', bg: '#ECD48E', txtColor: '#EFB714' }]
+    { category: 'Breed', value: '', bg: '#DED9FB', txtColor: '#5A40E2' },
+    { category: 'sex', value: '', bg: '#C9F7F3', txtColor: '#03CDB8' },
+    { category: 'DOB', value: '', bg: '#ECD48E', txtColor: '#EFB714' }]
 
-    const TABS = ["Archive", "Add New Activity", "QR Code"];
+    const TABS = ["Add New Activity", "QR Code"];
 
     const isTablet = DeviceInfo.isTablet();
 
     const [isFeatured, setIsFeatured] = useState(0)
     const [tabsSelect, setTabsSelect] = useState(0);
 
+
     return (
+
         <View style={{
             paddingStart: moderateScale(20)
         }}>
+
+            {console.log("animalData--->", props)}
+            {console.log("ANIMAL--->", ANIMAL_BIO[1].value)}
             <FlatList
                 horizontal
                 data={ANIMAL_BIO}
@@ -84,7 +93,8 @@ function AboutPetView(props) {
                                     paddingStart: moderateScale(4),
                                     paddingEnd: moderateScale(4),
 
-                                }}>{item.value}
+                                }}>{getAnimalValues(item.category)}
+
                             </AutoSizeText>
                         </View>
 
@@ -93,69 +103,42 @@ function AboutPetView(props) {
 
             />
 
-            <View style={{ flexDirection: 'row', marginTop: verticalScale(10) }}>
+           
+                
 
-                <View style={{
-                    backgroundColor: isFeatured === 0 ? '#021C41' : '#F5F5F5',
-                    borderRadius: moderateScale(5),
-                    height: verticalScale(25),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: isTablet ? moderateScale(115) : moderateScale(95),
-                    marginEnd: moderateScale(15),
-                }} onPress={() => {
-                    setIsFeatured(0);
-                }}>
+               
+            {animalData.featured?
+            <Text
+                style={{
+                    ...styles.generalTxt,
+                    color: 'green',
+                    fontSize: moderateScale(14),
+                    paddingBottom: moderateScale(15),
+                    paddingTop: moderateScale(5),
+                    paddingStart: moderateScale(10),
+                    fontFamily: Fonts.type.medium,
+                }}>Featured
+            </Text>:null}
+                
 
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={moderateScale(12)}
-                        fontSize={moderateScale(14)}
-                        mode={ResizeTextMode.max_lines}
-                        style={{
-                            color: isFeatured === 0 ? 'white' : '#464646',
-                            paddingStart: moderateScale(2),
-                            paddingEnd: moderateScale(2),
-                            textAlign: 'center',
-                            fontFamily: Fonts.type.medium,
-                        }}>Featured
-                    </AutoSizeText>
-                </View>
-
-                <View style={{
-                    backgroundColor: isFeatured === 1 ? '#021C41' : '#F5F5F5',
-                    borderRadius: moderateScale(5),
-                    height: verticalScale(25),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    width: isTablet ? moderateScale(115) : moderateScale(95),
-                    marginEnd: moderateScale(5),
-                }} onPress={() => {
-                    setIsFeatured(1)
-                }}>
-
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={moderateScale(12)}
-                        fontSize={moderateScale(14)}
-                        mode={ResizeTextMode.max_lines}
-                        style={{
-                            color: isFeatured === 1 ? 'white' : '#464646',
-                            paddingStart: moderateScale(2),
-                            paddingEnd: moderateScale(2),
-                            textAlign: 'center',
-                            fontFamily: Fonts.type.medium,
-                        }}>Public
-                    </AutoSizeText>
-                </View>
-            </View>
-
+         {!animalData.isPrivate?
+            <Text
+                style={{
+                    ...styles.generalTxt,
+                    color: '#464646',
+                    fontSize: moderateScale(14),
+                    paddingStart: moderateScale(10),
+                    fontFamily: Fonts.type.medium,
+                }}>Public
+            </Text>:null}
+         
             <Text
                 style={{
                     ...styles.generalTxt,
                     color: '#464646',
                     fontSize: moderateScale(14),
                     padding: moderateScale(20),
+                    paddingTop: moderateScale(15),
                     paddingBottom: moderateScale(10),
                     paddingStart: moderateScale(10),
                     fontFamily: Fonts.type.medium,
@@ -170,23 +153,24 @@ function AboutPetView(props) {
                     ...styles.generalTxt,
                     fontSize: moderateScale(12),
                     color: '#777777',
-                }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata
+                }}>{animalData.data.Notes}
             </Text>
 
             <FlatList
                 data={TABS}
                 numColumns={4}
                 contentContainerStyle={{
-                    paddingStart: 0,
+                    paddingStart: moderateScale(40),
+                    paddingEnd:moderateScale(40),
                     padding: moderateScale(20), paddingTop: moderateScale(10)
                 }}
                 renderItem={({ item, index }) => {
 
                     return (
                         <TouchableOpacity style={{
-                            backgroundColor: tabsSelect === index ? '#FE8B19' : '#F5F5F5',
+                            backgroundColor: '#F5F5F5',
                             borderRadius: moderateScale(10),
-                            height: verticalScale(40),
+                            height: verticalScale(30),
                             justifyContent: 'center',
                             alignItems: 'center',
                             flex: 1,
@@ -197,15 +181,15 @@ function AboutPetView(props) {
 
                             <AutoSizeText
                                 numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
+                                minFontSize={moderateScale(10)}
+                                fontSize={moderateScale(12)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
-                                    color: tabsSelect === index ? 'white' : '#464646',
+                                    color: '#464646',
                                     paddingStart: moderateScale(2),
                                     paddingEnd: moderateScale(2),
                                     textAlign: 'center',
-                                    fontFamily: Fonts.type.medium,
+                                    fontFamily: Fonts.type.base,
                                 }}>{item}
                             </AutoSizeText>
                         </TouchableOpacity>
@@ -230,6 +214,23 @@ function AboutPetView(props) {
             </TouchableOpacity>
         </View>
     )
+
+    function getAnimalValues(category) {
+        switch (category) {
+            case 'Animal Id':
+                return route.params.id
+
+            case 'Breed':
+                return animalData.data.breed[0]
+
+            case 'sex':
+                return animalData.data.Sex
+            default:
+                return moment(animalData.data?.DOB).format('DD MMM YYYY')
+
+        }
+
+    }
 }
 
 const styles = StyleSheet.create({
