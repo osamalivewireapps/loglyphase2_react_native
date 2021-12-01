@@ -20,4 +20,5 @@ const bg_splash1 = require('../assets/Images/bg_splash1/bg_splash1.png');
 const bg_splash2 = require('../assets/Images/bg_splash2/bg_splash2.png');
 const bg_splash3 = require('../assets/Images/bg_splash3/bg_splash3.png');
 const img_logo_splash = require('../assets/Images/img_logo_splash/img_logo_splash.png');
-export default { img_logo_splash,bg_splash1, bg_splash2,bg_splash3,img_bg_quickmenu,sample_bird,img_inventory_home,img_reg_pet,img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };
+const img_user_placeholder = require('../assets/Images/img_user_placeholder/img_user_placeholder.jpg');
+export default { img_user_placeholder,img_logo_splash,bg_splash1, bg_splash2,bg_splash3,img_bg_quickmenu,sample_bird,img_inventory_home,img_reg_pet,img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };

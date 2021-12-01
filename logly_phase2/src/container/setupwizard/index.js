@@ -11,6 +11,6 @@ import TeamSetup from './TeamSetup';
 import AnimalInfo from './animal_info';
 import ProductInfo from './product_info';
 import BusListing from './bus_listing';
-import HomeScreen from './home_screen'
+import HomeScreen from './home_screen';
 export { HomeScreen,BusListing,ProductInfo,AnimalInfo,TeamSetup,TeamMemberSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile}
 

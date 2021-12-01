@@ -156,7 +156,7 @@ function ProductListingView(props) {
                                 return (
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('PetDetail', { id: item._id });
+                                            props.navigation.navigate('ProductDetail', { id: item._id });
                                         }}
                                         style={{
                                             ...styles.boxcontainer,
@@ -346,7 +346,7 @@ function ProductListingView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('RegisterPet')
+                    props.navigation.navigate('RegisterProduct')
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{

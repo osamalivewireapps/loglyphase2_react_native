@@ -136,7 +136,7 @@ export async function getFormCategory(catId){
                 else {
                     setTimeout(() => {
                         reject();
-                        utils.topAlertError("breed issues:"+response.data.message);
+                        utils.topAlertError(response.data.message);
                     }, timeOut);
                 }
                 

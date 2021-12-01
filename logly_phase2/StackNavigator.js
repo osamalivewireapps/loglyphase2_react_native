@@ -16,7 +16,8 @@ import {
   BusAccountPackagesController, RegistrationAccountTypeController,
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
-  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts
+  TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts,
+  ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -46,11 +47,16 @@ function StackNavigator(props) {
           <Stack.Screen name="RegisterPet" component={RegisterPet} />
           <Stack.Screen name="PetProfile" component={PetProfile} />
           <Stack.Screen name="PetDetail" component={PetDetail} />
+          <Stack.Screen name="ProductDetail" component={ProductDetail} />
+          <Stack.Screen name="ContactDetails" component={ContactDetails} />
           <Stack.Screen name='SearchItem' component={SearchItem} />
           <Stack.Screen name='DashBoard' component={DashBoard} />
           <Stack.Screen name='ProductListing' component={ProductListing} />
+          <Stack.Screen name='ContactListing' component={ContactListing} />
+          <Stack.Screen name='FilterContacts' component={FilterContacts} />
           <Stack.Screen name='FilterProducts' component={FilterProducts} />
           <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
+          <Stack.Screen name="RegisterProduct" component={RegisterProduct} />
           <Stack.Screen name="Login" component={LoginController} />
           <Stack.Screen name="Registration" component={RegistrationController} />
           <Stack.Screen name="VerificationCode" component={VerificationCodeController} />
@@ -71,7 +77,7 @@ function StackNavigator(props) {
           <Stack.Screen name='BusListing' component={BusListing} />
           <Stack.Screen name='ProductInfo' component={ProductInfo} />
           <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
-
+          <Stack.Screen name='AddContacts' component={AddContacts}/>
           <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
           <Stack.Screen name='FilterAnimal' component={FilterAnimal} />
         </Stack.Navigator>
@@ -165,7 +171,7 @@ function homeDrawer() {
           />),
       }} />
 
-      <Drawer.Screen name='Contacts' component={HomeScreen} options={{
+      <Drawer.Screen name='Contacts' component={ContactListing} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18)
         },
