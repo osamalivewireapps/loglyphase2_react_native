@@ -24,7 +24,7 @@ function InventoryView(props) {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ flex: 1 }}>
 
                     <View style={{

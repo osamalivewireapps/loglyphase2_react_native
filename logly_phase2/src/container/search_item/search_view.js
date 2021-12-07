@@ -54,7 +54,7 @@ function SearchView(props) {
             </View>
 
             <View style={{ backgroundColor: '#707070', width: '100%', height: verticalScale(0.5) }} />
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
 
 

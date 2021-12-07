@@ -3,11 +3,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable prettier/prettier */
 import { connect } from 'react-redux';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 
-
+import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -17,7 +17,7 @@ import {
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
   TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts,
-  ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails
+  ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -27,63 +27,83 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { color } from 'react-native-reanimated';
 import { Image, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
+import DataHandler from './src/utils/DataHandler'
 
 
 
 function StackNavigator(props) {
   const Stack = createStackNavigator();
 
-  return (
-    <Loader>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{
-          headerBackVisible: false, headerShown: false,
-          ...horizontalAnimation
+  const [initialRoute, setInitialRoute] = useState('');
 
-        }}>
+  useEffect(() => {
+    DataHandler.getAccountType().then((value) => {
+      if (value)
+        setInitialRoute('HomeDrawer')
+      else
+        setInitialRoute('Splash')
+    }).catch(() => setInitialRoute('Splash'));
+  }, [])
 
-          <Stack.Screen name="Splash" component={SplashScreen} />  
-          <Stack.Screen name="HomeDrawer" component={homeDrawer} />
-          <Stack.Screen name="RegisterPet" component={RegisterPet} />
-          <Stack.Screen name="PetProfile" component={PetProfile} />
-          <Stack.Screen name="PetDetail" component={PetDetail} />
-          <Stack.Screen name="ProductDetail" component={ProductDetail} />
-          <Stack.Screen name="ContactDetails" component={ContactDetails} />
-          <Stack.Screen name='SearchItem' component={SearchItem} />
-          <Stack.Screen name='DashBoard' component={DashBoard} />
-          <Stack.Screen name='ProductListing' component={ProductListing} />
-          <Stack.Screen name='ContactListing' component={ContactListing} />
-          <Stack.Screen name='FilterContacts' component={FilterContacts} />
-          <Stack.Screen name='FilterProducts' component={FilterProducts} />
-          <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
-          <Stack.Screen name="RegisterProduct" component={RegisterProduct} />
-          <Stack.Screen name="Login" component={LoginController} />
-          <Stack.Screen name="Registration" component={RegistrationController} />
-          <Stack.Screen name="VerificationCode" component={VerificationCodeController} />
-          <Stack.Screen name="PasswordReset" component={PasswordResetController} />
-          <Stack.Screen name="ChangePassword" component={ChangePasswordController} />
-          <Stack.Screen name="RegisterAccountType" component={RegistrationAccountTypeController} />
-          <Stack.Screen name="BusAccountPackages" component={BusAccountPackagesController} />
-          <Stack.Screen name="ThanksRegistration" component={ThanksRegistrationController} />
-          <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} />
-          <Stack.Screen name="PolicyScreen" component={PolicyController} />
-          <Stack.Screen name="WelcomeRegistration" component={WelcomeRegistration} />
-          <Stack.Screen name="ServicesSetup" component={ServicesSetup} />
-          <Stack.Screen name='AccountSetup' component={AccountSetup} />
-          <Stack.Screen name='BusProfileSetup' component={BusProfileSetup} />
-          <Stack.Screen name='BusProfile' component={BusProfile} />
-          <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup} />
-          <Stack.Screen name='TeamSetup' component={TeamSetup} />
-          <Stack.Screen name='BusListing' component={BusListing} />
-          <Stack.Screen name='ProductInfo' component={ProductInfo} />
-          <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
-          <Stack.Screen name='AddContacts' component={AddContacts}/>
-          <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
-          <Stack.Screen name='FilterAnimal' component={FilterAnimal} />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </Loader>
-  );
+  if (initialRoute) {
+    return (
+      <Loader>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName={initialRoute}
+            screenOptions={{
+              headerBackVisible: false, headerShown: false,
+              ...horizontalAnimation
+
+            }}>
+
+            <Stack.Screen name="Splash" component={SplashScreen} />
+            <Stack.Screen name="HomeDrawer" component={homeDrawer} />
+            <Stack.Screen name="RegisterPet" component={RegisterPet} />
+            <Stack.Screen name="PetProfile" component={PetProfile} />
+            <Stack.Screen name="PetDetail" component={PetDetail} />
+            <Stack.Screen name="ProductDetail" component={ProductDetail} />
+            <Stack.Screen name="ContactDetails" component={ContactDetails} />
+            <Stack.Screen name='SearchItem' component={SearchItem} />
+            <Stack.Screen name='DashBoard' component={DashBoard} />
+            <Stack.Screen name='PdfReader' component={PdfReader} />
+            <Stack.Screen name='ImageGallery' component={ImageGallery} />
+            <Stack.Screen name='ProductListing' component={ProductListing} />
+            <Stack.Screen name='ContactListing' component={ContactListing} />
+            <Stack.Screen name='FilterContacts' component={FilterContacts} />
+            <Stack.Screen name='FilterProducts' component={FilterProducts} />
+            <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
+            <Stack.Screen name="RegisterProduct" component={RegisterProduct} />
+            <Stack.Screen name="Login" component={LoginController} />
+            <Stack.Screen name="Registration" component={RegistrationController} />
+            <Stack.Screen name="VerificationCode" component={VerificationCodeController} />
+            <Stack.Screen name="PasswordReset" component={PasswordResetController} />
+            <Stack.Screen name="ChangePassword" component={ChangePasswordController} />
+            <Stack.Screen name="RegisterAccountType" component={RegistrationAccountTypeController} />
+            <Stack.Screen name="BusAccountPackages" component={BusAccountPackagesController} />
+            <Stack.Screen name="ThanksRegistration" component={ThanksRegistrationController} />
+            <Stack.Screen name="BusinessOwner" component={BusinessOwnerController} />
+            <Stack.Screen name="PolicyScreen" component={PolicyController} />
+            <Stack.Screen name="WelcomeRegistration" component={WelcomeRegistration} />
+            <Stack.Screen name="ServicesSetup" component={ServicesSetup} />
+            <Stack.Screen name='AccountSetup' component={AccountSetup} />
+            <Stack.Screen name='BusProfileSetup' component={BusProfileSetup} />
+            <Stack.Screen name='BusProfile' component={BusProfile} />
+            <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup} />
+            <Stack.Screen name='TeamSetup' component={TeamSetup} />
+            <Stack.Screen name='BusListing' component={BusListing} />
+            <Stack.Screen name='ProductInfo' component={ProductInfo} />
+            <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
+            <Stack.Screen name='AddContacts' component={AddContacts} />
+            <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
+            <Stack.Screen name='FilterAnimal' component={FilterAnimal} />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </Loader>
+    );
+  } else {
+    return <View />
+  }
 }
 
 function homeDrawer() {
@@ -216,9 +236,9 @@ function homeDrawer() {
 
           />),
       }} />
-      
-     
-     
+
+
+
 
       <Drawer.Screen name='Setup Wizard' component={HomeScreen} options={{
         drawerLabelStyle: {
@@ -230,7 +250,7 @@ function homeDrawer() {
             style={{
               height: verticalScale(30),
               width: moderateScale(30),
-              marginStart:moderateScale(-10)
+              marginStart: moderateScale(-10)
             }}
 
           />),
@@ -249,7 +269,7 @@ function homeDrawer() {
             }}
           />),
       }} />
-      
+
 
     </Drawer.Navigator>
   );

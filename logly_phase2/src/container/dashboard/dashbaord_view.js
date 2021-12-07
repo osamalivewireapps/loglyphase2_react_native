@@ -81,7 +81,7 @@ function DashBoardView(props) {
                     <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                 </View>
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
 
 

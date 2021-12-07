@@ -17,7 +17,6 @@ import { VENDOR_ID } from '../../../constants';
 
 function ContactDetailView(props) {
 
-    
     const isTablet = DeviceInfo.isTablet();
     
     const [contactData, setContactData]= useState({});
@@ -153,7 +152,7 @@ function ContactDetailView(props) {
                             <TouchableOpacity
                                 flex={moderateScale(0.1)}
                                 onPress={() => {
-                                    props.navigation.navigate('AddContacts',{contactData:contactData})
+                                    props.navigation.navigate('AddContacts', { contactData: contactData, updateContacts:props.route.params.updateContacts})
                                     setIsEditShow(false)
                            
                                 }}>
@@ -197,7 +196,7 @@ function ContactDetailView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ flex: 1, padding: moderateScale(25) }}>
 
                     <View style={{
@@ -264,7 +263,7 @@ function ContactDetailView(props) {
                                 paddingStart: moderateScale(15),
                                 fontFamily: Fonts.type.base
                             }}>
-                            {contactData.phone > 0 ? contactData.phone[0] : ''}
+                            {contactData.phone}
 
                         </AutoSizeText>
                     </View>

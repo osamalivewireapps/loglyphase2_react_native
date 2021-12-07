@@ -28,18 +28,23 @@ class ContactListing extends Component {
         this.filterContacts(e)
     }
 
-    getContacts() {
-        this.props.getContacts('').then((response) => {
-            this.setState({ contactList: response.payload });
+    getContacts(e) {
+        this.props.getContacts('')
+            .then((response) => {
+                if (this.state.filterData.contactType.length===0)
+                    this.setState({ contactList: response.payload });
+                else {
+                    this.filterContacts(this.state.filterData)
+                }
 
-        });
+            });
     }
 
     filterContacts(e) {
 
         console.log("filter--->", e);
 
-        let tmp = !e.contactType ? this.props.contactListing:this.props.contactListing
+        let tmp = !e.contactType ? this.props.contactListing : this.props.contactListing
             .filter((value, index) => {
                 if (e.contactType === 'Vendors') {
                     return ((value.category === VENDOR_ID))
@@ -57,13 +62,13 @@ class ContactListing extends Component {
             listContacts={this.state.contactList}
             applyFilter={(e) => this.applyFilter(e)}
             filterObj={this.state.filterData}
+            updateContacts={(e) => this.getContacts(e)}
         />);
     }
 
 }
 
 const mapStateToProps = ({ contacts }) => {
-    console.log("mapStateToProps-->",contacts)
     return {
         contactListing: contacts.contactsListing,
     };

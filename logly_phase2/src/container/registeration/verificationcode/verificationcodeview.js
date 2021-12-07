@@ -37,7 +37,7 @@ function VerificationCodeView(props) {
                     <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : 0 }}>Back</Text>
                 </TouchableOpacity>
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{
                     marginStart: moderateScale(30),
                     marginEnd: moderateScale(30), alignItems: 'center',

@@ -164,7 +164,7 @@ function BusProfileView(props) {
                 keyboardVerticalOffset={verticalOffSet}
                 behavior={Platform.OS === "ios" ? "padding" : "height"}
             >
-                <ScrollView keyboardShouldPersistTaps={true}>
+                <ScrollView keyboardShouldPersistTaps='handled'>
                     <View style={{
                         padding: moderateScale(30),
                         alignItems: 'center',

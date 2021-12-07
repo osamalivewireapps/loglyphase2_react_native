@@ -11,39 +11,40 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
-import RBSheet from "react-native-raw-bottom-sheet";
+import RBSheet from 'react-native-raw-bottom-sheet';
 import { TextInput } from 'react-native-gesture-handler';
 import Util from '../../../utils';
-import moment from 'moment';
-import AppLoader from '../../../components/AppLoader';
-import { VENDOR_ID } from '../../../constants';
-
+import _ from 'lodash';
+import { VENDOR_ID, VET_ID } from '../../../constants';
+import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 
 function AddContactsView(props) {
 
 
-    const CONTACTS_TYPES = ["Vendor", 'Veterinary'];
+    const CONTACTS_TYPES = ['Vendor', 'Veterinary'];
 
-    const { validateState,arrStates, arrCity, userState, userStateLocation, chooseState, userCityLocation,
-        userCity, chooseCity, validateCity } = props;
+    const { validateState, arrStates, arrCity, userState, userStateLocation, chooseState, userCityLocation,
+        userCity, chooseCity, validateCity, addContact, capturePic, imgUri } = props;
 
-    const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
+    const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
 
-    const [contactType, setContactType] = useState(props.route.params?props.route.params?.contactData.category===VENDOR_ID?0:1:-1);
+    const [contactType, setContactType] = useState(props.route.params.contactData ? props.route.params.contactData?.category === VENDOR_ID ? 0 : 1 : -1);
 
     const [validateName, setValidateName] = useState(true);
-    const [valueName, setValueName] = useState(props.route.params?.contactData.name)
+    const [valueName, setValueName] = useState(props.route.params.contactData?.name);
 
     const [validateEmail, setValidateEmail] = useState(true);
-    const [valueEmail, setValueEmail] = useState(props.route.params?.contactData.email[0])
+    const [valueEmail, setValueEmail] = useState(props.route.params.contactData?.email[0]);
 
     const [validatePhone, setValidatePhone] = useState(true);
-    const [valuePhone, setValuePhone] = useState(props.route.params?.contactData.phone[0])
+    const [valuePhone, setValuePhone] = useState(props.route.params.contactData?.phone[0]);
 
-    
-    const [valueDesc, setDesc] = useState(props.route.params?.contactData.address);
+
+    const [valueDesc, setDesc] = useState(props.route.params.contactData?.address);
     const [validateDesc, setValidateDesc] = useState(true);
- 
+
+    const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
+
     const sheetRef = useRef(null);
 
     //STATES...
@@ -52,7 +53,7 @@ function AddContactsView(props) {
     const [filterArray, setFilterArr] = useState([]);
 
     //CITY...
-    const inputCity = useRef(null); 
+    const inputCity = useRef(null);
     const [isCityVisible, setIsCityVisible] = useState(false);
     const [filterCityArray, setFilterCityArr] = useState([]);
 
@@ -61,25 +62,27 @@ function AddContactsView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
+    console.log("imageuri---->", imgUri)
+
     useEffect(() => {
 
 
         if (isVisible && arrStates) {
 
             setFilterArr(arrStates.filter((e) => {
-                return (e.name.toLowerCase().startsWith(userState.toLowerCase()) || e.name.toLowerCase().includes(userState.toLowerCase()))
-            }))
+                return (e.name.toLowerCase().startsWith(userState.toLowerCase()) || e.name.toLowerCase().includes(userState.toLowerCase()));
+            }));
         }
-    }, [userStateLocation])
+    }, [userStateLocation]);
 
     useEffect(() => {
         if (isCityVisible && arrCity) {
 
             setFilterCityArr(arrCity.filter((e) => {
-                return (e.name.toLowerCase().startsWith(userCity.toLowerCase()) || e.name.toLowerCase().includes(userCity.toLowerCase()))
-            }))
+                return (e.name.toLowerCase().startsWith(userCity.toLowerCase()) || e.name.toLowerCase().includes(userCity.toLowerCase()));
+            }));
         }
-    }, [userCityLocation])
+    }, [userCityLocation]);
 
 
     return (
@@ -91,19 +94,19 @@ function AddContactsView(props) {
                 shadowColor: 'black',
                 borderBottomLeftRadius: moderateScale(30),
                 borderBottomRightRadius: moderateScale(30),
-                height: verticalScale(140)
+                height: verticalScale(140),
             }}>
                 <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => { props.navigation.pop() }}>
-                        <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    <TouchableOpacity onPress={() => { props.navigation.pop(); }}>
+                        <Image source={Icons.icon_whitebg_back} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
                         <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
-                            <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
+                            <Image source={Icons.icon_search_home} resizeMode="contain" style={{ height: '100%', width: '100%' }} />
                         </TouchableOpacity>
-                        <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        <Image source={Icons.icon_notification} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        <Image source={Icons.icon_qrcode} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </View>
 
                 </View>
@@ -112,7 +115,7 @@ function AddContactsView(props) {
                     flexDirection: 'row', flex: 1,
                     alignItems: 'flex-end',
                     marginTop: verticalScale(20),
-                    marginBottom: verticalScale(15)
+                    marginBottom: verticalScale(15),
                 }}>
                     <AutoSizeText
                         numberOfLines={2}
@@ -123,19 +126,19 @@ function AddContactsView(props) {
                             color: Colors.appBgColor,
                             flex: 0.8,
                             paddingStart: moderateScale(25),
-                            fontFamily: Fonts.type.bold
+                            fontFamily: Fonts.type.bold,
                         }}>
                         Add Contacts
 
                     </AutoSizeText>
-                    <Image source={Icons.icon_header_add_contacts} resizeMode='contain'
+                    <Image source={Icons.icon_header_add_contacts} resizeMode="contain"
                         style={{ flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(40) }} />
                 </View>
 
             </View>
             <ScrollView
                 ref={scroll}
-                keyboardShouldPersistTaps={true}>
+                keyboardShouldPersistTaps='handled'>
                 <View style={{ flex: 1 }}>
 
                     <View style={{
@@ -157,7 +160,7 @@ function AddContactsView(props) {
                             <View style={{
                                 flexDirection: 'row', padding: 0,
                                 alignItems: 'center',
-                                flex: 1
+                                flex: 1,
                             }}>
 
                                 <AutoSizeText
@@ -168,12 +171,12 @@ function AddContactsView(props) {
                                     style={{
                                         color: '#464646',
                                         fontFamily: Fonts.type.base,
-                                        width: '97%'
+                                        width: '97%',
                                     }}>
                                     {contactType > -1 ? CONTACTS_TYPES[contactType] : 'Select Category'}
 
                                 </AutoSizeText>
-                                <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
+                                <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                             </View>
                         </TouchableOpacity>
@@ -184,8 +187,8 @@ function AddContactsView(props) {
                             openDuration={250}
                             customStyles={{
                                 container: {
-                                    borderRadius: moderateScale(30)
-                                }
+                                    borderRadius: moderateScale(30),
+                                },
                             }}
                             onClose={() => setCloseBottonSheet(false)}
                         >
@@ -194,25 +197,42 @@ function AddContactsView(props) {
                         </RBSheet>
                         {isBottonSheetVisible ? sheetRef.current.open() : null}
 
-                        <View style={{
-                            backgroundColor: '#F4F4F4', alignSelf: 'center',
-                            height: moderateScale(90),
-                            width: moderateScale(90),
-                            borderRadius: moderateScale(100),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginTop: verticalScale(20),
-                            marginBottom: verticalScale(10)
-                        }}>
-
-                            <Image source={Icons.icon_awesome_plus} resizeMode='contain'
+                        <TouchableOpacity
+                            style={{
+                                backgroundColor: '#F4F4F4', alignSelf: 'center',
+                                height: moderateScale(90),
+                                width: moderateScale(90),
+                                borderRadius: moderateScale(100),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: verticalScale(20),
+                                marginBottom: verticalScale(10),
+                            }}
+                            onPress={() => {
+                                setDialogVisibleStatus(true)
+                            }}
+                        >
+                            <Image
+                            source={{uri:imgUri}}
                                 style={{
-                                    height: verticalScale(10),
-                                    width: verticalScale(10)
-                                }} />
+                                    height: moderateScale(90),
+                                    width: moderateScale(90),
+                                    borderRadius: moderateScale(100),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    position:'absolute'
+                                }}/>
 
-                        </View>
+                                <Image
+                                    source={Icons.icon_awesome_plus}
 
+                                    resizeMode="contain"
+                                    style={{
+                                        height: verticalScale(10),
+                                        width: verticalScale(10),
+                                    }} />
+
+                        </TouchableOpacity>
                         <AutoSizeText
                             numberOfLines={2}
                             minFontSize={moderateScale(14)}
@@ -223,7 +243,7 @@ function AddContactsView(props) {
                                 fontFamily: Fonts.type.medium,
                                 width: '100%',
                                 textAlign: 'center',
-                                marginBottom: verticalScale(10)
+                                marginBottom: verticalScale(10),
                             }}>
                             Add Photo
 
@@ -243,14 +263,14 @@ function AddContactsView(props) {
                                 flex: 1,
                                 textAlign: 'left',
                             }}
-                                underlineColorAndroid='transparent'
+                                underlineColorAndroid="transparent"
                                 require={true}
                                 numberOfLines={1}
-                                autoCapitalize='none'
+                                autoCapitalize="none"
                                 keyboardType="default"
                                 onChangeText={(e) => {
                                     setValidateName(Util.isLengthGreater(e));
-                                    setValueName(e)
+                                    setValueName(e);
                                 }
                                 }
                                 value={valueName} />
@@ -271,20 +291,20 @@ function AddContactsView(props) {
                                 flex: 1,
                                 textAlign: 'left',
                             }}
-                                underlineColorAndroid='transparent'
+                                underlineColorAndroid="transparent"
                                 require={true}
                                 numberOfLines={1}
-                                autoCapitalize='none'
+                                autoCapitalize="none"
                                 keyboardType="email-address"
                                 onChangeText={(e) => {
                                     setValidateEmail(Util.isEmailValid(e));
-                                    setValueEmail(e)
+                                    setValueEmail(e);
                                 }
                                 }
                                 value={valueEmail} />
                         </View>
 
-                         <View style={{
+                        <View style={{
                             ...styles.boxcontainer,
                             marginTop: verticalScale(10),
                             flexDirection: 'row', alignItems: 'center',
@@ -299,14 +319,14 @@ function AddContactsView(props) {
                                 flex: 1,
                                 textAlign: 'left',
                             }}
-                                underlineColorAndroid='transparent'
+                                underlineColorAndroid="transparent"
                                 require={true}
                                 numberOfLines={1}
-                                autoCapitalize='none'
+                                autoCapitalize="none"
                                 maxLength={12}
                                 keyboardType="phone-pad"
                                 onChangeText={(e) => {
-                                    setPhoneNo(e)
+                                    setPhoneNo(e);
                                 }
                                 }
                                 value={valuePhone} />
@@ -320,27 +340,26 @@ function AddContactsView(props) {
                             shadowOpacity: validateState ? 0.25 : 1,
                             marginTop: verticalScale(15), flexDirection: 'row',
                             padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}>
 
                             <TextInput placeholder="Select State"
                                 ref={inputEl}
-                                autoCapitalize='none'
+                                autoCapitalize="none"
 
                                 onPressIn={() => {
 
                                     inputEl.current.focus();
-                                    if (inputCity.current.isFocused())
-                                        return
+                                    if (inputCity.current.isFocused()) { return; }
 
                                     setIsVisible(true);
-                                    setIsCityVisible(false)
-                                    setFilterArr(arrStates)
-                                    scroll.current.scrollTo({ x: 0, y: 150, animated: true })
+                                    setIsCityVisible(false);
+                                    setFilterArr(arrStates);
+                                    scroll.current.scrollTo({ x: 0, y: 150, animated: true });
                                 }}
                                 onChangeText={(e) => {
                                     userStateLocation({ name: e, stateId: -1 });
-                                    setIsVisible(isVisible)
+                                    setIsVisible(isVisible);
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
@@ -372,19 +391,19 @@ function AddContactsView(props) {
                             height: moderateScale(150),
                             shadowRadius: 4,
                             borderRadius: moderateScale(10),
-                            zIndex: 1
+                            zIndex: 1,
 
                         }}>
 
                             <FlatList
-                                keyboardShouldPersistTaps='handled'
+                                keyboardShouldPersistTaps="handled"
                                 data={filterArray}
                                 renderItem={(item) => {
                                     return (
                                         <TouchableOpacity onPress={() => {
-                                            Keyboard.dismiss()
+                                            Keyboard.dismiss();
                                             chooseState({ name: item.item.name, stateId: item.item.id });
-                                            setIsVisible(false)
+                                            setIsVisible(false);
 
                                         }}>
                                             <View >
@@ -393,11 +412,11 @@ function AddContactsView(props) {
                                                     borderWidth: 0, width: '100%', padding: moderateScale(10),
                                                     borderRadius: moderateScale(10), marginTop: 0,
                                                     backgroundColor: 'white',
-                                                    color: 'black', fontSize: moderateScale(14)
+                                                    color: 'black', fontSize: moderateScale(14),
 
                                                 }}>{item.item.name}</Text>
                                             </View>
-                                        </TouchableOpacity>)
+                                        </TouchableOpacity>);
                                 }}
                                 keyExtractor={item => item.Country}
                             />
@@ -410,45 +429,45 @@ function AddContactsView(props) {
                             shadowOpacity: validateCity ? 0.25 : 1,
                             marginTop: verticalScale(15), flexDirection: 'row',
                             padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
-                            alignItems: 'center'
+                            alignItems: 'center',
                         }}>
 
                             <TextInput placeholder="Select City"
                                 ref={inputCity}
                                 onPressIn={() => {
-                                    setIsVisible(false)
+                                    setIsVisible(false);
                                     if (userState.length !== 0) {
-                                        setIsCityVisible(true)
-                                        setFilterCityArr(arrCity)
-                                        scroll.current.scrollTo({ x: 0, y: 200, animated: true })
+                                        setIsCityVisible(true);
+                                        setFilterCityArr(arrCity);
+                                        scroll.current.scrollTo({ x: 0, y: 200, animated: true });
                                     } else {
-                                        alert("Please select state first..")
-                                        setIsCityVisible(false)
+                                        alert('Please select state first..');
+                                        setIsCityVisible(false);
                                     }
                                 }
                                 }
                                 onChangeText={(e) => {
-                                    setIsVisible(false)
+                                    setIsVisible(false);
                                     userCityLocation({ name: e, cityId: -1 });
-                                    setIsCityVisible(true)
-                                    scroll.current.scrollTo({ x: 0, y: 200, animated: true })
+                                    setIsCityVisible(true);
+                                    scroll.current.scrollTo({ x: 0, y: 200, animated: true });
 
                                 }}
                                 style={{
                                     ...styles.styleTextInput,
                                     flex: 8,
-                                    marginEnd: moderateScale(10)
+                                    marginEnd: moderateScale(10),
 
                                 }}
                                 keyboardType="default"
-                                autoCapitalize='none'
+                                autoCapitalize="none"
                                 value={userCity}
 
                             />
 
                             <TouchableOpacity
                                 onPress={() => {
-                 
+
                                 }}
                             >
                                 <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
@@ -462,18 +481,18 @@ function AddContactsView(props) {
                             ...styles.boxcontainer,
                             height: moderateScale(150),
                             shadowRadius: 4,
-                            borderRadius: moderateScale(10)
+                            borderRadius: moderateScale(10),
 
                         }}>
                             <FlatList
-                                keyboardShouldPersistTaps='handled'
+                                keyboardShouldPersistTaps="handled"
                                 data={filterCityArray}
                                 renderItem={(item) => {
                                     return (
                                         <TouchableOpacity onPress={() => {
                                             Keyboard.dismiss();
                                             chooseCity({ name: item.item.name, cityId: item.item.id });
-                                            setIsCityVisible(false)
+                                            setIsCityVisible(false);
 
                                         }}>
                                             <View >
@@ -483,11 +502,11 @@ function AddContactsView(props) {
                                                     padding: moderateScale(10),
                                                     borderRadius: moderateScale(10), marginTop: 0,
                                                     backgroundColor: 'white',
-                                                    color: 'black', fontSize: moderateScale(14)
+                                                    color: 'black', fontSize: moderateScale(14),
 
                                                 }}>{item.item.name}</Text>
                                             </View>
-                                        </TouchableOpacity>)
+                                        </TouchableOpacity>);
                                 }}
                                 keyExtractor={item => item.Country}
                             />
@@ -513,16 +532,16 @@ function AddContactsView(props) {
                                 textAlign: 'left',
                                 height: verticalScale(100),
                             }}
-                                underlineColorAndroid='transparent'
+                                underlineColorAndroid="transparent"
                                 require={true}
                                 multiline={true}
                                 numberOfLines={50}
                                 maxLength={75}
-                                autoCapitalize='none'
+                                autoCapitalize="none"
                                 keyboardType="default"
                                 onChangeText={(e) => {
-                                    setValidateDesc(Util.isLengthGreater(e))
-                                    setDesc(e)
+                                    setValidateDesc(Util.isLengthGreater(e));
+                                    setDesc(e);
                                 }
                                 }
                                 value={valueDesc} />
@@ -532,8 +551,26 @@ function AddContactsView(props) {
 
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
-                            marginTop: verticalScale(25)
-                        }} onPress={() => { }}>
+                            marginTop: verticalScale(25),
+                        }} onPress={() => {
+                            if (contactType === -1) {
+                                Util.topAlertError("Please select category")
+                            } else {
+                                addContact(
+                                    {
+                                        address: valueDesc,
+                                        category: contactType === 0 ? VENDOR_ID : VET_ID,
+                                        city: userCity,
+                                        state: userState,
+                                        name: valueName,
+                                        email: [valueEmail],
+                                        phone: [valuePhone]
+
+                                    }
+                                )
+                            }
+
+                        }}>
                             <Text style={{
                                 ...styles.generalTxt,
                                 fontSize: moderateScale(20), textAlign: 'center',
@@ -545,17 +582,84 @@ function AddContactsView(props) {
 
                     </View>
 
+
+                    <Dialog
+                        visible={dialogVisibleStatus}
+                        width={Dimensions.get("screen").width - 100}
+                        height={Dimensions.get("screen").height / 6}
+                        onTouchOutside={() => {
+                            setDialogVisibleStatus(false);
+                        }}
+                        dialogTitle={<DialogTitle title="Profile Picture" />}
+                        dialogAnimation={new ScaleAnimation({
+                            toValue: 0,
+                            useNativeDriver: true,
+                        })}
+                    >
+                        <DialogContent
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                                alignItems: 'flex-end',
+                            }}>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    flex: 5,
+                                    height: 50,
+                                    borderWidth: 2,
+                                    borderColor: 'black',
+                                    borderRadius: 10,
+                                    marginRight: 10,
+                                    justifyContent: 'center',
+                                }}>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                    }}
+                                    onPress={() => {
+                                        capturePic('gallery');
+                                        setDialogVisibleStatus(false);
+                                    }}>
+                                    Gallery
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    flex: 5,
+                                    height: 50,
+                                    borderWidth: 2,
+                                    borderColor: 'black',
+                                    borderRadius: 10,
+                                    marginRight: 10,
+                                    justifyContent: 'center',
+                                }}>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                    }}
+                                    onPress={() => {
+                                        capturePic('camera');
+                                        setDialogVisibleStatus(false);
+                                    }}>
+                                    Camera
+                                </Text>
+                            </View>
+                        </DialogContent>
+                    </Dialog>
                 </View>
-            </ScrollView>
-        </View>)
+            </ScrollView >
+        </View >);
 
     function showContactTypes() {
         return (
-            <ScrollView keyboardShouldPersistTaps='handled'>
+            <ScrollView keyboardShouldPersistTaps="handled">
                 <View>
                     <View style={{
                         alignItems: 'center', justifyContent: 'center',
-                        height: verticalScale(50)
+                        height: verticalScale(50),
                     }}>
 
                         <Text style={{ ...styles.generalTxt, color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10) }}>Select Pet Category</Text>
@@ -564,7 +668,7 @@ function AddContactsView(props) {
                     <FlatList
                         data={CONTACTS_TYPES}
                         contentContainerStyle={{
-                            padding: moderateScale(30)
+                            padding: moderateScale(30),
                         }}
                         renderItem={({ item, index }) => {
                             return (
@@ -580,12 +684,12 @@ function AddContactsView(props) {
                                     >
                                         <Image
                                             source={index === contactType ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
-                                            resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
+                                            resizeMode="contain" style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
                                         />
                                     </View>
                                     <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item}</Text>
                                 </TouchableOpacity>
-                            )
+                            );
                         }}
                         keyExtractor={(item) => item.id}
 
@@ -596,25 +700,29 @@ function AddContactsView(props) {
     }
 
     function setPhoneNo(text) {
-        let tmp = "";
+        let tmp = '';
 
-        if (text.length > valuePhone.length) {
-            if (text.length > 3 && text.length <= 4 && !text.includes("-")) {
-                tmp = text.substr(0, 3) + "-" + text.substr(3, text.length);
+        console.log("text--->", text.length);
+
+        if (valuePhone && text.length > valuePhone.length) {
+            if (text.length > 3 && text.length <= 4 && !text.includes('-')) {
+                tmp = text.substr(0, 3) + '-' + text.substr(3, text.length);
             }
             else if (text.length > 7 && text.length <= 8) {
-                tmp = text.substr(0, 7) + "-" + text.substr(7, text.length);
+                tmp = text.substr(0, 7) + '-' + text.substr(7, text.length);
             }
             else {
-                tmp = text
+                tmp = text;
             }
         } else {
             tmp = text;
         }
 
         setValuePhone(tmp);
-        setValidatePhone(Util.isValidPhone(tmp))
+        setValidatePhone(Util.isValidPhone(tmp));
     }
+
+
 }
 
 const styles = StyleSheet.create({
@@ -632,12 +740,12 @@ const styles = StyleSheet.create({
         height: moderateScale(46),
         elevation: verticalScale(5),
         borderRadius: moderateScale(10),
-        width: '100%'
+        width: '100%',
     },
     generalTxt: {
         color: 'white',
         fontSize: moderateScale(16),
-        fontFamily: Fonts.type.base
+        fontFamily: Fonts.type.base,
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
@@ -648,8 +756,8 @@ const styles = StyleSheet.create({
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor,
-        borderRadius: moderateScale(30)
-    }
+        borderRadius: moderateScale(30),
+    },
 });
 
 export default AddContactsView;

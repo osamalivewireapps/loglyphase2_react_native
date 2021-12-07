@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react';
-import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, FlatList } from 'react-native';
+import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, FlatList, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -21,6 +21,9 @@ function PetDetailView(props) {
 
     const pagerRef = useRef(null);
     const [initialPg, setInitialPg] = useState(0);
+    const [isEditShow, setIsEditShow] = useState(false);
+    const { updateAnimal } = props.route.params;
+    const { removeAnimal} = props;
 
     const isTablet = DeviceInfo.isTablet();
     const TABS = ["About", "Gallery", "Health", "Family\nTree"]
@@ -113,20 +116,79 @@ function PetDetailView(props) {
                         mode={ResizeTextMode.overflow_replacement}
                         style={{
                             color: 'white',
-                            flex: 0.8,
+                            flex: 1,
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        {props.animalData.data.name}
+                        {props.animalData.data?.name}
 
                     </AutoSizeText>
-                    <Image source={Icons.icon_edit_petprofile} resizeMode='contain'
-                        style={{ flex: 0.2, height: moderateScale(25) }} />
+                    {isEditShow ?
+                        <View style={{
+                            height: verticalScale(70),
+                            flex: moderateScale(0.15),
+                            marginTop: 0,
+                            marginBottom: 0,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <ImageBackground
+                                source={Images.img_popup_services}
+                                style={{
+                                    position: 'absolute', height: '100%',
+                                    width: '100%'
+                                }} />
+                            <TouchableOpacity
+                                flex={moderateScale(0.1)}
+                                onPress={() => {
+                                    props.navigation.navigate('RegisterPet', { animalData: props.animalData, updateAnimal: updateAnimal })
+                                    setIsEditShow(false)
+
+                                }}>
+                                <Image source={Icons.icon_services_edit}
+                                    resizeMode='contain' style={{
+                                        marginEnd: moderateScale(2), 
+                                        height: verticalScale(15), 
+                                        width: moderateScale(15)
+                                    }}
+
+                                />
+                            </TouchableOpacity>
+                            <View style={{
+                                width: '50%',
+                                height: verticalScale(0.5),
+                                backgroundColor: '#585858',
+                                marginEnd: moderateScale(5),
+                                marginTop: verticalScale(8),
+                                marginBottom: verticalScale(8)
+                            }} />
+                            <TouchableOpacity
+                                flex={moderateScale(0.1)}
+                                onPress={() => {
+                                    removeAnimal();
+                                    setIsEditShow(false)
+                                }}>
+                                <Image source={Icons.icon_services_delete}
+                                    resizeMode='contain'
+                                    style={{
+                                        marginEnd: moderateScale(3),
+                                        height: verticalScale(15),
+                                        width: moderateScale(15)
+                                    }} />
+                            </TouchableOpacity>
+                        </View> : <View style={{ flex: 0.1 }} />}
+                    <TouchableOpacity
+                        style={{ flex: 0.1, height: moderateScale(25) }}
+                        onPress={() => isEditShow ? setIsEditShow(false) : setIsEditShow(true)}>
+                        <Image source={Icons.icon_kebab} resizeMode='contain'
+                            style={{ height: moderateScale(25) }} />
+
+                    </TouchableOpacity>
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
-                <View style={{ flex: 1 }}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
+                <View style={{ flex: 1}}>
 
                     <FlatList
                         data={TABS}

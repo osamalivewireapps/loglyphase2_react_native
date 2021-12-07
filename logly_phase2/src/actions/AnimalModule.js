@@ -12,10 +12,10 @@ import { reject } from 'lodash';
 
 const timeOut = 500;
 
-export const getAnimals = (activationType = 'Active') => async(dispatch) => {
+export const getAnimals = (activationType = 'Active') => async (dispatch) => {
 
-     
-    let config = { headers: { 'auth': await DataHandler.getAuth()} };
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
     console.log("config-->", config)
 
@@ -50,10 +50,10 @@ export const getAnimals = (activationType = 'Active') => async(dispatch) => {
     });
 }
 
-export async function getAnimalCategories(type='animal'){
+export async function getAnimalCategories(type = 'animal') {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
-    return new Promise((resolve,reject) => {
+    return new Promise((resolve, reject) => {
         axios.get(`${baseUrl}/form/byBreeder?type=${type}`, config)
             .then(response => {
 
@@ -84,7 +84,7 @@ export async function getAnimalCategories(type='animal'){
 export const getAnimal = (id) => async (dispatch) => {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
-    
+
     dispatch(EnableLoader());
     axios
         .get(`${baseUrl}/animal/${id}`, config)
@@ -112,16 +112,54 @@ export const getAnimal = (id) => async (dispatch) => {
             }, timeOut);
         });
 
-    
+
+}
+
+export const deleteAnimal = (id) => async (dispatch) => {
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    dispatch(EnableLoader());
+    return new Promise((resolve, reject) => {
+        axios
+            .delete(`${baseUrl}/animal/${id}`, config)
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            })
+    });
+
+
 }
 
 
-export async function getFormCategory(catId){
+export async function getFormCategory(catId) {
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    let url = catId.startsWith('type') ? `http://147.182.194.105/api/form/byBreeder?${catId}` : `${baseUrl}/form/category/${catId}`;
+    console.log("token-------->",config);
     
-    return new Promise((resolve,reject) => {
+    let url = catId.startsWith('type') ? `http://147.182.194.105/api/form/byBreeder?${catId}` : `${baseUrl}/form/category/${catId}`;
+
+    return new Promise((resolve, reject) => {
         axios.get(url, config)
             .then(response => {
 
@@ -131,7 +169,7 @@ export async function getFormCategory(catId){
                     setTimeout(() => {
                         resolve({ formCategory: response.data.data });
                     }, timeOut);
-                    
+
                 }
                 else {
                     setTimeout(() => {
@@ -139,7 +177,7 @@ export async function getFormCategory(catId){
                         utils.topAlertError(response.data.message);
                     }, timeOut);
                 }
-                
+
             })
             .catch(error => {
 
@@ -152,3 +190,194 @@ export async function getFormCategory(catId){
     });
 
 }
+
+export const addAnimal = (dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', config);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/animal`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    
+                    resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+
+export const editAnimal = (id, dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .patch(`${baseUrl}/animal/${id}`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-edit-product-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const UploadAnimalImages = (dataToSubmit) => async (dispatch) => {
+
+    console.log("upload images--->", dataToSubmit)
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/animal/gallery/upload`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('upload images--->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const DeleteImage = (dataToSubmit) => async (dispatch) => {
+
+    console.log("delete images--->", dataToSubmit)
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .put(`${baseUrl}/animal/gallery/delete`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('upload images--->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const uploadHealth = (dataToSubmit) => async (dispatch) => {
+
+    console.log("upload pdf--->", dataToSubmit)
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/animal/healthrecord/upload`, dataToSubmit, config)
+            .then(response => {
+
+
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    utils.topAlertError(response.data.message);
+                    resolve({ responseData: response});
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};

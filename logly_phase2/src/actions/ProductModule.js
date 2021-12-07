@@ -85,3 +85,118 @@ export const getProductsDetails = (id) => async (dispatch) => {
             });
     });
 }
+
+export const addProducts = (dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/product`, dataToSubmit, config)
+            .then(response => {
+
+                
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    console.log('response-->', response.data.data);
+                    resolve({data:response.data.data});
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+
+export const editProducts = (id,dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .put(`${baseUrl}/product/${id}`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-edit-product-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const UploadProductImages = (dataToSubmit) => async (dispatch) => {
+
+    console.log("upload images--->",dataToSubmit)
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/product/gallery/upload`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('upload images--->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+

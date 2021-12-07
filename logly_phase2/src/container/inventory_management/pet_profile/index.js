@@ -19,8 +19,7 @@ class PetProfile extends Component {
     }
 
     componentDidMount() {
-        this.getAnimalList(this.state.filterData, false);
-
+        this.getAnimalList(this.state.filterData, true);
     }
 
     applyFilter(e) {
@@ -39,7 +38,12 @@ class PetProfile extends Component {
             listAnimal={this.state.animalList}
             applyFilter={(e) => this.applyFilter(e)}
             filterObj={this.state.filterData}
+            updateAnimal={() => this.updateAnimal()}
         />);
+    }
+
+    updateAnimal() {
+        this.getAnimalList(this.state.filterData,true);
     }
 
     getAnimalList(filterObject, isFilter) {
@@ -57,7 +61,7 @@ class PetProfile extends Component {
 
         let tmp = this.props.animalData
             .filter((value, index) => {
-                return ((value.status.toLowerCase() === e.status.toLowerCase()) && (e.animalId?value.categoryId._id === e.animalId:true))
+                return ((value.status.toLowerCase() === e.status.toLowerCase()) && (e.animalId ? value.categoryId._id === e.animalId : true))
             });
 
         this.setState({ animalList: tmp, filterData: e })

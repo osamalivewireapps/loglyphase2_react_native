@@ -77,8 +77,7 @@ class LoginController extends Component {
                     DataHandler.saveAuth(response.loginResponse.token);
                     DataHandler.saveUserObject(JSON.stringify(response.loginResponse.user));
                     DataHandler.saveAccountType(response.accountType);
-                    //this.props.navigation.navigate("WelcomeRegistration", { name: response.loginResponse.user.name});
-                    this.props.navigation.navigate("HomeDrawer",);
+                    this.props.navigation.navigate("WelcomeRegistration", { name: response.loginResponse.user.name});
                 }
                 else if (response.status === 400) {
                     if (!response.message.startsWith("Email") && !response.message.startsWith("Incorrect")) {

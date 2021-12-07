@@ -24,7 +24,7 @@ function ContactListingView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listContacts, applyFilter, filterObj } = props;
+    const { listContacts, applyFilter, filterObj, updateContacts } = props;
 
     const listBorderColors = ['#FE8B19', '#FC5D3F', '#F044F7', '#B7A4F9'];
     const [isEditShow, setEditShow] = useState(-1);
@@ -57,7 +57,9 @@ function ContactListingView(props) {
                 height: verticalScale(140)
             }}>
                 <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => { props.navigation.pop() }}>
+                    <TouchableOpacity onPress={() => { 
+                        props.navigation.goBack();
+                     }}>
                         <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
@@ -96,7 +98,7 @@ function ContactListingView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ flex: 1, height: Dimensions.get('window').height }}>
 
                     <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
@@ -175,7 +177,7 @@ function ContactListingView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('AddContacts')
+                    props.navigation.navigate('AddContacts', { updateContacts: updateContacts})
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{
@@ -204,7 +206,7 @@ function ContactListingView(props) {
         return (
             <TouchableOpacity
 
-                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id})}
+                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id, updateContacts: updateContacts})}
                 style={{
                     borderRadius: moderateScale(10),
                     marginTop: verticalScale(10),

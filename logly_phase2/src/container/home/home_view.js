@@ -17,10 +17,11 @@ import * as Animatable from 'react-native-animatable';
 
 function HomeView(props) {
 
+   
     const [isShow, setShow] = useState(false);
     const isTablet = DeviceInfo.isTablet();
 
-    const { toggleDrawer } = props;
+    const { toggleDrawer, userObject } = props;
     const PET_ACTIVITY = [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' } ,{ bg: Images.img_activity, txt: 'Activity' }]
     const actions = [
         {
@@ -133,7 +134,7 @@ function HomeView(props) {
                     <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                 </View>
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
 
 
@@ -144,7 +145,7 @@ function HomeView(props) {
                     }}>Welcome,</Text>
                     <Text style={{
                         ...styles.generalTxt,
-                    }}>James Anderson</Text>
+                    }}>{userObject.name}</Text>
 
                     <FlatList
                         horizontal

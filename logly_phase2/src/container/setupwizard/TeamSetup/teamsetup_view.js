@@ -312,7 +312,7 @@ function TeamSetupView(props) {
 
         return (
 
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
 
 
 

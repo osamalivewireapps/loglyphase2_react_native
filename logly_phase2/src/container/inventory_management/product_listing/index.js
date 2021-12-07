@@ -32,7 +32,8 @@ class ProductListing extends Component {
 
     getProductList() {
         this.props.getProducts().then((response) => {
-            this.setState({ productList: response.payload });
+            //this.setState({ productList: response.payload });
+            this.filterProducts(this.state.filterData);
 
         });
     }
@@ -58,7 +59,12 @@ class ProductListing extends Component {
             listProduct={this.state.productList}
             applyFilter={(e) => this.applyFilter(e)}
             filterObj={this.state.filterData}
+            updateProduct={() => this.updateProduct()}
         />);
+    }
+
+    updateProduct(){
+        this.getProductList();
     }
 
 }

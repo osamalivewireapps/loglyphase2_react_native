@@ -22,7 +22,7 @@ function ProductListingView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listProduct, applyFilter, filterObj } = props;
+    const { listProduct, applyFilter, filterObj, updateProduct } = props;
 
     
     useEffect(() => {
@@ -102,8 +102,8 @@ function ProductListingView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
-                <View style={{ flex: 1, height: Dimensions.get('window').height }}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
+                <View style={{ flex: 1, minHeight: Dimensions.get('window').height}}>
 
                     <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
                         <View style={{
@@ -156,7 +156,7 @@ function ProductListingView(props) {
                                 return (
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('ProductDetail', { id: item._id });
+                                            props.navigation.navigate('ProductDetail', { id: item._id, updateProduct: updateProduct });
                                         }}
                                         style={{
                                             ...styles.boxcontainer,
@@ -346,7 +346,7 @@ function ProductListingView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('RegisterProduct')
+                    props.navigation.navigate('RegisterProduct', { updateProduct: updateProduct})
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{

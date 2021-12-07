@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react';
-import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, FlatList } from 'react-native';
+import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, FlatList, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -17,7 +17,7 @@ function ProductDetailView(props) {
 
 
     const isTablet = DeviceInfo.isTablet();
-
+    const [isEditShow, setIsEditShow] = useState(false);
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -107,19 +107,76 @@ function ProductDetailView(props) {
                         mode={ResizeTextMode.overflow_replacement}
                         style={{
                             color: 'white',
-                            flex: 0.8,
+                            flex:1,
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        {props.productData.data?.name}
+                        {props.productData?.data?.name}
 
                     </AutoSizeText>
-                    <Image source={Icons.icon_edit_petprofile} resizeMode='contain'
-                        style={{ flex: 0.2, height: moderateScale(25) }} />
+
+                    {isEditShow ?
+                        <View style={{
+                            height: verticalScale(70),
+                            flex: moderateScale(0.145),
+                            marginTop: 0,
+                            marginBottom: 0,
+                            justifyContent: 'center',
+                            alignItems: 'center'
+                        }}>
+                            <ImageBackground
+                                source={Images.img_popup_services}
+                                style={{
+                                    position: 'absolute', height: '100%',
+                                    width: '100%'
+                                }} />
+                            <TouchableOpacity
+                                flex={moderateScale(0.1)}
+                                onPress={() => {
+                                    props.navigation.navigate('RegisterProduct', { productData: props.productData, updateProduct: props.route.params.updateProduct })
+                                    setIsEditShow(false)
+
+                                }}>
+                                <Image source={Icons.icon_services_edit}
+                                    resizeMode='contain' style={{
+                                        marginEnd: moderateScale(2), height: verticalScale(15), width: moderateScale(15)
+                                    }}
+
+                                />
+                            </TouchableOpacity>
+                            <View style={{
+                                width: '50%',
+                                height: verticalScale(0.5),
+                                backgroundColor: '#585858',
+                                marginEnd: moderateScale(5),
+                                marginTop: verticalScale(8),
+                                marginBottom: verticalScale(8)
+                            }} />
+                            <TouchableOpacity
+                                flex={moderateScale(0.1)}
+                                onPress={() => {
+                                    setIsEditShow(false)
+                                }}>
+                                <Image source={Icons.icon_services_delete}
+                                    resizeMode='contain'
+                                    style={{
+                                        marginEnd: moderateScale(3),
+                                        height: verticalScale(15),
+                                        width: moderateScale(15)
+                                    }} />
+                            </TouchableOpacity>
+                        </View> : <View style={{ flex: 0.1 }} />}
+                    <TouchableOpacity
+                        style={{ flex: 0.1, height: moderateScale(25) }}
+                        onPress={() => isEditShow?setIsEditShow(false):setIsEditShow(true)}>
+                        <Image source={Icons.icon_kebab} resizeMode='contain'
+                            style={{ height: moderateScale(25) }} />
+
+                    </TouchableOpacity>
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ flex: 1, padding: moderateScale(25) }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <View style={{ flex: 0.8 }}>
@@ -131,7 +188,7 @@ function ProductDetailView(props) {
                                 style={{
                                     color: '#464646',
                                     fontFamily: Fonts.type.bold,
-                                }}>{props.productData.categoryName}
+                                }}>{props.productData?.categoryName}
                             </AutoSizeText>
 
                             <AutoSizeText
@@ -142,7 +199,7 @@ function ProductDetailView(props) {
                                 style={{
                                     color: '#464646',
                                     fontFamily: Fonts.type.base,
-                                }}>{props.productData.data.subCategory}
+                                }}>{props.productData?.data?.subCategory}
                             </AutoSizeText>
                         </View>
                         <AutoSizeText
@@ -154,7 +211,7 @@ function ProductDetailView(props) {
                                 flex: 0.2,
                                 color: '#503A9F',
                                 fontFamily: Fonts.type.bold,
-                            }}>${props.productData.data.price}
+                            }}>${props.productData?.data?.price}
                         </AutoSizeText>
                     </View>
 
@@ -181,7 +238,7 @@ function ProductDetailView(props) {
                                 marginStart:moderateScale(10),
                                 marginTop: verticalScale(20),
                                 fontFamily: Fonts.type.base,
-                            }}>{props.productData._id}
+                            }}>{props.productData?._id}
                         </AutoSizeText>
                     </View>
                     <View style={{
@@ -215,7 +272,7 @@ function ProductDetailView(props) {
                                 flex: 0.9,
                                 textAlign: 'right',
                                 fontFamily: Fonts.type.bold,
-                            }}>{props.productData.data.quantity}kg
+                            }}>{props.productData?.data?.quantity}kg
                         </AutoSizeText>
                     </View>
 
@@ -240,7 +297,7 @@ function ProductDetailView(props) {
                             marginTop: verticalScale(10),
                             textAlign: 'left',
                             fontFamily: Fonts.type.base,
-                        }}>{props.productData.data.notes}
+                        }}>{props.productData?.data?.notes}
                     </AutoSizeText>
 
                     <View style={{
@@ -269,7 +326,7 @@ function ProductDetailView(props) {
                                 flex: 0.9,
                                 textAlign: 'right',
                                 fontFamily: Fonts.type.medium,
-                            }}>{(props.productData.quantity - props.productData.soldQuantity)} Pcs
+                            }}>{(props.productData?.quantity - props.productData?.soldQuantity)} Pcs
                         </AutoSizeText>
                     </View>
                     <AutoSizeText
@@ -280,7 +337,7 @@ function ProductDetailView(props) {
                         style={{
                             color: '#464646',
                             fontFamily: Fonts.type.medium,
-                        }}>{props.productData.status}
+                        }}>{props.productData?.status}
                     </AutoSizeText>
                 </View>
             </ScrollView>

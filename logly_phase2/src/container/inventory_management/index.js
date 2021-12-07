@@ -8,4 +8,6 @@ import FilterProducts from './product_listing/filterproducts'
 import ProductListing from './product_listing';
 import ProductDetail from './product_detail';
 import RegisterProduct from './product_reg';
-export { RegisterProduct,ProductDetail,FilterProducts,ProductListing,PetProfile, InventoryDashBoard, RegisterPet, PetDetail, FilterAnimal};
+import PdfReader from './pet_detail/PdfReader';
+import ImageGallery from './pet_detail/ImageGallery'
+export { ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,PetProfile, InventoryDashBoard, RegisterPet, PetDetail, FilterAnimal};

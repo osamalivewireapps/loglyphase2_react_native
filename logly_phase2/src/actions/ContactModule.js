@@ -94,3 +94,78 @@ export const getContactDetails = (id) => async (dispatch) => {
             });
     });
 };
+
+export const addContactDetails = (dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', config);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/contact`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const editContactDetails = (id,dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', config);
+    console.log("dataToSubmit--->",dataToSubmit+"--id--",id)
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .put(`${baseUrl}/contact/${id}`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};

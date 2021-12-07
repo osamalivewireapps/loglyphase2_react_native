@@ -36,7 +36,8 @@ class Util {
   }
 
   static isLengthGreater(name) {
-    return name.length >= 3;
+    console.log("name--->", name)
+    return (name && name.length >= 3)
   }
 
   static isLengthGreaterZero(name) {
@@ -44,6 +45,9 @@ class Util {
   }
 
   static isValidPhone(name) {
+    if (!name.includes('-')) {
+      return name.length >= 10;
+    }
     name = name.replaceAll("-", "");
     return name.length === 10;
   }
@@ -72,7 +76,8 @@ class Util {
   }
 
   static isGraterThanZero(name) {
-    return (name.length > 0 && name>0);
+    console.log('name--->',name)
+    return (name.length > 0 && name > 0);
   }
 
   static combineEmailValidate(email) {
@@ -246,7 +251,7 @@ class Util {
     let initials = name.split(' ');
 
     if (initials.length > 1) {
-      initials = initials.shift().charAt(0) +initials.pop().charAt(0);
+      initials = initials.shift().charAt(0) + initials.pop().charAt(0);
     } else {
       initials = name.substring(0, 2);
     }

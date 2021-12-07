@@ -22,5 +22,5 @@ export {
     BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup
 } from './setupwizard';
 
-export { RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
+export { ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
 export { ContactDetails,AddContacts, ContactListing, FilterContacts} from './contact_management';

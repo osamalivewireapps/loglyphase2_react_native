@@ -6,20 +6,34 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, TextInput } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
+import { uploadHealth, getAnimal } from '../../../actions/AnimalModule';
+import { useDispatch } from "react-redux";
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import Util from '../../../utils';
+import RBSheet from 'react-native-raw-bottom-sheet';
+import DocumentPicker from 'react-native-document-picker';
 
 function HealthPetView(props) {
 
     const { healthRecord } = props.animalData;
 
     const [arrHealthRecord, setArrHealthRecord] = useState([]);
-
     const [initialPg, setInitialPg] = useState(0);
+    const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
+    const [validateName, setValidateName] = useState(true);
+    const [valueName, setValueName] = useState(true);
+    const [valueDesc, setDesc] = useState('');
+    const [validateDesc, setValidateDesc] = useState(true);
+    const [fileDoc, setFileDoc] = useState({});
+
+    const sheetRef = useRef(null);
+
+    const dispatch = useDispatch();
 
     useEffect(() => {
         setArrHealthRecord(healthRecord)
@@ -30,7 +44,7 @@ function HealthPetView(props) {
         <View style={{
             flexDirection: 'column',
             paddingStart: moderateScale(20),
-            height: Dimensions.get('screen').height / 2,
+            minHeight: Dimensions.get('screen').height / 2,
             paddingBottom: verticalScale(30)
 
         }}>
@@ -83,9 +97,23 @@ function HealthPetView(props) {
                 </TouchableOpacity>
             </View>
 
+            <RBSheet
+                ref={sheetRef}
+                height={Dimensions.get('screen').height - moderateScale(200)}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        borderRadius: moderateScale(30),
+                    },
+                }}
+                onClose={() => setCloseBottonSheet(false)}
+            >
+                {showAddDocUI()}
 
+            </RBSheet>
+            {isBottonSheetVisible ? sheetRef.current.open() : null}
 
-            {arrHealthRecord.length > 0 ? arrHealthRecord.map((item) => {
+            {initialPg === 0 && arrHealthRecord.length > 0 ? arrHealthRecord.map((item) => {
                 return (
                     <View style={{
                         backgroundColor: '#F5F5F5',
@@ -127,8 +155,8 @@ function HealthPetView(props) {
                                 flex: 0.2,
                             }}
 
-                            src={item.type.toLowerCase().startsWith('image') ? item.filename: Icons.icon_file_pdf}
-                            placeholder={Icons.icon_paw}
+                            src={item.filename}
+                            placeholder={item.filename.includes('.pdf') ? Icons.icon_file_pdf : Icons.icon_paw}
                         />
 
 
@@ -163,10 +191,23 @@ function HealthPetView(props) {
                             </AutoSizeText>
                         </View>
 
-                        <View style={{
-                            flex: 0.2,
-                            justifyContent:'center'
-                        }}>
+                        <TouchableOpacity
+                            onPress={() => {
+                                if (item.filename.includes('pdf'))
+                                    props.navigation.navigate('PdfReader', { uri: item.filename })
+                                else {
+
+                                    let tmp = [];
+                                    tmp.push(item)
+                                    props.navigation.navigate('ImageGallery', { style: { flex: 1 }, listCollection: tmp })
+
+                                }
+                            }
+                            }
+                            style={{
+                                flex: 0.2,
+                                justifyContent: 'center'
+                            }}>
                             <AutoSizeText
                                 numberOfLines={1}
                                 minFontSize={moderateScale(14)}
@@ -174,36 +215,183 @@ function HealthPetView(props) {
                                 mode={ResizeTextMode.max_lines}
                                 style={{
                                     ...styles.generalTxt,
-                                    textAlign:'center',
-                                    borderColor:Colors.appBgColor,
-                                    padding:moderateScale(2),
+                                    textAlign: 'center',
+                                    borderColor: Colors.appBgColor,
+                                    padding: moderateScale(2),
                                     paddingStart: moderateScale(10),
                                     paddingEnd: moderateScale(10),
                                     color: Colors.appBgColor,
-                                    borderWidth:moderateScale(1),
-                                    borderRadius:moderateScale(10)
+                                    borderWidth: moderateScale(1),
+                                    borderRadius: moderateScale(10)
                                 }}>View
                             </AutoSizeText>
-                        </View>
+                        </TouchableOpacity>
                     </View>
                 )
             }) : <View />}
 
-            <TouchableOpacity style={{
-                ...styles.styleButtons, flex: 0,
-                margin: verticalScale(25),
-                marginStart: 0,
-                marginTop: verticalScale(65)
-            }} onPress={() => { }}>
-                <Text style={{
-                    ...styles.generalTxt,
-                    fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
-                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+            {initialPg === 0 ?
+                <TouchableOpacity style={{
+                    ...styles.styleButtons, flex: 0,
+                    margin: verticalScale(25),
+                    marginStart: 0,
+                    marginTop: verticalScale(65)
+                }} onPress={() => { docPicker() }}>
+                    <Text style={{
+                        ...styles.generalTxt,
+                        fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
-                }}>Add Document</Text>
-            </TouchableOpacity>
+                    }}>Add Document</Text>
+                </TouchableOpacity> : null}
         </View>
-    )
+    );
+
+    function showAddDocUI() {
+        return (
+            <ScrollView keyboardShouldPersistTaps="handled">
+                <View style={{
+                    padding: moderateScale(25),
+                    justifyContent: 'center',
+                }}>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        flexDirection: 'row', alignItems: 'center',
+                        shadowColor: validateName ? 'transparent' : 'darkred',
+                        shadowOpacity: validateName ? 0.25 : 1,
+                        padding: moderateScale(15),
+                    }}>
+
+
+                        <TextInput placeholder="File Name" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+                            textAlign: 'left',
+                        }}
+                            underlineColorAndroid="transparent"
+                            require={true}
+                            numberOfLines={1}
+                            autoCapitalize="none"
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setValidateName(Util.isLengthGreater(e));
+                                setValueName(e);
+                            }
+                            }
+                            value={valueName} />
+                    </View>
+
+                    <View style={{
+                        ...styles.boxcontainer,
+                        height: verticalScale(100),
+                        flexDirection: 'row', alignItems: 'center',
+                        shadowColor: validateDesc ? 'transparent' : 'darkred',
+                        shadowOpacity: validateDesc ? 0.25 : 1,
+                        marginTop: verticalScale(25),
+                    }}>
+
+
+                        <TextInput placeholder="Enter Notes" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+                            paddingTop: verticalScale(15),
+                            padding: moderateScale(15),
+                            textAlign: 'left',
+                            height: verticalScale(100),
+                        }}
+                            underlineColorAndroid="transparent"
+                            require={true}
+                            multiline={true}
+                            numberOfLines={50}
+                            maxLength={75}
+                            autoCapitalize="none"
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setValidateDesc(Util.isLengthGreater(e));
+                                setDesc(e);
+                            }
+                            }
+                            value={valueDesc} />
+                    </View>
+
+                    <TouchableOpacity style={{
+                        ...styles.styleButtons, flex: 0,
+                        marginTop: verticalScale(25),
+                    }} onPress={() => {
+
+                        if (!Util.isLengthGreater(valueName)) {
+                            setValidateName(false);
+                            return;
+                        }
+                        else if (!Util.isLengthGreater(valueDesc)) {
+                            setValidateDesc(false);
+                            return;
+                        }
+                        sheetRef.current.close();
+                        setCloseBottonSheet(false);
+                        setTimeout(() => {
+                            uploadHealthDocs();
+                        }, 1000)
+
+
+                    }}>
+                        <Text style={{
+                            ...styles.generalTxt,
+                            fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+
+                        }}>Done</Text>
+                    </TouchableOpacity>
+
+                </View>
+            </ScrollView>
+        );
+
+    }
+
+    async function docPicker() {
+        // Pick a single file
+        try {
+            const res = await DocumentPicker.pick({
+                type: [DocumentPicker.types.pdf, DocumentPicker.types.doc, DocumentPicker.types.docx, DocumentPicker.types.images],
+            });
+            console.log("uri--->", res[0]);
+            setFileDoc({ image: res[0].uri, fileName: res[0].name })
+            setCloseBottonSheet(true);
+        } catch (err) {
+            if (DocumentPicker.isCancel(err)) {
+            } else {
+                throw err;
+            }
+        }
+    }
+    function uploadHealthDocs() {
+        let formdata = new FormData();
+        formdata.append("id", props.route.params.id);
+        if (!fileDoc.image.includes("pdf")) {
+            formdata.append('file', {
+                uri: fileDoc.image,
+                name: fileDoc.fileName, type: 'image/*'
+            })
+        }
+        else {
+            formdata.append('file', {
+                uri: fileDoc.image,
+                name: fileDoc.fileName, type: 'application/pdf'
+            })
+        }
+
+        formdata.append('note', valueDesc)
+        formdata.append('fileNamed', valueName)
+
+        console.log("pdf doc--->", formdata);
+
+        dispatch(uploadHealth(formdata)).then((responseData) => {
+            setValueName('');
+            setValidateDesc('');
+            dispatch(getAnimal(props.route.params.id));
+        })
+    }
 }
 
 const styles = StyleSheet.create({

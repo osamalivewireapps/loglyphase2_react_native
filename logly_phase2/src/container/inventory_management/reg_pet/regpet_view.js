@@ -1,11 +1,12 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
-import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, KeyboardAvoidingView, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -16,12 +17,18 @@ import Util from '../../../utils';
 import { Calendar } from 'react-native-calendars';
 import moment from 'moment';
 import AppLoader from '../../../components/AppLoader';
-
+import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 function RegisterPetView(props) {
 
 
-    const { isLoad, animalCategories, animalBreed, getAnimalBreed } = props;
+    const { deletePic, isLoad, animalCategories, animalBreed, getAnimalBreed,
+        capturePic, imgUri, addProduct, capturePicCollections, listPhotoCollections } = props;
+
+    const animalData = props.route?.params?.animalData;
+
+    console.log('animalData---->', animalData);
 
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
     const [isCalSheetVisible, setCloseCalSheet] = useState(false)
@@ -29,11 +36,17 @@ function RegisterPetView(props) {
 
     const [petIndex, setPetIndex] = useState(-1);
     const [validateName, setValidateName] = useState(true);
-    const [valueName, setValueName] = useState('')
-    const [valueDesc, setDesc] = useState('');
+    const [valueName, setValueName] = useState(animalData ? animalData.data.name : '');
+    const [valueDesc, setDesc] = useState(animalData ? animalData.data.Notes : '');
     const [validateDesc, setValidateDesc] = useState(true);
-    const [serviceTypeIndex, setServiceTypeIndex] = useState(0);
+    const [serviceTypeIndex, setServiceTypeIndex] = useState(animalData ? animalData.data.Sex==='Male'?0:1 : 0);
     const [listBreed, setListBreed] = useState([]);
+    const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
+    const [validateQuantity, setValidateQuantity] = useState(true);
+    const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity : '');
+    const [captureCollection, setCaptureCollection] = useState(false);
+    const [validatePrice, setValidatePrice] = useState(true);
+    const [valuePrice, setValuePrice] = useState(animalData ? animalData.data.price : '');
 
     const sheetRef = useRef(null);
     const sheetCalRef = useRef(null);
@@ -41,9 +54,31 @@ function RegisterPetView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
+    useEffect(() => {
+
+        console.log("animalCategories--->", animalCategories)
+        if (animalData) {
+            let index = animalCategories.findIndex((value) => {
+                return value.categoryId._id === props.route.params.animalData.categoryId._id;
+            })
+            setPetIndex(index);
+
+            if (index > -1) {
+                animalData.data.breed.forEach((value) => {
+                    animalCategories[index].categoryId.breeds.forEach((inner) => {
+                        if (value === inner.name) {
+                            selectBreed(inner);
+                        }
+                    });
+
+                });
+            }
+        }
+    }, [animalCategories])
+
     //////////////////////////  CALENDAR ////////////////////////
     const initialDate = moment().format('YYYY-MM-DD');
-    const [selected, setSelected] = useState(initialDate);
+    const [selected, setSelected] = useState(animalData ? animalData.data.DOB : initialDate);
 
     let markedDates = {
         [selected]: {
@@ -54,7 +89,7 @@ function RegisterPetView(props) {
         }
     };
 
-    console.log("animalCategories1-->", animalCategories.length);
+    console.log("listPhotoCollections-->", listPhotoCollections);
     const onDayPress = day => {
         setSelected(day.dateString);
     };
@@ -83,8 +118,10 @@ function RegisterPetView(props) {
                 </View>
 
                 <View style={{
-                    flexDirection: 'row', flex: 1,
-                    alignItems: 'flex-end',
+                    flexDirection: 'row', 
+                    height: moderateScale(60),
+                    alignItems: 'center',
+                    justifyContent:'center',
                     marginTop: verticalScale(20),
                     marginBottom: verticalScale(25)
                 }}>
@@ -107,8 +144,14 @@ function RegisterPetView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
-                <View style={{ flex: 1 }}>
+            <ScrollView 
+                keyboardShouldPersistTaps='handled'>
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    keyboardVerticalOffset={50}
+                    behavior={Platform.OS === "ios" ? "padding" : null}
+
+                >
 
 
 
@@ -186,24 +229,63 @@ function RegisterPetView(props) {
 
                         {petIndex > -1 ?
                             <View>
-                                <View style={{
-                                    backgroundColor: '#F4F4F4', alignSelf: 'center',
-                                    height: moderateScale(90),
-                                    width: moderateScale(90),
-                                    borderRadius: moderateScale(100),
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginTop: verticalScale(20),
-                                    marginBottom: verticalScale(10)
-                                }}>
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: '#F4F4F4', alignSelf: 'center',
+                                        height: moderateScale(90),
+                                        width: moderateScale(90),
+                                        borderRadius: moderateScale(100),
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: verticalScale(20),
+                                        marginBottom: verticalScale(10),
+                                    }}
+                                    onPress={() => {
+                                        setDialogVisibleStatus(true);
+                                    }}
+                                >
 
-                                    <Image source={Icons.icon_awesome_plus} resizeMode='contain'
+                                    <ImagePlaceholder
+                                        showActivityIndicator={false}
+                                        activityIndicatorProps={{
+                                            size: 'small',
+                                            color: '#777777',
+                                        }}
+                                        resizeMode='cover'
+                                        placeholderStyle={{
+                                            height: moderateScale(90),
+                                            width: moderateScale(90),
+                                            borderRadius: moderateScale(100),
+
+                                        }}
+                                        imgStyle={{
+                                            borderRadius: moderateScale(100),
+                                            borderWidth: 1,
+                                            height: moderateScale(90),
+                                            width: moderateScale(90),
+                                            borderColor: 'transparent'
+                                        }}
+
+                                        style={{
+                                            borderRadius: moderateScale(100),
+                                            position: 'absolute'
+                                        }}
+
+                                        src={imgUri}
+                                        placeholder={imgUri ? Icons.icon_user : ''}
+                                    />
+
+                                    <Image
+                                        source={!imgUri ? Icons.icon_awesome_plus : ''}
+
+                                        resizeMode="contain"
                                         style={{
                                             height: verticalScale(10),
-                                            width: verticalScale(10)
+                                            width: verticalScale(10),
                                         }} />
 
-                                </View>
+                                </TouchableOpacity>
+
 
                                 <AutoSizeText
                                     numberOfLines={2}
@@ -256,9 +338,10 @@ function RegisterPetView(props) {
                                     borderWidth: moderateScale(1),
                                     padding: moderateScale(10),
                                     paddingBottom: verticalScale(10)
-                                }} onPress={() => { 
+                                }} onPress={() => {
                                     getAnimalBreed(animalCategories[petIndex].categoryId._id)
-                                    setCloseBreedSheet(true) }}>
+                                    setCloseBreedSheet(true)
+                                }}>
                                     <Text style={{
                                         ...styles.generalTxt,
                                         textAlign: 'center',
@@ -316,8 +399,62 @@ function RegisterPetView(props) {
                                     {showBreed()}
                                 </RBSheet>
 
-                                {isBreedSheetVisible ? sheetBreedRef.current.open() : null}
+                                {animalBreed.length > 0 && isBreedSheetVisible ? sheetBreedRef.current.open() : null}
+                                <View style={{
+                                    ...styles.boxcontainer,
+                                    marginTop: verticalScale(10),
+                                    flexDirection: 'row', alignItems: 'center',
+                                    shadowColor: validateQuantity ? 'transparent' : 'darkred',
+                                    shadowOpacity: validateQuantity ? 0.25 : 1,
+                                    padding: moderateScale(15),
+                                }}>
 
+
+                                    <TextInput placeholder="Enter Quantity" style={{
+                                        ...styles.styleTextInput,
+                                        flex: 1,
+                                        textAlign: 'left',
+                                    }}
+                                        underlineColorAndroid="transparent"
+                                        require={true}
+                                        numberOfLines={1}
+                                        autoCapitalize="none"
+                                        keyboardType="number-pad"
+                                        onChangeText={(e) => {
+                                            setValidateQuantity(Util.isGraterThanZero(e));
+                                            setValueQuantity(e);
+                                        }
+                                        }
+                                        value={valueQuantity} />
+                                </View>
+
+                                <View style={{
+                                    ...styles.boxcontainer,
+                                    marginTop: verticalScale(10),
+                                    flexDirection: 'row', alignItems: 'center',
+                                    shadowColor: validatePrice ? 'transparent' : 'darkred',
+                                    shadowOpacity: validatePrice ? 0.25 : 1,
+                                    padding: moderateScale(15),
+                                }}>
+
+
+                                    <TextInput placeholder="Price" style={{
+                                        ...styles.styleTextInput,
+                                        flex: 1,
+                                        textAlign: 'left',
+                                    }}
+                                        underlineColorAndroid="transparent"
+                                        require={true}
+                                        numberOfLines={1}
+                                        autoCapitalize="none"
+                                        keyboardType="number-pad"
+                                        onChangeText={(e) => {
+                                            setValidatePrice(Util.isGraterThanZero(e));
+                                            setValuePrice(e);
+                                        }
+                                        }
+                                        value={valuePrice} />
+                                </View>
                                 <Text
                                     style={{
                                         ...styles.generalTxt,
@@ -430,7 +567,7 @@ function RegisterPetView(props) {
                                                 color: '#464646',
                                                 paddingEnd: moderateScale(5),
                                                 flex: 7,
-                                            }}>Add Parent
+                                            }}>Add Father
                                         </AutoSizeText>
                                         <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
                                     </TouchableOpacity>
@@ -457,7 +594,7 @@ function RegisterPetView(props) {
                                                 ...styles.generalTxt,
                                                 color: '#464646',
                                                 flex: 7,
-                                            }}>Add Parent
+                                            }}>Add Mother
                                         </AutoSizeText>
                                         <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
                                     </TouchableOpacity>
@@ -504,15 +641,73 @@ function RegisterPetView(props) {
                             </View> : null}
                     </View>
 
+                    {petIndex > -1 && listPhotoCollections.length > 0 ?
+                        <FlatList
+                            horizontal
+                            data={listPhotoCollections}
+                            style={{
+                                height: verticalScale(80),
+                                width: '100%',
+                                marginStart: moderateScale(25),
+                                marginTop: verticalScale(0),
+                                marginBottom: verticalScale(20),
+                            }}
+                            contentContainerStyle={{
+                                //padding: moderateScale(30),
+                            }}
+                            renderItem={({ item, index }) => {
+                                console.log('pic---->', item)
+                                return (
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            deletePic(index)
+                                        }}
+                                        style={{
+                                            flexDirection: 'row',
+                                            marginEnd: verticalScale(10)
+                                        }}>
+                                        <View
+                                            style={{
+
+                                                width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
+                                            }}
+                                        >
+                                            <Image
+                                                source={{ uri: item }}
+                                                resizeMode="cover" style={{
+                                                    position: 'absolute',
+                                                    borderRadius: moderateScale(20),
+                                                    height: '100%', width: '100%'
+                                                }}
+                                            />
+
+                                            <Image
+                                                source={Icons.icon_metro_cancel}
+                                                resizeMode="contain" style={{
+                                                    margin: moderateScale(5),
+                                                    height: verticalScale(20), width: moderateScale(20)
+                                                }}
+                                            />
+                                        </View>
+                                    </TouchableOpacity>
+                                );
+                            }}
+                            keyExtractor={(item) => item.id}
+
+                        /> : null}
                     {petIndex > -1 ?
                         <View>
                             <TouchableOpacity style={{
                                 ...styles.styleButtons, flex: 0,
                                 margin: verticalScale(25),
+                                marginTop: 0,
                                 backgroundColor: 'white',
                                 borderWidth: moderateScale(1),
-                                marginBottom: verticalScale(0)
-                            }} onPress={() => { }}>
+                                marginBottom: verticalScale(0),
+                            }} onPress={(e) => {
+                                setCaptureCollection(true);
+                                setDialogVisibleStatus(true)
+                            }}>
                                 <Text style={{
                                     ...styles.generalTxt,
                                     fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
@@ -525,7 +720,18 @@ function RegisterPetView(props) {
                                 ...styles.styleButtons, flex: 0,
                                 margin: verticalScale(25),
                                 marginTop: verticalScale(15)
-                            }} onPress={() => { }}>
+                            }} onPress={() => {
+                                addProduct({
+                                    categoryId: animalCategories[petIndex].categoryId._id,
+                                    name: valueName,
+                                    Notes: valueDesc,
+                                    price: valuePrice,
+                                    quantity: valueQuantity,
+                                    breed: listBreed.map((value) => value.name),
+                                    DOB: selected,
+                                    Sex: serviceTypeIndex === 0 ? 'Male' : 'Female',
+                                })
+                            }}>
                                 <Text style={{
                                     ...styles.generalTxt,
                                     fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
@@ -534,7 +740,84 @@ function RegisterPetView(props) {
                                 }}>REGISTER</Text>
                             </TouchableOpacity>
                         </View> : null}
-                </View>
+
+                    <Dialog
+                        visible={dialogVisibleStatus}
+                        width={Dimensions.get('screen').width - 100}
+                        height={Dimensions.get('screen').height / 6}
+                        onTouchOutside={() => {
+                            setDialogVisibleStatus(false);
+                        }}
+                        dialogTitle={<DialogTitle title="Profile Picture" />}
+                        dialogAnimation={new ScaleAnimation({
+                            toValue: 0,
+                            useNativeDriver: true,
+                        })}
+                    >
+                        <DialogContent
+                            style={{
+                                flex: 1,
+                                flexDirection: 'row',
+                                justifyContent: 'flex-end',
+                                alignItems: 'flex-end',
+                            }}>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    flex: 5,
+                                    height: 50,
+                                    borderWidth: 2,
+                                    borderColor: 'black',
+                                    borderRadius: 10,
+                                    marginRight: 10,
+                                    justifyContent: 'center',
+                                }}>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                    }}
+                                    onPress={() => {
+                                        if (!captureCollection)
+                                            capturePic('gallery');
+                                        else{
+                                            capturePicCollections('gallery');
+                                            setCaptureCollection(false)
+                                        }
+                                        setDialogVisibleStatus(false);
+                                    }}>
+                                    Gallery
+                                </Text>
+                            </View>
+                            <View
+                                style={{
+                                    backgroundColor: 'white',
+                                    flex: 5,
+                                    height: 50,
+                                    borderWidth: 2,
+                                    borderColor: 'black',
+                                    borderRadius: 10,
+                                    marginRight: 10,
+                                    justifyContent: 'center',
+                                }}>
+                                <Text
+                                    style={{
+                                        textAlign: 'center',
+                                    }}
+                                    onPress={() => {
+                                        if (!captureCollection)
+                                            capturePic('camera');
+                                        else{
+                                            capturePicCollections('camera');
+                                            setCaptureCollection(false)
+                                        }
+                                        setDialogVisibleStatus(false);
+                                    }}>
+                                    Camera
+                                </Text>
+                            </View>
+                        </DialogContent>
+                    </Dialog>
+                </KeyboardAvoidingView>
             </ScrollView>
 
             <AppLoader loader={{ isLoading: isLoad }} />
@@ -723,10 +1006,11 @@ function RegisterPetView(props) {
 
 
 
+
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
-                        marginTop: verticalScale(75), backgroundColor: '#FFC081'
+                        marginTop: verticalScale(25), backgroundColor: '#FFC081'
                     }}
                         onPress={() => {
                             setTimeout(() => {

@@ -27,7 +27,7 @@ function PetProfileView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listAnimal, applyFilter, filterObj } = props;
+    const { listAnimal, applyFilter, filterObj, updateAnimal } = props;
 
     console.log("animal1234--->", filterObj);
 
@@ -108,8 +108,8 @@ function PetProfileView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps={true}>
-                <View style={{ flex: 1, height: Dimensions.get('window').height }}>
+            <ScrollView keyboardShouldPersistTaps='handled'>
+                <View style={{ flex: 1, minHeight: Dimensions.get('window').height }}>
 
                     <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
                         <View style={{
@@ -162,7 +162,7 @@ function PetProfileView(props) {
                                 return (
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('PetDetail',{id:item._id});
+                                            props.navigation.navigate('PetDetail', { id: item._id, updateAnimal: updateAnimal});
                                         }}
                                         style={{
                                             ...styles.boxcontainer,

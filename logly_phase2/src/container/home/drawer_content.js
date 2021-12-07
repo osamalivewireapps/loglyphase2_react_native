@@ -4,12 +4,13 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React from 'react';
+import React, { useEffect, useState} from 'react';
 import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, useColorScheme, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
+import { CommonActions } from "@react-navigation/native";
 import {
     useTheme,
     Avatar,
@@ -26,9 +27,16 @@ import {
     DrawerItemList,
 } from '@react-navigation/drawer';
 import DeviceInfo from 'react-native-device-info';
+import DataHandler from '../../utils/DataHandler';
 
 function CustomDrawer(props) {
 
+    const [userObject, setUserObject] = useState({})
+    useEffect(() => {
+        DataHandler.getUserObject().then((value) => {
+            setUserObject(JSON.parse(value));
+        });
+    }, []);
     const isTablet = DeviceInfo.isTablet();
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -45,7 +53,7 @@ function CustomDrawer(props) {
                 />
                 <View style={{ marginStart: moderateScale(20), marginTop: verticalScale(10) }}>
 
-                    <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(20) }}>James Cordon</Text>
+                    <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(20) }}>{userObject.name}</Text>
                     <Text style={{ ...styles.generalTxt }}>Edit Profile</Text>
                 </View>
             </View>
@@ -61,11 +69,21 @@ function CustomDrawer(props) {
             </DrawerContentScrollView>
             <View style={{ ...styles.bottomDrawerSection, flex: 0.2 }}>
                 <View backgroundColor='#464646' height={moderateScale(0.5)} />
-                <View style={{ flexDirection: 'row', paddingStart: moderateScale(40), marginTop: verticalScale(25) }}>
+                <TouchableOpacity 
+                onPress={()=>{
+                    DataHandler.saveAccountType('');
+                        const resetAction = CommonActions.reset({
+                            index: 2,
+                            routes: [{ name: "Splash" }, { name:'Login'}]
+                        });
+
+                        props.navigation.dispatch(resetAction);
+                }}
+                style={{ flexDirection: 'row', paddingStart: moderateScale(40), marginTop: verticalScale(25) }}>
                     <Image source={Icons.icon_logout} resizeMode='contain'
                         style={{ height: moderateScale(20), width: moderateScale(20) }} />
                     <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(20) }}>Logout</Text>
-                </View>
+                </TouchableOpacity>
             </View>
         </View>
     )

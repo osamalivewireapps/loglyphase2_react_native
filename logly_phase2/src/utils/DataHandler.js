@@ -68,7 +68,7 @@ export default class DataHandler {
         try {
             let value = await AsyncStorage.getItem("auth");
             if (value !== null) {
-                console.log("accountType---->", value);
+                console.log("token---->", value);
                 return value;
             }
 
