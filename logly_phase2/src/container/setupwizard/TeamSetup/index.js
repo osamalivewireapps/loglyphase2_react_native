@@ -5,6 +5,7 @@
 import React, { Component } from "react";
 import DataHandler from "../../../utils/DataHandler";
 import TeamSetupView from "./teamsetup_view";
+import { CommonActions } from "@react-navigation/native";
 
 class TeamSetup extends React.Component {
 
@@ -30,7 +31,12 @@ class TeamSetup extends React.Component {
     }
 
     clickNextButton() {
-        this.props.navigation.navigate('HomeDrawer')
+        const resetAction = CommonActions.reset({
+            index: 1,
+            routes: [{ name: "Splash" }, { name: "HomeDrawer" }],
+        });
+
+        this.props.navigation.dispatch(resetAction);
     }
 
     addMember(e) {

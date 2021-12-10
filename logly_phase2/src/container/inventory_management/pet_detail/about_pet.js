@@ -219,7 +219,7 @@ function AboutPetView(props) {
     function getAnimalValues(category) {
         switch (category) {
             case 'Animal Id':
-                return route.params.id;
+                return route.params.id.substring(0,7);
 
             case 'Breed':
                 return animalData.data?.breed[0];

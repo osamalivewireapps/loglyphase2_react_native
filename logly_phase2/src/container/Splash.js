@@ -32,51 +32,52 @@ class SplashScreen extends React.Component {
                     <View style={{ height: '15%', justifyContent: 'center' }}>
                         <Image source={Images.img_logo_splash}
                             resizeMode='contain'
-                            style={{height:'100%',width:moderateScale(160)}} />
+                            style={{ height: '100%', width: moderateScale(160) }} />
                     </View>
                     <Pages
-                        containerStyle={{ ...styles.viewPager,paddingBottom:verticalScale(10) }}
+                        containerStyle={{ ...styles.viewPager, paddingBottom: verticalScale(0) }}
                         indicatorColor={Colors.appBgColor}
                     >
-                        <View style={{ flex:1,alignItems: 'center' }}>
+                        <View style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={Images.bg_splash1}
                                 resizeMode='contain'
-                                style={{height:'70%',width:'100%'}} />
+                                style={{ height: '70%', width: '100%' }} />
                             <Text style={{
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',
                                 padding: moderateScale(10),
-                                paddingTop: verticalScale(20),
+                                paddingTop: verticalScale(10),
                                 fontFamily: Fonts.type.bold, color: '#464646'
-                            }}>Register your Pet</Text>
+                            }}>LOGLY for Pet Parents</Text>
 
                             <Text style={{
                                 fontSize: moderateScale(13),
                                 textAlign: 'center',
+                                paddingTop: verticalScale(5),
                                 padding: moderateScale(10),
 
                                 fontFamily: Fonts.type.base, color: '#464646'
-                            }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, dolore magna aliquyam erat, sed diam voluptua.</Text>
+                            }}>LOGLY is Free for Pet Parents, Social Pet Profiles, Activity Reminders, Lost Pet Alert System. Socially Connected Community to local vetted Animal Care Businesses and Much More.</Text>
                         </View>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={Images.bg_splash2}
                                 resizeMode='contain'
-                                style={{ height: '70%', width:'100%' }}  />
+                                style={{ height: '70%', width: '100%' }} />
                             <Text style={{
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',
                                 padding: moderateScale(10),
-                                paddingTop: verticalScale(20),
+                                paddingTop: verticalScale(10),
                                 fontFamily: Fonts.type.bold, color: '#464646'
-                            }}>Track your Pet Activity</Text>
+                            }}>LOGLY for Pet Care Businesses</Text>
 
                             <Text style={{
                                 fontSize: moderateScale(13),
                                 textAlign: 'center',
                                 padding: moderateScale(10),
-
+                                paddingTop: verticalScale(5),
                                 fontFamily: Fonts.type.base, color: '#464646'
-                            }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, dolore magna aliquyam erat, sed diam voluptua.</Text>
+                            }}>Enjoy business growth without lots of the frustrations with other pet platforms. Flat-rate pricing, ability to communicate with clients, faster payouts and you own your growing client list.</Text>
                         </View>
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={Images.bg_splash3}
@@ -86,24 +87,46 @@ class SplashScreen extends React.Component {
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',
                                 padding: moderateScale(10),
-                                paddingTop: verticalScale(20),
+                                paddingTop: verticalScale(10),
                                 fontFamily: Fonts.type.bold, color: '#464646'
-                            }}>Buy and Sell your Pet</Text>
+                            }}>LOGLY for Animal Care Non-Profits</Text>
 
                             <Text style={{
                                 fontSize: moderateScale(13),
                                 textAlign: 'center',
                                 padding: moderateScale(10),
+                                paddingTop: verticalScale(5),
 
                                 fontFamily: Fonts.type.base, color: '#464646'
-                            }}>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, dolore magna aliquyam erat, sed diam voluptua.</Text>
-                        </View> 
+                            }}>We believe in your passion work, for that we have developed a dedicated platform to assist with Donations, Volunteers and Fostering.  Also with 501c, enjoy LOGLY business software for FREE.</Text>
+                        </View>
+
+                        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                            <Image source={Images.bg_splash4}
+                                resizeMode='contain'
+                                style={{ height: '70%', width: '100%' }} />
+                            <Text style={{
+                                fontSize: moderateScale(22),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+                                paddingTop: verticalScale(10),
+                                fontFamily: Fonts.type.bold, color: '#464646'
+                            }}>LOGLY’s Mission</Text>
+
+                            <Text style={{
+                                fontSize: moderateScale(13),
+                                textAlign: 'center',
+                                padding: moderateScale(10),
+                                paddingTop: verticalScale(5),
+                                fontFamily: Fonts.type.base, color: '#464646'
+                            }}>By Socially Connecting all 3 pillars, our vision is a platform for the betterment and love of all pets that enriches and fills our lives with unconditional love.</Text>
+                        </View>
                     </Pages>
 
                     <View style={{
                         width: '85%',
                         height: '15%',
-                        marginTop:verticalScale(10),
+                        marginTop: verticalScale(10),
                         justifyContent: 'flex-end', marginBottom: verticalScale(10)
                     }}>
 
@@ -141,8 +164,6 @@ const styles = StyleSheet.create({
         height: '70%',
         width: '100%',
         flex: 1,
-
-
     },
 });
 

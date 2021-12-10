@@ -24,3 +24,4 @@ export {
 
 export { ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
 export { ContactDetails,AddContacts, ContactListing, FilterContacts} from './contact_management';
+export { CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPaymentDetails,CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails} from './CRM'

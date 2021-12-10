@@ -312,7 +312,7 @@ function RegisterPetView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Name" style={{
+                                    <TextInput placeholder="Name" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         textAlign: 'left',
@@ -410,7 +410,7 @@ function RegisterPetView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Quantity" style={{
+                                    <TextInput placeholder="Quantity" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         textAlign: 'left',
@@ -512,7 +512,7 @@ function RegisterPetView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Notes" style={{
+                                    <TextInput placeholder="Notes" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         paddingTop: verticalScale(15),

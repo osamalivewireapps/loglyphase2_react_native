@@ -277,7 +277,7 @@ function ProductRegView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Name" style={{
+                                    <TextInput placeholder="Name" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         textAlign: 'left',
@@ -305,7 +305,7 @@ function ProductRegView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Bulk Quantity" style={{
+                                    <TextInput placeholder="Bulk Quantity" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         textAlign: 'left',
@@ -333,7 +333,7 @@ function ProductRegView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Unit Quantity" style={{
+                                    <TextInput placeholder="Unit Quantity" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         textAlign: 'left',
@@ -361,7 +361,7 @@ function ProductRegView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Price" style={{
+                                    <TextInput placeholder="Price" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         textAlign: 'left',
@@ -448,7 +448,7 @@ function ProductRegView(props) {
                                 }}>
 
 
-                                    <TextInput placeholder="Enter Notes" style={{
+                                    <TextInput placeholder="Notes" style={{
                                         ...styles.styleTextInput,
                                         flex: 1,
                                         paddingTop: verticalScale(15),

@@ -258,7 +258,7 @@ function AddContactsView(props) {
                         }}>
 
 
-                            <TextInput placeholder="Enter Name" style={{
+                            <TextInput placeholder="Name" style={{
                                 ...styles.styleTextInput,
                                 flex: 1,
                                 textAlign: 'left',
@@ -286,7 +286,7 @@ function AddContactsView(props) {
                         }}>
 
 
-                            <TextInput placeholder="Enter Email" style={{
+                            <TextInput placeholder="Email" style={{
                                 ...styles.styleTextInput,
                                 flex: 1,
                                 textAlign: 'left',
@@ -524,7 +524,7 @@ function AddContactsView(props) {
                         }}>
 
 
-                            <TextInput placeholder="Enter Address" style={{
+                            <TextInput placeholder="Address" style={{
                                 ...styles.styleTextInput,
                                 flex: 1,
                                 paddingTop: verticalScale(15),

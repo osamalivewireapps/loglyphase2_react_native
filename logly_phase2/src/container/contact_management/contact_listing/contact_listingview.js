@@ -26,7 +26,7 @@ function ContactListingView(props) {
 
     const { listContacts, applyFilter, filterObj, updateContacts } = props;
 
-    const listBorderColors = ['#FE8B19', '#FC5D3F', '#F044F7', '#B7A4F9'];
+    const listBorderColors = ['#FE8B19', '#F044F7'];
     const [isEditShow, setEditShow] = useState(-1);
 
     console.log('contacts--->', listContacts);
@@ -228,7 +228,7 @@ function ContactListingView(props) {
                             backgroundColor: '#097D3B',
                             position: 'absolute',
                             borderRadius: moderateScale(50),
-                            borderColor: listBorderColors[index % 4],
+                            borderColor: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
                             borderWidth: moderateScale(2),
                             height: verticalScale(50), width: moderateScale(60)
                         }}
@@ -287,7 +287,7 @@ function ContactListingView(props) {
                                 ...styles.generalTxt,
                                 fontFamily: Fonts.type.base,
                                 paddingEnd: moderateScale(10),
-                                color: listBorderColors[index % 4],
+                                color: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
                                 marginTop: verticalScale(5)
                             }}>{item.category === VET_ID ? 'Veterinary' : 'Vendor'}
                         </AutoSizeText>

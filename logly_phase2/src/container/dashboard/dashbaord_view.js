@@ -89,7 +89,7 @@ function DashBoardView(props) {
                         ...styles.generalTxt,
                         fontFamily: Fonts.type.bold,
                         fontSize: moderateScale(30),
-                    }}>DashbBoard</Text>
+                    }}>DashBoard</Text>
 
                     <View style={{
                         ...styles.boxcontainer, flexDirection: 'row', padding: 0,

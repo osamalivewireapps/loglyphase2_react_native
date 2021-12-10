@@ -17,7 +17,8 @@ import {
   PasswordResetController, ChangePasswordController, VerificationCodeController, RegistrationController, ForgotPasswordController,
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
   TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts,
-  ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery
+  ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
+  CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -75,6 +76,13 @@ function StackNavigator(props) {
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
             <Stack.Screen name="RegisterProduct" component={RegisterProduct} />
             <Stack.Screen name="Login" component={LoginController} />
+            <Stack.Screen name="CRMDashBoard" component={CRMDashBoard} />
+            <Stack.Screen name="CRMNewOrder" component={CRMNewOrder} />
+            <Stack.Screen name="CRMSalesDetails" component={CRMSalesDetails} />
+            <Stack.Screen name="CRMAddCustomers" component={CRMAddCustomers} />
+            <Stack.Screen name="CRMPaymentDetails" component={CRMPaymentDetails} />
+            <Stack.Screen name="CRMCustomerDetail" component={CRMCustomerDetail} />
+            <Stack.Screen name="CRMPurchaseHistoryDetail" component={CRMPurchaseHistoryDetail} />
             <Stack.Screen name="Registration" component={RegistrationController} />
             <Stack.Screen name="VerificationCode" component={VerificationCodeController} />
             <Stack.Screen name="PasswordReset" component={PasswordResetController} />
@@ -163,7 +171,7 @@ function homeDrawer() {
           />),
       }} />
 
-      <Drawer.Screen name='CRM' component={HomeScreen} options={{
+      <Drawer.Screen name='CRM' component={CRMDashBoard} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18)
         },
@@ -239,8 +247,7 @@ function homeDrawer() {
 
 
 
-
-      <Drawer.Screen name='Setup Wizard' component={HomeScreen} options={{
+      <Drawer.Screen name='Setup Wizard' component={WelcomeRegistration} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18)
         },
