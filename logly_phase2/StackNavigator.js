@@ -18,7 +18,7 @@ import {
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
   TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts,
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
-  CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail
+  CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -76,6 +76,7 @@ function StackNavigator(props) {
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
             <Stack.Screen name="RegisterProduct" component={RegisterProduct} />
             <Stack.Screen name="Login" component={LoginController} />
+            <Stack.Screen name='CrmOrderCompleted' component={CrmOrderCompleted}/>
             <Stack.Screen name="CRMDashBoard" component={CRMDashBoard} />
             <Stack.Screen name="CRMNewOrder" component={CRMNewOrder} />
             <Stack.Screen name="CRMSalesDetails" component={CRMSalesDetails} />

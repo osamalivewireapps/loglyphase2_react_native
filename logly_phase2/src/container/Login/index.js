@@ -21,8 +21,8 @@ class LoginController extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            email: 'faizan@livewireapps.com',//'osama@livewirelabs.co',
-            password: 'Lwa12345',
+            email: '',//'faizan@livewireapps.com',//'osama@livewirelabs.co',
+            password:'' ,//'Lwa12345',
             userEmail: true,
             userPassword: true,
             isCheckOnTerms: true

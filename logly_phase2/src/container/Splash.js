@@ -41,7 +41,7 @@ class SplashScreen extends React.Component {
                         <View style={{ flex: 1, alignItems: 'center' }}>
                             <Image source={Images.bg_splash1}
                                 resizeMode='contain'
-                                style={{ height: '70%', width: '100%' }} />
+                                style={{ height: '65%', width: '100%' }} />
                             <Text style={{
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',
@@ -62,7 +62,7 @@ class SplashScreen extends React.Component {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={Images.bg_splash2}
                                 resizeMode='contain'
-                                style={{ height: '70%', width: '100%' }} />
+                                style={{ height: '65%', width: '100%' }} />
                             <Text style={{
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',
@@ -82,7 +82,7 @@ class SplashScreen extends React.Component {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={Images.bg_splash3}
                                 resizeMode='contain'
-                                style={{ height: '70%', width: '100%' }} />
+                                style={{ height: '60%', width: '100%' }} />
                             <Text style={{
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',
@@ -104,7 +104,7 @@ class SplashScreen extends React.Component {
                         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                             <Image source={Images.bg_splash4}
                                 resizeMode='contain'
-                                style={{ height: '70%', width: '100%' }} />
+                                style={{ height: '65%', width: '100%' }} />
                             <Text style={{
                                 fontSize: moderateScale(22),
                                 textAlign: 'center',

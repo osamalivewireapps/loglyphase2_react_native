@@ -8,11 +8,16 @@
 import React, { useState, useRef } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import CRMStyles from './../crm_styles';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import {
+    BarChart,
+} from "react-native-chart-kit";
+
+
 
 function SalesHistoryView(props) {
 
@@ -22,6 +27,33 @@ function SalesHistoryView(props) {
     const [historyIndex, setHistoryIndex] = useState(-1);
 
     const sheetRef = useRef(null);
+
+    const chartConfig = {
+        //backgroundColor: '#553E90',
+        backgroundGradientFrom: "#7050DE",
+        backgroundGradientFromOpacity: 0.5,
+        backgroundGradientTo: "#341897",
+        backgroundGradientToOpacity: 0.5,
+        color: (opacity = 1) => `white`,
+        // strokeWidth: 2, // optional, default 3
+        barPercentage: moderateScale(0.5),
+        useShadowColorFromDataset: false, // optional
+        style: {
+            padding: 100,
+        },
+        fillShadowGradient: 'white', // THIS
+        fillShadowGradientOpacity: 1, // THIS
+
+    };
+    const screenWidth = Dimensions.get("window").width;
+    const data = {
+        labels: ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [
+            {
+                data: [70, 55, 55, 80, 99, 55, 0]
+            }
+        ]
+    };
     return (
         <View style={{}}>
             <ScrollView keyboardShouldPersistTaps='handled'>
@@ -108,29 +140,64 @@ function SalesHistoryView(props) {
                     </RBSheet>
                     {isBottonSheetVisible ? sheetRef.current.open() : null}
 
+
+                    <ImageBackground style={{
+                        width: '100%',
+                        marginTop: verticalScale(20),
+                        height: moderateVerticalScale(190),
+                        backgroundColor: '#341897',
+                        borderRadius: moderateScale(10),
+                        justifyContent: 'center'
+                    }}>
+
+                        <BarChart
+                            data={data}
+                            width={screenWidth * 0.85}
+                            height={moderateVerticalScale(190)}
+                            withInnerLines={false}
+                            style={{ borderRadius: moderateScale(10) }}
+                            withHorizontalLabels={true}
+                            chartConfig={{
+                                ...chartConfig,
+                                borderRadius: moderateScale(10),
+                                barRadius: moderateScale(10)
+                            }}
+                            showBarTops={false}
+                            yAxisLabel="$ "
+                            yLabelsOffset={moderateScale(10)}
+                        />
+                    </ImageBackground>
+
+
+                    
+
+
+
+
+
                     <FlatList
                         data={ACTIVITY_TYPE}
                         contentContainerStyle={{
-                            marginTop: verticalScale(20),
+                            marginTop: verticalScale(10),
                         }}
                         renderItem={({ item }) => {
                             return (
-                                <TouchableOpacity 
+                                <TouchableOpacity
                                     onPress={() => props.navigation.navigate('CRMSalesDetails')}
-                                style={{
-                                    backgroundColor: '#F5F5F5',
-                                    padding: moderateScale(5),
-                                    borderRadius: moderateScale(10),
-                                    marginTop: verticalScale(10),
-                                    flexDirection: 'row',
-                                    alignItems: 'center',
-                                    paddingTop:verticalScale(12),
-                                    paddingBottom:verticalScale(12)
-                                }}>
+                                    style={{
+                                        backgroundColor: '#F5F5F5',
+                                        padding: moderateScale(5),
+                                        borderRadius: moderateScale(10),
+                                        marginTop: verticalScale(10),
+                                        flexDirection: 'row',
+                                        alignItems: 'center',
+                                        paddingTop: verticalScale(12),
+                                        paddingBottom: verticalScale(12)
+                                    }}>
 
                                     <View style={{
                                         flex: 0.9,
-                                        marginStart:moderateScale(12)
+                                        marginStart: moderateScale(12)
                                     }}>
                                         <View style={{
                                             flexDirection: 'row'
@@ -141,7 +208,7 @@ function SalesHistoryView(props) {
                                                 style={{
                                                     width: moderateScale(15),
                                                     height: verticalScale(15),
-                                   
+
                                                 }}
                                                 source={Icons.icon_crm_paymentinvoice} />
                                             <AutoSizeText
@@ -151,7 +218,7 @@ function SalesHistoryView(props) {
                                                 style={{
                                                     fontFamily: Fonts.type.bold,
                                                     color: Colors.appBgColor,
-                                                    marginStart:moderateScale(10)
+                                                    marginStart: moderateScale(10)
 
                                                 }}
                                             >
@@ -161,7 +228,7 @@ function SalesHistoryView(props) {
 
                                         <View style={{
                                             flexDirection: 'row',
-                                            marginTop:verticalScale(5)
+                                            marginTop: verticalScale(5)
                                         }}>
 
                                             <Image
@@ -296,7 +363,7 @@ function SalesHistoryView(props) {
                     />
                 </View>
             </ScrollView>
-            
+
 
 
         </View>

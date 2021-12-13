@@ -425,13 +425,21 @@ function HomeView(props) {
                                 }}>
                                     {/* <Image source={Icons.icon_float_reg} resizeMode='contain'
                                 style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
+                                    
+                                    <TouchableOpacity
+                                    onPress={()=>{
+                                            props.navigation.navigate('RegisterPet');
+                                    }}
+                                    >
                                     <Text style={{
                                         ...styles.generalTxt,
                                         color: 'white',
 
                                         fontFamily: Fonts.type.medium,
                                         fontSize: moderateScale(20),
-                                    }}>Register Animal</Text></View>
+                                    }}>Register Animal</Text>
+                                    </TouchableOpacity>
+                                    </View>
 
                                 <View style={{
                                     flexDirection: 'row',
@@ -440,13 +448,21 @@ function HomeView(props) {
                                 }}>
                                     {/* <Image source={Icons.icon_float_reg_products} resizeMode='contain'
                             style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
+                                    
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            props.navigation.navigate('RegisterProduct');
+                                        }}
+                                    >
                                     <Text style={{
                                         ...styles.generalTxt,
                                         color: 'white',
                                         textAlign: 'center',
                                         fontFamily: Fonts.type.medium,
                                         fontSize: moderateScale(20),
-                                    }}>Register Product</Text></View>
+                                    }}>Register Product</Text>
+                                    </TouchableOpacity>
+                                    </View>
 
                                 <View style={{
                                     flexDirection: 'row',

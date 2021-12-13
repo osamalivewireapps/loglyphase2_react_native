@@ -8,17 +8,47 @@
 import React, { useState, useRef } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import {
+    BarChart,
+} from "react-native-chart-kit";
 
 function PaymentsView(props) {
 
     const ACTIVITY_TYPE = ['All Time', 'Today', 'This Week', 'Yesterday', 'Last Week']
 
     const [tabUpcoming, setTabUpcoming] = useState(0);//0 for upcoming or vice versa
+
+    const chartConfig = {
+        //backgroundColor: '#553E90',
+        backgroundGradientFrom: "#7050DE",
+        backgroundGradientFromOpacity: 0.5,
+        backgroundGradientTo: "#341897",
+        backgroundGradientToOpacity: 0.5,
+        color: (opacity = 1) => `white`,
+        // strokeWidth: 2, // optional, default 3
+        barPercentage: moderateScale(0.5),
+        useShadowColorFromDataset: false, // optional
+        style: {
+            padding: 100,
+        },
+        fillShadowGradient: 'white', // THIS
+        fillShadowGradientOpacity: 1, // THIS
+
+    };
+    const screenWidth = Dimensions.get("window").width;
+    const data = {
+        labels: ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"],
+        datasets: [
+            {
+                data: [70, 55, 55, 80, 99, 55, 0]
+            }
+        ]
+    };
     return (
         <View style={{}}>
             <ScrollView keyboardShouldPersistTaps='handled'>
@@ -91,6 +121,32 @@ function PaymentsView(props) {
                         </TouchableOpacity>
                     </View>
 
+                    <ImageBackground style={{
+                        width: '100%',
+                        marginTop: verticalScale(20),
+                        height: moderateVerticalScale(190),
+                        backgroundColor: '#341897',
+                        borderRadius: moderateScale(10),
+                        justifyContent: 'center'
+                    }}>
+
+                        <BarChart
+                            data={data}
+                            width={screenWidth * 0.85}
+                            height={moderateVerticalScale(190)}
+                            withInnerLines={false}
+                            style={{ borderRadius: moderateScale(10) }}
+                            withHorizontalLabels={true}
+                            chartConfig={{
+                                ...chartConfig,
+                                borderRadius: moderateScale(10),
+                                barRadius: moderateScale(10)
+                            }}
+                            showBarTops={false}
+                            yAxisLabel="$ "
+                            yLabelsOffset={moderateScale(10)}
+                        />
+                    </ImageBackground>
                     <FlatList
                         data={ACTIVITY_TYPE}
                         contentContainerStyle={{

@@ -31,12 +31,12 @@ function CRMCustomerDetailView(props) {
 
             <View style={{
                 backgroundColor: 'white',
-                height: verticalScale(185)
+                //height: verticalScale(185)
             }}>
                 <View style={{
                     backgroundColor: '#1CB875',
                     borderBottomLeftRadius: moderateScale(40),
-                    height: verticalScale(185)
+                    //height: verticalScale(185)
                 }}>
                     <View style={{
                         paddingBottom: verticalScale(10),

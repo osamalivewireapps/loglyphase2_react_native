@@ -29,15 +29,28 @@ function CRMPaymentDetailsView(props) {
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <CRMHeaderView
-                iconStyles={{flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(40) }}
+                iconStyles={{ flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(40) }}
                 name="Payments" icon={Icons.icon_crm_payment_details} bgColor='#CD1818'
                 {...props}
             />
             <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ paddingTop: moderateScale(30) }}>
 
+                    <Text
+                        style={{
+                            fontSize: moderateScale(16),
+                            marginBottom: verticalScale(20),
+                            marginStart: moderateScale(25),
+                            fontFamily: Fonts.type.medium,
+                            color: '#464646',
+
+                        }}
+                    >
+                        Sales Details
+                    </Text>
                     <View style={{
-                        flexDirection: 'row', alignItems: 'center', marginStart: moderateScale(25),
+                        flexDirection: 'row', alignItems: 'center', 
+                        marginStart: moderateScale(25),
                         marginEnd: moderateScale(25)
                     }}>
                         <Image
@@ -189,8 +202,8 @@ function CRMPaymentDetailsView(props) {
 
                     <View style={{
                         ...CRMStyles.boxcontainer,
-                        shadowOpacity:0.09,
-                        height: verticalScale(55),
+                        shadowOpacity: 0.09,
+                        height: verticalScale(65),
                         borderRadius: moderateScale(15),
                         flexDirection: 'row', alignItems: 'center', marginStart: moderateScale(25),
                         marginEnd: moderateScale(25),
@@ -201,7 +214,7 @@ function CRMPaymentDetailsView(props) {
                             resizeMode='cover'
                             style={{
                                 width: moderateScale(65),
-                                height: verticalScale(55),
+                                height: '100%',
                                 borderRadius: moderateScale(15)
                                 , marginEnd: moderateScale(15)
                             }}
@@ -216,7 +229,7 @@ function CRMPaymentDetailsView(props) {
                                 flexDirection: 'row',
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                paddingEnd:moderateScale(15)
+                                paddingEnd: moderateScale(15)
                             }}>
 
                                 <AutoSizeText
@@ -250,9 +263,9 @@ function CRMPaymentDetailsView(props) {
                             <View style={{
                                 flexDirection: 'row',
                                 paddingEnd: moderateScale(15),
-                                width:'100%',
-                                alignItems:'flex-end',
-                                height:verticalScale(16),
+                                width: '100%',
+                                alignItems: 'flex-end',
+                                height: verticalScale(16),
                             }}>
 
                                 <AutoSizeText
@@ -262,31 +275,31 @@ function CRMPaymentDetailsView(props) {
                                     style={{
                                         fontFamily: Fonts.type.base,
                                         color: '#A1A1A1',
-                                        flex:1
-                     
+                                        flex: 1
+
                                     }}
                                 >
                                     Parrot
                                 </AutoSizeText>
                                 <View style={{
                                     backgroundColor: '#E27F0E',
-                                    justifyContent:'center',
-                                    paddingStart:moderateScale(5),
-                                    paddingEnd:moderateScale(5),
-                                    borderRadius:moderateScale(10)
-                              }}>
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(12)}
-                                    fontSize={moderateScale(14)}
-                                    style={{
-                                        fontFamily: Fonts.type.medium,
-                                        color: 'white',
-                            
-                                    }}
-                                >
-                                    1
-                                </AutoSizeText>
+                                    justifyContent: 'center',
+                                    paddingStart: moderateScale(5),
+                                    paddingEnd: moderateScale(5),
+                                    borderRadius: moderateScale(10)
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: 'white',
+
+                                        }}
+                                    >
+                                        1
+                                    </AutoSizeText>
                                 </View>
                             </View>
 
@@ -306,9 +319,9 @@ function CRMPaymentDetailsView(props) {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        paddingStart:moderateScale(25),
-                        paddingEnd:moderateScale(25),
-                        paddingBottom:moderateScale(10)
+                        paddingStart: moderateScale(25),
+                        paddingEnd: moderateScale(25),
+                        paddingBottom: moderateScale(10)
                     }}>
 
                         <AutoSizeText
@@ -495,6 +508,41 @@ function CRMPaymentDetailsView(props) {
                             $111.250
                         </AutoSizeText>
                     </View>
+
+                    <TouchableOpacity
+                        onPress={() => {
+                            props.navigation.pop()
+                        }}
+                        style={{
+                            ...CRMStyles.styleButtons, marginTop: verticalScale(50),
+                            backgroundColor: Colors.appBgColor,
+                            marginStart:moderateScale(35),
+                            marginEnd: moderateScale(35),
+                        }}>
+                        <Text style={{
+                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
+                            ...CRMStyles.generalTxt, color: 'white'
+                        }}>SEND REMINDER</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        onPress={() => {
+
+                            props.navigation.pop();
+                        }}
+                        style={{
+                            ...CRMStyles.styleButtons, marginTop: verticalScale(10),
+                            marginStart: moderateScale(35),
+                            marginEnd: moderateScale(35),
+                        }}>
+                        <Text style={{
+                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                            paddingTop: verticalScale(0), paddingBottom: verticalScale(10),
+                            ...CRMStyles.generalTxt, color: Colors.appBgColor
+                        }}>MARK AS PAID</Text>
+                    </TouchableOpacity>
+
                 </View>
             </ScrollView>
         </View>

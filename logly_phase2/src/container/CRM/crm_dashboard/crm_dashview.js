@@ -22,7 +22,7 @@ function CRMDashBoardView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { toggleDrawer, userObject } = props;
+    const { userObject } = props;
 
     const [tabs, setTab] = useState(0);
 
@@ -31,7 +31,7 @@ function CRMDashBoardView(props) {
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <View style={{ padding: moderateScale(25), flexDirection: 'row', alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => { toggleDrawer.toggleDrawer() }}>
+                <TouchableOpacity onPress={() => { props.navigation.toggleDrawer() }}>
                     <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
                 </TouchableOpacity>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>

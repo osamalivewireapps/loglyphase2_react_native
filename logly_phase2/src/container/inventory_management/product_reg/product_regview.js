@@ -26,26 +26,25 @@ function ProductRegView(props) {
     const { deletePic,isLoad, productCategories, subCategory, getSubProduct,
         capturePic, imgUri, addProduct, capturePicCollections, listPhotoCollections } = props;
 
-    const { productData } = props.route.params;
-
+    
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
     const [isSubProductSheet, setSubProductSheet] = useState(false);
 
     const [petIndex, setPetIndex] = useState(-1);
 
     const [validateName, setValidateName] = useState(true);
-    const [valueName, setValueName] = useState(productData ? productData.data.name : '');
+    const [valueName, setValueName] = useState(props.route.params?.productData ? props.route.params.productData.data.name : '');
 
     const [validateBulkQuantity, setValidateBulkQuantity] = useState(true);
-    const [valueBulk, setValueBulk] = useState(productData ? productData.data.quantity : '');
+    const [valueBulk, setValueBulk] = useState(props.route.params?.productData ? props.route.params.productData.data.quantity : '');
 
     const [validateUnitQuantity, setValidateUnitQuantity] = useState(true);
     const [valueUnit, setValueUnit] = useState('');
 
     const [validatePrice, setValidatePrice] = useState(true);
-    const [valuePrice, setValuePrice] = useState(productData ? productData.data.price : '');
+    const [valuePrice, setValuePrice] = useState(props.route.params?.productData ? props.route.params.productData.data.price : '');
 
-    const [valueDesc, setDesc] = useState(productData ? productData.data.notes : '');
+    const [valueDesc, setDesc] = useState(props.route.params?.productData ? props.route.params.productData.data.notes : '');
     const [validateDesc, setValidateDesc] = useState(true);
     const [serviceTypeIndex, setServiceTypeIndex] = useState(0);
     const [listSubProduct, setListSubProduct] = useState([]);
@@ -62,15 +61,15 @@ function ProductRegView(props) {
 
     useEffect(() => {
 
-        if (productData) {
+        if (props.route.params?.productData) {
             let index = productCategories.findIndex((value) => {
-                return value.categoryId._id === props.route.params.productData.data.categoryId;
+                return value.categoryId._id === props.route.params?.productData.data.categoryId;
             })
             setPetIndex(index);
 
             if (index > -1) {
                 let tmp = [];
-                tmp.push(productCategories[index].categoryId.subCategories.find(item => item.name === productData.data.subCategory))
+                tmp.push(productCategories[index].categoryId.subCategories.find(item => item.name === props.route.params?.productData.data.subCategory))
                 setListSubProduct(tmp);
             }
         }

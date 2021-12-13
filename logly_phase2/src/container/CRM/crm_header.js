@@ -31,14 +31,14 @@ function CRMHeaderView(props) {
                 height: verticalScale(160)
             }}>
                 <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => { props.navigation.pop() }}>
+                    <TouchableOpacity onPress={() => { props.backScreen ?props.backScreen():props.navigation.pop() }}>
                         <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
-                        <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+                        {/* <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
                             <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
-                        </TouchableOpacity>
+                        </TouchableOpacity> */}
                         <TouchableOpacity onPress={() => {
                             const resetAction = CommonActions.reset({
                                 index: 1,

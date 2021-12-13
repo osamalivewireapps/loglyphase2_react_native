@@ -16,4 +16,4 @@ export {
 export { BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup} from './container/setupwizard'
 export { ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './container/inventory_management';
 export { ContactDetails,AddContacts, ContactListing, FilterContacts} from './container/contact_management';
-export { CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPaymentDetails,CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails} from './container/CRM';
+export { CrmOrderCompleted,CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPaymentDetails,CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails} from './container/CRM';

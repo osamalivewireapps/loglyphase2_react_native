@@ -31,11 +31,11 @@ class RegisterProduct extends Component {
             this.setState({ productCategories: response.formCategory, isLoad: false });
         }).catch(() => this.setState({ isLoad: false }));
 
-        if (this.props.route.params.productData?.gallery.length > 0) {
-            let tmp = this.props.route.params.productData?.gallery.map((value) => {
+        if (this.props.route.params?.productData?.gallery.length > 0) {
+            let tmp = this.props.route.params?.productData?.gallery.map((value) => {
                 return value.filename;
             });
-            this.setState({ listFileUri: tmp, fileUri: this.props.route.params.productData.image });
+            this.setState({ listFileUri: tmp, fileUri: this.props.route.params?.productData.image });
         }
     }
 
@@ -158,9 +158,9 @@ class RegisterProduct extends Component {
             });
         }
 
-        if (this.props.route.params.productData) {
+        if (this.props.route.params?.productData) {
 
-            this.props.editProducts(this.props.route.params.productData._id, formdata).then((response) => {
+            this.props.editProducts(this.props.route.params?.productData._id, formdata).then((response) => {
 
                 this.uploadImages(response.data._id)
 
@@ -178,10 +178,10 @@ class RegisterProduct extends Component {
 
 
         if (this.state.listFileUri.length === 0) {
-            if (this.props.route.params.productData)
+            if (this.props.route.params?.productData)
                 this.props.getProductsDetails(id);
 
-            this.props.route.params.updateProduct();
+            this.props.route.params?.updateProduct();
             this.props.navigation.pop();
             return
         }
@@ -197,10 +197,10 @@ class RegisterProduct extends Component {
         })
 
         this.props.UploadProductImages(formdata2).then((response) => {
-            if (this.props.route.params.productData)
+            if (this.props.route.params?.productData)
                 this.props.getProductsDetails(id);
 
-            this.props.route.params.updateProduct();
+            this.props.route.params?.updateProduct();
             this.props.navigation.pop();
         })
 

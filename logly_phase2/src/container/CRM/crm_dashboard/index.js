@@ -29,7 +29,6 @@ class CRMDashBoard extends Component {
         return (<CRMDashBoardView
             {...this.props}
             userObject={this.state.userObject}
-            toggleDrawer={this.props.navigation}
         />);
     }
 }

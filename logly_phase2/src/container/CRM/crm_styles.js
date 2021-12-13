@@ -37,7 +37,6 @@ const CRMStyles = StyleSheet.create({
         fontSize: moderateScale(16),
         color: '#585858',
         width: '100%',
-
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor,
