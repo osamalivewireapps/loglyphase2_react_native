@@ -13,6 +13,7 @@ import { TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
 import DeviceInfo from 'react-native-device-info';
 import * as Animatable from 'react-native-animatable';
+import Util from '../../utils';
 
 
 function HomeView(props) {
@@ -135,16 +136,20 @@ function HomeView(props) {
                 </View>
             </View>
             <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
+                <View style={{ }}>
 
 
                     <Text style={{
                         ...styles.generalTxt,
                         fontFamily: Fonts.type.bold,
                         fontSize: moderateScale(30),
+                        marginEnd: moderateScale(25),
+                        marginStart: moderateScale(25)
                     }}>Welcome,</Text>
                     <Text style={{
                         ...styles.generalTxt,
+                        marginEnd: moderateScale(25),
+                        marginStart: moderateScale(25)
                     }}>{userObject.name}</Text>
 
                     <FlatList
@@ -160,7 +165,9 @@ function HomeView(props) {
                                             props.navigation.navigate('PetProfile')
                                         } else if (index === 1){
                                             props.navigation.navigate('ProductListing')
-                                        }
+                                        } else if (index === 3) {
+                                            props.navigation.navigate('ScheduleListingActivity')
+                                        } 
                                     }}
                                     style={{
                                         borderRadius: moderateScale(10),
@@ -169,6 +176,7 @@ function HomeView(props) {
                                         marginEnd: moderateScale(10),
                                         alignItems: 'flex-start',
                                         justifyContent: 'flex-end',
+                                        marginStart: index === 0 ? moderateScale(25) : 0,
                                     }}
                                 >
                                     <Image
@@ -203,7 +211,9 @@ function HomeView(props) {
                         ...styles.generalTxt,
                         fontFamily: Fonts.type.bold,
                         fontSize: moderateScale(24),
-                        marginTop: verticalScale(20)
+                        marginTop: verticalScale(20),
+                        marginEnd: moderateScale(25),
+                        marginStart: moderateScale(25)
                     }}>Services</Text>
 
                     <FlatList
@@ -214,6 +224,8 @@ function HomeView(props) {
                         renderItem={({ item, index }) => {
                             return (
                                 <TouchableOpacity
+
+                                onPress={()=>Util.topAlert("In-Progress")}
                                     style={{
                                         borderRadius: moderateScale(15),
                                         width: Dimensions.get('screen').width / moderateScale(2),
@@ -221,6 +233,7 @@ function HomeView(props) {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         marginEnd: moderateScale(10),
+                                        marginStart:index===0?moderateScale(25):0,
                                         backgroundColor: item.bg
                                     }}
                                 >
@@ -253,10 +266,11 @@ function HomeView(props) {
                     <TouchableOpacity
                         style={{
                             borderRadius: moderateScale(15),
-                            width: '100%',
                             flexDirection: 'row',
                             height: verticalScale(80),
                             marginTop: verticalScale(30),
+                            marginEnd: moderateScale(25),
+                            marginStart: moderateScale(25),
                             justifyContent: 'center',
                             alignItems: 'center',
                             backgroundColor: '#4B24D5'
@@ -314,10 +328,16 @@ function HomeView(props) {
                         ...styles.generalTxt,
                         fontFamily: Fonts.type.bold,
                         fontSize: moderateScale(24),
+                        marginEnd: moderateScale(25),
+                        marginStart: moderateScale(25),
                         marginTop: verticalScale(20)
                     }}>Market place</Text>
 
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={{
+                        flexDirection: 'row', 
+                        marginEnd: moderateScale(25),
+                        marginStart:moderateScale(25)
+                             }}>
                         <TouchableOpacity
                             style={{
                                 borderRadius: moderateScale(10),

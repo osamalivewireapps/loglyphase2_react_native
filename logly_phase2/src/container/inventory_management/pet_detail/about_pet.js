@@ -178,6 +178,9 @@ function AboutPetView(props) {
                             marginEnd: moderateScale(5),
                         }} onPress={() => {
                             setTabsSelect(index);
+
+                            if(index===0)
+                                props.navigation.navigate('CreateActivity')
                         }}>
 
                             <AutoSizeText
@@ -186,7 +189,7 @@ function AboutPetView(props) {
                                 fontSize={moderateScale(12)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
-                                    color: '#464646',
+                                    color: Colors.appBgColor,
                                     paddingStart: moderateScale(2),
                                     paddingEnd: moderateScale(2),
                                     textAlign: 'center',
@@ -200,7 +203,7 @@ function AboutPetView(props) {
 
             />
 
-            <TouchableOpacity style={{
+            {/* <TouchableOpacity style={{
                 ...styles.styleButtons, flex: 0,
                 margin: verticalScale(25),
                 marginStart: 0,
@@ -212,7 +215,7 @@ function AboutPetView(props) {
                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                 }}>Share</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
         </View>
     );
 
@@ -233,28 +236,7 @@ function AboutPetView(props) {
 
     }
 
-    function messagefunc(){
-        if (Platform.OS === "ios") {
-            return `Logly (See Animal Profile)`;
-        }
-        else {
-            return `Logly (See Animal Profile) \n \n https://logly.us/animalProfile/${animalData._id}`;
-        }
-    };
-
-     async function ShareProfile(){
-        try {
-            const result = await Share.share({
-                subject: 'Logly',
-                title: 'Logly',
-                message: messagefunc(),
-                url: `https://logly.us/animalProfile/${animalData._id}`,
-            },
-            );
-        } catch (error) {
-            Alert.alert(error.message);
-        }
-    }
+    
 }
 
 const styles = StyleSheet.create({

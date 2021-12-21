@@ -24,4 +24,8 @@ export {
 
 export { ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
 export { ContactDetails,AddContacts, ContactListing, FilterContacts} from './contact_management';
-export { CrmOrderCompleted,CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPaymentDetails,CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails} from './CRM'
+export { CrmOrderCompleted,CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPaymentDetails,CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails} from './CRM';
+export { GroupListing, CreateGroup} from './groups';
+export { EditScheduleActivity,ScheduleListingActivity,CreateActivity, AddScheduleActivity} from './activity_management';
+export { TeamListing, MemberDetails, AddTeamMember} from './team_management';
+export { ViewProfile} from './Profile'

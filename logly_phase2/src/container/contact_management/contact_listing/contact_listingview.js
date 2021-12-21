@@ -57,10 +57,8 @@ function ContactListingView(props) {
                 height: verticalScale(140)
             }}>
                 <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => { 
-                        props.navigation.goBack();
-                     }}>
-                        <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    <TouchableOpacity onPress={() => { props.navigation.toggleDrawer() }}>
+                        <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
                     </TouchableOpacity>
                     <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
@@ -314,7 +312,6 @@ function ContactListingView(props) {
                             flex={moderateScale(0.1)}
                             onPress={() => {
                                 setEditShow(-1)
-                                updateServiceValues(item)
                             }}>
                             <Image source={Icons.icon_services_edit}
                                 resizeMode='contain' style={{
@@ -335,7 +332,7 @@ function ContactListingView(props) {
                             flex={moderateScale(0.1)}
                             onPress={() => {
                                 setEditShow(-1)
-                                delTrainingProgram(index)
+                                //delTrainingProgram(index)
                             }}>
                             <Image source={Icons.icon_services_delete}
                                 resizeMode='contain'

@@ -4,7 +4,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, useColorScheme, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
@@ -41,12 +41,15 @@ function CustomDrawer(props) {
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
-            <View style={{
-                backgroundColor: Colors.appBgColor,
-                alignItems: 'center',
-                paddingStart: moderateScale(40),
-                flex: 0.3, width: '100%', flexDirection: 'row'
-            }}>
+            <TouchableOpacity
+
+                onPress={() => props.navigation.navigate('ViewProfile')}
+                style={{
+                    backgroundColor: Colors.appBgColor,
+                    alignItems: 'center',
+                    paddingStart: moderateScale(40),
+                    flex: 0.3, width: '100%', flexDirection: 'row'
+                }}>
 
                 <Image source={Icons.icon_edit_profile} resizeMode='contain'
                     style={{ height: moderateScale(30), width: moderateScale(30) }}
@@ -56,11 +59,11 @@ function CustomDrawer(props) {
                     <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(20) }}>{userObject.name}</Text>
                     <Text style={{ ...styles.generalTxt }}>Edit Profile</Text>
                 </View>
-            </View>
+            </TouchableOpacity>
             <DrawerContentScrollView {...props} style={{
                 flex: 0.5,
-                paddingTop:isTablet?verticalScale(10):verticalScale(0),
-                paddingBottom:isTablet?0:verticalScale(80)
+                paddingTop: isTablet ? verticalScale(10) : verticalScale(0),
+                paddingBottom: isTablet ? 0 : verticalScale(80)
             }}
 
             >
@@ -69,17 +72,17 @@ function CustomDrawer(props) {
             </DrawerContentScrollView>
             <View style={{ ...styles.bottomDrawerSection, flex: 0.2 }}>
                 <View backgroundColor='#464646' height={moderateScale(0.5)} />
-                <TouchableOpacity 
-                onPress={()=>{
-                    DataHandler.saveAccountType('');
+                <TouchableOpacity
+                    onPress={() => {
+                        DataHandler.saveAccountType('');
                         const resetAction = CommonActions.reset({
                             index: 2,
-                            routes: [{ name: "Splash" }, { name:'Login'}]
+                            routes: [{ name: "Splash" }, { name: 'Login' }]
                         });
 
                         props.navigation.dispatch(resetAction);
-                }}
-                style={{ flexDirection: 'row', paddingStart: moderateScale(40), marginTop: verticalScale(25) }}>
+                    }}
+                    style={{ flexDirection: 'row', paddingStart: moderateScale(40), marginTop: verticalScale(25) }}>
                     <Image source={Icons.icon_logout} resizeMode='contain'
                         style={{ height: moderateScale(20), width: moderateScale(20) }} />
                     <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(20) }}>Logout</Text>

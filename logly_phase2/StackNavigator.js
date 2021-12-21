@@ -18,7 +18,8 @@ import {
   WelcomeRegistration, ServicesSetup, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup,
   TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts,
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
-  CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted
+  CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted,
+  GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -65,6 +66,8 @@ function StackNavigator(props) {
             <Stack.Screen name="PetDetail" component={PetDetail} />
             <Stack.Screen name="ProductDetail" component={ProductDetail} />
             <Stack.Screen name="ContactDetails" component={ContactDetails} />
+            <Stack.Screen name="AddScheduleActivity" component={AddScheduleActivity} />
+            <Stack.Screen name="EditScheduleActivity" component={EditScheduleActivity} />
             <Stack.Screen name='SearchItem' component={SearchItem} />
             <Stack.Screen name='DashBoard' component={DashBoard} />
             <Stack.Screen name='PdfReader' component={PdfReader} />
@@ -84,6 +87,10 @@ function StackNavigator(props) {
             <Stack.Screen name="CRMPaymentDetails" component={CRMPaymentDetails} />
             <Stack.Screen name="CRMCustomerDetail" component={CRMCustomerDetail} />
             <Stack.Screen name="CRMPurchaseHistoryDetail" component={CRMPurchaseHistoryDetail} />
+            <Stack.Screen name="GroupListing" component={GroupListing} />
+            <Stack.Screen name="CreateGroup" component={CreateGroup} />
+            <Stack.Screen name="CreateActivity" component={CreateActivity} />
+            <Stack.Screen name="ScheduleListingActivity" component={ScheduleListingActivity} />
             <Stack.Screen name="Registration" component={RegistrationController} />
             <Stack.Screen name="VerificationCode" component={VerificationCodeController} />
             <Stack.Screen name="PasswordReset" component={PasswordResetController} />
@@ -103,9 +110,13 @@ function StackNavigator(props) {
             <Stack.Screen name='BusListing' component={BusListing} />
             <Stack.Screen name='ProductInfo' component={ProductInfo} />
             <Stack.Screen name='AnimalInfo' component={AnimalInfo} />
+            <Stack.Screen name='TeamListing' component={TeamListing} />
             <Stack.Screen name='AddContacts' component={AddContacts} />
+            <Stack.Screen name='AddTeamMember' component={AddTeamMember} />
+            <Stack.Screen name='MemberDetails' component={MemberDetails} />
             <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
             <Stack.Screen name='FilterAnimal' component={FilterAnimal} />
+            <Stack.Screen name='ViewProfile' component={ViewProfile} />
           </Stack.Navigator>
         </NavigationContainer>
       </Loader>
@@ -185,7 +196,7 @@ function homeDrawer() {
             }}
           />),
       }} />
-      <Drawer.Screen name='Team Member' component={HomeScreen} options={{
+      <Drawer.Screen name='Team Member' component={TeamListing} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18)
         },
@@ -215,7 +226,7 @@ function homeDrawer() {
           />),
       }} />
 
-      <Drawer.Screen name='Groups' component={HomeScreen} options={{
+      <Drawer.Screen name='Groups' component={GroupListing} options={{
         drawerLabelStyle: {
           fontSize: moderateScale(18),
         },

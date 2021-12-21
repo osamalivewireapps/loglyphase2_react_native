@@ -39,7 +39,7 @@ function CRMHeaderView(props) {
                         {/* <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
                             <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
                         </TouchableOpacity> */}
-                        <TouchableOpacity onPress={() => {
+                        {/* <TouchableOpacity onPress={() => {
                             const resetAction = CommonActions.reset({
                                 index: 1,
                                 routes: [{ name: "Splash" }, { name: "HomeDrawer" }],
@@ -52,7 +52,7 @@ function CRMHeaderView(props) {
 
                             <Image source={Icons.icon_header_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                         </TouchableOpacity>
-                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} /> */}
                     </View>
 
                 </View>

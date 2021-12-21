@@ -5,7 +5,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState } from 'react';
-import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, FlatList, ImageBackground } from 'react-native';
+import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, FlatList, ImageBackground, Platform, Share, Alert } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -78,7 +78,7 @@ function PetDetailView(props) {
                     <TouchableOpacity onPress={() => { props.navigation.pop() }}>
                         <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
                         <TouchableOpacity onPress={() => {
                             props.navigation.navigate('SearchItem')
@@ -100,7 +100,7 @@ function PetDetailView(props) {
                             <Image source={Icons.icon_header_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                         </TouchableOpacity>
                         <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                    </View>
+                    </View> */}
 
                 </View>
 
@@ -123,6 +123,14 @@ function PetDetailView(props) {
                         {props.animalData.data?.name}
 
                     </AutoSizeText>
+
+                    <TouchableOpacity
+                        style={{ flex: 0.1}}
+                        onPress={() => { ShareProfile() }}>
+                        <Image source={Icons.icon_detail_share} resizeMode='contain'
+                            style={{ height: moderateScale(20) }} />
+
+                    </TouchableOpacity>
                     {isEditShow ?
                         <View style={{
                             height: verticalScale(70),
@@ -177,6 +185,8 @@ function PetDetailView(props) {
                                     }} />
                             </TouchableOpacity>
                         </View> : <View style={{ flex: 0.1 }} />}
+                    
+                    
                     <TouchableOpacity
                         style={{ flex: 0.1, height: moderateScale(25) }}
                         onPress={() => isEditShow ? setIsEditShow(false) : setIsEditShow(true)}>
@@ -252,6 +262,29 @@ function PetDetailView(props) {
 
             case 3:
                 return <FamilyTreePetView {...props} />
+        }
+    }
+
+    function messagefunc() {
+        if (Platform.OS === "ios") {
+            return `Logly (See Animal Profile)`;
+        }
+        else {
+            return `Logly (See Animal Profile) \n \n https://logly.us/animalProfile/${props.animalData._id}`;
+        }
+    };
+
+    async function ShareProfile() {
+        try {
+            const result = await Share.share({
+                subject: 'Logly',
+                title: 'Logly',
+                message: messagefunc(),
+                url: `https://logly.us/animalProfile/${props.animalData._id}`,
+            },
+            );
+        } catch (error) {
+            Alert.alert(error.message);
         }
     }
 

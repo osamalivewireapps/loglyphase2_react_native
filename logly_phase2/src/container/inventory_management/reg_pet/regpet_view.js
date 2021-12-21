@@ -106,14 +106,14 @@ function RegisterPetView(props) {
                     <TouchableOpacity onPress={() => { props.navigation.pop() }}>
                         <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
+                    {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
 
                         <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
                             <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
                         </TouchableOpacity>
                         <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                         <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                    </View>
+                    </View> */}
 
                 </View>
 
