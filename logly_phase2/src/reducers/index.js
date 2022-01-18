@@ -2,7 +2,8 @@
 import users from './../reducers/users';
 import animal from './animal';
 import product from './product';
-import contacts from './contacts'
+import contacts from './contacts';
+import team_members from './team_members';
 
 import { combineReducers } from 'redux';
 import Loader from './Loader';
@@ -12,7 +13,8 @@ const allReducers = combineReducers({
     loader: Loader,
     animal: animal,
     product: product,
-    contacts: contacts
+    contacts: contacts,
+    team_members: team_members
 
 });
 

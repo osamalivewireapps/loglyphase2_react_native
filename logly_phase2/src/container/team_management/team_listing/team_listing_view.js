@@ -6,7 +6,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { TextInput, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { RefreshControl, TextInput, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -24,7 +24,7 @@ function TeamListingView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listContacts, applyFilter, filterObj, updateContacts } = props;
+    const { listContacts, updateContacts, removeMember } = props;
 
     const listBorderColors = ['#FE8B19', '#F044F7'];
     const [isEditShow, setEditShow] = useState(-1);
@@ -40,9 +40,16 @@ function TeamListingView(props) {
     }, [searchTxt]);
 
     useEffect(() => {
-        setContactList(listContacts)
+        setContactList(listContacts);
+        setRefreshing(false);
     }, [listContacts]);
 
+
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = () => {
+        updateContacts();
+    }
 
 
     return (
@@ -96,70 +103,73 @@ function TeamListingView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ flex: 1, height: Dimensions.get('window').height }}>
+            <View style={{ flex: 1 }}>
 
-                    <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
+                <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
+                    <View style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                    }}>
                         <View style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            alignItems: 'center'
+                            flex: 1,
+                            flexDirection: 'row', alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: moderateScale(10)
                         }}>
-                            <View style={{
-                                flex: 1, 
-                                flexDirection: 'row', alignItems: 'center',
-                                justifyContent: 'flex-end', 
-                                backgroundColor: '#F5F5F5', 
-                                borderRadius: moderateScale(10)
-                            }}>
 
-                                <TextInput
-                                    onChangeText={(e) => {
-                                        setSearchTxt(e)
-                                    }}
-                                    value={searchTxt}
-                                    placeholder='Search Team Members'
-                                    numberOfLines={1}
-                                    keyboardType='default'
-                                    autoCapitalize='none'
-                                    style={{
-                                        keyboardShouldPersistTaps: true,
-                                        flex: 0.9,
-                                        height: verticalScale(40),
-                                        ...styles.generalTxt,
-                                        color: '#777777',
-                                        fontSize: moderateScale(14),
-                                    }} />
-                                <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
+                            <TextInput
+                                onChangeText={(e) => {
+                                    setSearchTxt(e)
+                                }}
+                                value={searchTxt}
+                                placeholder='Search Team Members'
+                                numberOfLines={1}
+                                keyboardType='default'
+                                autoCapitalize='none'
+                                style={{
+                                    keyboardShouldPersistTaps: true,
+                                    flex: 0.9,
+                                    height: verticalScale(40),
+                                    ...styles.generalTxt,
+                                    color: '#777777',
+                                    fontSize: moderateScale(14),
+                                }} />
+                            <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
 
-                            </View>
-
-                  
                         </View>
-                    </View>
-
-                    <View flex={1}>
-
-                        <FlatList
-                            contentContainerStyle={{
-                                flex: 1, padding: moderateScale(25),
-                            }}
-                            data={contactList}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    getFriendItem(item, index)
-                                )
-                            }}
-                            keyExtractor={(item) => item.id}
-
-                        />
 
 
                     </View>
-
-
                 </View>
-            </ScrollView>
+
+
+                <FlatList
+                    contentContainerStyle={{
+                        padding: moderateScale(25),
+                        paddingBottom: verticalScale(80)
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                    data={contactList}
+                    renderItem={({ item, index }) => {
+                        return (
+                            getFriendItem(item, index)
+                        )
+                    }}
+                    keyExtractor={(item) => item.id}
+
+                />
+
+
+
+
+            </View>
 
             <TouchableOpacity
                 style={{
@@ -200,6 +210,9 @@ function TeamListingView(props) {
     );
 
     function getFriendItem(item, index) {
+
+        console.log("image--->", item.image);
+
         return (
             <TouchableOpacity
 
@@ -219,19 +232,51 @@ function TeamListingView(props) {
                     alignItems: 'center',
                     height: verticalScale(50), width: moderateScale(60)
                 }} >
-                    <Image
-                        resizeMode='contain'
+
+                    <ImagePlaceholder
+                        showActivityIndicator={false}
+                        activityIndicatorProps={{
+                            size: 'small',
+                            color: '#777777',
+                        }}
+                        resizeMode='cover'
+                        placeholderStyle={{
+                            width: moderateScale(50),
+                            height: moderateScale(50),
+                            borderRadius: moderateScale(50),
+
+                        }}
+                        imgStyle={{
+                            borderRadius: moderateScale(50),
+                            borderColor: 'transparent',
+                            borderWidth: moderateScale(2),
+                            width: moderateScale(50),
+                            height: moderateScale(50),
+                        }}
+
                         style={{
-                            backgroundColor: '#097D3B',
+                            borderRadius: moderateScale(50),
+                            height: moderateScale(50),
+                        }}
+
+                        src={item.image}
+                        placeholder={Images.img_user_placeholder}
+                    />
+                    {/* <Image
+                        resizeMode='contain'
+                        source={{uri:item.image}}
+                        style={{
+                            //backgroundColor: '#097D3B',
                             position: 'absolute',
                             borderRadius: moderateScale(50),
                             borderColor: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
                             borderWidth: moderateScale(2),
-                            height: verticalScale(50), width: moderateScale(60)
+                            height: verticalScale(50),
+                            width: moderateScale(50)
                         }}
-                    />
+                    /> */}
 
-                    <AutoSizeText
+                    {/* <AutoSizeText
                         numberOfLines={1}
                         minFontSize={moderateScale(12)}
                         fontSize={moderateScale(18)}
@@ -241,7 +286,7 @@ function TeamListingView(props) {
                             fontFamily: Fonts.type.bold,
                             color: 'white',
                         }}>{Util.getInitials(item.name)}
-                    </AutoSizeText>
+                    </AutoSizeText> */}
                 </View>
 
                 <View style={{
@@ -273,7 +318,7 @@ function TeamListingView(props) {
                                 paddingEnd: moderateScale(10),
                                 color: '#464646',
                                 marginTop: verticalScale(5)
-                            }}>{item.phone.length > 0 ? item.phone[0] : ''}
+                            }}>{item.phone && item.phone.length > 0 ? item.phone : ''}
                         </AutoSizeText>
                     </View>
 
@@ -296,8 +341,13 @@ function TeamListingView(props) {
                             }} />
                         <TouchableOpacity
                             flex={moderateScale(0.1)}
+                            style={{
+                                justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                alignItems: 'center'
+                            }}
                             onPress={() => {
                                 setEditShow(-1)
+                                props.navigation.navigate('AddTeamMember', { contactData: item, updateContacts: updateContacts })
                             }}>
                             <Image source={Icons.icon_services_edit}
                                 resizeMode='contain' style={{
@@ -316,9 +366,13 @@ function TeamListingView(props) {
                         }} />
                         <TouchableOpacity
                             flex={moderateScale(0.1)}
+                            style={{
+                                justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                alignItems: 'center',
+                            }}
                             onPress={() => {
                                 setEditShow(-1)
-                                //delTrainingProgram(index)
+                                removeMember(item._id);
                             }}>
                             <Image source={Icons.icon_services_delete}
                                 resizeMode='contain'

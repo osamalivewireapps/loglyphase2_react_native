@@ -2,10 +2,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { getContacts } from '../../../actions/ContactModule';
+import { getContacts, removeContact } from '../../../actions/ContactModule';
 import { connect } from 'react-redux';
 import ContactListingView from './contact_listingview';
 import { VENDOR_ID, VET_ID } from '../../../constants';
+import { Alert } from 'react-native';
 
 class ContactListing extends Component {
 
@@ -55,7 +56,27 @@ class ContactListing extends Component {
         this.setState({ contactList: tmp, filterData: e })
     }
 
+    confirmModal = (e) => {
+        Alert.alert(`Are you sure you want to delete?`, '',
+            [
+                { text: 'Cancel' },
+                { text: 'OK', onPress: () => { this.removeMember(e) } },
 
+            ],
+            { cancelable: false }
+        );
+
+    }
+
+    removeMember(id) {
+        this.props.removeContact(id).then((proceed) => {
+
+            if (proceed) {
+                this.getContacts();
+            }
+        });
+
+    }
 
     render() {
         return (<ContactListingView {...this.props}
@@ -63,6 +84,7 @@ class ContactListing extends Component {
             applyFilter={(e) => this.applyFilter(e)}
             filterObj={this.state.filterData}
             updateContacts={(e) => this.getContacts(e)}
+            removeMember={(e) => this.confirmModal(e)}
         />);
     }
 
@@ -76,6 +98,7 @@ const mapStateToProps = ({ contacts }) => {
 
 const mapDispatchToProps = dispatch => ({
     getContacts: () => dispatch(getContacts('')),
+    removeContact: (data) => dispatch(removeContact(data)),
 
 });
 

@@ -19,6 +19,7 @@ import moment from 'moment';
 import ImageBlurLoading from 'react-native-image-blur-loading';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { TextInput } from 'react-native';
+import { RefreshControl } from 'react-native';
 
 function PetProfileView(props) {
 
@@ -31,6 +32,12 @@ function PetProfileView(props) {
 
     console.log("animal1234--->", filterObj);
 
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = () => {
+        updateAnimal();
+    }
+
     useEffect(() => {
         if (listAnimal.length > 0) {
             setAnimalList(props.animalData.filter((e) => {
@@ -42,6 +49,7 @@ function PetProfileView(props) {
     useEffect(() => {
         //if (listAnimal.length > 0) {
             setAnimalList(listAnimal)
+        setRefreshing(false);
         //}
     }, [listAnimal]);
 
@@ -108,8 +116,7 @@ function PetProfileView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ flex: 1, minHeight: Dimensions.get('window').height }}>
+                <View style={{ flex: 1}}>
 
                     <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
                         <View style={{
@@ -153,9 +160,15 @@ function PetProfileView(props) {
                    
                     <View flex={1}>
                         <FlatList
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            }
                             numColumns={2}
                             contentContainerStyle={{
-                                flex: 1, padding: moderateScale(25)
+                                padding: moderateScale(25)
                             }}
                             data={animalList}
                             renderItem={({ item, index }) => {
@@ -191,7 +204,7 @@ function PetProfileView(props) {
                                                 resizeMode='cover'
                                                 placeholderStyle={{
                                                     width: '100%',
-                                                    height: moderateScale(120),
+                                                    height: '100%',
                                                     borderRadius: moderateScale(10),
                                                     borderBottomLeftRadius: 0,
                                                     borderBottomRightRadius: 0,
@@ -202,7 +215,7 @@ function PetProfileView(props) {
                                                     borderBottomLeftRadius: 0,
                                                     borderBottomRightRadius: 0,
                                                     borderWidth: 1,
-                                                    borderColor: 'transparent'
+                                                    borderColor: 'transparent',
                                                 }}
 
                                                 style={{
@@ -337,8 +350,7 @@ function PetProfileView(props) {
 
 
                 </View>
-            </ScrollView>
-
+          
             <TouchableOpacity
                 style={{
                     height: moderateScale(50),
@@ -352,7 +364,7 @@ function PetProfileView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('RegisterPet')
+                    props.navigation.navigate('RegisterPet', { updateAnimal: updateAnimal})
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{

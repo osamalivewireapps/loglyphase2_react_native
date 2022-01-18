@@ -1,3 +1,4 @@
+/* eslint-disable semi */
 /* eslint-disable react/no-did-mount-set-state */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable prettier/prettier */
@@ -6,9 +7,10 @@ import React, { Component } from 'react';
 import { Keyboard, View } from 'react-native';
 import { connect } from 'react-redux';
 import RegisterPetView from './regpet_view';
-import { getAnimalCategories, getFormCategory, editAnimal, addAnimal, getAnimal, UploadAnimalImages } from '../../../actions/AnimalModule';
+import { DeleteImage, getAnimalCategories, getFormCategory, editAnimal, addAnimal, getAnimal, UploadAnimalImages } from '../../../actions/AnimalModule';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
 import utils from '../../../utils';
+import { debug } from 'react-native-reanimated';
 
 class RegisterPet extends Component {
 
@@ -17,12 +19,12 @@ class RegisterPet extends Component {
         this.state = {
             isLoad: false,
             animalCategories: [],
-            animalBreed:[],
+            animalBreed: [],
             fileUri: '',
             listFileUri: [],
         }
 
-        this.animalData = (props.route.params?.animalData) ? props.route.params.animalData:null;
+        this.animalData = (props.route.params?.animalData) ? props.route.params.animalData : null;
     }
 
     componentDidMount() {
@@ -40,9 +42,9 @@ class RegisterPet extends Component {
         }
     }
 
-    getBreed(catId){
-        console.log("catId-->",catId)
-        this.setState({isLoad:true});
+    getBreed(catId) {
+        console.log("catId-->", catId)
+        this.setState({ isLoad: true });
         getFormCategory(catId).then((response) => {
             console.log("animalBreed-->", response.animalBreed)
             this.setState({ animalBreed: response.formCategory.categoryId.breeds, isLoad: false })
@@ -58,7 +60,7 @@ class RegisterPet extends Component {
             isLoad={this.state.isLoad}
             animalCategories={this.state.animalCategories}
             animalBreed={this.state.animalBreed}
-            getAnimalBreed={(e)=>this.getBreed(e)}
+            getAnimalBreed={(e) => this.getBreed(e)}
             capturePic={(e) => { this.getPic(e, false); }}
             capturePicCollections={(e) => { this.getPic(e, true); }}
             imgUri={this.state.fileUri}
@@ -68,12 +70,39 @@ class RegisterPet extends Component {
         />);
     }
 
-    
+
     deletePic(e) {
+
+        if (this.animalData)
+            this.deleteHandler(e);
+        else
+            this.clearImageStack(e)
+    }
+
+    deleteHandler(e) {
+        if (this.state.listFileUri[e].includes('http')) {
+            let values = {};
+            values.id = this.animalData._id
+            values.animals = this.animalData.gallery[e]._id
+            this.props.DeleteImage(values).then((response) => {
+                if (this.props.route?.params?.animalData)
+                    this.props.getAnimal(this.props.route?.params?.animalData._id).then((response) => {
+                        this.animalData = response.payload
+                    });
+
+                this.props.route?.params?.updateAnimal();
+                this.clearImageStack(e)
+            })
+        } else
+            this.clearImageStack(e)
+    }
+
+    clearImageStack(e) {
         let tmp = this.state.listFileUri;
         tmp.splice(e, 1);
         this.setState({ listFileUri: tmp })
     }
+
     createAnimal(e) {
         if (this.validateFields(e)) {
             this.createAnimalProfile(e);
@@ -83,7 +112,7 @@ class RegisterPet extends Component {
 
     validateFields(e) {
         //breed array//traits//"Spayed or Neutered"
-        
+
         const { name, breed, quantity, price, DOB, Sex, Weight, Notes } = e;
 
         console.log("subcatorgory--->", breed);
@@ -105,14 +134,14 @@ class RegisterPet extends Component {
             return false;
         }
 
-       
+
         else if (!utils.isGraterThanZero(price)) {
 
             utils.topAlertError('price is required');
             this.setState({});
             return false;
         }
-        else if (!breed.length>0) {
+        else if (!breed.length > 0) {
 
             utils.topAlertError('Please select breed.');
             this.setState({});
@@ -136,6 +165,8 @@ class RegisterPet extends Component {
         let formdata = new FormData();
         formdata.append('categoryId', e.categoryId);
 
+        debugger
+
         let productIndex = this.state.animalCategories.find((value) => {
             return e.categoryId === value.categoryId._id;
         });
@@ -143,8 +174,18 @@ class RegisterPet extends Component {
 
         console.log(categoryName)
 
+
         formdata.append('categoryName', categoryName);
         formdata.append('data', JSON.stringify(e));
+
+        var familyvalues = {}
+        familyvalues.parent1 = { id: '' }
+        familyvalues.parent2 = { id: '' }
+        familyvalues.children = []
+
+        if (!this.animalData)
+            formdata.append('family', '{}')
+
         if (this.state.fileUri) {
             formdata.append('file', {
                 uri: this.state.fileUri,//Platform.OS === 'android' ? imageSelect.uri.uri : 'file://' + imageSelect.uri.uri,
@@ -154,7 +195,7 @@ class RegisterPet extends Component {
 
         if (this.animalData) {
 
-        
+
             this.props.editAnimal(this.animalData._id, formdata).then((response) => {
 
                 this.uploadImages(response.data._id)
@@ -173,10 +214,10 @@ class RegisterPet extends Component {
 
 
         if (this.state.listFileUri.length === 0) {
-            if (this.props.route?.params.animalData)
+            if (this.props.route?.params?.animalData)
                 this.props.getAnimal(id);
 
-            this.props.route?.params.updateAnimal();
+            this.props.route?.params?.updateAnimal();
             this.props.navigation.pop();
             return
         }
@@ -192,10 +233,10 @@ class RegisterPet extends Component {
         })
 
         this.props.UploadAnimalImages(formdata2).then((response) => {
-            if (this.props.route?.params.animalData)
+            if (this.props.route?.params?.animalData)
                 this.props.getAnimal(id);
 
-            this.props.route?.params.updateAnimal();
+            this.props.route?.params?.updateAnimal();
             this.props.navigation.pop();
         })
     }
@@ -204,7 +245,7 @@ class RegisterPet extends Component {
     //////////////////////////  CAMERA && GALLERY //////////////////
     options = {
         title: 'Select Image',
-        mediaType:'mixed',
+        mediaType: 'mixed',
         maxWidth: 500,
         maxHeight: 500,
         customButtons: [
@@ -274,10 +315,11 @@ const mapStateToProps = ({ animal }) => {
 };
 
 const mapDispatchToProps = dispatch => ({
-    editAnimal: (id, data) => dispatch(editAnimal(id,data)),
+    editAnimal: (id, data) => dispatch(editAnimal(id, data)),
     addAnimal: (data) => dispatch(addAnimal(data)),
     getAnimal: (data) => dispatch(getAnimal(data)),
     UploadAnimalImages: (data) => dispatch(UploadAnimalImages(data)),
+    DeleteImage: (data) => dispatch(DeleteImage(data)),
 });
 
 export default connect(

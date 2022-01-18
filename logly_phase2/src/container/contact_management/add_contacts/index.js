@@ -176,15 +176,15 @@ class AddContacts extends Component {
             });
             return false;
         }
-        else if (!utils.isLengthGreater(address)) {
+        // else if (!utils.isLengthGreater(address)) {
 
-            utils.topAlertError("Address is required");
+        //     utils.topAlertError("Address is required");
 
-            this.setState({
-                selectCity: false
-            });
-            return false;
-        }
+        //     this.setState({
+        //         selectCity: false
+        //     });
+        //     return false;
+        // }
 
 
         return true;

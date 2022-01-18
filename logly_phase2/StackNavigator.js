@@ -19,7 +19,8 @@ import {
   TeamSetup, InventoryDashBoard, RegisterPet, PetProfile, PetDetail, SearchItem, DashBoard, FilterAnimal, ProductListing, FilterProducts,
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
   CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted,
-  GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile
+  GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile,
+  AppointmentListing, SelectServices, SelectDateServices, AllAnimal
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -117,6 +118,10 @@ function StackNavigator(props) {
             <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
             <Stack.Screen name='FilterAnimal' component={FilterAnimal} />
             <Stack.Screen name='ViewProfile' component={ViewProfile} />
+            <Stack.Screen name='AppointmentListing' component={AppointmentListing}/>
+            <Stack.Screen name='SelectServices' component={SelectServices} />
+            <Stack.Screen name='AllAnimal' component={AllAnimal} />
+            <Stack.Screen name='SelectDateServices' component={SelectDateServices}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Loader>

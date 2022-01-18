@@ -7,7 +7,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from 'react';
-import { KeyboardAvoidingView,View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
+import { KeyboardAvoidingView, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -23,10 +23,12 @@ import ImagePlaceholder from '../../../components/ImagePlaceholder';
 function ProductRegView(props) {
 
 
-    const { deletePic,isLoad, productCategories, subCategory, getSubProduct,
+
+
+    const { deletePic, isLoad, productCategories, subCategory, getSubProduct,
         capturePic, imgUri, addProduct, capturePicCollections, listPhotoCollections } = props;
 
-    
+
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
     const [isSubProductSheet, setSubProductSheet] = useState(false);
 
@@ -39,7 +41,7 @@ function ProductRegView(props) {
     const [valueBulk, setValueBulk] = useState(props.route.params?.productData ? props.route.params.productData.data.quantity : '');
 
     const [validateUnitQuantity, setValidateUnitQuantity] = useState(true);
-    const [valueUnit, setValueUnit] = useState('');
+    const [valueUnitQuantity, setValueUnitQuantity] = useState(props.route.params.productData ? props.route.params.productData.data.unit_quantity : '');
 
     const [validatePrice, setValidatePrice] = useState(true);
     const [valuePrice, setValuePrice] = useState(props.route.params?.productData ? props.route.params.productData.data.price : '');
@@ -103,7 +105,7 @@ function ProductRegView(props) {
                     flexDirection: 'row', flex: 1,
                     alignItems: 'flex-end',
                     marginTop: verticalScale(20),
-                    marginBottom: verticalScale(25),
+                    marginBottom: verticalScale(20),
                 }}>
                     <AutoSizeText
                         numberOfLines={2}
@@ -116,7 +118,7 @@ function ProductRegView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold,
                         }}>
-                        Register Products
+                        {props.route.params?.productData ? 'Edit Products' :'Register Products'}
 
                     </AutoSizeText>
                     <Image source={Icons.icon_header_regproduct} resizeMode="contain"
@@ -124,14 +126,14 @@ function ProductRegView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                
-                    <KeyboardAvoidingView
-                        style={{ flex: 1 }}
-                        keyboardVerticalOffset={50}
-                        behavior={Platform.OS === "ios" ? "padding" : null}
 
-                    >
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : null}
+
+            >
+                <ScrollView keyboardShouldPersistTaps='handled'>
+
 
 
                     <View style={{
@@ -237,17 +239,19 @@ function ProductRegView(props) {
                                         }}
 
                                         src={imgUri}
-                                        placeholder={imgUri ? Icons.icon_user : ''}
+                                        placeholder={imgUri ? Images.img_user_placeholder : ''}
                                     />
 
-                                    <Image
-                                        source={!imgUri ? Icons.icon_awesome_plus : ''}
+                                    {!imgUri ?
+                                        <Image
+                                            source={Icons.icon_awesome_plus}
 
-                                        resizeMode="contain"
-                                        style={{
-                                            height: verticalScale(10),
-                                            width: verticalScale(10),
-                                        }} />
+                                            resizeMode="contain"
+                                            style={{
+                                                height: verticalScale(10),
+                                                width: verticalScale(10),
+                                            }} />
+                                        : <View />}
 
                                 </TouchableOpacity>
 
@@ -344,10 +348,10 @@ function ProductRegView(props) {
                                         keyboardType="number-pad"
                                         onChangeText={(e) => {
                                             setValidateUnitQuantity(Util.isGraterThanZero(e));
-                                            setValueUnit(e);
+                                            setValueUnitQuantity(e);
                                         }
                                         }
-                                        value={valueUnit} />
+                                        value={valueUnitQuantity} />
                                 </View>
 
                                 <View style={{
@@ -406,7 +410,7 @@ function ProductRegView(props) {
                                                 fontFamily: Fonts.type.base,
                                                 width: '97%',
                                             }}>
-                                            {}
+                                            { }
                                             {petIndex > -1 ? (listSubProduct.length > 0 ? listSubProduct[0].name : 'Select SubCategory') : 'Select SubCategory'}
 
                                         </AutoSizeText>
@@ -477,7 +481,7 @@ function ProductRegView(props) {
                                         style={{
                                             height: verticalScale(80),
                                             width: '100%',
-                                            marginTop: verticalScale(10),
+                                            marginTop: verticalScale(20),
                                         }}
                                         contentContainerStyle={{
                                             //padding: moderateScale(30),
@@ -495,13 +499,13 @@ function ProductRegView(props) {
                                                     <View
                                                         style={{
 
-                                                            width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
+                                                            width: moderateScale(90), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
                                                         }}
                                                     >
                                                         <Image
                                                             source={{ uri: item }}
                                                             resizeMode="cover" style={{
-                                                                position:'absolute',
+                                                                position: 'absolute',
                                                                 borderRadius: moderateScale(20),
                                                                 height: '100%', width: '100%'
                                                             }}
@@ -510,7 +514,7 @@ function ProductRegView(props) {
                                                         <Image
                                                             source={Icons.icon_metro_cancel}
                                                             resizeMode="contain" style={{
-                                                                margin:moderateScale(5),
+                                                                margin: moderateScale(5),
                                                                 height: verticalScale(20), width: moderateScale(20)
                                                             }}
                                                         />
@@ -550,6 +554,7 @@ function ProductRegView(props) {
                             }} onPress={() => {
 
                                 addProduct({
+                                    unit_quantity: valueUnitQuantity,
                                     categoryId: productCategories[petIndex].categoryId._id,
                                     bulkquantity: valueBulk,
                                     name: valueName,
@@ -566,7 +571,7 @@ function ProductRegView(props) {
                                     fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
                                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
-                                }}>REGISTER</Text>
+                                }}>{props.route.params.productData ? 'SAVE' : 'REGISTER'}</Text>
                             </TouchableOpacity>
                         </View> : null}
 
@@ -646,9 +651,9 @@ function ProductRegView(props) {
                             </View>
                         </DialogContent>
                     </Dialog>
-                    </KeyboardAvoidingView>
-                
-            </ScrollView>
+
+                </ScrollView>
+            </KeyboardAvoidingView>
 
             <AppLoader loader={{ isLoading: isLoad }} />
         </View>
@@ -712,7 +717,7 @@ function ProductRegView(props) {
                         height: verticalScale(50),
                     }}>
 
-                        <Text style={{ ...styles.generalTxt, color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10) }}>Select Breed</Text>
+                        <Text style={{ ...styles.generalTxt, color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10) }}>Select Sub-Category</Text>
                         <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
                     <FlatList

@@ -6,7 +6,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { TextInput, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { RefreshControl, TextInput, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -24,7 +24,7 @@ function ContactListingView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listContacts, applyFilter, filterObj, updateContacts } = props;
+    const { listContacts, applyFilter, filterObj, updateContacts, removeMember } = props;
 
     const listBorderColors = ['#FE8B19', '#F044F7'];
     const [isEditShow, setEditShow] = useState(-1);
@@ -40,9 +40,15 @@ function ContactListingView(props) {
     }, [searchTxt]);
 
     useEffect(() => {
-        setContactList(listContacts)
+        setContactList(listContacts);
+        setRefreshing(false);
     }, [listContacts]);
 
+    const [refreshing, setRefreshing] = React.useState(false);
+
+    const onRefresh = () => {
+        updateContacts();
+    }
 
 
     return (
@@ -91,76 +97,79 @@ function ContactListingView(props) {
                         Contacts
 
                     </AutoSizeText>
-                    <Image source={Icons.icon_header_add_contacts} resizeMode='contain'
+                    <Image source={Icons.icon_header_teammember} resizeMode='contain'
                         style={{ flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(40) }} />
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ flex: 1, height: Dimensions.get('window').height }}>
+            <View style={{ flex: 1 }}>
 
-                    <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
+                <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
+                    <View style={{
+                        width: '100%',
+                        flexDirection: 'row',
+                        alignItems: 'center'
+                    }}>
                         <View style={{
-                            width: '100%',
-                            flexDirection: 'row',
-                            alignItems: 'center'
+                            marginEnd: moderateScale(20),
+                            flex: 1, flexDirection: 'row', alignItems: 'center',
+                            justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
                         }}>
-                            <View style={{
-                                marginEnd: moderateScale(20),
-                                flex: 1, flexDirection: 'row', alignItems: 'center',
-                                justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
-                            }}>
 
-                                <TextInput
-                                    onChangeText={(e) => {
-                                        setSearchTxt(e)
-                                    }}
-                                    value={searchTxt}
-                                    placeholder='Search Contacts'
-                                    numberOfLines={1}
-                                    keyboardType='default'
-                                    autoCapitalize='none'
-                                    style={{
-                                        keyboardShouldPersistTaps: true,
-                                        flex: 0.9,
-                                        height: verticalScale(40),
-                                        ...styles.generalTxt,
-                                        color: '#777777',
-                                        fontSize: moderateScale(14),
-                                    }} />
-                                <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
-
-                            </View>
-
-                            <TouchableOpacity onPress={() => { props.navigation.navigate('FilterContacts', { ...props, filterList: ((e) => applyFilter(e)), customFilters: filterObj }) }}>
-                                <Image source={Icons.icon_filter_list} resizeMode='contain' style={{ height: moderateScale(20), width: moderateScale(20) }} />
-                            </TouchableOpacity>
+                            <TextInput
+                                onChangeText={(e) => {
+                                    setSearchTxt(e)
+                                }}
+                                value={searchTxt}
+                                placeholder='Search Contacts'
+                                numberOfLines={1}
+                                keyboardType='default'
+                                autoCapitalize='none'
+                                style={{
+                                    keyboardShouldPersistTaps: true,
+                                    flex: 0.9,
+                                    height: verticalScale(40),
+                                    ...styles.generalTxt,
+                                    color: '#777777',
+                                    fontSize: moderateScale(14),
+                                }} />
+                            <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
 
                         </View>
-                    </View>
 
-                    <View flex={1}>
-
-                        <FlatList
-                            contentContainerStyle={{
-                                flex: 1, padding: moderateScale(25),
-                            }}
-                            data={contactList}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    getFriendItem(item, index)
-                                )
-                            }}
-                            keyExtractor={(item) => item.id}
-
-                        />
-
+                        <TouchableOpacity onPress={() => { props.navigation.navigate('FilterContacts', { ...props, filterList: ((e) => applyFilter(e)), customFilters: filterObj }) }}>
+                            <Image source={Icons.icon_filter_list} resizeMode='contain' style={{ height: moderateScale(20), width: moderateScale(20) }} />
+                        </TouchableOpacity>
 
                     </View>
-
-
                 </View>
-            </ScrollView>
+
+
+                <FlatList
+                    contentContainerStyle={{
+                        padding: moderateScale(25),
+                        paddingBottom:verticalScale(80)
+                    }}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                        />
+                    }
+                    data={contactList}
+                    renderItem={({ item, index }) => {
+                        return (
+                            getFriendItem(item, index)
+                        )
+                    }}
+                    keyExtractor={(item) => item.id}
+
+                />
+
+
+
+
+            </View>
 
             <TouchableOpacity
                 style={{
@@ -175,7 +184,7 @@ function ContactListingView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('AddContacts', { updateContacts: updateContacts})
+                    props.navigation.navigate('AddContacts', { updateContacts: updateContacts })
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{
@@ -203,8 +212,8 @@ function ContactListingView(props) {
     function getFriendItem(item, index) {
         return (
             <TouchableOpacity
-
-                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id, updateContacts: updateContacts})}
+                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id, updateContacts: updateContacts })}
+                
                 style={{
                     borderRadius: moderateScale(10),
                     marginTop: verticalScale(10),
@@ -228,7 +237,8 @@ function ContactListingView(props) {
                             borderRadius: moderateScale(50),
                             borderColor: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
                             borderWidth: moderateScale(2),
-                            height: verticalScale(50), width: moderateScale(60)
+                            height: verticalScale(42), 
+                            width: moderateScale(50)
                         }}
                     />
 
@@ -310,7 +320,12 @@ function ContactListingView(props) {
                             }} />
                         <TouchableOpacity
                             flex={moderateScale(0.1)}
+                            style={{
+                                justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                alignItems: 'center',
+                            }}
                             onPress={() => {
+                                props.navigation.navigate('AddContacts', { contactData: item, updateContacts: updateContacts })
                                 setEditShow(-1)
                             }}>
                             <Image source={Icons.icon_services_edit}
@@ -330,9 +345,13 @@ function ContactListingView(props) {
                         }} />
                         <TouchableOpacity
                             flex={moderateScale(0.1)}
+                            style={{
+                                justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                alignItems: 'center',
+                            }}
                             onPress={() => {
                                 setEditShow(-1)
-                                //delTrainingProgram(index)
+                                removeMember(item._id);
                             }}>
                             <Image source={Icons.icon_services_delete}
                                 resizeMode='contain'

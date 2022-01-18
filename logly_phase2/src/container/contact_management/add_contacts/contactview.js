@@ -17,6 +17,8 @@ import Util from '../../../utils';
 import _ from 'lodash';
 import { VENDOR_ID, VET_ID } from '../../../constants';
 import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
+import { KeyboardAvoidingView } from 'react-native';
+import { Platform } from 'react-native';
 
 function AddContactsView(props) {
 
@@ -40,7 +42,7 @@ function AddContactsView(props) {
     const [valuePhone, setValuePhone] = useState(props.route.params.contactData?.phone[0]);
 
 
-    const [valueDesc, setDesc] = useState(props.route.params.contactData?.address);
+    const [valueDesc, setDesc] = useState(props.route.params.contactData ? props.route.params.contactData.address:'');
     const [validateDesc, setValidateDesc] = useState(true);
 
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
@@ -128,7 +130,7 @@ function AddContactsView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold,
                         }}>
-                        Add Contacts
+                        {props.route.params.contactData?'Edit Contacts':'Add Contacts'}
 
                     </AutoSizeText>
                     <Image source={Icons.icon_header_add_contacts} resizeMode="contain"
@@ -136,68 +138,72 @@ function AddContactsView(props) {
                 </View>
 
             </View>
-            <ScrollView
-                ref={scroll}
-                keyboardShouldPersistTaps='handled'>
-                <View style={{ flex: 1 }}>
+            <KeyboardAvoidingView
+                flex={1}
+                behavior={Platform.OS === "ios" ? "padding" : null}
+            >
+                <ScrollView
+                    ref={scroll}
+                    keyboardShouldPersistTaps='handled'>
+                    <View style={{ flex: 1 }}>
 
-                    <View style={{
-                        flex: 1,
-                        padding: moderateScale(25),
-                    }}>
+                        <View style={{
+                            flex: 1,
+                            padding: moderateScale(25),
+                        }}>
 
-                        <TouchableOpacity
-                            onPress={() => {
-                                setCloseBottonSheet(true);
-                            }}
-                            style={{
-                                ...styles.boxcontainer,
-                                flexDirection: 'row', padding: 0, alignItems: 'center',
-                                paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
-                            }}>
+                            <TouchableOpacity
+                                onPress={() => {
+                                    setCloseBottonSheet(true);
+                                }}
+                                style={{
+                                    ...styles.boxcontainer,
+                                    flexDirection: 'row', padding: 0, alignItems: 'center',
+                                    paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
+                                }}>
 
 
-                            <View style={{
-                                flexDirection: 'row', padding: 0,
-                                alignItems: 'center',
-                                flex: 1,
-                            }}>
+                                <View style={{
+                                    flexDirection: 'row', padding: 0,
+                                    alignItems: 'center',
+                                    flex: 1,
+                                }}>
 
-                                <AutoSizeText
-                                    numberOfLines={2}
-                                    minFontSize={moderateScale(14)}
-                                    fontSize={moderateScale(16)}
-                                    mode={ResizeTextMode.overflow_replacement}
-                                    style={{
-                                        color: '#464646',
-                                        fontFamily: Fonts.type.base,
-                                        width: '97%',
-                                    }}>
-                                    {contactType > -1 ? CONTACTS_TYPES[contactType] : 'Select Category'}
+                                    <AutoSizeText
+                                        numberOfLines={2}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.overflow_replacement}
+                                        style={{
+                                            color: '#464646',
+                                            fontFamily: Fonts.type.base,
+                                            width: '97%',
+                                        }}>
+                                        {contactType > -1 ? CONTACTS_TYPES[contactType] : 'Select Category'}
 
-                                </AutoSizeText>
-                                <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
+                                    </AutoSizeText>
+                                    <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
-                            </View>
-                        </TouchableOpacity>
+                                </View>
+                            </TouchableOpacity>
 
-                        <RBSheet
-                            ref={sheetRef}
-                            height={Dimensions.get('screen').height - moderateScale(130)}
-                            openDuration={250}
-                            customStyles={{
-                                container: {
-                                    borderRadius: moderateScale(30),
-                                },
-                            }}
-                            onClose={() => setCloseBottonSheet(false)}
-                        >
-                            {showContactTypes()}
+                            <RBSheet
+                                ref={sheetRef}
+                                height={Dimensions.get('screen').height - moderateScale(130)}
+                                openDuration={250}
+                                customStyles={{
+                                    container: {
+                                        borderRadius: moderateScale(30),
+                                    },
+                                }}
+                                onClose={() => setCloseBottonSheet(false)}
+                            >
+                                {showContactTypes()}
 
-                        </RBSheet>
-                        {isBottonSheetVisible ? sheetRef.current.open() : null}
+                            </RBSheet>
+                            {isBottonSheetVisible ? sheetRef.current.open() : null}
 
-                        <TouchableOpacity
+                            {/* <TouchableOpacity
                             style={{
                                 backgroundColor: '#F4F4F4', alignSelf: 'center',
                                 height: moderateScale(90),
@@ -247,411 +253,413 @@ function AddContactsView(props) {
                             }}>
                             Add Photo
 
-                        </AutoSizeText>
+                        </AutoSizeText> */}
 
-                        <View style={{
-                            ...styles.boxcontainer,
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validateName ? 'transparent' : 'darkred',
-                            shadowOpacity: validateName ? 0.25 : 1,
-                            padding: moderateScale(15),
-                        }}>
-
-
-                            <TextInput placeholder="Name" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                textAlign: 'left',
-                            }}
-                                underlineColorAndroid="transparent"
-                                require={true}
-                                numberOfLines={1}
-                                autoCapitalize="none"
-                                keyboardType="default"
-                                onChangeText={(e) => {
-                                    setValidateName(Util.isLengthGreater(e));
-                                    setValueName(e);
-                                }
-                                }
-                                value={valueName} />
-                        </View>
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            marginTop: verticalScale(10),
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validateEmail ? 'transparent' : 'darkred',
-                            shadowOpacity: validateEmail ? 0.25 : 1,
-                            padding: moderateScale(15),
-                        }}>
-
-
-                            <TextInput placeholder="Email" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                textAlign: 'left',
-                            }}
-                                underlineColorAndroid="transparent"
-                                require={true}
-                                numberOfLines={1}
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                onChangeText={(e) => {
-                                    setValidateEmail(Util.isEmailValid(e));
-                                    setValueEmail(e);
-                                }
-                                }
-                                value={valueEmail} />
-                        </View>
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            marginTop: verticalScale(10),
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validatePhone ? 'transparent' : 'darkred',
-                            shadowOpacity: validatePhone ? 0.25 : 1,
-                            padding: moderateScale(15),
-                        }}>
-
-
-                            <TextInput placeholder="Phone No" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                textAlign: 'left',
-                            }}
-                                underlineColorAndroid="transparent"
-                                require={true}
-                                numberOfLines={1}
-                                autoCapitalize="none"
-                                maxLength={12}
-                                keyboardType="phone-pad"
-                                onChangeText={(e) => {
-                                    setPhoneNo(e);
-                                }
-                                }
-                                value={valuePhone} />
-                        </View>
-
-
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            shadowColor: validateState ? 'white' : 'darkred',
-                            shadowOpacity: validateState ? 0.25 : 1,
-                            marginTop: verticalScale(15), flexDirection: 'row',
-                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
-                            alignItems: 'center',
-                        }}>
-
-                            <TextInput placeholder="Select State"
-                                ref={inputEl}
-                                autoCapitalize="none"
-
-                                onPressIn={() => {
-
-                                    inputEl.current.focus();
-                                    if (inputCity.current.isFocused()) { return; }
-
-                                    setIsVisible(true);
-                                    setIsCityVisible(false);
-                                    setFilterArr(arrStates);
-                                    scroll.current.scrollTo({ x: 0, y: 150, animated: true });
-                                }}
-                                onChangeText={(e) => {
-                                    userStateLocation({ name: e, stateId: -1 });
-                                    setIsVisible(isVisible);
-                                }}
-                                style={{
-                                    ...styles.styleTextInput,
-                                    flex: 8,
-                                    marginEnd: moderateScale(10),
-
-                                }}
-                                keyboardType="default"
-                                value={userState} />
-                            <TouchableOpacity
-                                onPress={() => {
-                                    //setIsVisible(!isVisible);
-                                    //setIsCityVisible(false)
-                                    //setIsZipVisible(false)
-
-
-                                }}
-                            >
-                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
-                            </TouchableOpacity>
-
-
-                        </View>
-
-                        {(isVisible) ? <View style={{
-                            width: '100%',
-                            marginTop: verticalScale(10),
-                            ...styles.boxcontainer,
-                            height: moderateScale(150),
-                            shadowRadius: 4,
-                            borderRadius: moderateScale(10),
-                            zIndex: 1,
-
-                        }}>
-
-                            <FlatList
-                                keyboardShouldPersistTaps="handled"
-                                data={filterArray}
-                                renderItem={(item) => {
-                                    return (
-                                        <TouchableOpacity onPress={() => {
-                                            Keyboard.dismiss();
-                                            chooseState({ name: item.item.name, stateId: item.item.id });
-                                            setIsVisible(false);
-
-                                        }}>
-                                            <View >
-                                                <Text style={{
-                                                    ...styles.generalTxt, borderColor: 'black',
-                                                    borderWidth: 0, width: '100%', padding: moderateScale(10),
-                                                    borderRadius: moderateScale(10), marginTop: 0,
-                                                    backgroundColor: 'white',
-                                                    color: 'black', fontSize: moderateScale(14),
-
-                                                }}>{item.item.name}</Text>
-                                            </View>
-                                        </TouchableOpacity>);
-                                }}
-                                keyExtractor={item => item.Country}
-                            />
-
-                        </View> : null}
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            shadowColor: validateCity ? 'white' : 'darkred',
-                            shadowOpacity: validateCity ? 0.25 : 1,
-                            marginTop: verticalScale(15), flexDirection: 'row',
-                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
-                            alignItems: 'center',
-                        }}>
-
-                            <TextInput placeholder="Select City"
-                                ref={inputCity}
-                                onPressIn={() => {
-                                    setIsVisible(false);
-                                    if (userState.length !== 0) {
-                                        setIsCityVisible(true);
-                                        setFilterCityArr(arrCity);
-                                        scroll.current.scrollTo({ x: 0, y: 200, animated: true });
-                                    } else {
-                                        alert('Please select state first..');
-                                        setIsCityVisible(false);
-                                    }
-                                }
-                                }
-                                onChangeText={(e) => {
-                                    setIsVisible(false);
-                                    userCityLocation({ name: e, cityId: -1 });
-                                    setIsCityVisible(true);
-                                    scroll.current.scrollTo({ x: 0, y: 200, animated: true });
-
-                                }}
-                                style={{
-                                    ...styles.styleTextInput,
-                                    flex: 8,
-                                    marginEnd: moderateScale(10),
-
-                                }}
-                                keyboardType="default"
-                                autoCapitalize="none"
-                                value={userCity}
-
-                            />
-
-                            <TouchableOpacity
-                                onPress={() => {
-
-                                }}
-                            >
-                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
-                            </TouchableOpacity>
-                        </View>
-
-                        {(isCityVisible) ? <View style={{
-                            zIndex: 1,
-                            width: '100%',
-                            marginTop: verticalScale(10),
-                            ...styles.boxcontainer,
-                            height: moderateScale(150),
-                            shadowRadius: 4,
-                            borderRadius: moderateScale(10),
-
-                        }}>
-                            <FlatList
-                                keyboardShouldPersistTaps="handled"
-                                data={filterCityArray}
-                                renderItem={(item) => {
-                                    return (
-                                        <TouchableOpacity onPress={() => {
-                                            Keyboard.dismiss();
-                                            chooseCity({ name: item.item.name, cityId: item.item.id });
-                                            setIsCityVisible(false);
-
-                                        }}>
-                                            <View >
-                                                <Text style={{
-                                                    ...styles.generalTxt, borderColor: 'black',
-                                                    borderWidth: 0, width: '100%',
-                                                    padding: moderateScale(10),
-                                                    borderRadius: moderateScale(10), marginTop: 0,
-                                                    backgroundColor: 'white',
-                                                    color: 'black', fontSize: moderateScale(14),
-
-                                                }}>{item.item.name}</Text>
-                                            </View>
-                                        </TouchableOpacity>);
-                                }}
-                                keyExtractor={item => item.Country}
-                            />
-                        </View> : null}
-
-
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            height: verticalScale(100),
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validateDesc ? 'transparent' : 'darkred',
-                            shadowOpacity: validateDesc ? 0.25 : 1,
-                            marginTop: verticalScale(15),
-                        }}>
-
-
-                            <TextInput placeholder="Address" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                paddingTop: verticalScale(15),
+                            <View style={{
+                                ...styles.boxcontainer,
+                                marginTop: verticalScale(10),
+                                flexDirection: 'row', alignItems: 'center',
+                                shadowColor: validateName ? 'transparent' : 'darkred',
+                                shadowOpacity: validateName ? 0.25 : 1,
                                 padding: moderateScale(15),
-                                textAlign: 'left',
+                            }}>
+
+
+                                <TextInput placeholder="Name" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                    underlineColorAndroid="transparent"
+                                    require={true}
+                                    numberOfLines={1}
+                                    autoCapitalize="none"
+                                    keyboardType="default"
+                                    onChangeText={(e) => {
+                                        setValidateName(Util.isLengthGreater(e));
+                                        setValueName(e);
+                                    }
+                                    }
+                                    value={valueName} />
+                            </View>
+
+                            <View style={{
+                                ...styles.boxcontainer,
+                                marginTop: verticalScale(10),
+                                flexDirection: 'row', alignItems: 'center',
+                                shadowColor: validateEmail ? 'transparent' : 'darkred',
+                                shadowOpacity: validateEmail ? 0.25 : 1,
+                                padding: moderateScale(15),
+                            }}>
+
+
+                                <TextInput placeholder="Email" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                    underlineColorAndroid="transparent"
+                                    require={true}
+                                    numberOfLines={1}
+                                    autoCapitalize="none"
+                                    keyboardType="email-address"
+                                    onChangeText={(e) => {
+                                        setValidateEmail(Util.isEmailValid(e));
+                                        setValueEmail(e);
+                                    }
+                                    }
+                                    value={valueEmail} />
+                            </View>
+
+                            <View style={{
+                                ...styles.boxcontainer,
+                                marginTop: verticalScale(10),
+                                flexDirection: 'row', alignItems: 'center',
+                                shadowColor: validatePhone ? 'transparent' : 'darkred',
+                                shadowOpacity: validatePhone ? 0.25 : 1,
+                                padding: moderateScale(15),
+                            }}>
+
+
+                                <TextInput placeholder="Phone No" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                    underlineColorAndroid="transparent"
+                                    require={true}
+                                    numberOfLines={1}
+                                    autoCapitalize="none"
+                                    maxLength={12}
+                                    keyboardType="phone-pad"
+                                    onChangeText={(e) => {
+                                        setPhoneNo(e);
+                                    }
+                                    }
+                                    value={valuePhone} />
+                            </View>
+
+
+
+                            <View style={{
+                                ...styles.boxcontainer,
+                                shadowColor: validateState ? 'white' : 'darkred',
+                                shadowOpacity: validateState ? 0.25 : 1,
+                                marginTop: verticalScale(10), flexDirection: 'row',
+                                padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                                alignItems: 'center',
+                            }}>
+
+                                <TextInput placeholder="Select State"
+                                    ref={inputEl}
+                                    autoCapitalize="none"
+
+                                    onPressIn={() => {
+
+                                        inputEl.current.focus();
+                                        if (inputCity.current.isFocused()) { return; }
+
+                                        setIsVisible(true);
+                                        setIsCityVisible(false);
+                                        setFilterArr(arrStates);
+                                        scroll.current.scrollTo({ x: 0, y: 150, animated: true });
+                                    }}
+                                    onChangeText={(e) => {
+                                        userStateLocation({ name: e, stateId: -1 });
+                                        setIsVisible(isVisible);
+                                    }}
+                                    style={{
+                                        ...styles.styleTextInput,
+                                        flex: 8,
+                                        marginEnd: moderateScale(10),
+
+                                    }}
+                                    keyboardType="default"
+                                    value={userState} />
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        //setIsVisible(!isVisible);
+                                        //setIsCityVisible(false)
+                                        //setIsZipVisible(false)
+
+
+                                    }}
+                                >
+                                    <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
+                                </TouchableOpacity>
+
+
+                            </View>
+
+                            {(isVisible) ? <View style={{
+                                width: '100%',
+                                marginTop: verticalScale(10),
+                                ...styles.boxcontainer,
+                                height: moderateScale(150),
+                                shadowRadius: 4,
+                                borderRadius: moderateScale(10),
+                                zIndex: 1,
+
+                            }}>
+
+                                <FlatList
+                                    keyboardShouldPersistTaps="handled"
+                                    data={filterArray}
+                                    renderItem={(item) => {
+                                        return (
+                                            <TouchableOpacity onPress={() => {
+                                                Keyboard.dismiss();
+                                                chooseState({ name: item.item.name, stateId: item.item.id });
+                                                setIsVisible(false);
+
+                                            }}>
+                                                <View >
+                                                    <Text style={{
+                                                        ...styles.generalTxt, borderColor: 'black',
+                                                        borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                                        borderRadius: moderateScale(10), marginTop: 0,
+                                                        backgroundColor: 'white',
+                                                        color: 'black', fontSize: moderateScale(14),
+
+                                                    }}>{item.item.name}</Text>
+                                                </View>
+                                            </TouchableOpacity>);
+                                    }}
+                                    keyExtractor={item => item.Country}
+                                />
+
+                            </View> : null}
+
+                            <View style={{
+                                ...styles.boxcontainer,
+                                shadowColor: validateCity ? 'white' : 'darkred',
+                                shadowOpacity: validateCity ? 0.25 : 1,
+                                marginTop: verticalScale(10), flexDirection: 'row',
+                                padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                                alignItems: 'center',
+                            }}>
+
+                                <TextInput placeholder="Select City"
+                                    ref={inputCity}
+                                    onPressIn={() => {
+                                        setIsVisible(false);
+                                        if (userState.length !== 0) {
+                                            setIsCityVisible(true);
+                                            setFilterCityArr(arrCity);
+                                            scroll.current.scrollTo({ x: 0, y: 200, animated: true });
+                                        } else {
+                                            alert('Please select state first..');
+                                            setIsCityVisible(false);
+                                        }
+                                    }
+                                    }
+                                    onChangeText={(e) => {
+                                        setIsVisible(false);
+                                        userCityLocation({ name: e, cityId: -1 });
+                                        setIsCityVisible(true);
+                                        scroll.current.scrollTo({ x: 0, y: 200, animated: true });
+
+                                    }}
+                                    style={{
+                                        ...styles.styleTextInput,
+                                        flex: 8,
+                                        marginEnd: moderateScale(10),
+
+                                    }}
+                                    keyboardType="default"
+                                    autoCapitalize="none"
+                                    value={userCity}
+
+                                />
+
+                                <TouchableOpacity
+                                    onPress={() => {
+
+                                    }}
+                                >
+                                    <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
+                                </TouchableOpacity>
+                            </View>
+
+                            {(isCityVisible) ? <View style={{
+                                zIndex: 1,
+                                width: '100%',
+                                marginTop: verticalScale(10),
+                                ...styles.boxcontainer,
+                                height: moderateScale(150),
+                                shadowRadius: 4,
+                                borderRadius: moderateScale(10),
+
+                            }}>
+                                <FlatList
+                                    keyboardShouldPersistTaps="handled"
+                                    data={filterCityArray}
+                                    renderItem={(item) => {
+                                        return (
+                                            <TouchableOpacity onPress={() => {
+                                                Keyboard.dismiss();
+                                                chooseCity({ name: item.item.name, cityId: item.item.id });
+                                                setIsCityVisible(false);
+
+                                            }}>
+                                                <View >
+                                                    <Text style={{
+                                                        ...styles.generalTxt, borderColor: 'black',
+                                                        borderWidth: 0, width: '100%',
+                                                        padding: moderateScale(10),
+                                                        borderRadius: moderateScale(10), marginTop: 0,
+                                                        backgroundColor: 'white',
+                                                        color: 'black', fontSize: moderateScale(14),
+
+                                                    }}>{item.item.name}</Text>
+                                                </View>
+                                            </TouchableOpacity>);
+                                    }}
+                                    keyExtractor={item => item.Country}
+                                />
+                            </View> : null}
+
+
+
+                            <View style={{
+                                ...styles.boxcontainer,
                                 height: verticalScale(100),
-                            }}
-                                underlineColorAndroid="transparent"
-                                require={true}
-                                multiline={true}
-                                numberOfLines={50}
-                                maxLength={75}
-                                autoCapitalize="none"
-                                keyboardType="default"
-                                onChangeText={(e) => {
-                                    setValidateDesc(Util.isLengthGreater(e));
-                                    setDesc(e);
+                                flexDirection: 'row', alignItems: 'center',
+                                shadowColor: validateDesc ? 'transparent' : 'darkred',
+                                shadowOpacity: validateDesc ? 0.25 : 1,
+                                marginTop: verticalScale(10),
+                            }}>
+
+
+                                <TextInput placeholder="Address" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    paddingTop: verticalScale(15),
+                                    padding: moderateScale(15),
+                                    textAlign: 'left',
+                                    height: verticalScale(100),
+                                }}
+                                    underlineColorAndroid="transparent"
+                                    require={true}
+                                    multiline={true}
+                                    numberOfLines={50}
+                                    maxLength={75}
+                                    autoCapitalize="none"
+                                    keyboardType="default"
+                                    onChangeText={(e) => {
+                                        setValidateDesc(Util.isLengthGreater(e));
+                                        setDesc(e);
+                                    }
+                                    }
+                                    value={valueDesc} />
+                            </View>
+
+
+
+                            <TouchableOpacity style={{
+                                ...styles.styleButtons, flex: 0,
+                                marginTop: verticalScale(25),
+                            }} onPress={() => {
+                                if (contactType === -1) {
+                                    Util.topAlertError("Please select category")
+                                } else {
+                                    addContact(
+                                        {
+                                            address: valueDesc,
+                                            category: contactType === 0 ? VENDOR_ID : VET_ID,
+                                            city: userCity,
+                                            state: userState,
+                                            name: valueName,
+                                            email: [valueEmail],
+                                            phone: [valuePhone]
+
+                                        }
+                                    )
                                 }
-                                }
-                                value={valueDesc} />
+
+                            }}>
+                                <Text style={{
+                                    ...styles.generalTxt,
+                                    fontSize: moderateScale(20), textAlign: 'center',
+                                    padding: moderateScale(10),
+                                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+
+                                }}>{props.route.params.contactData ?'SAVE' :'ADD CONTACT'}</Text>
+                            </TouchableOpacity>
+
                         </View>
 
 
-
-                        <TouchableOpacity style={{
-                            ...styles.styleButtons, flex: 0,
-                            marginTop: verticalScale(25),
-                        }} onPress={() => {
-                            if (contactType === -1) {
-                                Util.topAlertError("Please select category")
-                            } else {
-                                addContact(
-                                    {
-                                        address: valueDesc,
-                                        category: contactType === 0 ? VENDOR_ID : VET_ID,
-                                        city: userCity,
-                                        state: userState,
-                                        name: valueName,
-                                        email: [valueEmail],
-                                        phone: [valuePhone]
-
-                                    }
-                                )
-                            }
-
-                        }}>
-                            <Text style={{
-                                ...styles.generalTxt,
-                                fontSize: moderateScale(20), textAlign: 'center',
-                                padding: moderateScale(10),
-                                paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
-
-                            }}>ADD CONTACT</Text>
-                        </TouchableOpacity>
-
+                        <Dialog
+                            visible={dialogVisibleStatus}
+                            width={Dimensions.get("screen").width - 100}
+                            height={Dimensions.get("screen").height / 6}
+                            onTouchOutside={() => {
+                                setDialogVisibleStatus(false);
+                            }}
+                            dialogTitle={<DialogTitle title="Profile Picture" />}
+                            dialogAnimation={new ScaleAnimation({
+                                toValue: 0,
+                                useNativeDriver: true,
+                            })}
+                        >
+                            <DialogContent
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'flex-end',
+                                }}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        flex: 5,
+                                        height: 50,
+                                        borderWidth: 2,
+                                        borderColor: 'black',
+                                        borderRadius: 10,
+                                        marginRight: 10,
+                                        justifyContent: 'center',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                        }}
+                                        onPress={() => {
+                                            capturePic('gallery');
+                                            setDialogVisibleStatus(false);
+                                        }}>
+                                        Gallery
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        flex: 5,
+                                        height: 50,
+                                        borderWidth: 2,
+                                        borderColor: 'black',
+                                        borderRadius: 10,
+                                        marginRight: 10,
+                                        justifyContent: 'center',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                        }}
+                                        onPress={() => {
+                                            capturePic('camera');
+                                            setDialogVisibleStatus(false);
+                                        }}>
+                                        Camera
+                                    </Text>
+                                </View>
+                            </DialogContent>
+                        </Dialog>
                     </View>
-
-
-                    <Dialog
-                        visible={dialogVisibleStatus}
-                        width={Dimensions.get("screen").width - 100}
-                        height={Dimensions.get("screen").height / 6}
-                        onTouchOutside={() => {
-                            setDialogVisibleStatus(false);
-                        }}
-                        dialogTitle={<DialogTitle title="Profile Picture" />}
-                        dialogAnimation={new ScaleAnimation({
-                            toValue: 0,
-                            useNativeDriver: true,
-                        })}
-                    >
-                        <DialogContent
-                            style={{
-                                flex: 1,
-                                flexDirection: 'row',
-                                justifyContent: 'flex-end',
-                                alignItems: 'flex-end',
-                            }}>
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    flex: 5,
-                                    height: 50,
-                                    borderWidth: 2,
-                                    borderColor: 'black',
-                                    borderRadius: 10,
-                                    marginRight: 10,
-                                    justifyContent: 'center',
-                                }}>
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                    }}
-                                    onPress={() => {
-                                        capturePic('gallery');
-                                        setDialogVisibleStatus(false);
-                                    }}>
-                                    Gallery
-                                </Text>
-                            </View>
-                            <View
-                                style={{
-                                    backgroundColor: 'white',
-                                    flex: 5,
-                                    height: 50,
-                                    borderWidth: 2,
-                                    borderColor: 'black',
-                                    borderRadius: 10,
-                                    marginRight: 10,
-                                    justifyContent: 'center',
-                                }}>
-                                <Text
-                                    style={{
-                                        textAlign: 'center',
-                                    }}
-                                    onPress={() => {
-                                        capturePic('camera');
-                                        setDialogVisibleStatus(false);
-                                    }}>
-                                    Camera
-                                </Text>
-                            </View>
-                        </DialogContent>
-                    </Dialog>
-                </View>
-            </ScrollView >
-        </View >);
+                </ScrollView>
+            </KeyboardAvoidingView>
+        </View>);
 
     function showContactTypes() {
         return (

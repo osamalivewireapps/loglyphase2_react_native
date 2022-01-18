@@ -5,6 +5,7 @@ import {
     TouchableOpacity,
     Animated
 } from 'react-native';
+import { verticalScale } from 'react-native-size-matters';
 
 class CollapsibleSection extends React.Component {
     constructor(props) {
@@ -64,7 +65,9 @@ class CollapsibleSection extends React.Component {
 
     render() {
         return (
-            <Animated.View style={{ ...styles.container, height: this.state.animation }}>
+            <Animated.View style={{ ...styles.container, 
+                ...this.props.styles ? this.props.styles:null,
+            height: this.state.animation }}>
                 <TouchableOpacity
                     activeOpacity={0.8}
                     onPress={this.toggle.bind(this)}
@@ -72,7 +75,9 @@ class CollapsibleSection extends React.Component {
                 >
                     {this.props.header}
                 </TouchableOpacity>
-                <View onLayout={this._setMaxHeight.bind(this)}>
+                <View 
+                style={{}}
+                onLayout={this._setMaxHeight.bind(this)}>
                     {this.props.children}
                 </View>
             </Animated.View>

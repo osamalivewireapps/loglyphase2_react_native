@@ -282,7 +282,7 @@ function DashBoardView(props) {
                                 fontSize={moderateScale(32)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
-                                    flex: 0.5,
+                                    //flex: 0.5,
                                     fontFamily: Fonts.type.bold,
                                     color: item.txtColor,
                                     textAlign: 'center',

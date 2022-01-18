@@ -2,10 +2,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { getContacts } from '../../../actions/ContactModule';
+import { getTeamMembers, removeMember } from '../../../actions/TeamMembersModule';
 import { connect } from 'react-redux';
 import { VENDOR_ID, VET_ID } from '../../../constants';
 import TeamListingView from './team_listing_view';
+import { Alert } from 'react-native';
 
 class TeamListing extends Component {
 
@@ -24,35 +25,34 @@ class TeamListing extends Component {
 
     }
 
-    applyFilter(e) {
-        this.filterContacts(e)
-    }
 
     getContacts(e) {
-        this.props.getContacts('')
+        this.props.getTeamMembers('')
             .then((response) => {
-                if (this.state.filterData.contactType.length === 0)
-                    this.setState({ contactList: response.payload });
-                else {
-                    this.filterContacts(this.state.filterData)
-                }
-
+                this.setState({ contactList: response.payload });
             });
     }
 
-    filterContacts(e) {
+    confirmModal = (e) => {
+        Alert.alert(`Are you sure you want to delete?`, '',
+            [
+                { text: 'Cancel' },
+                { text: 'OK', onPress: () => { this.removeMember(e) } },
 
-        console.log("filter--->", e);
+            ],
+            { cancelable: false }
+        );
 
-        let tmp = !e.contactType ? this.props.contactListing : this.props.contactListing
-            .filter((value, index) => {
-                if (e.contactType === 'Vendors') {
-                    return ((value.category === VENDOR_ID))
-                } else
-                    return ((value.category === VET_ID))
-            });
+    }
 
-        this.setState({ contactList: tmp, filterData: e })
+    removeMember(id) {
+        this.props.removeMember(id).then((proceed) => {
+
+            if (proceed) {
+                this.getContacts();
+            }
+        });
+
     }
 
 
@@ -60,22 +60,23 @@ class TeamListing extends Component {
     render() {
         return (<TeamListingView {...this.props}
             listContacts={this.state.contactList}
-            applyFilter={(e) => this.applyFilter(e)}
             filterObj={this.state.filterData}
+            removeMember={(e) => { this.confirmModal(e) }}
             updateContacts={(e) => this.getContacts(e)}
         />);
     }
 
 }
 
-const mapStateToProps = ({ contacts }) => {
+const mapStateToProps = ({ team_members }) => {
     return {
-        contactListing: contacts.contactsListing,
+        teamListing: team_members.teamListing,
     };
 };
 
 const mapDispatchToProps = dispatch => ({
-    getContacts: () => dispatch(getContacts('')),
+    getTeamMembers: () => dispatch(getTeamMembers('')),
+    removeMember: (id) => dispatch(removeMember(id)),
 
 });
 

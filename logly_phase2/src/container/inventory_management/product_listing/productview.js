@@ -14,6 +14,7 @@ import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/routers';
 import moment from 'moment';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import { RefreshControl } from 'react-native';
 
 function ProductListingView(props) {
 
@@ -36,10 +37,14 @@ function ProductListingView(props) {
     useEffect(() => {
         //if (listProduct.length > 0) {
         setProductList(listProduct)
-        //}
+        setRefreshing(false)
     }, [listProduct]);
 
+    const [refreshing, setRefreshing] = React.useState(false);
 
+    const onRefresh = () => {
+        updateProduct();
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -102,8 +107,7 @@ function ProductListingView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ flex: 1, minHeight: Dimensions.get('window').height}}>
+                <View style={{ flex: 1}}>
 
                     <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
                         <View style={{
@@ -149,8 +153,15 @@ function ProductListingView(props) {
                         <FlatList
                             numColumns={2}
                             contentContainerStyle={{
-                                flex: 1, padding: moderateScale(25)
+                                padding: moderateScale(25)
                             }}
+
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                />
+                            }
                             data={productList}
                             renderItem={({ item, index }) => {
                                 return (
@@ -185,7 +196,7 @@ function ProductListingView(props) {
                                                 resizeMode='cover'
                                                 placeholderStyle={{
                                                     width: '100%',
-                                                    height: moderateScale(120),
+                                                    height: '100%',
                                                     borderRadius: moderateScale(10),
                                                     borderBottomLeftRadius: 0,
                                                     borderBottomRightRadius: 0,
@@ -200,7 +211,7 @@ function ProductListingView(props) {
                                                 }}
 
                                                 style={{
-                                                    borderRadius: moderateScale(10)
+                                                    borderRadius: moderateScale(10),
                                                 }}
 
                                                 src={item.image}
@@ -331,7 +342,6 @@ function ProductListingView(props) {
 
 
                 </View>
-            </ScrollView>
 
             <TouchableOpacity
                 style={{

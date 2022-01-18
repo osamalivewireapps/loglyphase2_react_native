@@ -36,7 +36,6 @@ class Util {
   }
 
   static isLengthGreater(name) {
-    console.log("name--->", name)
     return (name && name.length >= 3)
   }
 
@@ -45,10 +44,10 @@ class Util {
   }
 
   static isValidPhone(name) {
-    if (!name.includes('-')) {
+    if (name && !name.includes('-')) {
       return name.length >= 10;
     }
-    name = name.replaceAll("-", "");
+    name = name ? name.replaceAll("-", ""):'';
     return name.length === 10;
   }
 
@@ -76,7 +75,7 @@ class Util {
   }
 
   static isGraterThanZero(name) {
-    console.log('name--->',name)
+    console.log('name--->', name)
     return (name.length > 0 && name > 0);
   }
 

@@ -22,8 +22,8 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/
 
 function ImageGallery(props) {
 
-    
-    const { listCollection, style} = props;
+
+    const { listCollection, style, removeImage } = props;
     const [listFileUri, setListFileUri] = useState([])
 
 
@@ -35,54 +35,83 @@ function ImageGallery(props) {
     const [] = useState()
     return (
         <View style={{
-            ...props.route?.params ? props.route.params.style:props.style,
-      
+            ...props.route?.params ? props.route.params.style : props.style,
+
         }}>
 
             <Pages
-                style={{flex:1}}
-                indicatorColor={Colors.appBgColor}
+                style={{
+                    flex: 1,
+                }}
+                indicatorColor='#fff'
             >
-                {listFileUri && listFileUri.length>0 ?listFileUri.map((item, index) => {
-                    console.log("images--->",item.filename)
+                {listFileUri && listFileUri.length > 0 ? listFileUri.map((item, index) => {
+                    console.log("images--->", item.filename)
                     return (
-                        <TouchableOpacity
-                            style={{ flex: 1, alignItems: 'center' }}>
-                            <ImagePlaceholder
-                                showActivityIndicator={true}
-                                activityIndicatorProps={{
-                                    size: 'small',
-                                    color: '#777777',
-                                }}
-                                resizeMode='cover'
-                                placeholderStyle={{
-                                    width: Dimensions.get('screen').width,
-                                    height:'100%'
+                        <View
+                            
+                            style={{ flex: 1, alignItems: 'flex-end' }}>
 
-                                }}
-                                imgStyle={{
-                                    width: Dimensions.get('screen').width,
-                                }}
-
+                            <View
                                 style={{
-
+                                    width: Dimensions.get('screen').width,
+                                    height: '100%',
+                                    position: 'absolute'
                                 }}
+                            >
 
-                                src={item.filename}
-                                placeholder={Icons.icon_paw}
-                            />
-                        </TouchableOpacity>
+
+                                <ImagePlaceholder
+                                    showActivityIndicator={true}
+                                    activityIndicatorProps={{
+                                        size: 'small',
+                                        color: '#777777',
+                                    }}
+                                    resizeMode='cover'
+                                    placeholderStyle={{
+                                        width: Dimensions.get('screen').width,
+                                        height: '100%'
+
+                                    }}
+                                    imgStyle={{
+                                        width: Dimensions.get('screen').width,
+                                    }}
+
+                                    style={{
+                                    }}
+
+                                    src={item.filename}
+                                    placeholder={Icons.icon_paw}
+                                />
+
+
+
+                            </View>
+
+                            <TouchableOpacity
+                                onPress={() => removeImage(item._id)}
+                                style={{
+                                    justifyContent: 'center',
+                                    margin: moderateScale(10)
+                                }}>
+                                <Image source={Icons.icon_close} resizeMode='contain' style={{
+                                     tintColor:'white',
+                                     height: verticalScale(10), width: verticalScale(10) }} />
+                            </TouchableOpacity>
+                        </View>
                     )
-                }):<View/>}
+                }) : <View />}
 
 
             </Pages>
 
-           
+
+
+
         </View>
     )
 
-    
+
 }
 
 const styles = StyleSheet.create({

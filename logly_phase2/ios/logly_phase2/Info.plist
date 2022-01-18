@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>logly_sprint2</string>
+	<string>logly</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIconName</key>
@@ -40,6 +40,8 @@
 		</dict>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
+	<string></string>
+	<key>NSCameraUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>logly_sprint2 uses photos</string>

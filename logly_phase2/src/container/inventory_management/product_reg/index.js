@@ -84,7 +84,7 @@ class RegisterProduct extends Component {
 
     validateFields(e) {
 
-        const { bulkquantity, name, notes, price, quantity, servicedate, subCategory } = e;
+        const { unit_quantity,bulkquantity, name, notes, price, quantity, servicedate, subCategory } = e;
 
         console.log("subcatorgory--->", subCategory);
 

@@ -152,6 +152,10 @@ function ContactDetailView(props) {
                                 }} />
                             <TouchableOpacity
                                 flex={moderateScale(0.1)}
+                                style={{
+                                    justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                    alignItems: 'center'
+                                }}
                                 onPress={() => {
                                     props.navigation.navigate('AddContacts', { contactData: contactData, updateContacts:props.route.params.updateContacts})
                                     setIsEditShow(false)
@@ -174,8 +178,13 @@ function ContactDetailView(props) {
                             }} />
                             <TouchableOpacity
                                 flex={moderateScale(0.1)}
+                                style={{
+                                    justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                    alignItems: 'center'
+                                }}
                                 onPress={() => {
-                                    setIsEditShow(false)
+                                    setIsEditShow(false);
+                                    props.removeMember()
                                 }}>
                                 <Image source={Icons.icon_services_delete}
                                     resizeMode='contain'
@@ -200,6 +209,28 @@ function ContactDetailView(props) {
             <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ flex: 1, padding: moderateScale(25) }}>
 
+                    <View style={{
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                    }}>
+                        <Image source={Icons.icon_detailscreen_phone} resizeMode='contain' style={{
+                            height: verticalScale(50), width: moderateScale(50)
+                        }} />
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={moderateScale(22)}
+                            fontSize={moderateScale(16)}
+                            mode={ResizeTextMode.overflow_replacement}
+                            style={{
+                                color: '#464646',
+                                flex: 1,
+                                paddingStart: moderateScale(15),
+                                fontFamily: Fonts.type.base
+                            }}>
+                            {contactData.phone}
+
+                        </AutoSizeText>
+                    </View>
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
@@ -241,33 +272,12 @@ function ContactDetailView(props) {
                                 paddingStart: moderateScale(15),
                                 fontFamily: Fonts.type.base
                             }}>
-                            {contactData.city}
+                            {contactData.city ? contactData.address +", "+contactData.city+", "+contactData.state:''}
 
                         </AutoSizeText>
                     </View>
 
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                    }}>
-                        <Image source={Icons.icon_detailscreen_phone} resizeMode='contain' style={{
-                            height: verticalScale(50), width: moderateScale(50)
-                        }} />
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={moderateScale(22)}
-                            fontSize={moderateScale(16)}
-                            mode={ResizeTextMode.overflow_replacement}
-                            style={{
-                                color: '#464646',
-                                flex: 1,
-                                paddingStart: moderateScale(15),
-                                fontFamily: Fonts.type.base
-                            }}>
-                            {contactData.phone}
-
-                        </AutoSizeText>
-                    </View>
+                   
 
                     <AutoSizeText
                         numberOfLines={1}

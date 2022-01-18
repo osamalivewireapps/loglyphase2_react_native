@@ -381,3 +381,190 @@ export const uploadHealth = (dataToSubmit) => async (dispatch) => {
             });
     });
 };
+
+export const delHealthRecord = (id,healthId) => async (dispatch) => {
+
+    console.log("upload pdf--->", id+''+healthId)
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', id);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .delete(`${baseUrl}/animal/${id}/healthrecord/${healthId}`, config)
+            .then(response => {
+
+
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    utils.topAlertError(response.data.message);
+                    resolve({ responseData: response });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const addParent = (data) => async (dispatch) => {
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('data------->',data)
+
+    dispatch(EnableLoader());
+    return new Promise((resolve, reject) => {
+        axios
+            .put(`${baseUrl}/animal/addasparentchild`, data, config)
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            })
+    });
+
+
+}
+
+export const deleteParent = (id, parentName) => async (dispatch) => {
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    dispatch(EnableLoader());
+    return new Promise((resolve, reject) => {
+        axios
+            .delete(`${baseUrl}/animal/${id}/parent/${parentName}`, config)
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            })
+    });
+
+
+}
+
+export const updateFeatured = (id, dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .put(`${baseUrl}/animal/update/${id}`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-updateFeatured-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const updatePrivacy = (id, dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .put(`${baseUrl}/animal/update/${id}`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-update Privacy-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};

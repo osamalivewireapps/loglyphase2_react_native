@@ -8,10 +8,11 @@ import { Keyboard, View } from 'react-native';
 import { connect } from 'react-redux';
 import Util from '../../../utils';
 import utils from '../../../utils';
-import { addContactDetails, editContactDetails, getContacts, getContactDetails } from '../../../actions/ContactModule'
+import { addMemberDetails, editMemberDetails, getTeamMembers, getMemberDetails } from '../../../actions/TeamMembersModule'
 import { getStateRequest, getCityRequest } from '../../../actions/SignUpModule';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
 import AddTeamMemberView from './add_team_member_view';
+import moment from 'moment';
 
 class AddTeamMember extends Component {
 
@@ -27,7 +28,7 @@ class AddTeamMember extends Component {
             userCity: props.route.params.contactData?.city,
             selectCity: true,
             selectState: true,
-            fileUri: "",
+            fileUri: props.route.params.contactData ? props.route.params.contactData?.image : '',
         };
     }
 
@@ -99,10 +100,32 @@ class AddTeamMember extends Component {
 
     addContact(e) {
 
-        console.log("dataToSubmit fields", e)
+        const { address, category, city, email, name,
+            phone, state, emergencyContact } = e;
+
+        let formdata = new FormData();
+        formdata.append('address', address);
+        formdata.append('city', city);
+        formdata.append('email', email);
+        formdata.append('name', name);
+        formdata.append('phone', phone);
+        formdata.append('state', state);
+        formdata.append('emergencyContact', JSON.stringify(emergencyContact));
+        formdata.append('canAccessMobileApp', true);
+        formdata.append('canAccessInventoryManagement', true);
+        formdata.append('active', true);
+        
+        if (this.state.fileUri && this.state.fileUri.length > 0 && !this.state.fileUri.includes('https'))
+            formdata.append('file', {
+                uri: this.state.fileUri,
+                name: 'team_member' + moment().unix() + '.jpg', type: 'image/jpg',
+            });
+
+        console.log("dataToSubmit fields", formdata);
+
         if (this.validateFields(e)) {
             if (this.props.route.params.contactData) {
-                this.props.editContactDetails(this.props.route.params.contactData._id, e).then((proceed) => {
+                this.props.editContactDetails(this.props.route.params.contactData._id, formdata).then((proceed) => {
 
                     if (proceed) {
                         this.props.getContactDetails(this.props.route.params.contactData._id);
@@ -112,7 +135,7 @@ class AddTeamMember extends Component {
                 });
 
             } else {
-                this.props.addContactDetails(e).then((proceed) => {
+                this.props.addContactDetails(formdata).then((proceed) => {
 
                     if (proceed) {
                         this.props.route.params.updateContacts();
@@ -140,7 +163,7 @@ class AddTeamMember extends Component {
             });
             return false;
         }
-        else if (!utils.isEmailValid(email[0])) {
+        else if (!utils.isEmailValid(email)) {
 
             utils.topAlertError("Email is required");
 
@@ -149,7 +172,7 @@ class AddTeamMember extends Component {
             });
             return false;
         }
-        else if (!utils.isValidPhone(phone[0])) {
+        else if (!phone || !utils.isValidPhone(phone)) {
 
             utils.topAlertError("Phone is required");
 
@@ -176,15 +199,15 @@ class AddTeamMember extends Component {
             });
             return false;
         }
-        else if (!utils.isLengthGreater(address)) {
+        // else if (!utils.isLengthGreater(address)) {
 
-            utils.topAlertError("Address is required");
+        //     utils.topAlertError("Address is required");
 
-            this.setState({
-                selectCity: false
-            });
-            return false;
-        }
+        //     this.setState({
+        //         selectCity: false
+        //     });
+        //     return false;
+        // }
 
 
         return true;
@@ -218,8 +241,8 @@ class AddTeamMember extends Component {
                 } else if (response.errorCode) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
+                    console.log('camera----->', response);
                     const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
-                    //this.props.uploadPicRequest(source)
                     this.setState({ fileUri: response.assets[0].uri })
                 }
             });
@@ -256,10 +279,10 @@ const mapStateToProps = ({ user }) => {
 const mapDispatchToProps = dispatch => ({
     getStateRequest: () => dispatch(getStateRequest()),
     getCityRequest: (data) => dispatch(getCityRequest(data)),
-    addContactDetails: (data) => dispatch(addContactDetails(data)),
-    editContactDetails: (id, data) => dispatch(editContactDetails(id, data)),
-    getContacts: (data) => dispatch(getContacts(data)),
-    getContactDetails: (data) => dispatch(getContactDetails(data)),
+    addContactDetails: (data) => dispatch(addMemberDetails(data)),
+    editContactDetails: (id, data) => dispatch(editMemberDetails(id, data)),
+    getContacts: (data) => dispatch(getTeamMembers(data)),
+    getContactDetails: (data) => dispatch(getMemberDetails(data)),
 });
 
 export default connect(

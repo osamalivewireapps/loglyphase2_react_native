@@ -2,9 +2,9 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { Alert, View } from 'react-native';
 import ProductDetailView from './productdetailview';
-import { getProductsDetails } from '../../../actions/ProductModule'
+import { getProductsDetails, deleteProducts } from '../../../actions/ProductModule'
 import { connect } from 'react-redux';
 
 class ProductDetail extends Component {
@@ -14,14 +14,34 @@ class ProductDetail extends Component {
     }
 
     componentDidMount() {
-        console.log("id----->", this.props.route.params.id);
         this.props.getProductsDetails(this.props.route.params.id)
     }
 
     render() {
         return (<ProductDetailView {...this.props}
+            removeAnimal={() => this.confirmModal()}
 
         />);
+    }
+
+    confirmModal = (e) => {
+        Alert.alert(`Are you sure you want to delete?`, '',
+            [
+                { text: 'Cancel' },
+                { text: 'OK', onPress: () => { this.removeItem() } },
+
+            ],
+            { cancelable: false }
+        );
+
+    }
+
+    removeItem(){
+
+        this.props.deleteProducts(this.props.route.params.id).then(response => {
+            this.props.navigation.goBack()
+            this.props.route.params.updateProduct();
+        })
     }
 }
 const mapStateToProps = ({ product }) => {
@@ -32,6 +52,7 @@ const mapStateToProps = ({ product }) => {
 
 const mapDispatchToProps = dispatch => ({
     getProductsDetails: (data) => dispatch(getProductsDetails(data)),
+    deleteProducts: (data) => dispatch(deleteProducts(data)),
 
 });
 

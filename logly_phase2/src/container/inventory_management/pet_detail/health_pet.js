@@ -11,7 +11,7 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
-import { uploadHealth, getAnimal } from '../../../actions/AnimalModule';
+import { uploadHealth, getAnimal, delHealthRecord } from '../../../actions/AnimalModule';
 import { useDispatch } from "react-redux";
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import Util from '../../../utils';
@@ -226,6 +226,18 @@ function HealthPetView(props) {
                                 }}>View
                             </AutoSizeText>
                         </TouchableOpacity>
+
+                        <TouchableOpacity
+                            onPress={() => {
+                                delHealthRecords(props.animalData._id, item._id)  
+                            }
+                            }
+                            style={{
+                                justifyContent: 'center',
+                                marginStart:moderateScale(10)
+                            }}>
+                            <Image source={Icons.icon_close} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                        </TouchableOpacity>
                     </View>
                 )
             }) : <View />}
@@ -389,6 +401,12 @@ function HealthPetView(props) {
         dispatch(uploadHealth(formdata)).then((responseData) => {
             setValueName('');
             setValidateDesc('');
+            dispatch(getAnimal(props.route.params.id));
+        })
+    }
+
+    function delHealthRecords(id,healthRecord){
+        dispatch(delHealthRecord(id,healthRecord)).then((responseData) => {
             dispatch(getAnimal(props.route.params.id));
         })
     }

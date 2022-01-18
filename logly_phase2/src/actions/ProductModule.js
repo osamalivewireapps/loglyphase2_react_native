@@ -162,6 +162,43 @@ export const editProducts = (id,dataToSubmit) => async (dispatch) => {
     });
 };
 
+export const deleteProducts = (id) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', id);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .delete(`${baseUrl}/product/${id}`, config)
+            .then(response => {
+
+                console.log('response-edit-product-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
 export const UploadProductImages = (dataToSubmit) => async (dispatch) => {
 
     console.log("upload images--->",dataToSubmit)

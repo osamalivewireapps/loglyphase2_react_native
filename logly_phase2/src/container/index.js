@@ -22,7 +22,7 @@ export {
     BusListing,ProductInfo,AnimalInfo,TeamSetup,WelcomeRegistration, AccountSetup, BusProfileSetup, BusProfile, TeamMemberSetup
 } from './setupwizard';
 
-export { ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
+export { AllAnimal,ImageGallery,PdfReader,RegisterProduct,ProductDetail,FilterProducts,ProductListing,InventoryDashBoard, RegisterPet, PetProfile, PetDetail, FilterAnimal} from './inventory_management';
 export { ContactDetails,AddContacts, ContactListing, FilterContacts} from './contact_management';
 export { CrmOrderCompleted,CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPaymentDetails,CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails} from './CRM';
 export { GroupListing, CreateGroup} from './groups';

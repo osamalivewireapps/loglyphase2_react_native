@@ -13,10 +13,12 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import moment from 'moment';
+import { useDispatch } from "react-redux";
+import { updateFeatured, getAnimal, updatePrivacy } from '../../../actions/AnimalModule';
 
 function AboutPetView(props) {
 
-    const { animalData,route } = props;
+    const { animalData, route } = props;
 
 
 
@@ -34,6 +36,7 @@ function AboutPetView(props) {
     const [isFeatured, setIsFeatured] = useState(0);
     const [tabsSelect, setTabsSelect] = useState(0);
 
+    const dispatch = useDispatch();
 
     return (
 
@@ -104,35 +107,53 @@ function AboutPetView(props) {
 
             />
 
-           
-                
 
-               
-            {animalData?.featured ?
-            <Text
-                style={{
-                    ...styles.generalTxt,
-                    color: 'green',
-                    fontSize: moderateScale(14),
-                    paddingBottom: moderateScale(15),
-                    paddingTop: moderateScale(5),
-                    paddingStart: moderateScale(10),
-                    fontFamily: Fonts.type.medium,
-                }}>Featured
-            </Text> : null}
-                
 
-         {!animalData?.isPrivate ?
-            <Text
+
+            <TouchableOpacity
+
                 style={{
-                    ...styles.generalTxt,
-                    color: '#464646',
-                    fontSize: moderateScale(14),
-                    paddingStart: moderateScale(10),
-                    fontFamily: Fonts.type.medium,
-                }}>Public
-            </Text> : null}
-         
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: moderateScale(15),
+                    marginTop: moderateScale(5),
+                    width: '25%',
+                    borderRadius:moderateScale(10),
+                    padding:verticalScale(2),
+                    backgroundColor: animalData.featured ? 'green' : '#777777'
+                }}
+                onPress={() => updateStatusFeatured()}>
+                <Text
+                    style={{
+                        ...styles.generalTxt,
+                        color: 'white',
+                        fontSize: moderateScale(14),
+                        fontFamily: Fonts.type.medium,
+                    }}>Featured
+                </Text>
+            </TouchableOpacity>
+
+
+            <TouchableOpacity
+                style={{ flexDirection: 'row' }}
+                onPress={() => updatePrivacyStatus()}
+            >
+                <Text
+                    style={{
+                        ...styles.generalTxt,
+                        color: '#464646',
+                        fontSize: moderateScale(14),
+                        paddingStart: moderateScale(10),
+                        fontFamily: Fonts.type.medium,
+                    }}>
+                    {animalData.isPrivate ? 'Public' : 'Private'}
+                </Text>
+
+                <Image source={animalData.isPrivate ? Icons.icon_open_eye : Icons.icon_close_eye}
+                    style={{ marginStart: moderateScale(10), resizeMode: 'contain', height: verticalScale(15), width: moderateScale(15) }}
+                />
+            </TouchableOpacity>
+
             <Text
                 style={{
                     ...styles.generalTxt,
@@ -162,7 +183,7 @@ function AboutPetView(props) {
                 numColumns={4}
                 contentContainerStyle={{
                     paddingStart: moderateScale(40),
-                    paddingEnd:moderateScale(40),
+                    paddingEnd: moderateScale(40),
                     padding: moderateScale(20), paddingTop: moderateScale(10),
                 }}
                 renderItem={({ item, index }) => {
@@ -179,7 +200,7 @@ function AboutPetView(props) {
                         }} onPress={() => {
                             setTabsSelect(index);
 
-                            if(index===0)
+                            if (index === 0)
                                 props.navigation.navigate('CreateActivity')
                         }}>
 
@@ -222,7 +243,7 @@ function AboutPetView(props) {
     function getAnimalValues(category) {
         switch (category) {
             case 'Animal Id':
-                return route.params.id.substring(0,7);
+                return route.params.id.substring(0, 7);
 
             case 'Breed':
                 return animalData.data?.breed[0];
@@ -236,7 +257,26 @@ function AboutPetView(props) {
 
     }
 
-    
+    ///////////////////////   FEATURED STATUS ////////////////
+    function updateStatusFeatured(e) {
+        let values = {};
+        values.featured = !animalData.featured
+        dispatch(updateFeatured(animalData._id, values)).then((response) => {
+            dispatch(getAnimal(props.route.params.id));
+            props.route.params.updateAnimal();
+        })
+    }
+
+    ///////////////////////   SET PRIVACY ////////////////
+    function updatePrivacyStatus(e) {
+        let values = {};
+        values.isPrivate = !animalData.isPrivate
+        dispatch(updatePrivacy(animalData._id, values)).then((response) => {
+            dispatch(getAnimal(props.route.params.id));
+            props.route.params.updateAnimal();
+        })
+    }
+
 }
 
 const styles = StyleSheet.create({

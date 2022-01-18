@@ -278,7 +278,7 @@ function PetDetailView(props) {
         try {
             const result = await Share.share({
                 subject: 'Logly',
-                title: 'Logly',
+                title: 'Logly - ' + props.animalData.data?.name,
                 message: messagefunc(),
                 url: `https://logly.us/animalProfile/${props.animalData._id}`,
             },

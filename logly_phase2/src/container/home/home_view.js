@@ -171,8 +171,8 @@ function HomeView(props) {
                                     }}
                                     style={{
                                         borderRadius: moderateScale(10),
-                                        width: Dimensions.get('screen').width / moderateScale(2),
-                                        height: verticalScale(170),
+                                        width: Dimensions.get('screen').width / moderateScale(2.2),
+                                        height: verticalScale(160),
                                         marginEnd: moderateScale(10),
                                         alignItems: 'flex-start',
                                         justifyContent: 'flex-end',
@@ -225,10 +225,10 @@ function HomeView(props) {
                             return (
                                 <TouchableOpacity
 
-                                onPress={()=>Util.topAlert("In-Progress")}
+                                    onPress={() => props.navigation.navigate('AppointmentListing')}
                                     style={{
                                         borderRadius: moderateScale(15),
-                                        width: Dimensions.get('screen').width / moderateScale(2),
+                                        width: Dimensions.get('screen').width / moderateScale(2.2),
                                         height: verticalScale(130),
                                         alignItems: 'center',
                                         justifyContent: 'center',

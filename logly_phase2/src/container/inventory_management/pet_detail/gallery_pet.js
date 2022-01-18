@@ -115,7 +115,7 @@ function GalleryPetView(props) {
     function deleteHandler(e) {
         let values = {};
         values.id = animalData._id
-        values.animals = e._id
+        values.animals = e
         dispatch(DeleteImage(values)).then((response) => {
             dispatch(getAnimal(props.route.params.id));
             props.route.params.updateAnimal();

@@ -69,7 +69,6 @@ function MemberDetailView(props) {
                         style={{
 
                         }}
-
                         src={contactData?.image}
                         placeholder={Images.img_user_placeholder}
                     />
@@ -137,7 +136,7 @@ function MemberDetailView(props) {
 
                     {isEditShow ?
                         <View style={{
-                            height: verticalScale(70),
+                            height: verticalScale(75),
                             flex: moderateScale(0.145),
                             marginTop: 0,
                             marginBottom: 0,
@@ -152,6 +151,10 @@ function MemberDetailView(props) {
                                 }} />
                             <TouchableOpacity
                                 flex={moderateScale(0.1)}
+                                style={{
+                                    justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                    alignItems: 'center'
+                                }}
                                 onPress={() => {
                                     props.navigation.navigate('AddTeamMember', { contactData: contactData, updateContacts: props.route.params.updateContacts })
                                     setIsEditShow(false)
@@ -174,8 +177,13 @@ function MemberDetailView(props) {
                             }} />
                             <TouchableOpacity
                                 flex={moderateScale(0.1)}
+                                style={{
+                                    justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                    alignItems: 'center'
+                                }}
                                 onPress={() => {
-                                    setIsEditShow(false)
+                                    setIsEditShow(false),
+                                        props.removeMember()
                                 }}>
                                 <Image source={Icons.icon_services_delete}
                                     resizeMode='contain'
@@ -201,6 +209,30 @@ function MemberDetailView(props) {
                 <View style={{ flex: 1 }}>
 
                     <View style={{ padding: moderateScale(25) }}>
+
+                        <View style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                        }}>
+                            <Image source={Icons.icon_detailscreen_phone} resizeMode='contain' style={{
+                                height: verticalScale(50), width: moderateScale(50)
+                            }} />
+                            <AutoSizeText
+                                numberOfLines={1}
+                                minFontSize={moderateScale(22)}
+                                fontSize={moderateScale(16)}
+                                mode={ResizeTextMode.overflow_replacement}
+                                style={{
+                                    color: '#464646',
+                                    flex: 1,
+                                    paddingStart: moderateScale(15),
+                                    fontFamily: Fonts.type.base
+                                }}>
+                                {contactData.phone}
+
+                            </AutoSizeText>
+                        </View>
+
                         <View style={{
                             flexDirection: 'row',
                             alignItems: 'center',
@@ -242,35 +274,14 @@ function MemberDetailView(props) {
                                     paddingStart: moderateScale(15),
                                     fontFamily: Fonts.type.base
                                 }}>
-                                {contactData.city}
+                                {contactData.address?(contactData.address + ", " + contactData.city + ", " + contactData.state):''}
 
                             </AutoSizeText>
                         </View>
 
-                        <View style={{
-                            flexDirection: 'row',
-                            alignItems: 'center',
-                        }}>
-                            <Image source={Icons.icon_detailscreen_phone} resizeMode='contain' style={{
-                                height: verticalScale(50), width: moderateScale(50)
-                            }} />
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(22)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.overflow_replacement}
-                                style={{
-                                    color: '#464646',
-                                    flex: 1,
-                                    paddingStart: moderateScale(15),
-                                    fontFamily: Fonts.type.base
-                                }}>
-                                {contactData.phone}
-
-                            </AutoSizeText>
-                        </View>
+                     
                     </View>
-                    <View style={{ backgroundColor: '#F5F5F5',paddingStart:moderateScale(25) }}>
+                    <View style={{ backgroundColor: '#F5F5F5', paddingStart: moderateScale(25) }}>
                         <AutoSizeText
                             numberOfLines={1}
                             minFontSize={moderateScale(22)}
@@ -298,8 +309,8 @@ function MemberDetailView(props) {
                                 paddingStart: moderateScale(15),
                                 fontFamily: Fonts.type.base
                             }}>
-                            Chris Mathew
-
+                            {props.contactData ? (props.contactData.emergencyContact.emergencyName ? props.contactData.emergencyContact.emergencyName : JSON.parse(props.contactData?.emergencyContact).emergencyName) : ''}
+                    
                         </AutoSizeText>
                         <AutoSizeText
                             numberOfLines={1}
@@ -311,9 +322,9 @@ function MemberDetailView(props) {
                                 flex: 1,
                                 paddingStart: moderateScale(15),
                                 fontFamily: Fonts.type.base,
-                                marginBottom:verticalScale(10)
+                                marginBottom: verticalScale(10)
                             }}>
-                            +11221212
+                            {props.contactData ? (props.contactData.emergencyContact.contactNumber ? props.contactData.emergencyContact.contactNumber : JSON.parse(props.contactData?.emergencyContact).contactNumber) : ''}
 
                         </AutoSizeText>
 

@@ -39,11 +39,11 @@ function RegisterPetView(props) {
     const [valueName, setValueName] = useState(animalData ? animalData.data.name : '');
     const [valueDesc, setDesc] = useState(animalData ? animalData.data.Notes : '');
     const [validateDesc, setValidateDesc] = useState(true);
-    const [serviceTypeIndex, setServiceTypeIndex] = useState(animalData ? animalData.data.Sex==='Male'?0:1 : 0);
+    const [serviceTypeIndex, setServiceTypeIndex] = useState(animalData ? animalData.data.Sex === 'Male' ? 0 : 1 : 0);
     const [listBreed, setListBreed] = useState([]);
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
     const [validateQuantity, setValidateQuantity] = useState(true);
-    const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity : '');
+    const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity+"" : '');
     const [captureCollection, setCaptureCollection] = useState(false);
     const [validatePrice, setValidatePrice] = useState(true);
     const [valuePrice, setValuePrice] = useState(animalData ? animalData.data.price : '');
@@ -118,10 +118,10 @@ function RegisterPetView(props) {
                 </View>
 
                 <View style={{
-                    flexDirection: 'row', 
+                    flexDirection: 'row',
                     height: moderateScale(60),
                     alignItems: 'center',
-                    justifyContent:'center',
+                    justifyContent: 'center',
                     marginTop: verticalScale(20),
                     marginBottom: verticalScale(25)
                 }}>
@@ -136,7 +136,7 @@ function RegisterPetView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        Register Pet
+                        {animalData ? 'Edit Profile' : 'Register Pet'} 
 
                     </AutoSizeText>
                     <Image source={Images.img_reg_pet} resizeMode='contain'
@@ -144,14 +144,15 @@ function RegisterPetView(props) {
                 </View>
 
             </View>
-            <ScrollView 
-                keyboardShouldPersistTaps='handled'>
-                <KeyboardAvoidingView
-                    style={{ flex: 1 }}
-                    keyboardVerticalOffset={50}
-                    behavior={Platform.OS === "ios" ? "padding" : null}
 
-                >
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : null}
+
+            >
+                <ScrollView
+                    keyboardShouldPersistTaps='handled'>
+
 
 
 
@@ -275,14 +276,16 @@ function RegisterPetView(props) {
                                         placeholder={imgUri ? Icons.icon_user : ''}
                                     />
 
-                                    <Image
-                                        source={!imgUri ? Icons.icon_awesome_plus : ''}
+                                    {!imgUri ?
+                                        <Image
+                                            source={Icons.icon_awesome_plus}
 
-                                        resizeMode="contain"
-                                        style={{
-                                            height: verticalScale(10),
-                                            width: verticalScale(10),
-                                        }} />
+                                            resizeMode="contain"
+                                            style={{
+                                                height: verticalScale(10),
+                                                width: verticalScale(10),
+                                            }} />
+                                        : <View />}
 
                                 </TouchableOpacity>
 
@@ -730,6 +733,7 @@ function RegisterPetView(props) {
                                     breed: listBreed.map((value) => value.name),
                                     DOB: selected,
                                     Sex: serviceTypeIndex === 0 ? 'Male' : 'Female',
+
                                 })
                             }}>
                                 <Text style={{
@@ -737,7 +741,7 @@ function RegisterPetView(props) {
                                     fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
                                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
-                                }}>REGISTER</Text>
+                                }}>  {animalData ? 'SAVE' : 'REGISTER'} </Text>
                             </TouchableOpacity>
                         </View> : null}
 
@@ -779,7 +783,7 @@ function RegisterPetView(props) {
                                     onPress={() => {
                                         if (!captureCollection)
                                             capturePic('gallery');
-                                        else{
+                                        else {
                                             capturePicCollections('gallery');
                                             setCaptureCollection(false)
                                         }
@@ -806,7 +810,7 @@ function RegisterPetView(props) {
                                     onPress={() => {
                                         if (!captureCollection)
                                             capturePic('camera');
-                                        else{
+                                        else {
                                             capturePicCollections('camera');
                                             setCaptureCollection(false)
                                         }
@@ -817,8 +821,8 @@ function RegisterPetView(props) {
                             </View>
                         </DialogContent>
                     </Dialog>
-                </KeyboardAvoidingView>
-            </ScrollView>
+                </ScrollView>
+            </KeyboardAvoidingView>
 
             <AppLoader loader={{ isLoading: isLoad }} />
         </View>

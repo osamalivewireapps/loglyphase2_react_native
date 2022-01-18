@@ -44,11 +44,12 @@ class ProductListing extends Component {
 
         let tmp = this.props.productListing
             .filter((value, index) => {
-                if (e.animalType === 'Active' ? !value.isArchived:value.isArchived) {
-                    return ((e.productId ? value.categoryId === e.productId : true) && (e.subProdId ? value.data.subCategory.includes(e.subProdId): true))
+                if (e.animalType === 'Active' ? !value.isArchived : value.isArchived) {
+                    return ((e.productId ? value.categoryId === e.productId : true) && (e.subProdId ? value.data.subCategory.includes(e.subProdId) : true))
                 }
             });
 
+        console.log("archieved--->", tmp)
         this.setState({ productList: tmp, filterData: e })
     }
 
@@ -63,7 +64,7 @@ class ProductListing extends Component {
         />);
     }
 
-    updateProduct(){
+    updateProduct() {
         this.getProductList();
     }
 

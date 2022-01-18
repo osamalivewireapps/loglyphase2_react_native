@@ -121,7 +121,7 @@ class BusinessOwnerController extends Component {
                 validateBusURL={this.state.isBusUrl}
                 setBusUrl={(e) => this.setBusUrl(e)}
 
-                accountType={this.props.route.params.accountType}
+                accountType=''//{this.props.route.params.accountType}
                 openRegisterAccount={(e) => this.openRegisterAccount(e)}
                 backScreen={(e) => { this.goingBack(e) }}
                 openDocumetFolder={(e) => { this.openDocumetFolder(e) }}

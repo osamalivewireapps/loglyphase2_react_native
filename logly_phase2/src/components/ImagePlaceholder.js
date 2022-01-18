@@ -127,6 +127,8 @@ const styles = StyleSheet.create({
     bottom: 0,
   },
   image: {
-    flex: 1,
+    //flex: 1,
+    width: '100%',
+    height: '100%',
   },
 });
