@@ -272,7 +272,7 @@ function ContactDetailView(props) {
                                 paddingStart: moderateScale(15),
                                 fontFamily: Fonts.type.base
                             }}>
-                            {contactData.city ? contactData.address +", "+contactData.city+", "+contactData.state:''}
+                            {contactData.city ? (contactData.address ? contactData.address +", ":'')+contactData.city+", "+contactData.state:''}
 
                         </AutoSizeText>
                     </View>

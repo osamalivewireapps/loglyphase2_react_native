@@ -463,10 +463,50 @@ export const deleteParent = (id, parentName) => async (dispatch) => {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
+    console.log('data------->', `${baseUrl}/animal/${id}/parent/${parentName}`)
+
     dispatch(EnableLoader());
     return new Promise((resolve, reject) => {
         axios
             .delete(`${baseUrl}/animal/${id}/parent/${parentName}`, config)
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            })
+    });
+
+
+}
+
+export const deleteChild = (id, child) => async (dispatch) => {
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('data------->', `${baseUrl}/animal/${id}/child/${child}`)
+
+    dispatch(EnableLoader());
+    return new Promise((resolve, reject) => {
+        axios
+            .delete(`${baseUrl}/animal/${id}/child/${child}`, config)
             .then(response => {
 
                 console.log("response-->", response);

@@ -43,10 +43,13 @@ function RegisterPetView(props) {
     const [listBreed, setListBreed] = useState([]);
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
     const [validateQuantity, setValidateQuantity] = useState(true);
-    const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity+"" : '');
+    const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity + "" : '');
     const [captureCollection, setCaptureCollection] = useState(false);
     const [validatePrice, setValidatePrice] = useState(true);
     const [valuePrice, setValuePrice] = useState(animalData ? animalData.data.price : '');
+    const [father, setFather] = useState();
+    const [mother, setMother] = useState();
+    const [children, setChildren] = useState([]);
 
     const sheetRef = useRef(null);
     const sheetCalRef = useRef(null);
@@ -56,7 +59,6 @@ function RegisterPetView(props) {
 
     useEffect(() => {
 
-        console.log("animalCategories--->", animalCategories)
         if (animalData) {
             let index = animalCategories.findIndex((value) => {
                 return value.categoryId._id === props.route.params.animalData.categoryId._id;
@@ -89,7 +91,6 @@ function RegisterPetView(props) {
         }
     };
 
-    console.log("listPhotoCollections-->", listPhotoCollections);
     const onDayPress = day => {
         setSelected(day.dateString);
     };
@@ -136,7 +137,7 @@ function RegisterPetView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        {animalData ? 'Edit Profile' : 'Register Pet'} 
+                        {animalData ? 'Edit Profile' : 'Register Pet'}
 
                     </AutoSizeText>
                     <Image source={Images.img_reg_pet} resizeMode='contain'
@@ -537,19 +538,141 @@ function RegisterPetView(props) {
                                         }
                                         value={valueDesc} />
                                 </View>
-                                <Text style={{
-                                    marginTop: verticalScale(25),
-                                    ...styles.generalTxt, color: '#464646',
-                                    fontFamily: Fonts.type.medium,
-                                }}>Parents</Text>
 
-                                <View flexDirection='row' marginTop={0}>
+                                {!animalData ? <View>
+                                    <Text style={{
+                                        marginTop: verticalScale(25),
+                                        ...styles.generalTxt, color: '#464646',
+                                        fontFamily: Fonts.type.medium,
+                                    }}>Parents</Text>
+
+                                    <View flexDirection='row' marginTop={0}>
+
+                                        <TouchableOpacity style={{
+                                            backgroundColor: '#F5F5F5',
+                                            borderRadius: moderateScale(10),
+                                            marginTop: verticalScale(5),
+                                            flex: 1,
+                                            height: verticalScale(40),
+                                            flexDirection: 'row',
+                                            paddingStart: moderateScale(15),
+                                            paddingEnd: moderateScale(15),
+                                            alignItems: 'center',
+                                            marginStart: 0,
+                                        }} onPress={() => {
+                                            if (!father) {
+                                                let family = getFamily();
+                                                props.navigation.navigate('AllAnimal', { FamilyData: family, mainId: '', updateAnimal: (e) => { addAnimalasParent(e, true) } })
+                                            }
+                                            else {
+                                                deleteAnimalasParent(father, true)
+                                            }
+                                        }}>
+
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={moderateScale(14)}
+                                                fontSize={moderateScale(16)}
+                                                mode={ResizeTextMode.max_lines}
+                                                style={{
+                                                    ...styles.generalTxt,
+                                                    color: '#464646',
+                                                    paddingEnd: moderateScale(5),
+                                                    flex: 7,
+                                                }}>{father ? father.data.name : 'Add Father'}
+                                            </AutoSizeText>
+                                            <Image source={father ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                        </TouchableOpacity>
+                                        <TouchableOpacity style={{
+                                            backgroundColor: '#F5F5F5',
+                                            borderRadius: moderateScale(10),
+                                            marginTop: verticalScale(5),
+                                            flex: 1,
+                                            height: verticalScale(40),
+                                            paddingStart: moderateScale(15),
+                                            paddingEnd: moderateScale(15),
+                                            alignItems: 'center',
+                                            marginStart: moderateScale(10),
+                                            flexDirection: 'row'
+                                        }} onPress={() => {
+                                            if (!mother) {
+                                                let family = getFamily();
+                                                props.navigation.navigate('AllAnimal', { FamilyData: family, mainId: '', updateAnimal: (e) => { addAnimalasParent(e, false) } })
+                                            }
+                                            else {
+                                                deleteAnimalasParent(mother, false)
+                                            }
+                                        }}>
+
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={moderateScale(14)}
+                                                fontSize={moderateScale(16)}
+                                                mode={ResizeTextMode.max_lines}
+                                                style={{
+                                                    ...styles.generalTxt,
+                                                    color: '#464646',
+                                                    flex: 7,
+                                                }}>{mother ? mother.data.name : 'Add Mother'}
+                                            </AutoSizeText>
+                                            <Image source={mother ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                        </TouchableOpacity>
+
+
+                                    </View>
+                                    <Text style={{
+                                        marginTop: verticalScale(25),
+                                        ...styles.generalTxt, color: '#464646',
+                                        fontFamily: Fonts.type.medium,
+                                    }}>Child</Text>
+
+                                    <FlatList
+                                        numColumns={2}
+                                        data={children}
+                                        renderItem={({ item, index }) => {
+
+                                            return (
+                                                <TouchableOpacity style={{
+                                                    backgroundColor: '#F5F5F5',
+                                                    borderRadius: moderateScale(10),
+                                                    marginTop: verticalScale(5),
+                                                    flex: 0.5,
+                                                    height: verticalScale(40),
+                                                    flexDirection: 'row',
+                                                    paddingStart: moderateScale(15),
+                                                    paddingEnd: moderateScale(15),
+                                                    alignItems: 'center',
+                                                    marginStart: index % 2 === 0 ? 0 : moderateScale(10),
+                                                }} onPress={() => {
+                                                    let tmp = children;
+                                                    tmp.splice(index, 1)
+                                                    setChildren([...tmp]);
+                                                }}>
+
+                                                    <AutoSizeText
+                                                        numberOfLines={1}
+                                                        minFontSize={moderateScale(14)}
+                                                        fontSize={moderateScale(16)}
+                                                        mode={ResizeTextMode.max_lines}
+                                                        style={{
+                                                            ...styles.generalTxt,
+                                                            color: '#464646',
+                                                            paddingEnd: moderateScale(5),
+                                                            flex: 7,
+                                                        }}>{item && item.data ? item.data.name : ''}
+                                                    </AutoSizeText>
+                                                    <Image source={item && item.data ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                                </TouchableOpacity>
+                                            )
+                                        }}
+                                    />
 
                                     <TouchableOpacity style={{
                                         backgroundColor: '#F5F5F5',
                                         borderRadius: moderateScale(10),
                                         marginTop: verticalScale(5),
-                                        flex: 1,
+                                        flex: 0.5,
+                                        width: '50%',
                                         height: verticalScale(40),
                                         flexDirection: 'row',
                                         paddingStart: moderateScale(15),
@@ -557,7 +680,15 @@ function RegisterPetView(props) {
                                         alignItems: 'center',
                                         marginStart: 0,
                                     }} onPress={() => {
-
+                                        let family = getFamily();
+                                        family.children = children;
+                                        props.navigation.navigate('AllAnimal', {
+                                            FamilyData: family, mainId: '', updateAnimal: (e) => {
+                                                let tmp = children;
+                                                tmp.push(e)
+                                                setChildren([...tmp])
+                                            }
+                                        })
                                     }}>
 
                                         <AutoSizeText
@@ -570,76 +701,11 @@ function RegisterPetView(props) {
                                                 color: '#464646',
                                                 paddingEnd: moderateScale(5),
                                                 flex: 7,
-                                            }}>Add Father
+                                            }}>Add Children
                                         </AutoSizeText>
                                         <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{
-                                        backgroundColor: '#F5F5F5',
-                                        borderRadius: moderateScale(10),
-                                        marginTop: verticalScale(5),
-                                        flex: 1,
-                                        height: verticalScale(40),
-                                        paddingStart: moderateScale(15),
-                                        paddingEnd: moderateScale(15),
-                                        alignItems: 'center',
-                                        marginStart: moderateScale(10),
-                                        flexDirection: 'row'
-                                    }} onPress={() => {
-                                    }}>
-
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={moderateScale(14)}
-                                            fontSize={moderateScale(16)}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                color: '#464646',
-                                                flex: 7,
-                                            }}>Add Mother
-                                        </AutoSizeText>
-                                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                                    </TouchableOpacity>
-
-
-                                </View>
-                                <Text style={{
-                                    marginTop: verticalScale(25),
-                                    ...styles.generalTxt, color: '#464646',
-                                    fontFamily: Fonts.type.medium,
-                                }}>Child</Text>
-
-                                <TouchableOpacity style={{
-                                    backgroundColor: '#F5F5F5',
-                                    borderRadius: moderateScale(10),
-                                    marginTop: verticalScale(5),
-                                    flex: 0.5,
-                                    width: '50%',
-                                    height: verticalScale(40),
-                                    flexDirection: 'row',
-                                    paddingStart: moderateScale(15),
-                                    paddingEnd: moderateScale(15),
-                                    alignItems: 'center',
-                                    marginStart: 0,
-                                }} onPress={() => {
-
-                                }}>
-
-                                    <AutoSizeText
-                                        numberOfLines={1}
-                                        minFontSize={moderateScale(14)}
-                                        fontSize={moderateScale(16)}
-                                        mode={ResizeTextMode.max_lines}
-                                        style={{
-                                            ...styles.generalTxt,
-                                            color: '#464646',
-                                            paddingEnd: moderateScale(5),
-                                            flex: 7,
-                                        }}>Add Children
-                                    </AutoSizeText>
-                                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                                </TouchableOpacity>
+                                </View> : <View />}
 
                             </View> : null}
                     </View>
@@ -656,10 +722,8 @@ function RegisterPetView(props) {
                                 marginBottom: verticalScale(20),
                             }}
                             contentContainerStyle={{
-                                //padding: moderateScale(30),
                             }}
                             renderItem={({ item, index }) => {
-                                console.log('pic---->', item)
                                 return (
                                     <TouchableOpacity
                                         onPress={() => {
@@ -724,6 +788,14 @@ function RegisterPetView(props) {
                                 margin: verticalScale(25),
                                 marginTop: verticalScale(15)
                             }} onPress={() => {
+
+                                let tmpFamily = getFamily();
+                                let childs = []
+                                children.forEach((data, inn) => {
+                                    childs.push(data._id)
+                                });
+                                tmpFamily.children = childs
+
                                 addProduct({
                                     categoryId: animalCategories[petIndex].categoryId._id,
                                     name: valueName,
@@ -733,7 +805,7 @@ function RegisterPetView(props) {
                                     breed: listBreed.map((value) => value.name),
                                     DOB: selected,
                                     Sex: serviceTypeIndex === 0 ? 'Male' : 'Female',
-
+                                    family: tmpFamily
                                 })
                             }}>
                                 <Text style={{
@@ -1058,6 +1130,28 @@ function RegisterPetView(props) {
                 </View>
             </ScrollView>
         )
+    }
+
+    function getFamily() {
+        let family = {};
+        let parent1 = { id: father ? father._id : null, name: father ? father.data.name : '' }
+        let parent2 = { id: mother ? mother._id : null, name: mother ? mother.data.name : '' }
+        family.parent1 = parent1;
+        family.parent2 = parent2;
+        return family;
+    }
+    function addAnimalasParent(e, isFather) {
+        if (isFather)
+            setFather(e)
+        else
+            setMother(e)
+
+    }
+    function deleteAnimalasParent(e, isFather) {
+        if (isFather)
+            setFather('')
+        else
+            setMother('')
     }
 }
 

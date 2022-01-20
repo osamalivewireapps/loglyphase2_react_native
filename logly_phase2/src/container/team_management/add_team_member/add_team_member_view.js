@@ -31,22 +31,22 @@ function AddTeamMemberView(props) {
     const [contactType, setContactType] = useState(props.route.params.contactData ? props.route.params.contactData?.category === VENDOR_ID ? 0 : 1 : -1);
 
     const [validateName, setValidateName] = useState(true);
-    const [valueName, setValueName] = useState(props.route.params.contactData ?props.route.params.contactData?.name:'');
+    const [valueName, setValueName] = useState(props.route.params.contactData ? props.route.params.contactData?.name : '');
 
     const [validateEmail, setValidateEmail] = useState(true);
-    const [valueEmail, setValueEmail] = useState(props.route.params.contactData ?props.route.params.contactData?.email:'');
+    const [valueEmail, setValueEmail] = useState(props.route.params.contactData ? props.route.params.contactData?.email : '');
 
     const [validatePhone, setValidatePhone] = useState(true);
-    const [valuePhone, setValuePhone] = useState(props.route.params.contactData ?props.route.params.contactData.phone:'');
+    const [valuePhone, setValuePhone] = useState(props.route.params.contactData ? props.route.params.contactData.phone : '');
 
 
-    const [valueDesc, setDesc] = useState(props.route.params.contactData?props.route.params.contactData.address:'');
+    const [valueDesc, setDesc] = useState(props.route.params.contactData ? props.route.params.contactData.address : '');
     const [validateDesc, setValidateDesc] = useState(true);
 
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
 
-    const [emergencyName, setEmergencyName] = useState(props.route.params.contactData ? (props.route.params.contactData.emergencyContact.emergencyName ? props.route.params.contactData.emergencyContact.emergencyName:JSON.parse(props.route.params.contactData?.emergencyContact).emergencyName) : '');
-    const [emergencyPhone, setEmergencyPhone] = useState(props.route.params.contactData ? (props.route.params.contactData.emergencyContact.contactNumber ? props.route.params.contactData.emergencyContact.contactNumber+"" : JSON.parse(props.route.params.contactData?.emergencyContact).contactNumber)+"" : '');
+    const [emergencyName, setEmergencyName] = useState((props.route.params.contactData && props.route.params.contactData.emergencyContact) ? (typeof (props.route.params.contactData.emergencyContact) !== 'string' ? props.route.params.contactData.emergencyContact.emergencyName : JSON.parse(props.route.params.contactData?.emergencyContact).emergencyName) : '');
+    const [emergencyPhone, setEmergencyPhone] = useState(props.route.params.contactData && props.route.params.contactData.emergencyContact ? (typeof (props.route.params.contactData.emergencyContact) !== 'string' ? props.route.params.contactData.emergencyContact.contactNumber + "" : JSON.parse(props.route.params.contactData?.emergencyContact).contactNumber) + "" : '');
 
     const sheetRef = useRef(null);
 
@@ -65,7 +65,7 @@ function AddTeamMemberView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    
+
     useEffect(() => {
 
 
@@ -86,8 +86,9 @@ function AddTeamMemberView(props) {
         }
     }, [userCityLocation]);
 
-
+   
     return (
+
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <View style={{
@@ -130,7 +131,7 @@ function AddTeamMemberView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold,
                         }}>
-                        {props.route.params.contactData ?'Edit Team Member':'Add Team Member'}
+                        {props.route.params.contactData ? 'Edit Team Member' : 'Add Team Member'}
 
                     </AutoSizeText>
                     <Image source={Icons.icon_header_teammember} resizeMode="contain"
@@ -140,7 +141,7 @@ function AddTeamMemberView(props) {
             </View>
 
             <KeyboardAvoidingView
-            flex={1}
+                flex={1}
                 behavior={Platform.OS === "ios" ? "padding" : null}
             >
                 <ScrollView
@@ -819,7 +820,7 @@ function AddTeamMemberView(props) {
                                 let tmp = setPhoneNo(e, emergencyPhone);
                                 setEmergencyPhone(tmp);
 
-                                
+
                             }}
                             value={emergencyPhone}
                             placeholder='Phone'
@@ -865,7 +866,7 @@ function AddTeamMemberView(props) {
                             paddingTop: verticalScale(5),
                             paddingBottom: verticalScale(5),
 
-                        }}>{props.route.params.contactData?'Save':'Add'}</Text>
+                        }}>{props.route.params.contactData ? 'Save' : 'Add'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{
@@ -915,7 +916,7 @@ function AddTeamMemberView(props) {
             tmp = text;
         }
 
-       return tmp;
+        return tmp;
     }
 
 

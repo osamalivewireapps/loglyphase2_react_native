@@ -50,13 +50,15 @@ function AllAnimal(props) {
             if (mainId) {
                 animalsRemoved.push(mainId)
             }
-            if (FamilyData.parent1[0]) {
-                animalsRemoved.push(FamilyData.parent1._id)
+            if (FamilyData.parent1) {
+                animalsRemoved.push(FamilyData.parent1._id ? FamilyData.parent1._id : FamilyData.parent1.id)
             }
-            if (FamilyData.parent2[0]) {
-                animalsRemoved.push(FamilyData.parent2._id)
+            if (FamilyData.parent2) {
+                animalsRemoved.push(FamilyData.parent2._id ? FamilyData.parent2._id : FamilyData.parent2.id)
             }
-            if (FamilyData.children.length > 0) {
+
+            console.log("FAMILY DATA CHILDREN-->",FamilyData.children)
+            if (FamilyData.children && FamilyData.children.length > 0) {
                 FamilyData.children.map((e) => (
                     animalsRemoved.push(e._id)
                 ))

@@ -89,7 +89,7 @@ function ProductDetailView(props) {
 
                                         }}
 
-                                        src={item.filename}
+                                        src={item?.filename}
                                         placeholder={Icons.icon_paw}
                                     />
 
@@ -250,7 +250,7 @@ function ProductDetailView(props) {
                                 marginStart: moderateScale(10),
                                 marginTop: verticalScale(20),
                                 fontFamily: Fonts.type.base,
-                            }}>{props.productData?._id.substring(0, 6)}
+                            }}>{props.productData?._id}
                         </AutoSizeText>
                     </View>
                     <View style={{

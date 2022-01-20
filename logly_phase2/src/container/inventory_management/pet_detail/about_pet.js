@@ -109,50 +109,86 @@ function AboutPetView(props) {
 
 
 
+            <View style={{
+                flexDirection: 'row',
+                marginTop: moderateScale(5),
+                alignItems: 'center',
+                marginBottom: moderateScale(15),
+                marginEnd: moderateScale(10)
 
-            <TouchableOpacity
+            }}>
+                <View
 
-                style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginBottom: moderateScale(15),
-                    marginTop: moderateScale(5),
-                    width: '25%',
-                    borderRadius:moderateScale(10),
-                    padding:verticalScale(2),
-                    backgroundColor: animalData.featured ? 'green' : '#777777'
-                }}
-                onPress={() => updateStatusFeatured()}>
-                <Text
                     style={{
-                        ...styles.generalTxt,
-                        color: 'white',
-                        fontSize: moderateScale(14),
-                        fontFamily: Fonts.type.medium,
-                    }}>Featured
-                </Text>
-            </TouchableOpacity>
-
-
-            <TouchableOpacity
-                style={{ flexDirection: 'row' }}
-                onPress={() => updatePrivacyStatus()}
-            >
-                <Text
-                    style={{
-                        ...styles.generalTxt,
-                        color: '#464646',
-                        fontSize: moderateScale(14),
-                        paddingStart: moderateScale(10),
-                        fontFamily: Fonts.type.medium,
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        width: '25%',
+                        borderRadius: moderateScale(10),
+                        padding: verticalScale(2),
+                        backgroundColor: animalData.featured ? 'green' : '#777777'
                     }}>
-                    {animalData.isPrivate ? 'Public' : 'Private'}
-                </Text>
+                    <Text
+                        style={{
+                            ...styles.generalTxt,
+                            color: 'white',
+                            fontSize: moderateScale(14),
+                            fontFamily: Fonts.type.medium,
+                        }}>Featured
+                    </Text>
+                </View>
+                <TouchableOpacity
+                    style={{ width: '75%', alignItems: 'flex-end' }}
+                    onPress={() => updateStatusFeatured()}>
+                    <Image
+                        source={animalData.featured ? Icons.icon_toggle_on : Icons.icon_toggle_off}
+                        resizeMode='contain'
+                        style={{ height: verticalScale(15), width: moderateScale(30) }}
 
-                <Image source={animalData.isPrivate ? Icons.icon_open_eye : Icons.icon_close_eye}
-                    style={{ marginStart: moderateScale(10), resizeMode: 'contain', height: verticalScale(15), width: moderateScale(15) }}
-                />
-            </TouchableOpacity>
+                    />
+                </TouchableOpacity>
+            </View>
+
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginEnd: moderateScale(10),
+
+
+            }}>
+                <View
+                    style={{
+                        flexDirection: 'row', width: '25%',
+                        borderRadius: moderateScale(10),
+                        padding: verticalScale(2),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: animalData.isPrivate ? 'green' : '#777777'
+                    }}
+
+                >
+                    <Text
+                        style={{
+                            ...styles.generalTxt,
+                            color: 'white',
+                            fontSize: moderateScale(14),
+                            fontFamily: Fonts.type.medium,
+                        }}>
+                        {animalData.isPrivate ? 'Public' : 'Private'}
+                    </Text>
+
+                </View>
+
+                <TouchableOpacity
+                    style={{ width: '75%', alignItems: 'flex-end' }}
+                    onPress={() => updatePrivacyStatus()}>
+                    <Image
+                        source={animalData.isPrivate ? Icons.icon_toggle_on : Icons.icon_toggle_off}
+                        resizeMode='contain'
+                        style={{ height: verticalScale(15), width: moderateScale(30) }}
+
+                    />
+                </TouchableOpacity>
+            </View>
 
             <Text
                 style={{
@@ -246,7 +282,7 @@ function AboutPetView(props) {
                 return route.params.id.substring(0, 7);
 
             case 'Breed':
-                return animalData.data?.breed[0];
+                return animalData.data?.breed ? animalData.data?.breed[0] : '';
 
             case 'sex':
                 return animalData.data?.Sex;

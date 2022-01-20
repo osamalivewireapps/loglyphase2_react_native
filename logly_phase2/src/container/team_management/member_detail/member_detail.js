@@ -274,7 +274,7 @@ function MemberDetailView(props) {
                                     paddingStart: moderateScale(15),
                                     fontFamily: Fonts.type.base
                                 }}>
-                                {contactData.address?(contactData.address + ", " + contactData.city + ", " + contactData.state):''}
+                                {contactData.city ? (contactData.address ? contactData.address + ", " : '') + contactData.city + ", " + contactData.state : ''}
 
                             </AutoSizeText>
                         </View>
@@ -309,7 +309,7 @@ function MemberDetailView(props) {
                                 paddingStart: moderateScale(15),
                                 fontFamily: Fonts.type.base
                             }}>
-                            {props.contactData ? (props.contactData.emergencyContact.emergencyName ? props.contactData.emergencyContact.emergencyName : JSON.parse(props.contactData?.emergencyContact).emergencyName) : ''}
+                            {(props.contactData && props.contactData.emergencyContact) ? (typeof (props.contactData.emergencyContact) !== 'string' ? props.contactData.emergencyContact.emergencyName : JSON.parse(props.contactData?.emergencyContact).emergencyName) : ''}
                     
                         </AutoSizeText>
                         <AutoSizeText
@@ -324,7 +324,7 @@ function MemberDetailView(props) {
                                 fontFamily: Fonts.type.base,
                                 marginBottom: verticalScale(10)
                             }}>
-                            {props.contactData ? (props.contactData.emergencyContact.contactNumber ? props.contactData.emergencyContact.contactNumber : JSON.parse(props.contactData?.emergencyContact).contactNumber) : ''}
+                            {(props.contactData && props.contactData.emergencyContact) ? (typeof (props.contactData.emergencyContact) !== 'string' ? props.contactData.emergencyContact.contactNumber : JSON.parse(props.contactData?.emergencyContact).contactNumber) : ''}
 
                         </AutoSizeText>
 

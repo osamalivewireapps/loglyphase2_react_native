@@ -160,7 +160,7 @@ class RegisterPet extends Component {
 
 
     createAnimalProfile(e) {
-        console.log('values--->', e);
+        console.log('values--->', e.family);
 
         let formdata = new FormData();
         formdata.append('categoryId', e.categoryId);
@@ -178,13 +178,9 @@ class RegisterPet extends Component {
         formdata.append('categoryName', categoryName);
         formdata.append('data', JSON.stringify(e));
 
-        var familyvalues = {}
-        familyvalues.parent1 = { id: '' }
-        familyvalues.parent2 = { id: '' }
-        familyvalues.children = []
-
+       
         if (!this.animalData)
-            formdata.append('family', '{}')
+            formdata.append('family', JSON.stringify(e.family))
 
         if (this.state.fileUri) {
             formdata.append('file', {

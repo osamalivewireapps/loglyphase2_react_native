@@ -12,18 +12,18 @@ import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import { useDispatch } from "react-redux";
-import { getAnimal, addParent, deleteParent } from '../../../actions/AnimalModule';
+import { getAnimal, addParent, deleteParent, deleteChild } from '../../../actions/AnimalModule';
 
 function FamilyTreePetView(props) {
 
-    const [initialPg, setInitialPg] = useState(0);
     const { animalData, route } = props;
-    const [father, setFather] = useState(animalData.family.parent1.id ? animalData.family.parent1.id : '');
-    const [mother, setMother] = useState(animalData.family.parent2.id ? animalData.family.parent2.id : '');
+    const [father, setFather] = useState(animalData && animalData.family.parent1 ? animalData.family.parent1 : '');
+    const [mother, setMother] = useState(animalData && animalData.family.parent2 ? animalData.family.parent2 : '');
+    const [children, setChildren] = useState(animalData && animalData.family.children ? animalData.family.children:[]);
 
     const dispatch = useDispatch();
 
-    console.log("props--->",animalData);
+    console.log("props1234--->", props);
 
     return (
         <View style={{
@@ -52,11 +52,11 @@ function FamilyTreePetView(props) {
                     alignItems: 'center',
                     marginStart: 0,
                 }} onPress={() => {
-                    //if (father.length === 0)
-                        //props.navigation.navigate('AllAnimal', { FamilyData: animalData.family, mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, true) } })
-                    //else {
-                        //deleteAnimalasParent(father, true)
-                    //}
+                    if (!father || !father.name)
+                        props.navigation.navigate('AllAnimal', { FamilyData: getFamily(), mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, true) } })
+                    else {
+                        deleteAnimalasParent(father, true)
+                    }
                 }}>
 
                     <AutoSizeText
@@ -69,7 +69,7 @@ function FamilyTreePetView(props) {
                             color: '#464646',
                             paddingEnd: moderateScale(5),
                             flex: 7,
-                        }}>{father ? father.data.name : 'Add Father'}
+                        }}>{father && father.name ? father.name : 'Add Father'}
                     </AutoSizeText>
                     <Image source={father ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
                 </TouchableOpacity>
@@ -85,11 +85,11 @@ function FamilyTreePetView(props) {
                     marginStart: moderateScale(10),
                     flexDirection: 'row'
                 }} onPress={() => {
-                    // if (mother.length === 0)
-                    //     props.navigation.navigate('AllAnimal', { FamilyData: animalData.family, mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, false) } })
-                    // else {
-                    //     deleteAnimalasParent(mother, false)
-                    // }
+                    if (!mother || !mother.name)
+                        props.navigation.navigate('AllAnimal', { FamilyData: getFamily(), mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, false) } })
+                    else {
+                        deleteAnimalasParent(mother, false)
+                    }
                 }}>
 
                     <AutoSizeText
@@ -101,7 +101,7 @@ function FamilyTreePetView(props) {
                             ...styles.generalTxt,
                             color: '#464646',
                             flex: 7,
-                        }}>{mother ? mother.data.name : 'Add Mother'}
+                        }}>{mother && mother.name ? mother.name : 'Add Mother'}
                     </AutoSizeText>
                     <Image source={mother ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
                 </TouchableOpacity>
@@ -113,6 +113,45 @@ function FamilyTreePetView(props) {
                 ...styles.generalTxt, color: '#464646',
                 fontFamily: Fonts.type.medium,
             }}>Child</Text>
+
+            <FlatList
+                numColumns={2}
+                data={children}
+                renderItem={({ item, index }) => {
+
+                    return (
+                        <TouchableOpacity style={{
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: moderateScale(10),
+                            marginTop: verticalScale(5),
+                            flex: 0.5,
+                            height: verticalScale(40),
+                            flexDirection: 'row',
+                            paddingStart: moderateScale(15),
+                            paddingEnd: moderateScale(15),
+                            alignItems: 'center',
+                            marginStart: index % 2 === 0 ? 0 : moderateScale(10),
+                        }} onPress={() => {
+                            deleteChildAsParent(item,index)
+                        }}>
+
+                            <AutoSizeText
+                                numberOfLines={1}
+                                minFontSize={moderateScale(14)}
+                                fontSize={moderateScale(16)}
+                                mode={ResizeTextMode.max_lines}
+                                style={{
+                                    ...styles.generalTxt,
+                                    color: '#464646',
+                                    paddingEnd: moderateScale(5),
+                                    flex: 7,
+                                }}>{item && item.data ? item.data.name : ''}
+                            </AutoSizeText>
+                            <Image source={item && item.data ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                        </TouchableOpacity>
+                    )
+                }}
+            />
 
             <TouchableOpacity style={{
                 backgroundColor: '#F5F5F5',
@@ -127,7 +166,13 @@ function FamilyTreePetView(props) {
                 alignItems: 'center',
                 marginStart: 0,
             }} onPress={() => {
-
+                let family = getFamily();
+                family.children = children;
+                props.navigation.navigate('AllAnimal', {
+                    FamilyData: family, mainId: '', updateAnimal: (e) => {
+                       addChildAsParent(e)
+                    }
+                })
             }}>
 
                 <AutoSizeText
@@ -148,24 +193,63 @@ function FamilyTreePetView(props) {
         </View>
     );
 
+    function getFamily() {
+        let family = {};
+        let parent1 = { id: father ? father?.id : null, name: father ? father?.name : '' }
+        let parent2 = { id: mother ? mother?.id : null, name: mother ? mother?.name : '' }
+        family.parent1 = parent1;
+        family.parent2 = parent2;
+        return family;
+    }
+
     function addAnimalasParent(e, isFather) {
         let values = {};
         values.id = animalData._id
         values.animalId = e._id;
         values.type = isFather ? 'parent1' : 'parent2';
+        values.name= e.data.name
         dispatch(addParent(values)).then((response) => {
-            if (isFather)
-                setFather(e)
-            else
-                setMother(e)
+            if (isFather){
+                setFather({ id: e._id,name:e.data.name})
+            }
+            else{
+                setMother({ id: e._id, name: e.data.name })
+            }
+            dispatch(getAnimal(props.route.params.id));
+            props.route.params.updateAnimal();
+        })
+    }
+
+    function addChildAsParent(e) {
+        let values = {};
+        values.id = animalData._id
+        values.animalId = e._id;
+        values.type = 'children';
+        values.name = e.data.name
+        dispatch(addParent(values)).then((response) => {
+           
+            let tmp = children;
+            tmp.push(e)
+            setChildren([...tmp]);
+
             dispatch(getAnimal(props.route.params.id));
             props.route.params.updateAnimal();
         })
     }
 
     function deleteAnimalasParent(e, isFather) {
-        dispatch(deleteParent(e._id, isFather ? 'parent1' : 'parent2')).then((response) => {
-            isFather ? setFather(e) : setMother(e)
+        dispatch(deleteParent(animalData._id, isFather ? 'parent1' : 'parent2')).then((response) => {
+            isFather ? setFather({}) : setMother({})
+            dispatch(getAnimal(props.route.params.id));
+            props.route.params.updateAnimal();
+        })
+    }
+
+    function deleteChildAsParent(e,index) {
+        dispatch(deleteChild(animalData._id,e._id)).then((response) => {
+            let tmp = children;
+            tmp.splice(index, 1)
+            setChildren([...tmp]);
             dispatch(getAnimal(props.route.params.id));
             props.route.params.updateAnimal();
         })
