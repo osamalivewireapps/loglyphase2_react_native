@@ -6,10 +6,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
-import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
+import { RefreshControl, ImageBackground, TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { Colors, Fonts, Icons } from '../../../theme';
+import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/routers';
 import { FlatList } from 'react-native-gesture-handler';
@@ -21,10 +21,10 @@ function GroupListingView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listGroups, updateContacts } = props;
+    const { listGroups, updateContacts, removeMember } = props;
 
- 
- 
+    const [isEditShow, setEditShow] = useState(-1);
+
     useEffect(() => {
         if (listGroups.length > 0) {
             setGroupsList(listGroups.filter((e) => {
@@ -37,7 +37,11 @@ function GroupListingView(props) {
         setGroupsList(listGroups)
     }, [listGroups]);
 
+    const [refreshing, setRefreshing] = React.useState(false);
 
+    const onRefresh = () => {
+        updateContacts();
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -102,7 +106,7 @@ function GroupListingView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
+            {/* <ScrollView keyboardShouldPersistTaps='handled'> */}
                 <View style={{ flex: 1, height: Dimensions.get('window').height }}>
                     <View style={{ padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%' }}>
                         <View style={{
@@ -136,127 +140,198 @@ function GroupListingView(props) {
 
                             </View>
 
-           
+
                         </View>
                     </View>
 
                     <FlatList
-                        data={['','']}
+                        data={contactList}
                         contentContainerStyle={{
                             marginTop: verticalScale(10),
-                            padding:moderateScale(25),
-                            paddingTop:0
+                            padding: moderateScale(25),
+                            paddingTop: 0,
+                            paddingBottom: verticalScale(90),
                         }}
-                        renderItem={({ item }) => {
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => props.navigation.navigate('CreateGroup', { updateContacts: updateContacts })}
-                                    style={{
-                                        backgroundColor: '#F5F5F5',
-                                        padding: moderateScale(5),
-                                        borderRadius: moderateScale(10),
-                                        marginTop: verticalScale(10),
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        paddingTop: verticalScale(12),
-                                        paddingBottom: verticalScale(12)
-                                    }}>
 
-                                    <View style={{
-                                        flex: 0.9,
-                                        marginStart: moderateScale(12)
-                                    }}>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: Colors.appBgColor,
-                                       
-                                                }}
-                                            >
-                                                Test Group
-                                            </AutoSizeText>
-                           
-                                        <View style={{
-                                            flexDirection: 'row',
-                                            marginTop: verticalScale(5)
-                                        }}>
+                        refreshControl={
+                            <RefreshControl
+                                refreshing={refreshing}
+                                onRefresh={onRefresh}
+                            />
+                        }
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => props.navigation.navigate('CreateGroup', { updateContacts: updateContacts, groupData: item })}
+                                style={{
+                                    backgroundColor: '#F5F5F5',
+                                    padding: moderateScale(5),
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingTop: verticalScale(12),
+                                    paddingBottom: verticalScale(12)
+                                }}>
 
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(14)}
-                                                style={{
-                                                    fontFamily: Fonts.type.base,
-                                                    color: '#777777',
-                                     
-                                                }}
-                                            >
-                                                Total Animals:
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(14)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(2)
-
-                                                }}
-                                            >
-                                                2 Animals
-                                            </AutoSizeText>
-                                        </View>
-                                        <View style={{
-                                            flexDirection: 'row',
-                                            marginTop: verticalScale(5)
-                                        }}>
-
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(14)}
-                                                style={{
-                                                    fontFamily: Fonts.type.base,
-                                                    color: '#777777',
-
-                                                }}
-                                            >
-                                                Total Members:
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(14)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(2)
-
-                                                }}
-                                            >
-                                                2 Team Members
-                                            </AutoSizeText>
-                                        </View>
-
-                                    </View>
-                                    <Image
-                                        resizeMode='contain'
+                                <View style={{
+                                    flex: 0.9,
+                                    marginStart: moderateScale(12)
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
                                         style={{
-                                            flex: 0.1,
+                                            fontFamily: Fonts.type.medium,
+                                            color: Colors.appBgColor,
 
                                         }}
-                                        source={Icons.icon_arrow_blue} />
+                                    >
+                                        {item.name}
+                                    </AutoSizeText>
+
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        marginTop: verticalScale(5)
+                                    }}>
+
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(14)}
+                                            style={{
+                                                fontFamily: Fonts.type.base,
+                                                color: '#777777',
+
+                                            }}
+                                        >
+                                            Total Animals:
+                                        </AutoSizeText>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(14)}
+                                            style={{
+                                                fontFamily: Fonts.type.medium,
+                                                color: '#777777',
+                                                marginStart: moderateScale(2)
+
+                                            }}
+                                        >
+                                            {item.animals.length} Animals
+                                        </AutoSizeText>
+                                    </View>
+                                    <View style={{
+                                        flexDirection: 'row',
+                                        marginTop: verticalScale(5)
+                                    }}>
+
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(14)}
+                                            style={{
+                                                fontFamily: Fonts.type.base,
+                                                color: '#777777',
+
+                                            }}
+                                        >
+                                            Total Members:
+                                        </AutoSizeText>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(14)}
+                                            style={{
+                                                fontFamily: Fonts.type.medium,
+                                                color: '#777777',
+                                                marginStart: moderateScale(2)
+
+                                            }}
+                                        >
+                                            {item.employees.length} Team Members
+                                        </AutoSizeText>
+                                    </View>
+
+                                </View>
+                                {isEditShow === index ?
+                                    <View style={{
+                                        height: verticalScale(70),
+                                        flex: moderateScale(0.145),
+                                        marginTop: 0,
+                                        marginBottom: 0,
+                                        justifyContent: 'center',
+                                        alignItems: 'center'
+                                    }}>
+                                        <ImageBackground
+                                            source={Images.img_popup_services}
+                                            style={{
+                                                position: 'absolute', height: '100%',
+                                                width: '100%'
+                                            }} />
+                                        <TouchableOpacity
+                                            flex={moderateScale(0.1)}
+                                            style={{
+                                                justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => {
+                                                props.navigation.navigate('CreateGroup', { updateContacts: updateContacts, groupData: item })
+                                                setEditShow(-1)
+                                            }}>
+                                            <Image source={Icons.icon_services_edit}
+                                                resizeMode='contain' style={{
+                                                    marginEnd: moderateScale(2), height: verticalScale(10), width: moderateScale(15)
+                                                }}
+
+                                            />
+                                        </TouchableOpacity>
+                                        <View style={{
+                                            width: '50%',
+                                            height: verticalScale(0.5),
+                                            backgroundColor: '#585858',
+                                            marginEnd: moderateScale(5),
+                                            marginTop: verticalScale(8),
+                                            marginBottom: verticalScale(8)
+                                        }} />
+                                        <TouchableOpacity
+                                            flex={moderateScale(0.1)}
+                                            style={{
+                                                justifyContent: 'center', width: '90%', height: verticalScale(15),
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => {
+                                                setEditShow(-1)
+                                                removeMember(item._id);
+                                            }}>
+                                            <Image source={Icons.icon_services_delete}
+                                                resizeMode='contain'
+                                                style={{
+                                                    marginEnd: moderateScale(3),
+                                                    height: verticalScale(12),
+                                                    width: moderateScale(15)
+                                                }} />
+                                        </TouchableOpacity>
+                                    </View> : <View flex={moderateScale(0.1)} />}
+
+                                <TouchableOpacity
+                                    style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
+
+                                    onPress={() => {
+                                        setEditShow(index)
+                                    }}>
+                                    <Image source={Icons.icon_three_colons}
+                                        resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
+                                    />
                                 </TouchableOpacity>
-                            )
-                        }}
+                            </TouchableOpacity>
+                        )
+                    }}
 
                     />
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
 
             <TouchableOpacity
                 style={{

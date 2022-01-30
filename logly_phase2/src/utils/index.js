@@ -36,6 +36,7 @@ class Util {
   }
 
   static isLengthGreater(name) {
+    console.log("name---->", name);
     return (name && name.length >= 3)
   }
 
@@ -47,7 +48,7 @@ class Util {
     if (name && !name.includes('-')) {
       return name.length >= 10;
     }
-    name = name ? name.replaceAll("-", ""):'';
+    name = name ? name.replaceAll("-", "") : '';
     return name.length === 10;
   }
 
@@ -77,6 +78,14 @@ class Util {
   static isGraterThanZero(name) {
     console.log('name--->', name)
     return (name.length > 0 && name > 0);
+  }
+
+  static isTwoDecimalPlaces(name) {
+    console.log('decimal--->', name.includes('.'))
+    if (name.includes('.'))
+      return /^(\d+(\.\d{0,2})?|\.?\d{1,2})$/.test(name);
+    else
+      return (name.length > 0 && name > 0);
   }
 
   static combineEmailValidate(email) {

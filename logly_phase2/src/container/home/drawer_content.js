@@ -74,7 +74,7 @@ function CustomDrawer(props) {
                 <View backgroundColor='#464646' height={moderateScale(0.5)} />
                 <TouchableOpacity
                     onPress={() => {
-                        DataHandler.saveAccountType('');
+                        DataHandler.saveAccountType(null);
                         const resetAction = CommonActions.reset({
                             index: 2,
                             routes: [{ name: "Splash" }, { name: 'Login' }]

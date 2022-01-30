@@ -16,3 +16,5 @@ export const GET_CONTACTS = "GET_CONTACTS";
 export const GET_CONTACTS_DETAILS = "GET_CONTACTS_DETAILS";
 export const GET_TEAM_MEMBERS = "GET_TEAM_MEMBERS";
 export const MEMBER_DETAILS = "MEMBER_DETAILS";
+export const GET_GROUPS = "GET_GROUPS";
+export const GET_FORMS = "GET_FORMS";

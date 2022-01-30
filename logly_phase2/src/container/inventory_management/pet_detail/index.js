@@ -14,6 +14,7 @@ class PetDetail extends Component {
     }
 
     componentDidMount() {
+        console.log("Pet Profile--->",this.props);
         this.props.getAnimal(this.props.route.params.id)
     }
 

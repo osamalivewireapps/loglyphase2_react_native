@@ -1,2 +1,3 @@
 import ViewProfile from './viewprofile';
-export { ViewProfile}
+import EditProfile from './edit_profile';
+export { ViewProfile, EditProfile}

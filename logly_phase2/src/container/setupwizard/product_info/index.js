@@ -8,6 +8,8 @@ import React, { Component } from "react";
 import { BUS_LISTING } from "../../../constants";
 import DataHandler from "../../../utils/DataHandler";
 import ProductInfoView from "./productinfo_view";
+import { getSetupWizardForm } from '../../../actions/SetupWizardModule';
+import { connect } from 'react-redux';
 
 class ProductInfo extends Component {
 
@@ -15,6 +17,7 @@ class ProductInfo extends Component {
         super(props);
         this.state = {
             animalCategory: [],
+            listProducts:[]
         };
     }
 
@@ -22,18 +25,50 @@ class ProductInfo extends Component {
         DataHandler.getAccountType().then((value) => {
             this.accountType = value;
         });
+
+        DataHandler.getUserObject().then((value) => {
+            this.userObject = JSON.parse(value);
+        });
+
+        DataHandler.getProductList().then(value=>{
+            this.productList = JSON.parse(value);
+            console.log("product info--->", this.productList)
+            this.props.getSetupWizardForm().then((response) => {
+                if (response) {
+                    let tmp = [];
+                    if(this.productList){
+                        this.productList.filter((value)=>{
+                            response.payload.forEach(element => {
+                                if (element._id === value._id)
+                                    tmp.push(element)
+                            });
+                        })
+                    }
+                    else if (tmp.length === 0) {
+                        response.payload.forEach(element => {
+                            if (element.breedersId.includes(this.userObject._id))//element.categoryId.active
+                                tmp.push(element)
+                        });
+                    }
+                    console.log("animal categories--->", tmp)
+                    this.setState({ listProducts: response.payload,animalCategory:tmp })
+                }
+            })
+        })
+        
     }
 
     addAnimalCategory(e) {
 
+        console.log("product item--->",e)
         let tmp = this.state.animalCategory;
-        if (tmp.length === 0) { tmp.push({ type: e.type, isSelect: e.isSelect }); }
+        if (tmp.length === 0) { tmp.push(e); }
         else {
-            let itemService = tmp.find(item => item.type === e.type);
+            let itemService = tmp.find(item => item._id === e._id);
             if (itemService) {
                 tmp.splice(tmp.indexOf(itemService), 1);
             } else {
-                tmp.push({ type: e.type, isSelect: e.isSelect });
+                tmp.push(e);
             }
 
         }
@@ -49,6 +84,9 @@ class ProductInfo extends Component {
     }
 
     nextScreen(e) {
+        if (this.state.animalCategory)
+            DataHandler.saveProductList(JSON.stringify(this.state.animalCategory));
+
         this.switchScreen();
     }
 
@@ -61,6 +99,7 @@ class ProductInfo extends Component {
 
     render() {
         return (<ProductInfoView
+            AnimalCategories={this.state.listProducts}
             addServices={(e) => this.addAnimalCategory(e)}
             selectedServices={this.state.animalCategory}
             skipBtn={(e) => { this.skipBtn(e) }}
@@ -73,4 +112,18 @@ class ProductInfo extends Component {
 
 }
 
-export default ProductInfo;
+const mapStateToProps = ({ }) => {
+    return {
+
+    };
+};
+
+const mapDispatchToProps = dispatch => ({
+    getSetupWizardForm: () => dispatch(getSetupWizardForm()),
+
+});
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+)(ProductInfo);

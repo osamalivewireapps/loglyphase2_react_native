@@ -234,14 +234,14 @@ class RegisterProduct extends Component {
                 } else if (response.errorCode) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     //this.props.uploadPicRequest(source)
 
                     let tmp = this.state.listFileUri;
                     if (!isAddCollection)
-                        this.setState({ fileUri: response.assets[0].uri });
+                        this.setState({ fileUri: response.uri });
                     else {
-                        tmp.push(response.assets[0].uri)
+                        tmp.push(response.uri)
                         this.setState({ listFileUri: tmp })
                     }
                 }
@@ -258,13 +258,13 @@ class RegisterProduct extends Component {
                 } else if (response.customButton) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     //this.props.uploadPicRequest(source)
                     let tmp = this.state.listFileUri;
                     if (!isAddCollection)
-                        this.setState({ fileUri: response.assets[0].uri });
+                        this.setState({ fileUri: response.uri });
                     else {
-                        tmp.push(response.assets[0].uri)
+                        tmp.push(response.uri)
                         this.setState({ listFileUri: tmp })
                     }
                 }

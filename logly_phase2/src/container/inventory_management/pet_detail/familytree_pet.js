@@ -26,11 +26,17 @@ function FamilyTreePetView(props) {
     console.log("props1234--->", props);
 
     return (
-        <View style={{
-            flexDirection: 'column',
-            paddingStart: moderateScale(20),
-            padding: verticalScale(20)
+        <ScrollView style={{
+            height: '100%',
 
+        }}>
+        <View style={{
+            paddingTop:0,
+            paddingStart: moderateScale(20),
+            paddingEnd: verticalScale(20),
+            height: '100%',
+            paddingBottom: verticalScale(10),
+    
         }}>
             <Text style={{
                 marginTop: verticalScale(25),
@@ -156,9 +162,9 @@ function FamilyTreePetView(props) {
             <TouchableOpacity style={{
                 backgroundColor: '#F5F5F5',
                 borderRadius: moderateScale(10),
-                marginTop: verticalScale(5),
-                flex: 0.5,
-                width: '50%',
+                marginTop: verticalScale(15),
+                //flex: 1,
+                width: '55%',
                 height: verticalScale(40),
                 flexDirection: 'row',
                 paddingStart: moderateScale(15),
@@ -191,6 +197,7 @@ function FamilyTreePetView(props) {
             </TouchableOpacity>
 
         </View>
+        </ScrollView>
     );
 
     function getFamily() {

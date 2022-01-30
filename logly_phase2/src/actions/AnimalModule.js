@@ -157,7 +157,7 @@ export async function getFormCategory(catId) {
 
     console.log("token-------->",config);
     
-    let url = catId.startsWith('type') ? `http://147.182.194.105/api/form/byBreeder?${catId}` : `${baseUrl}/form/category/${catId}`;
+    let url = catId.startsWith('type') ? `${baseUrl}/form/byBreeder?${catId}` : `${baseUrl}/form/category/${catId}`;
 
     return new Promise((resolve, reject) => {
         axios.get(url, config)

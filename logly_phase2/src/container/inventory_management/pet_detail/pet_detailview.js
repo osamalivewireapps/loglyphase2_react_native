@@ -197,7 +197,7 @@ function PetDetailView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
+            {/* <ScrollView keyboardShouldPersistTaps='handled'> */}
                 <View style={{ flex: 1}}>
 
                     <FlatList
@@ -244,7 +244,7 @@ function PetDetailView(props) {
 
 
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
         </View>
 
     );

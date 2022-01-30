@@ -19,6 +19,7 @@ import moment from 'moment';
 import AppLoader from '../../../components/AppLoader';
 import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import VideoPlayer from 'react-native-video-player';
 
 function RegisterPetView(props) {
 
@@ -41,6 +42,7 @@ function RegisterPetView(props) {
     const [validateDesc, setValidateDesc] = useState(true);
     const [serviceTypeIndex, setServiceTypeIndex] = useState(animalData ? animalData.data.Sex === 'Male' ? 0 : 1 : 0);
     const [listBreed, setListBreed] = useState([]);
+    const [listAnimalBreed, setListAnimalBreed] = useState([]);
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
     const [validateQuantity, setValidateQuantity] = useState(true);
     const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity + "" : '');
@@ -50,6 +52,7 @@ function RegisterPetView(props) {
     const [father, setFather] = useState();
     const [mother, setMother] = useState();
     const [children, setChildren] = useState([]);
+    const [searchTxt, setSearchTxt] = useState('');
 
     const sheetRef = useRef(null);
     const sheetCalRef = useRef(null);
@@ -77,6 +80,20 @@ function RegisterPetView(props) {
             }
         }
     }, [animalCategories])
+
+    useEffect(() => {
+        if (animalBreed.length > 0) {
+            setListAnimalBreed(animalBreed.filter((e) => {
+                return (e.name.toLowerCase().startsWith(searchTxt.toLowerCase()))
+            }))
+        }
+    }, [searchTxt]);
+
+    useEffect(() => {
+        if (animalBreed.length > 0) {
+          setListAnimalBreed(animalBreed)
+        }
+    }, [animalBreed]);
 
     //////////////////////////  CALENDAR ////////////////////////
     const initialDate = moment().format('YYYY-MM-DD');
@@ -451,9 +468,9 @@ function RegisterPetView(props) {
                                         require={true}
                                         numberOfLines={1}
                                         autoCapitalize="none"
-                                        keyboardType="number-pad"
+                                        keyboardType="decimal-pad"
                                         onChangeText={(e) => {
-                                            setValidatePrice(Util.isGraterThanZero(e));
+                                            setValidatePrice(Util.isTwoDecimalPlaces(e));
                                             setValuePrice(e);
                                         }
                                         }
@@ -733,6 +750,8 @@ function RegisterPetView(props) {
                                             flexDirection: 'row',
                                             marginEnd: verticalScale(10)
                                         }}>
+
+                                        {item.includes('jpg') || item.includes('png') || item.includes('jpeg')?
                                         <View
                                             style={{
 
@@ -755,7 +774,45 @@ function RegisterPetView(props) {
                                                     height: verticalScale(20), width: moderateScale(20)
                                                 }}
                                             />
-                                        </View>
+                                        </View>:
+
+                                            <View
+                                                style={{
+
+                                                    width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
+                                                }}
+                                            >
+      
+                                                <View
+                                                    style={{
+                                                        position: 'absolute',
+                                                        borderRadius: moderateScale(20),
+                                                        height: '100%', width: '100%'
+                                                    }}
+                                                > 
+                                                <VideoPlayer
+                                                    style={{
+                                                        height: '100%', width: '100%',
+                                                            borderRadius: moderateScale(20),
+                                                    }}
+                                                    video={{ uri: item }}
+                                                    videoWidth={1600}
+                                                    videoHeight={900}
+                                                    duration={1}
+                                                />
+                                                </View>
+                                            
+                                                <Image
+                                                    source={Icons.icon_metro_cancel}
+                                                    resizeMode="contain" style={{
+                                                        margin: moderateScale(5),
+                                                        height: verticalScale(20), width: moderateScale(20),
+                                                        tintColor:'white'
+                                                    }}
+                                                />
+                                            </View>
+                                        
+                                        }
                                     </TouchableOpacity>
                                 );
                             }}
@@ -995,10 +1052,40 @@ function RegisterPetView(props) {
                         <Text style={{ ...styles.generalTxt, color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10) }}>Select Breed</Text>
                         <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
+
+                    <View style={{
+                        flexDirection: 'row', alignItems: 'center',
+                        margin: moderateScale(25),
+                        marginTop: verticalScale(15),
+                        marginBottom: verticalScale(15),
+                        justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                    }}>
+
+                        <TextInput
+                            onChangeText={(e) => {
+                                setSearchTxt(e)
+                            }}
+                            value={searchTxt}
+                            placeholder='Search'
+                            numberOfLines={1}
+                            keyboardType='default'
+                            autoCapitalize='none'
+                            style={{
+                                keyboardShouldPersistTaps: true,
+                                flex: 0.9,
+                                height: verticalScale(40),
+                                ...styles.generalTxt,
+                                color: '#777777',
+                                fontSize: moderateScale(14),
+                            }} />
+                        <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
+
+                    </View>
                     <FlatList
-                        data={animalBreed}
+                        data={listAnimalBreed}
                         contentContainerStyle={{
-                            padding: moderateScale(30)
+                            padding: moderateScale(30),
+                            paddingTop:0,
                         }}
                         renderItem={({ item, index }) => {
                             return (

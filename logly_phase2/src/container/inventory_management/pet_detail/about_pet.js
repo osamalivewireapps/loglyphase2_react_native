@@ -42,6 +42,7 @@ function AboutPetView(props) {
 
         <View style={{
             paddingStart: moderateScale(20),
+            height:'80%'
         }}>
 
             {console.log("animalData--->", props)}
@@ -260,19 +261,7 @@ function AboutPetView(props) {
 
             />
 
-            {/* <TouchableOpacity style={{
-                ...styles.styleButtons, flex: 0,
-                margin: verticalScale(25),
-                marginStart: 0,
-                marginTop: verticalScale(15),
-            }} onPress={() => { ShareProfile()}}>
-                <Text style={{
-                    ...styles.generalTxt,
-                    fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
-                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
-
-                }}>Share</Text>
-            </TouchableOpacity> */}
+            
         </View>
     );
 

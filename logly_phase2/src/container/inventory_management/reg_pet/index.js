@@ -4,13 +4,14 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { Component } from 'react';
-import { Keyboard, View } from 'react-native';
+import { Keyboard, Platform, View } from 'react-native';
 import { connect } from 'react-redux';
 import RegisterPetView from './regpet_view';
 import { DeleteImage, getAnimalCategories, getFormCategory, editAnimal, addAnimal, getAnimal, UploadAnimalImages } from '../../../actions/AnimalModule';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
 import utils from '../../../utils';
 import { debug } from 'react-native-reanimated';
+import moment from 'moment';
 
 class RegisterPet extends Component {
 
@@ -135,7 +136,7 @@ class RegisterPet extends Component {
         }
 
 
-        else if (!utils.isGraterThanZero(price)) {
+        else if (!utils.isTwoDecimalPlaces(price)) {
 
             utils.topAlertError('price is required');
             this.setState({});
@@ -220,10 +221,15 @@ class RegisterPet extends Component {
         let formdata2 = new FormData();
         formdata2.append("id", id);
         this.state.listFileUri.forEach((file, inn) => {
-            if (!file.includes('http')) {
+            if (!file.includes('http') && (file.includes('jpg') || file.includes('png') || file.includes('jpeg'))) {
                 formdata2.append('file', {
                     uri: file,
                     name: 'animalImage' + inn + ".jpg", type: 'image/jpg'
+                });
+            } else if (!file.includes('http')) {
+                formdata2.append('file', {
+                    uri: Platform.OS === "android" ? file : file.replace("file://", ""),
+                    name: 'animal_video' + moment().unix() + ".mp4", type: 'video/quicktime',
                 });
             }
         })
@@ -265,14 +271,14 @@ class RegisterPet extends Component {
                 } else if (response.errorCode) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     //this.props.uploadPicRequest(source)
 
                     let tmp = this.state.listFileUri;
                     if (!isAddCollection)
-                        this.setState({ fileUri: response.assets[0].uri });
+                        this.setState({ fileUri: response.uri });
                     else {
-                        tmp.push(response.assets[0].uri)
+                        tmp.push(response.uri)
                         this.setState({ listFileUri: tmp })
                     }
                 }
@@ -289,13 +295,13 @@ class RegisterPet extends Component {
                 } else if (response.customButton) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     //this.props.uploadPicRequest(source)
                     let tmp = this.state.listFileUri;
                     if (!isAddCollection)
-                        this.setState({ fileUri: response.assets[0].uri });
+                        this.setState({ fileUri: response.uri });
                     else {
-                        tmp.push(response.assets[0].uri)
+                        tmp.push(response.uri)
                         this.setState({ listFileUri: tmp })
                     }
                 }

@@ -20,7 +20,7 @@ import {
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
   CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted,
   GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile,
-  AppointmentListing, SelectServices, SelectDateServices, AllAnimal
+  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -31,18 +31,22 @@ import { color } from 'react-native-reanimated';
 import { Image, Platform } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import DataHandler from './src/utils/DataHandler'
-
+import { accountType, INDIVIDUAL } from './src/constants';
 
 
 function StackNavigator(props) {
   const Stack = createStackNavigator();
 
   const [initialRoute, setInitialRoute] = useState('');
+  const [currentType, setCurrentType] = useState('');
 
   useEffect(() => {
     DataHandler.getAccountType().then((value) => {
-      if (value)
+      if (value) {
+        console.log('sccccc----->', value)
+        setCurrentType(value);
         setInitialRoute('HomeDrawer')
+      }
       else
         setInitialRoute('Splash')
     }).catch(() => setInitialRoute('Splash'));
@@ -80,7 +84,7 @@ function StackNavigator(props) {
             <Stack.Screen name="ForgotPassword" component={ForgotPasswordController} />
             <Stack.Screen name="RegisterProduct" component={RegisterProduct} />
             <Stack.Screen name="Login" component={LoginController} />
-            <Stack.Screen name='CrmOrderCompleted' component={CrmOrderCompleted}/>
+            <Stack.Screen name='CrmOrderCompleted' component={CrmOrderCompleted} />
             <Stack.Screen name="CRMDashBoard" component={CRMDashBoard} />
             <Stack.Screen name="CRMNewOrder" component={CRMNewOrder} />
             <Stack.Screen name="CRMSalesDetails" component={CRMSalesDetails} />
@@ -106,6 +110,7 @@ function StackNavigator(props) {
             <Stack.Screen name='AccountSetup' component={AccountSetup} />
             <Stack.Screen name='BusProfileSetup' component={BusProfileSetup} />
             <Stack.Screen name='BusProfile' component={BusProfile} />
+            <Stack.Screen name='EditProfile' component={EditProfile} />
             <Stack.Screen name='TeamMemberSetup' component={TeamMemberSetup} />
             <Stack.Screen name='TeamSetup' component={TeamSetup} />
             <Stack.Screen name='BusListing' component={BusListing} />
@@ -118,10 +123,10 @@ function StackNavigator(props) {
             <Stack.Screen name='InventoryDashBoard' component={InventoryDashBoard} />
             <Stack.Screen name='FilterAnimal' component={FilterAnimal} />
             <Stack.Screen name='ViewProfile' component={ViewProfile} />
-            <Stack.Screen name='AppointmentListing' component={AppointmentListing}/>
+            <Stack.Screen name='AppointmentListing' component={AppointmentListing} />
             <Stack.Screen name='SelectServices' component={SelectServices} />
             <Stack.Screen name='AllAnimal' component={AllAnimal} />
-            <Stack.Screen name='SelectDateServices' component={SelectDateServices}/>
+            <Stack.Screen name='SelectDateServices' component={SelectDateServices} />
           </Stack.Navigator>
         </NavigationContainer>
       </Loader>
@@ -129,175 +134,189 @@ function StackNavigator(props) {
   } else {
     return <View />
   }
+
+  function homeDrawer() {
+    const Drawer = createDrawerNavigator();
+
+    const isTablet = DeviceInfo.isTablet();
+
+    DataHandler.getAccountType().then((value) => {
+      setCurrentType(value)
+    })
+    console.log('current type--->', currentType)
+    if (currentType)
+      return (
+        <Drawer.Navigator
+          drawerContent={props => <CustomDrawer {...props} />}
+          screenOptions={{
+            headerBackVisible: false, headerShown: false,
+            drawerType: 'front',
+            drawerStyle: {
+              width: '85%',
+            },
+            drawerActiveTintColor: Colors.appBgColor,
+            drawerInactiveTintColor: '#464646',
+            drawerItemStyle: { marginStart: moderateScale(30), marginBottom: isTablet ? verticalScale(15) : 0 },
+            drawerActiveBackgroundColor: 'transparent',
+            drawerInActiveBackgroundColor: 'transparent',
+            ...horizontalAnimation
+
+          }}
+
+        >
+
+          <Drawer.Screen name='Home' component={HomeScreen} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18),
+            },
+
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_feather_home} r
+
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(20),
+                  width: moderateScale(20)
+                }}
+
+              />),
+          }} />
+
+          {currentType && currentType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ? null :
+            <Drawer.Screen name='DashBoard' component={DashBoard} options={{
+              drawerLabelStyle: {
+                fontSize: moderateScale(18)
+              },
+              drawerIcon: ({ color }) => (
+                <Image source={Icons.icon_material_dashboard}
+                  resizeMode='contain'
+                  style={{
+                    height: verticalScale(20),
+                    width: moderateScale(20)
+                  }}
+
+                />),
+            }} />
+          }
+          {currentType && currentType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ? null :
+            <Drawer.Screen name='CRM' component={CRMDashBoard} options={{
+              drawerLabelStyle: {
+                fontSize: moderateScale(18)
+              },
+              drawerIcon: ({ color }) => (
+                <Image source={Icons.icon_crm}
+                  resizeMode='contain'
+                  style={{
+                    height: verticalScale(20),
+                    width: moderateScale(20)
+                  }}
+                />),
+            }} />}
+          <Drawer.Screen name='Team Member' component={TeamListing} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18)
+            },
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_team_member}
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(20),
+                  width: moderateScale(20)
+                }}
+
+              />),
+          }} />
+
+          <Drawer.Screen name='Contacts' component={ContactListing} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18)
+            },
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_contacts}
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(20),
+                  width: moderateScale(20)
+                }}
+
+              />),
+          }} />
+
+          <Drawer.Screen name='Groups' component={GroupListing} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18),
+            },
+
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_groups} r
+
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(20),
+                  width: moderateScale(20)
+                }}
+
+              />),
+          }} />
+          <Drawer.Screen name='Subscription' component={HomeScreen} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18)
+            },
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_subs}
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(20),
+                  width: moderateScale(20)
+                }}
+
+              />),
+          }} />
+
+
+
+          <Drawer.Screen name='Setup Wizard' component={WelcomeRegistration} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18)
+            },
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_setup_wizard}
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(30),
+                  width: moderateScale(30),
+                  marginStart: moderateScale(-10)
+                }}
+
+              />),
+          }} />
+
+          <Drawer.Screen name='Settings' component={HomeScreen} options={{
+            drawerLabelStyle: {
+              fontSize: moderateScale(18)
+            },
+            drawerIcon: ({ color }) => (
+              <Image source={Icons.icon_settings}
+                resizeMode='contain'
+                style={{
+                  height: verticalScale(20),
+                  width: moderateScale(20)
+                }}
+              />),
+          }} />
+
+
+        </Drawer.Navigator>
+      );
+
+    else
+      return <View />
+
+
+  }
 }
 
-function homeDrawer() {
-  const Drawer = createDrawerNavigator();
 
-  const isTablet = DeviceInfo.isTablet();
-
-  return (
-    <Drawer.Navigator
-      drawerContent={props => <CustomDrawer {...props} />}
-      screenOptions={{
-        headerBackVisible: false, headerShown: false,
-        drawerType: 'front',
-        drawerStyle: {
-          width: '85%',
-        },
-        drawerActiveTintColor: Colors.appBgColor,
-        drawerInactiveTintColor: '#464646',
-        drawerItemStyle: { marginStart: moderateScale(30), marginBottom: isTablet ? verticalScale(15) : 0 },
-        drawerActiveBackgroundColor: 'transparent',
-        drawerInActiveBackgroundColor: 'transparent',
-        ...horizontalAnimation
-
-      }}
-
-    >
-
-      <Drawer.Screen name='Home' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18),
-        },
-
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_feather_home} r
-
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-
-      <Drawer.Screen name='DashBoard' component={DashBoard} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_material_dashboard}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-
-      <Drawer.Screen name='CRM' component={CRMDashBoard} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_crm}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-          />),
-      }} />
-      <Drawer.Screen name='Team Member' component={TeamListing} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_team_member}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-
-      <Drawer.Screen name='Contacts' component={ContactListing} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_contacts}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-
-      <Drawer.Screen name='Groups' component={GroupListing} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18),
-        },
-
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_groups} r
-
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-      <Drawer.Screen name='Subscription' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_subs}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-
-          />),
-      }} />
-
-
-
-      <Drawer.Screen name='Setup Wizard' component={WelcomeRegistration} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_setup_wizard}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(30),
-              width: moderateScale(30),
-              marginStart: moderateScale(-10)
-            }}
-
-          />),
-      }} />
-
-      <Drawer.Screen name='Settings' component={HomeScreen} options={{
-        drawerLabelStyle: {
-          fontSize: moderateScale(18)
-        },
-        drawerIcon: ({ color }) => (
-          <Image source={Icons.icon_settings}
-            resizeMode='contain'
-            style={{
-              height: verticalScale(20),
-              width: moderateScale(20)
-            }}
-          />),
-      }} />
-
-
-    </Drawer.Navigator>
-  );
-}
 
 const mapStateToProps = ({ reducer }) => {
   return {

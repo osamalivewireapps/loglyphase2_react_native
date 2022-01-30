@@ -65,7 +65,8 @@ class WelcomeRegistration extends Component {
                 break
 
             case INDIVIDUAL:
-                this.props.navigation.navigate("AnimalInfo");
+                //this.props.navigation.navigate("AnimalInfo");
+                this.props.navigation.navigate("BusProfileSetup");
                 break;
 
             default:

@@ -9,6 +9,8 @@ import { StyleSheet, FlatList, TouchableOpacity, View, Image, ImageBackground, D
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { Fonts, Colors, Icons, Images } from '../../../theme';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
+
 
 const vehicleData = ['Truck', 'PickUp', 'Car', 'MotorBike']
 
@@ -40,7 +42,7 @@ function TeamListing(props) {
                 borderRadius: moderateScale(10),
                 marginTop: verticalScale(10),
                 flex: 1,
-                height: verticalScale(50),
+                height: verticalScale(46),
                 flexDirection: 'row',
                 alignItems: 'center',
                 paddingEnd: moderateScale(15)
@@ -49,8 +51,41 @@ function TeamListing(props) {
 
             }}>
 
-                <Image source={Images.img_friend_sample} 
+                {/* <Image source={item.image} 
                     resizeMode='contain' style={{ height: verticalScale(50), width: moderateScale(50) }}
+                /> */}
+
+                <ImagePlaceholder
+                    showActivityIndicator={false}
+                    activityIndicatorProps={{
+                        size: 'small',
+                        color: '#777777',
+                    }}
+                    resizeMode='cover'
+                    placeholderStyle={{
+                        height: '100%',
+                        width: moderateScale(55),
+                        borderRadius:moderateScale(10),
+                        borderWidth:1,
+                        borderColor: '#777777',
+
+                    }}
+                    imgStyle={{
+                        borderRadius: moderateScale(10),
+                        borderColor: 'transparent',
+                        width: moderateScale(55),
+                        height: '100%',
+                    }}
+
+                    style={{
+                        borderRadius: moderateScale(10),
+                        height: '100%',
+                        width: moderateScale(55),
+                        flex:0,
+                    }}
+
+                    src={item.image}
+                    placeholder={Images.img_user_placeholder}
                 />
 
 
@@ -143,6 +178,7 @@ function TeamListing(props) {
             </View>
         )
     }
+
 }
 
 const styles = StyleSheet.create({

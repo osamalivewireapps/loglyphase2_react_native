@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable react/self-closing-comp */
@@ -5,7 +6,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import DeviceInfo from 'react-native-device-info';
@@ -19,21 +20,17 @@ import DropDownPicker from 'react-native-dropdown-picker';
 function DashBoardView(props) {
 
     const isTablet = DeviceInfo.isTablet();
+
+    const { animalData, productData, totalAnimals, totalProducts, getInventory } = props;
+
     const arrInvType = [
         'Animal Inventory',
         'Product Inventory',
     ]
 
-    const arrCategory = [
-        'All Categories', 'Dog', 'Cat', 'Parrot', 'Horse'
-    ]
-
-    const arrSpecificAnimal = [
-        'Affenpinscher', 'Terrier', 'American Bully'
-    ]
 
     const ANIMAL_STATES = [{
-        icon: Icons.icon_alive, category: 'Alive', value: '29', bg: '#FFE8D1', txtColor: '#E17B14'
+        icon: Icons.icon_alive, category: 'Alive', value: '0', bg: '#FFE8D1', txtColor: '#E17B14'
     },
     { icon: Icons.icon_sick, category: 'Sick', value: '3', bg: '#DBE8FC', txtColor: '#0947AF' },
     { icon: Icons.icon_dead, category: 'Dead', value: '2', bg: '#FED8DC', txtColor: '#BF323F' },
@@ -48,22 +45,55 @@ function DashBoardView(props) {
     { icon: Icons.icon_sold, category: 'Sold', value: '4', bg: '#FFDCF8', txtColor: '#BC149A' }]
 
     const [invType, setInvType] = useState(arrInvType[0])
-    const [catType, setCatType] = useState(arrCategory[0])
+    const [catType, setCatType] = useState('')
+
     const fListRef = useRef(null);
     const fListMain = useRef(null);
 
-    const [items, setItems] = useState([
-        { label: arrCategory[0], value: arrCategory[0] },
-        { label: arrCategory[1], value: arrCategory[1] },
-        { label: arrCategory[2], value: arrCategory[2] },
-        { label: arrCategory[3], value: arrCategory[3] },
-        { label: arrCategory[4], value: arrCategory[4] },
-    ]);
+    const [items, setItems] = useState([]);
 
     const [items1, setItems1] = useState([
         { label: arrInvType[0], value: arrInvType[0] },
         { label: arrInvType[1], value: arrInvType[1] },
     ]);
+
+    const [countProduct, setCountProduct] = useState(0);
+
+    useEffect(() => {
+        setAnimalCategories()
+    }, [animalData]);
+
+    useEffect(() => {
+        setProductCategories()
+    }, [productData]);
+
+    function setAnimalCategories() {
+        if (animalData && animalData.length > 0) {
+            let tmp = getCatsData(animalData);
+            setItems([...tmp]);
+            setCatType(tmp[0].label)
+
+        }
+    }
+
+    function setProductCategories() {
+        if (productData && productData.length > 0) {
+            let tmp = getCatsData(productData);
+            setItems([...tmp]);
+            setCatType(tmp[0].label)
+        }
+    }
+
+    function getCatsData(arrCat) {
+        let tmp = [];
+        tmp.push({ label: 'All Categories', value: 'All Categories' })
+        arrCat.forEach((element, index) => {
+            tmp.push({ label: element.name, value: element._id })
+        });
+
+        return tmp;
+    }
+
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'flex-start' }}>
@@ -83,7 +113,6 @@ function DashBoardView(props) {
             </View>
             <ScrollView keyboardShouldPersistTaps='handled'>
                 <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
-
 
                     <Text style={{
                         ...styles.generalTxt,
@@ -123,10 +152,22 @@ function DashBoardView(props) {
                             placeholder={arrInvType[0]}
                             items={items1}
                             onChangeItem={(item) => {
+                                setCatType('All Categories')
+
+                                if (animalData.length === 0 || productData.length === 0)
+                                    getInventory(item.value)
+                                else {
+                                    if (item.value.toLowerCase().includes('animal'))
+                                        setAnimalCategories()
+                                    else
+                                        setProductCategories()
+                                }
+
                                 setInvType(item.value)
+
                             }}
                         />
-                   
+
                         <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
@@ -153,19 +194,39 @@ function DashBoardView(props) {
                                 paddingStart: moderateScale(15),
 
                             }}
-                            placeholder={arrCategory[0]}
+                            defaultNull={false}
+                            placeholder={'All Categories'}
                             items={items}
                             onChangeItem={(item) => {
-                                setCatType(item.value)
+                                let countProduct = 0;
+                                if (invType === arrInvType[0]) {
+                                    animalData.filter((value, index) => {
+                                        if (value.name === item.label) {
+                                            value.items.forEach(innerValue => {
+                                                countProduct = countProduct + innerValue.total;
+                                            })
+                                        }
+                                    })
+                                } else
+                                    productData.filter((value, index) => {
+                                        if (value.name === item.label) {
+                                            value.items.forEach(innerValue=>{
+                                                countProduct = countProduct + innerValue.total;
+                                            })
+                                        }
+                                    })
+
+                                setCountProduct(countProduct)
+                                setCatType(item.label)
                             }}
                         />
-                        
+
                         <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
 
                     {getTotalInventory()}
-                    {catType === arrCategory[0] ? getAnimalStatus() : getSpecificDetail()}
+                    {items && items.length > 0 ? catType === 'All Categories' ? getAnimalStatus() : renderDataByCategory() : null}
 
                 </View>
             </ScrollView>
@@ -174,7 +235,7 @@ function DashBoardView(props) {
         </View>
     );
 
-    function getTotalInventory() {
+    function getTotalInventory(totalCount) {
         return (
 
             <View style={{
@@ -194,18 +255,18 @@ function DashBoardView(props) {
                     fontFamily: Fonts.type.bold,
                     fontSize: moderateScale(22),
                     color: '#503A9F',
-                    flex: 0.8
+                    flex: 0.6
                 }}>
-                    {invType === arrInvType[0] ? 'Total Animals' : 'Total Products'}
+                    {catType === 'All Categories' ? (invType === arrInvType[0] ? 'Total Animals' : 'Total Products') : catType}
                 </Text>
                 <Text style={{
                     fontFamily: Fonts.type.bold,
                     fontSize: moderateScale(28),
                     color: '#503A9F',
-                    flex: 0.2,
+                    flex: 0.4,
                     textAlign: 'right'
                 }}>
-                    38
+                    {catType === 'All Categories' ? invType === arrInvType[0] ? totalAnimals.totalAnimals : totalProducts.totalProducts : countProduct}
                 </Text>
 
             </View>
@@ -232,7 +293,6 @@ function DashBoardView(props) {
                     setTimeout(() => fListMain.current.scrollToIndex({ index: error.index }), 3000);
                 }}
                 renderItem={({ item, index }) => {
-
                     return (
                         <View style={{
                             backgroundColor: item.bg,
@@ -282,7 +342,6 @@ function DashBoardView(props) {
                                 fontSize={moderateScale(32)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
-                                    //flex: 0.5,
                                     fontFamily: Fonts.type.bold,
                                     color: item.txtColor,
                                     textAlign: 'center',
@@ -290,7 +349,7 @@ function DashBoardView(props) {
                                     paddingStart: moderateScale(4),
                                     paddingEnd: moderateScale(4),
 
-                                }}>{item.value}
+                                }}>{invType.includes(arrInvType[0]) ? getStatsByType(true, index) : getStatsByType(false, index)}
                             </AutoSizeText>
                         </View>
 
@@ -301,7 +360,27 @@ function DashBoardView(props) {
         )
     }
 
-    function getSpecificDetail() {
+    function renderDataByCategory() {
+        if (invType.includes(arrInvType[0])) {
+            let tmp = []
+            tmp = animalData.filter((value, index) =>
+                value.name === catType)
+
+            return getSpecificAnimalDetail(tmp.length > 0 ? tmp[0].items : [])
+        }
+        else {
+            let tmp = [];
+            tmp = productData.filter((item, index) => {
+                if (item.name === catType) {
+                    return item;
+                }
+            })
+
+            return getSpecificDetailProduct(tmp[0].items)
+        }
+    }
+
+    function getSpecificAnimalDetail(animalCategories) {
         return (
             <FlatList
                 key={'_'}
@@ -312,7 +391,7 @@ function DashBoardView(props) {
                     fListRef.current.scrollToOffset({ offset });
                     setTimeout(() => fListRef.current.scrollToIndex({ index: error.index }), 3000);
                 }}
-                data={arrSpecificAnimal}
+                data={animalCategories}
                 style={{
                     marginTop: verticalScale(20),
                 }}
@@ -343,7 +422,7 @@ function DashBoardView(props) {
                                     color: '#464646',
                                     flex: 0.4,
                                     fontFamily: Fonts.type.medium,
-                                }}>{item}
+                                }}>{item.name}
                             </AutoSizeText>
 
                             <View style={{ flex: 0.6, flexDirection: 'row' }}>
@@ -364,7 +443,7 @@ function DashBoardView(props) {
                                             paddingStart: moderateScale(4),
                                             paddingEnd: moderateScale(4),
 
-                                        }}>4
+                                        }}>{item.alive}
                                     </AutoSizeText>
                                     <AutoSizeText
                                         numberOfLines={1}
@@ -399,7 +478,7 @@ function DashBoardView(props) {
                                             paddingStart: moderateScale(4),
                                             paddingEnd: moderateScale(4),
 
-                                        }}>0
+                                        }}>{item.died}
                                     </AutoSizeText>
                                     <AutoSizeText
                                         numberOfLines={1}
@@ -434,7 +513,7 @@ function DashBoardView(props) {
                                             paddingStart: moderateScale(4),
                                             paddingEnd: moderateScale(4),
 
-                                        }}>0
+                                        }}>{item.sold}
                                     </AutoSizeText>
                                     <AutoSizeText
                                         numberOfLines={1}
@@ -454,7 +533,7 @@ function DashBoardView(props) {
 
                                 </View>
                                 <View style={{
-                                    flex: 3
+                                    flex: 3.5
                                 }}>
                                     <AutoSizeText
                                         numberOfLines={1}
@@ -469,7 +548,7 @@ function DashBoardView(props) {
                                             paddingStart: moderateScale(4),
                                             paddingEnd: moderateScale(4),
 
-                                        }}>2
+                                        }}>{item.pregnant}
                                     </AutoSizeText>
                                     <AutoSizeText
                                         numberOfLines={1}
@@ -500,6 +579,221 @@ function DashBoardView(props) {
 
             />
         )
+    }
+
+    function getSpecificDetailProduct(productCategories) {
+        return (
+            <FlatList
+                key={'_'}
+                nestedScrollEnabled={false}
+                ref={fListRef}
+                onScrollToIndexFailed={(error) => {
+                    const offset = error.averageItemLength * error.index;
+                    fListRef.current.scrollToOffset({ offset });
+                    setTimeout(() => fListRef.current.scrollToIndex({ index: error.index }), 3000);
+                }}
+                data={productCategories}
+                style={{
+                    marginTop: verticalScale(20),
+                }}
+                renderItem={({ item, index }) => {
+                    return (
+                        <View style={{
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: moderateScale(10),
+                            marginTop: verticalScale(10),
+                            height: verticalScale(50),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            flexDirection: 'row',
+                            flex: 1,
+                            padding: moderateScale(10)
+
+                        }} onPress={() => {
+
+                        }}>
+
+                            <AutoSizeText
+                                numberOfLines={1}
+                                minFontSize={moderateScale(12)}
+                                fontSize={moderateScale(16)}
+                                mode={ResizeTextMode.max_lines}
+                                style={{
+                                    color: '#464646',
+                                    flex: 0.4,
+                                    fontFamily: Fonts.type.medium,
+                                }}>{item.name}
+                            </AutoSizeText>
+
+                            <View style={{ flex: 0.6, flexDirection: 'row' }}>
+
+                                <View style={{
+                                    flex: 2
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.bold,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>{item.instock}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>InStock
+                                    </AutoSizeText>
+
+                                </View>
+                                <View style={{
+                                    flex: 2
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.bold,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>{item.expired}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>Expired
+                                    </AutoSizeText>
+
+                                </View>
+                                <View style={{
+                                    flex: 1.4
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.bold,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>{item.sold}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>Sold
+                                    </AutoSizeText>
+
+                                </View>
+                                <View style={{
+                                    flex: 2.5
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.bold,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>{item.damaged}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#464646',
+                                            textAlign: 'center',
+                                            width: '100%',
+                                            paddingStart: moderateScale(4),
+                                            paddingEnd: moderateScale(4),
+
+                                        }}>damaged
+                                    </AutoSizeText>
+
+                                </View>
+
+                            </View>
+
+
+
+                        </View>
+
+                    );
+                }}
+
+
+            />
+
+        )
+
+    }
+
+
+    function getStatsByType(isAnimal, index) {
+        if (index === 0)
+            return isAnimal ? totalAnimals.alive : totalProducts.instock
+        else if (index === 1)
+            return isAnimal ? totalAnimals.sick : totalProducts.expired;
+        else if (index === 2)
+            return isAnimal ? totalAnimals.dead : totalProducts.damaged;
+        else if (index === 3)
+            return isAnimal ? totalAnimals.pregnant : totalProducts.sold;
     }
 }
 

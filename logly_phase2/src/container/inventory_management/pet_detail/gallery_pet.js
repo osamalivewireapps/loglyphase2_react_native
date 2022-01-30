@@ -6,7 +6,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Alert } from 'react-native';
+import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Alert, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -18,7 +18,8 @@ import { DeleteImage, UploadAnimalImages, getAnimal } from '../../../actions/Ani
 import { DisableLoader, EnableLoader } from '../../../actions/LoaderProgress';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
 import ImageGallery from './ImageGallery';
-
+import moment from 'moment';
+import VideoPlayer from 'react-native-video-player';
 
 function GalleryPetView(props) {
 
@@ -40,6 +41,8 @@ function GalleryPetView(props) {
     const dispatch = useDispatch();
     const [listFileUri, setListFileUri] = useState([])
 
+    const isTablet = DeviceInfo.isTablet();
+
     useEffect(() => {
         setListFileUri(animalData.gallery);
     }, [animalData.gallery])
@@ -47,53 +50,120 @@ function GalleryPetView(props) {
     const [] = useState()
     return (
         <View style={{
-            flexDirection: 'column',
-            height: Dimensions.get('screen').height / 2,
+            height: '80%',
             justifyContent: 'flex-end',
-            paddingBottom: verticalScale(30)
+            paddingBottom: verticalScale(10)
 
         }}>
 
-            <ImageGallery
-                style={{ flex: 1,paddingStart:moderateScale(20) }}
-                listCollection={listFileUri} removeImage={(e) => removeImage(e)} />
-            {/* <Pages
-                containerStyle={{ flex: 1, paddingBottom: verticalScale(20) }}
-                indicatorColor={Colors.appBgColor}
-            >
-                {listFileUri.map((item, index) => {
-                    return (
-                        <TouchableOpacity
-                            onLongPress={(e) => removeImage(item)}
-                            style={{ flex: 1, alignItems: 'center' }}>
-                            <ImagePlaceholder
-                                showActivityIndicator={false}
-                                activityIndicatorProps={{
-                                    size: 'small',
-                                    color: '#777777',
-                                }}
-                                resizeMode='cover'
-                                placeholderStyle={{
-                                    width: Dimensions.get('screen').width,
+         
+            {listFileUri && listFileUri.length > 0 ?
 
-                                }}
-                                imgStyle={{
-                                    width: Dimensions.get('screen').width,
-                                }}
+                <FlatList
+                    numColumns={2}
+                    contentContainerStyle={{
+                        padding: moderateScale(25),
+                    }}
+                    data={listFileUri}
+                    renderItem={({ item, index})=>{
+                        console.log('item---->',item)
+                        return(
+                            <View
 
                                 style={{
+                                    flex: 0.5,
+                                    backgroundColor:'yellow',
+                                    marginTop:verticalScale(10),
+                                    height: isTablet ? verticalScale(195) : verticalScale(120),
+                                    marginEnd: (index % 2 === 0) ? (index === listFileUri.length - 1) ? 0 : verticalScale(10) : 0,
 
-                                }}
+                                }}>
+                                {item.type ? !item.type.toLowerCase().includes('video') ?
+                                    <View
+                                        style={{
+                                            ...styles.boxcontainer,
+                                            width: '100%',
+                                            position: 'absolute',
+                                            height: isTablet ? verticalScale(195) : verticalScale(120),
 
-                                src={item.filename}
-                                placeholder={Icons.icon_paw}
-                            />
-                        </TouchableOpacity>
-                    )
-                })}
+
+                                        }}>
+                                    
+                                      
+                                        <ImagePlaceholder
+                                            showActivityIndicator={false}
+                                            activityIndicatorProps={{
+                                                size: 'small',
+                                                color: '#777777',
+                                            }}
+                                            resizeMode='cover'
+                                            placeholderStyle={{
+                                                width: '100%',
+                                                height: '100%',
+                                                borderRadius: moderateScale(10),
+                                                
+
+                                            }}
+                                            imgStyle={{
+                                                borderRadius: moderateScale(10),
+                                                borderWidth: 1,
+                                                borderColor: 'transparent',
+                                            }}
+
+                                            style={{
+                                                width:'100%',
+                                                borderRadius: moderateScale(10),
+                                            }}
+
+                                          
+                                            src={item.filename}
+                                            placeholder={Icons.icon_paw}
+                                        />
 
 
-            </Pages> */}
+
+                                    </View> :
+                                    <View
+                                        style={{
+                                            width: '100%',
+                                            position: 'absolute',
+                                            height: isTablet ? verticalScale(195) : verticalScale(120),
+
+                                        }}
+                                    >
+                                        <VideoPlayer
+                                            style={{
+                                                height: '100%',
+                                                width: '100%',
+                                                borderRadius: moderateScale(10),
+                                            }}
+                                            video={{ uri: item.filename }}
+                                            videoWidth={1600}
+                                            videoHeight={900}
+                                        />
+                                    </View>
+                                    : <View style={{
+                                        width:'100%',
+                                        backgroundColor:'red',
+                                        height:Dimensions.get('window').height/2}}/>}
+
+                                <TouchableOpacity
+                                    onPress={() => removeImage(item._id)}
+                                    style={{
+                                        alignSelf:'flex-end',
+                                        margin: moderateScale(10),
+                                    }}>
+                                    <Image source={Icons.icon_close} resizeMode='contain' style={{
+                                        tintColor: 'white',
+                                        height: verticalScale(10), width: verticalScale(10)
+                                    }} />
+                                </TouchableOpacity>
+                            </View>
+                        )
+                    }}
+                />
+
+                : <View style={{flex:1}}/>}
 
             <TouchableOpacity style={{
                 ...styles.styleButtons, flex: 0,
@@ -136,22 +206,30 @@ function GalleryPetView(props) {
 
 
     ///////////////////////   UPLOAD IMAGES ////////////////
-    function uploadImages(id) {
+    function uploadImages(id, isVideo, videoUri) {
 
+        console.log('isVideo-->', videoUri)
 
         let formdata2 = new FormData();
         formdata2.append("id", id);
 
         console.log("listFileUri--->", listFileUri);
 
-        listFileUri.forEach((file, inn) => {
-            if (!file.filename.includes('http')) {
-                formdata2.append('file', {
-                    uri: file.filename,
-                    name: 'animalImage' + inn + ".jpg", type: 'image/jpg'
-                });
-            }
-        })
+        if (!isVideo)
+            listFileUri.forEach((file, inn) => {
+                if (!file.filename.includes('http')) {
+                    formdata2.append('file', {
+                        uri: file.filename,
+                        name: 'animalImage' + moment().unix() + ".jpg", type: 'image/jpg'
+                    });
+                }
+            })
+        else {
+            formdata2.append('file', {
+                uri: Platform.OS === "android" ? videoUri : videoUri.replace("file://", ""),
+                name: 'user_video' + moment().unix() + ".mp4", type: 'video/quicktime',
+            });
+        }
 
         dispatch(UploadAnimalImages(formdata2)).then((response) => {
             dispatch(getAnimal(id));
@@ -174,13 +252,13 @@ function GalleryPetView(props) {
                 } else if (response.errorCode) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     //this.props.uploadPicRequest(source)
 
                     let tmp = listFileUri;
-                    tmp.push({ filename: response.assets[0].uri })
+                    tmp.push({ filename: response.uri })
                     setListFileUri(tmp)
-                    uploadImages(props.route.params.id)
+                    //uploadImages(props.route.params.id,tmp)
                 }
             });
         }
@@ -195,11 +273,13 @@ function GalleryPetView(props) {
                 } else if (response.customButton) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     let tmp = listFileUri;
-                    tmp.push({ filename: response.assets[0].uri })
-                    setListFileUri(tmp)
-                    uploadImages(props.route.params.id)
+                    tmp.push({ filename: response.uri })
+
+                    if (!response.duration)
+                        setListFileUri(tmp)
+                    uploadImages(props.route.params.id, response.duration ? true : false, response.uri)
                 }
             });
         }

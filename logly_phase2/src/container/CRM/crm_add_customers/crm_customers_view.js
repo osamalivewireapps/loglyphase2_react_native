@@ -6,7 +6,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef, useEffect} from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, TextInput, Keyboard } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
@@ -26,10 +26,10 @@ function CRMAddCustomersView(props) {
 
     const [tabs, setTab] = useState(0);
 
-    const {  zipCodes,validateState, arrStates, arrCity, userState, userStateLocation, chooseState, userCityLocation,
+    const { zipCodes, validateState, arrStates, arrCity, userState, userStateLocation, chooseState, userCityLocation,
         userCity, chooseCity, validateCity, enterZipCode, validateZipCode, setZipCode, } = props;
 
-    
+
     const [validateName, setValidateName] = useState(true);
     const [valueName, setValueName] = useState();
 
@@ -108,18 +108,28 @@ function CRMAddCustomersView(props) {
             <ScrollView keyboardShouldPersistTaps='handled'
                 ref={scroll}
             >
-            <View style={{flex:1,padding:moderateScale(25)}}>
+                <TouchableOpacity
+                    onPress={() => {
+                        setIsVisible(false);
+                        setIsCityVisible(false);
+                        setIsZipVisible(false);
+                    }}
+                    style={{ flex: 1, padding: moderateScale(25) }}
+                    activeOpacity={1}>
+
+
+
 
                     <View style={{
                         ...CRMStyles.boxcontainer,
-                        backgroundColor:'#F5F5F5',
-                        borderRadius:moderateScale(10),
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: moderateScale(10),
                         flexDirection: 'row', alignItems: 'center',
                         shadowColor: validateName ? 'transparent' : 'darkred',
                         shadowOpacity: validateName ? 0.25 : 1,
                         padding: moderateScale(15),
-                        paddingTop:moderateScale(10),
-                        paddingBottom:moderateScale(10)
+                        paddingTop: moderateScale(10),
+                        paddingBottom: moderateScale(10)
                     }}>
 
 
@@ -191,7 +201,7 @@ function CRMAddCustomersView(props) {
                             ...CRMStyles.styleTextInput,
                             flex: 1,
                             backgroundColor: '#F5F5F5',
-                            borderRadius:moderateScale(10),
+                            borderRadius: moderateScale(10),
                             textAlign: 'left',
                         }}
                             underlineColorAndroid="transparent"
@@ -407,7 +417,7 @@ function CRMAddCustomersView(props) {
                         borderRadius: moderateScale(10),
                     }}>
 
-                   
+
                         <TextInput placeholder="Zip Code"
                             ref={inputZipCode}
                             autoCapitalize='none'
@@ -496,13 +506,13 @@ function CRMAddCustomersView(props) {
                         />
                     </View> : null}
 
-                    
+
 
 
 
                     <TouchableOpacity style={{
-                        ...CRMStyles.styleButtons, 
-                        backgroundColor:Colors.appBgColor,
+                        ...CRMStyles.styleButtons,
+                        backgroundColor: Colors.appBgColor,
                         marginTop: verticalScale(25),
                     }} onPress={() => {
                         props.navigation.pop()
@@ -510,7 +520,7 @@ function CRMAddCustomersView(props) {
                     }}>
                         <Text style={{
                             ...CRMStyles.generalTxt,
-                            color:'white',
+                            color: 'white',
                             fontSize: moderateScale(20), textAlign: 'center',
                             padding: moderateScale(10),
                             paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
@@ -535,7 +545,7 @@ function CRMAddCustomersView(props) {
 
                         }}>Cancel</Text>
                     </TouchableOpacity>
-            </View>
+                </TouchableOpacity>
 
             </ScrollView>
         </View>

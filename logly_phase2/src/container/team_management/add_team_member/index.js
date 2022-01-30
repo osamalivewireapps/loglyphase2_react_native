@@ -242,8 +242,8 @@ class AddTeamMember extends Component {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
                     console.log('camera----->', response);
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
-                    this.setState({ fileUri: response.assets[0].uri })
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
+                    this.setState({ fileUri: response.uri })
                 }
             });
         }
@@ -258,9 +258,9 @@ class AddTeamMember extends Component {
                 } else if (response.customButton) {
                     console.log('User tapped custom button: ', response.customButton);
                 } else {
-                    const source = { uri: response.assets[0].uri, type: response.assets[0].type, fileName: response.assets[0].fileName };
+                    const source = { uri: response.uri, type: response.type, fileName: response.fileName };
                     //this.props.uploadPicRequest(source)
-                    this.setState({ fileUri: response.assets[0].uri })
+                    this.setState({ fileUri: response.uri })
                 }
             });
         }

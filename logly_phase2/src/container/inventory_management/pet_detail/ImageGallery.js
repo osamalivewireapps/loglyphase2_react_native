@@ -18,7 +18,7 @@ import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { DeleteImage, UploadAnimalImages, getAnimal } from '../../../actions/AnimalModule';
 import { DisableLoader, EnableLoader } from '../../../actions/LoaderProgress';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
-
+import VideoPlayer from 'react-native-video-player';
 
 function ImageGallery(props) {
 
@@ -49,54 +49,78 @@ function ImageGallery(props) {
                     console.log("images--->", item.filename)
                     return (
                         <View
-                            
-                            style={{ flex: 1, alignItems: 'flex-end' }}>
 
-                            <View
-                                style={{
-                                    width: Dimensions.get('screen').width,
-                                    height: '100%',
-                                    position: 'absolute'
-                                }}
-                            >
-
-
-                                <ImagePlaceholder
-                                    showActivityIndicator={true}
-                                    activityIndicatorProps={{
-                                        size: 'small',
-                                        color: '#777777',
-                                    }}
-                                    resizeMode='cover'
-                                    placeholderStyle={{
-                                        width: Dimensions.get('screen').width,
-                                        height: '100%'
-
-                                    }}
-                                    imgStyle={{
-                                        width: Dimensions.get('screen').width,
-                                    }}
-
+                            style={{
+                                flex: 1,
+                                alignItems: 'flex-end'
+                            }}>
+                            {item.type ? !item.type.toLowerCase().includes('video') ?
+                                <View
                                     style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'absolute',
+                                        marginEnd: 100
                                     }}
-
-                                    src={item.filename}
-                                    placeholder={Icons.icon_paw}
-                                />
+                                >
 
 
+                                    <ImagePlaceholder
+                                        showActivityIndicator={true}
+                                        activityIndicatorProps={{
+                                            size: 'small',
+                                            color: '#777777',
+                                        }}
+                                        resizeMode='cover'
+                                        placeholderStyle={{
+                                            width: Dimensions.get('screen').width,
+                                            height: '100%'
 
-                            </View>
+                                        }}
+                                        imgStyle={{
+                                            width: Dimensions.get('screen').width,
+                                        }}
+
+                                        style={{
+                                        }}
+
+                                        src={item.filename}
+                                        placeholder={Icons.icon_paw}
+                                    />
+
+
+
+                                </View> :
+                                <View
+                                    style={{
+                                        width: '100%',
+                                        height: '100%',
+                                        position: 'absolute',
+                                        marginEnd: 100
+                                    }}
+                                >
+                                    <VideoPlayer
+                                        style={{
+                                            height: '100%',
+                                            width: '100%',
+                                        }}
+                                        video={{ uri: item.filename }}
+                                        videoWidth={1600}
+                                        videoHeight={900}
+                                    />
+                                </View>
+                                : <View />}
 
                             <TouchableOpacity
                                 onPress={() => removeImage(item._id)}
                                 style={{
                                     justifyContent: 'center',
-                                    margin: moderateScale(10)
+                                    margin: moderateScale(10),
                                 }}>
                                 <Image source={Icons.icon_close} resizeMode='contain' style={{
-                                     tintColor:'white',
-                                     height: verticalScale(10), width: verticalScale(10) }} />
+                                    tintColor: 'white',
+                                    height: verticalScale(10), width: verticalScale(10)
+                                }} />
                             </TouchableOpacity>
                         </View>
                     )

@@ -5,7 +5,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
@@ -15,24 +15,32 @@ import styles from '../styles'
 import { TextInput } from 'react-native';
 import moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Util from '../../../utils';
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 
 function AddTeamGroups(props) {
 
-    const { nextScreen, isSummary,team} = props;
+    const { nextScreen, isSummary, team, getTeamList, getFinalTeamList} = props;
 
     console.log("teams--->",team)
     const sheetRef = useRef(null);
 
     const [searchTxt, setSearchTxt] = useState('');
     const [addItems, setAddItems] = useState(team);
-    const [listAnimals, setListAnimals] = useState([{ id: 0, isSelect: false }, { id: 1, isSelect: false }, { id: 2, isSelect: false }]);
+    const [listAnimals, setListAnimals] = useState([])//([{ id: 0, isSelect: false }, { id: 1, isSelect: false }, { id: 2, isSelect: false }]);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
 
+    const [orgAnimalList, setOrgAnimalList] = useState([]);
 
-
+    useEffect(() => {
+        if (orgAnimalList.length > 0) {
+            setListAnimals(orgAnimalList.filter((e) => {
+                return (e.name.toLowerCase().startsWith(searchTxt.toLowerCase()))
+            }))
+        }
+    }, [searchTxt]);
+    
     return (
         <View style={{ flex: 1 }}>
 
@@ -80,7 +88,7 @@ function AddTeamGroups(props) {
                                         width: moderateScale(20)
                                     }}
                                     onPress={() => {
-                                        setCloseBottonSheet(true)
+                                        manipulateAnimaList()
                                     }}
                                 >
                                     <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ tintColor: 'white', height: verticalScale(10), width: verticalScale(8) }} />
@@ -97,7 +105,7 @@ function AddTeamGroups(props) {
                                 alignItems: 'center',
                                 flexDirection: 'row',
                             }} onPress={() => {
-                                setCloseBottonSheet(true)
+                                manipulateAnimaList()
                             }
                             }>
 
@@ -191,15 +199,34 @@ function AddTeamGroups(props) {
                 flexDirection: 'row',
                 alignItems: 'center',
             }}>
-                <Image
-                    source={Images.img_friend_sample}
-                    resizeMode='cover'
-                    style={{
-                        width: moderateScale(60),
-                        height: '100%',
-                        borderRadius: moderateScale(60)
-                        , marginEnd: moderateScale(15)
+                <ImagePlaceholder
+                    showActivityIndicator={false}
+                    activityIndicatorProps={{
+                        size: 'small',
+                        color: '#777777',
                     }}
+                    resizeMode='cover'
+                    placeholderStyle={{
+                        width: moderateScale(50),
+                        height: moderateScale(50),
+                        borderRadius: moderateScale(50),
+
+                    }}
+                    imgStyle={{
+                        borderRadius: moderateScale(50),
+                        borderColor: 'transparent',
+                        borderWidth: moderateScale(2),
+                        width: moderateScale(50),
+                        height: moderateScale(50),
+                    }}
+
+                    style={{
+                        marginEnd: moderateScale(15),
+                        flex: 0
+                    }}
+
+                    src={item.image}
+                    placeholder={Images.img_user_placeholder}
                 />
 
                 <TouchableOpacity
@@ -229,7 +256,7 @@ function AddTeamGroups(props) {
 
                                 }}
                             >
-                                Jack Rio
+                                {item.name}
                             </AutoSizeText>
 
 
@@ -251,7 +278,7 @@ function AddTeamGroups(props) {
 
                                 }}
                             >
-                                +123456
+                                {item.phone ? item.phone:''}
                             </AutoSizeText>
                         </View>
 
@@ -266,9 +293,8 @@ function AddTeamGroups(props) {
                     <TouchableOpacity onPress={() => {
                         let tmp = addItems;
                         tmp.splice(index, 1)
-                        listAnimals[index].isSelect = !listAnimals[index].isSelect;
-                        setListAnimals(listAnimals)
                         setAddItems([...tmp])
+                        getFinalTeamList ? getFinalTeamList(tmp) : null
                     }
 
                     }>
@@ -282,7 +308,7 @@ function AddTeamGroups(props) {
                         />
                     </TouchableOpacity> :
                     <Image
-                        source={item.isSelect ? Icons.icon_check_circle_green : Icons.icon_uncheck_paackage}
+                        source={addItems.length > 0 && addItems.findIndex((value) => value._id === item._id) > -1 ? Icons.icon_check_circle_green : Icons.icon_uncheck_paackage}
                         resizeMode='contain'
                         style={{
                             width: moderateScale(15),
@@ -294,8 +320,28 @@ function AddTeamGroups(props) {
     }
 
     function addBreeder(index) {
-        listAnimals[index].isSelect = !listAnimals[index].isSelect;
-        setListAnimals([...listAnimals])
+     
+        let addItem = addItems;
+
+        let finIndex = addItem.findIndex(value => value._id === listAnimals[index]._id);
+        if (finIndex > -1) {
+            addItem.splice(finIndex, 1)
+        } else
+            addItem.push(listAnimals[index])
+        setAddItems([...addItem])
+
+        getFinalTeamList ? getFinalTeamList(addItem) : null
+    }
+
+    function manipulateAnimaList() {
+        if (!listAnimals || listAnimals.length === 0) {
+            getTeamList().then((response) => {
+                setListAnimals(response);
+                setCloseBottonSheet(true)
+                setOrgAnimalList(response)
+            })
+        } else if (listAnimals && listAnimals.length > 0)
+            setCloseBottonSheet(true)
     }
 
     //////////////////// BOTTOM SHEET /////////////
@@ -389,8 +435,8 @@ function AddTeamGroups(props) {
                         onPress={() => {
                             setTimeout(() => {
                                 //setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
-                                let tmp = listAnimals.filter((value) => value.isSelect === true);
-                                setAddItems(tmp)
+                                // let tmp = listAnimals.filter((value) => value.isSelect === true);
+                                // setAddItems(tmp)
 
                                 sheetRef.current.close();
                             }, 200)

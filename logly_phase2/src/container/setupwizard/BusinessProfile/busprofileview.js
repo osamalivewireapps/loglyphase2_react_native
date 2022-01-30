@@ -4,7 +4,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions, ImageBackground, KeyboardAvoidingView, Keyboard } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { FlatList, TextInput } from "react-native-gesture-handler";
@@ -15,8 +15,9 @@ import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { LocaleConfig } from 'react-native-calendars';
-import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
+import { BUS_LISTING, BUS_SER_PROVIDER, INDIVIDUAL } from "../../../constants";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 
 function BusProfileView(props) {
 
@@ -29,7 +30,8 @@ function BusProfileView(props) {
     };
     LocaleConfig.defaultLocale = 'en';
 
-    const { isServiceEnabled, backScreen, clickNextButton, accountType } = props;
+    const { isServiceEnabled, backScreen, clickNextButton, accountType, busDetails,
+        capturePic, imgUri } = props;
 
     const [valueDesc, setDesc] = useState('');
     const [validateDesc, setValidateDesc] = useState(true);
@@ -50,10 +52,32 @@ function BusProfileView(props) {
     const [validateHolidays, setValidateHolidays] = useState(true);
     const [addHolidays, setAddHolidays] = useState([]);
     const [verticalOffSet, setVerticalOffSet] = useState(50);
+    const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
+    const [photoUri, setPhotoUri] = useState('');
 
     const sheetRef = React.useRef(null);
     //SCROLLVIEW
     const scroll = React.useRef(null);
+
+    useEffect(() => {
+        if (imgUri && imgUri.length > 0) {
+            setPhotoUri(imgUri)
+        }
+    }, [imgUri])
+
+    useEffect(() => {
+        if (busDetails.length > 0) {
+            setDesc(busDetails[0].businessInfo ? busDetails[0].businessInfo:'')
+            setSelectWeekFrequency(busDetails[0].daysOpen ? busDetails[0].daysOpen:[])
+            setValueStartBusTiming(busDetails[0].openHrStart ? moment(busDetails[0].openHrStart, 'YYYY-MM-DDThh:mm:ss') : '')
+            setValueEndBusTiming(busDetails[0].openHrEnd ? moment(busDetails[0].openHrEnd, 'YYYY-MM-DDThh:mm:ss') : '')
+            setValueStartTiming(busDetails[0].breakTimeStart ? moment(busDetails[0].breakTimeStart, 'YYYY-MM-DDThh:mm:ss') : '')
+            setValueEndTiming(busDetails[0].breakTimeEnd ? moment(busDetails[0].breakTimeEnd, 'YYYY-MM-DDThh:mm:ss') : '')
+            setAddHolidays(busDetails[0].holidays ? busDetails[0].holidays:[])
+            setValueTaxPercentage(busDetails[0].taxPercentage + "")
+            setPhotoUri(busDetails[0].imageUrl ? busDetails[0].imageUrl:'')
+        }
+    }, [busDetails])
 
     //////////////////////////  CALENDAR ////////////////////////
     const initialDate = moment().format('YYYY-MM-DD');
@@ -113,8 +137,8 @@ function BusProfileView(props) {
                         </View>
 
                     </View> : <View />}
-                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>{accountType === BUS_SER_PROVIDER ? "Account Setup" : 'Business Details'}</Text>
-                <Text style={{ ...styles.generalTxt2, marginTop: verticalScale(10), textAlign: 'center' }}>Please setup your business profile</Text>
+                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>{accountType === INDIVIDUAL ? 'Profile Details' : accountType === BUS_SER_PROVIDER ? "Account Setup" : 'Business Details'}</Text>
+                <Text style={{ ...styles.generalTxt2, marginTop: verticalScale(10), textAlign: 'center' }}>{accountType === INDIVIDUAL ? 'Please setup your profile' : 'Please setup your business profile'}</Text>
             </View>
 
 
@@ -131,29 +155,51 @@ function BusProfileView(props) {
                     }}
 
                 />
-                <View style={{
-                    backgroundColor: '#F4F4F4', alignSelf: 'center',
-                    height: moderateScale(90), width: moderateScale(90), borderRadius: moderateScale(100),
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    paddingTop: verticalScale(10)
-                }}>
+                <TouchableOpacity
+                    onPress={() => {
+                        setDialogVisibleStatus(true)
+                    }}
+                    style={{
+                        backgroundColor: '#F4F4F4', alignSelf: 'center',
+                        height: moderateScale(90), width: moderateScale(90),
+                        borderRadius: moderateScale(100),
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: verticalScale(10)
+                    }}>
 
-                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(15), width: verticalScale(15) }} />
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={moderateScale(14)}
-                        fontSize={moderateScale(16)}
-                        mode={ResizeTextMode.max_lines}
+                    <Image
+                        source={{ uri: photoUri }}
                         style={{
-                            ...styles.generalTxt,
-                            color: Colors.appBgColor,
-                            textAlign: 'center',
-                            width: '100%',
-                        }}>Logo
-                    </AutoSizeText>
+                            height: moderateScale(90),
+                            width: moderateScale(90),
+                            borderRadius: moderateScale(100),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            position: 'absolute'
+                        }} />
+                    {!photoUri || photoUri.length === 0 ?
+                        <View style={{ alignItems: 'center' }}>
+                            <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
+                            <AutoSizeText
+                                numberOfLines={1}
+                                minFontSize={moderateScale(14)}
+                                fontSize={moderateScale(16)}
+                                mode={ResizeTextMode.max_lines}
+                                style={{
+                                    ...styles.generalTxt,
+                                    color: Colors.appBgColor,
+                                    textAlign: 'center',
+                                    width: '100%',
+                                }}>{accountType === INDIVIDUAL ? 'Photo' : 'Logo'}
+                            </AutoSizeText>
+                        </View>
+                        : <View />
+                    }
 
-                </View>
+
+
+                </TouchableOpacity>
             </View>
 
 
@@ -177,7 +223,7 @@ function BusProfileView(props) {
                             ...styles.bottomSheetHeader,
                             marginBottom: verticalScale(5), marginStart: moderateScale(5),
                             marginTop: 0
-                        }}>Business Info *</Text>
+                        }}>{accountType === INDIVIDUAL ? 'Bio *' : 'Business Info *'}</Text>
                         <View style={{
                             ...styles.boxcontainer,
                             height: verticalScale(100),
@@ -211,201 +257,223 @@ function BusProfileView(props) {
                                 value={valueDesc} />
                         </View>
 
-                        {getWeeklyRecurring()}
-                        {getBusTiming()}
-                        {getClassTiming()}
-                        <View style={{
-                            marginTop: verticalScale(15),
-                            flex: 1
-                        }}>
+                        {accountType == INDIVIDUAL ? <View /> : <View style={{ width: '100%' }}>
+                            {getWeeklyRecurring()}
+                            {getBusTiming()}
+                            {getClassTiming()}
                             <View style={{
-                                backgroundColor: '#F5F5F5',
-                                borderRadius: moderateScale(10),
-                                width: '99%',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-
+                                marginTop: verticalScale(15),
+                                flex: 1
                             }}>
-                                <TouchableOpacity style={{
+                                <View style={{
                                     backgroundColor: '#F5F5F5',
                                     borderRadius: moderateScale(10),
-                                    height: verticalScale(50),
-                                    paddingStart: moderateScale(25),
-                                    paddingEnd: moderateScale(25),
-                                    justifyContent: 'center',
+                                    width: '99%',
                                     alignItems: 'center',
-                                    flexDirection: 'row'
-                                }} onPress={() => {
-                                    setIndexHoliday(addHolidays.length)
-                                    setValueHolidays('')
-                                    setSelected(initialDate)
-                                    setCloseBottonSheet(true)
-                                }
-                                }>
+                                    justifyContent: 'center',
 
-                                    <AutoSizeText
-                                        numberOfLines={1}
-                                        minFontSize={moderateScale(14)}
-                                        fontSize={moderateScale(16)}
-                                        mode={ResizeTextMode.max_lines}
-                                        style={{
-                                            ...styles.generalTxt,
-                                            color: '#454545',
-                                            textAlign: 'left',
-                                            width: '100%',
-                                        }}>Holidays
-                                    </AutoSizeText>
-                                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(15), width: verticalScale(15) }} />
-                                </TouchableOpacity>
-                                {addHolidays.length > 0 ?
-                                    <FlatList
-                                        contentContainerStyle={{ paddingBottom: verticalScale(10) }}
-                                        nestedScrollEnabled={true}
-                                        data={addHolidays}
-                                        renderItem={({ item, index }) => {
-                                            return (
-                                                <TouchableOpacity style={{
-                                                    backgroundColor: 'white',
-                                                    borderRadius: moderateScale(10),
-                                                    height: verticalScale(50),
-                                                    marginTop: verticalScale(5),
-                                                    width: Dimensions.get('screen').width - moderateScale(90),
-                                                    flexDirection: 'row'
+                                }}>
+                                    <TouchableOpacity style={{
+                                        backgroundColor: '#F5F5F5',
+                                        borderRadius: moderateScale(10),
+                                        height: verticalScale(50),
+                                        paddingStart: moderateScale(25),
+                                        paddingEnd: moderateScale(25),
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        flexDirection: 'row'
+                                    }} onPress={() => {
+                                        setIndexHoliday(addHolidays.length)
+                                        setValueHolidays('')
+                                        setSelected(initialDate)
+                                        setCloseBottonSheet(true)
+                                    }
+                                    }>
 
-                                                }} onPress={() => {
-                                                    markedDates = item.markedDate
-                                                    setIndexHoliday(item.id)
-                                                    setValueHolidays(item.holiday)
-                                                    setCloseBottonSheet(true)
-                                                }
-                                                }>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(14)}
+                                            fontSize={moderateScale(16)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                color: '#454545',
+                                                textAlign: 'left',
+                                                width: '100%',
+                                            }}>Holidays
+                                        </AutoSizeText>
+                                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(15), width: verticalScale(15) }} />
+                                    </TouchableOpacity>
+                                    {addHolidays.length > 0 ?
+                                        <FlatList
+                                            contentContainerStyle={{ paddingBottom: verticalScale(10) }}
+                                            nestedScrollEnabled={true}
+                                            data={addHolidays}
+                                            renderItem={({ item, index }) => {
+                                                return (
+                                                    <TouchableOpacity style={{
+                                                        backgroundColor: 'white',
+                                                        borderRadius: moderateScale(10),
+                                                        height: verticalScale(50),
+                                                        marginTop: verticalScale(5),
+                                                        width: Dimensions.get('screen').width - moderateScale(90),
+                                                        flexDirection: 'row'
 
-                                                    <View
-                                                        style={{
-                                                            height: '100%',
-                                                            backgroundColor: Colors.appBgColor,
-                                                            borderRadius: moderateScale(10),
-                                                            justifyContent: 'center',
-                                                            alignItems: 'center',
-                                                            flex: 0.25
-                                                        }} >
+                                                    }} onPress={() => {
+                                                        markedDates = item.markedDate
+                                                        setIndexHoliday(item.id)
+                                                        setValueHolidays(item.holi_name)
+                                                        setCloseBottonSheet(true)
+                                                    }
+                                                    }>
 
-                                                        <AutoSizeText
-                                                            numberOfLines={1}
-                                                            minFontSize={moderateScale(16)}
-                                                            fontSize={moderateScale(30)}
-                                                            mode={ResizeTextMode.max_lines}
+                                                        <View
                                                             style={{
-                                                                ...styles.generalTxt,
-                                                                fontFamily: Fonts.type.bold,
-                                                                color: 'white'
-                                                            }}>{item.date ? moment(item.date).format("D") : ''}
-                                                        </AutoSizeText>
-                                                        <AutoSizeText
-                                                            numberOfLines={1}
-                                                            minFontSize={moderateScale(10)}
-                                                            fontSize={moderateScale(12)}
-                                                            mode={ResizeTextMode.max_lines}
-                                                            style={{
-                                                                ...styles.generalTxt,
-                                                                includeFontPadding: false,
-                                                                fontFamily: Fonts.type.base,
-                                                                marginTop: verticalScale(-5),
-                                                                color: 'white'
-                                                            }}>{item.date ? moment(item.date).format("MMM") : ''}
-                                                        </AutoSizeText>
+                                                                height: '100%',
+                                                                backgroundColor: Colors.appBgColor,
+                                                                borderRadius: moderateScale(10),
+                                                                justifyContent: 'center',
+                                                                alignItems: 'center',
+                                                                flex: 0.25
+                                                            }} >
+
+                                                            <AutoSizeText
+                                                                numberOfLines={1}
+                                                                minFontSize={moderateScale(16)}
+                                                                fontSize={moderateScale(30)}
+                                                                mode={ResizeTextMode.max_lines}
+                                                                style={{
+                                                                    ...styles.generalTxt,
+                                                                    fontFamily: Fonts.type.bold,
+                                                                    color: 'white'
+                                                                }}>{item.holi_date ? moment(item.holi_date).format("D") : ''}
+                                                            </AutoSizeText>
+                                                            <AutoSizeText
+                                                                numberOfLines={1}
+                                                                minFontSize={moderateScale(10)}
+                                                                fontSize={moderateScale(12)}
+                                                                mode={ResizeTextMode.max_lines}
+                                                                style={{
+                                                                    ...styles.generalTxt,
+                                                                    includeFontPadding: false,
+                                                                    fontFamily: Fonts.type.base,
+                                                                    marginTop: verticalScale(-5),
+                                                                    color: 'white'
+                                                                }}>{item.holi_date ? moment(item.holi_date).format("MMM") : ''}
+                                                            </AutoSizeText>
 
 
-                                                    </View>
-                                                    <View style={{
-                                                        flex: 1,
-                                                        justifyContent: 'center'
-                                                    }}>
-                                                        <AutoSizeText
-                                                            numberOfLines={1}
-                                                            minFontSize={moderateScale(14)}
-                                                            fontSize={moderateScale(16)}
-                                                            mode={ResizeTextMode.max_lines}
-                                                            style={{
-                                                                ...styles.generalTxt,
-                                                                fontFamily: Fonts.type.base,
-                                                                paddingStart: moderateScale(10),
-                                                                paddingEnd: moderateScale(10),
-                                                                color: '#585858'
-                                                            }}>{item.holiday}
-                                                        </AutoSizeText>
+                                                        </View>
+                                                        <View style={{
+                                                            flex: 1,
+                                                            justifyContent: 'center'
+                                                        }}>
+                                                            <AutoSizeText
+                                                                numberOfLines={1}
+                                                                minFontSize={moderateScale(14)}
+                                                                fontSize={moderateScale(16)}
+                                                                mode={ResizeTextMode.max_lines}
+                                                                style={{
+                                                                    ...styles.generalTxt,
+                                                                    fontFamily: Fonts.type.base,
+                                                                    paddingStart: moderateScale(10),
+                                                                    paddingEnd: moderateScale(10),
+                                                                    color: '#585858'
+                                                                }}>{item.holi_name}
+                                                            </AutoSizeText>
 
-                                                    </View>
+                                                        </View>
 
-                                                </TouchableOpacity>
-                                            )
-                                        }}
+                                                    </TouchableOpacity>
+                                                )
+                                            }}
 
-                                    /> : null}
+                                        /> : null}
+                                </View>
                             </View>
-                        </View>
 
-                        {isBottonSheetVisible ? sheetRef.current.open() : null}
-                        <RBSheet
-                            ref={sheetRef}
-                            height={Dimensions.get('screen').height - moderateScale(130)}
-                            openDuration={250}
-                            customStyles={{
-                                container: {
-                                    borderRadius: moderateScale(30)
-                                }
-                            }}
-                            onClose={() => setCloseBottonSheet(false)}
-                        >
-                            {showBottomSheet()}
-                        </RBSheet>
-
-                        <Text style={{
-                            ...styles.bottomSheetHeader,
-                            marginStart: moderateScale(5),
-                            marginTop: verticalScale(15),
-                            marginBottom: verticalScale(5)
-                        }}>Tax Percentage</Text>
-
-                        <View style={{
-                            ...styles.boxcontainer,
-                            flexDirection: 'row', alignItems: 'center',
-                            shadowColor: validateDesc ? 'black' : 'darkred',
-                            shadowOpacity: validateDesc ? 0.25 : 1,
-                            padding: moderateScale(15),
-                        }}>
-
-
-                            <TextInput placeholder="" style={{
-                                ...styles.styleTextInput,
-                                flex: 1,
-                                textAlign: 'left',
-                            }}
-                                onPressIn={() => {
-                                    //scroll.current.scrollTo({ x: 0, y: -50, animated: true })
+                            {isBottonSheetVisible ? sheetRef.current.open() : null}
+                            <RBSheet
+                                ref={sheetRef}
+                                height={Dimensions.get('screen').height - moderateScale(130)}
+                                openDuration={250}
+                                customStyles={{
+                                    container: {
+                                        borderRadius: moderateScale(30)
+                                    }
                                 }}
-
-
-                                underlineColorAndroid='transparent'
-                                require={true}
-                                numberOfLines={1}
-                                autoCapitalize='none'
-                                keyboardType="number-pad"
-                                onChangeText={(e) => {
-                                    setValueTaxPercentage(e)
-                                }
-                                }
-                                value={valueTaxPercentage} />
+                                onClose={() => setCloseBottonSheet(false)}
+                            >
+                                {showBottomSheet()}
+                            </RBSheet>
 
                             <Text style={{
-                                ...styles.suffix,
-                                flex: 0.05,
-                            }}>%</Text>
-                        </View>
+                                ...styles.bottomSheetHeader,
+                                marginStart: moderateScale(5),
+                                marginTop: verticalScale(15),
+                                marginBottom: verticalScale(5)
+                            }}>Tax Percentage</Text>
+
+                            <View style={{
+                                ...styles.boxcontainer,
+                                flexDirection: 'row', alignItems: 'center',
+                                shadowColor: 'black',
+                                shadowOpacity: 0.25,
+                                padding: moderateScale(15),
+                            }}>
+
+
+                                <TextInput placeholder="" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                    onPressIn={() => {
+                                        //scroll.current.scrollTo({ x: 0, y: -50, animated: true })
+                                    }}
+
+
+                                    underlineColorAndroid='transparent'
+                                    require={true}
+                                    numberOfLines={1}
+                                    autoCapitalize='none'
+                                    keyboardType="number-pad"
+                                    onChangeText={(e) => {
+                                        setValueTaxPercentage(e)
+                                    }
+                                    }
+                                    value={valueTaxPercentage} />
+
+                                <Text style={{
+                                    ...styles.suffix,
+                                    flex: 0.05,
+                                }}>%</Text>
+                            </View>
+                        </View>}
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             marginTop: verticalScale(35), width: '100%'
-                        }} onPress={() => { clickNextButton() }}>
+                        }} onPress={() => {
+
+                            if (validateSpecificFields()) {
+                                let busDetail = {};
+                                if (accountType === INDIVIDUAL) {
+                                    busDetail.businessInfo = valueDesc;
+                                    busDetail.imageUrl = photoUri;
+                                } else {
+                                    busDetail.businessInfo = valueDesc;
+                                    busDetail.daysOpen = selectWeekFrequency
+                                    busDetail.openHrStart = moment(valueStartBusTiming).format('YYYY-MM-DDThh:mm:ss')
+                                    busDetail.openHrEnd = moment(valueEndBusTiming).format('YYYY-MM-DDThh:mm:ss')
+                                    busDetail.breakTimeStart = moment(valueStartTiming).format('YYYY-MM-DDThh:mm:ss')
+                                    busDetail.breakTimeEnd = moment(valueEndTiming).format('YYYY-MM-DDThh:mm:ss')
+                                    busDetail.holidays = addHolidays//[{ "holi_date": "2019-04-28T14:45:15", "holi_name": "newyear" }],
+                                    busDetail.taxPercentage = valueTaxPercentage;
+                                    busDetail.imageUrl = photoUri;
+                                }
+                                clickNextButton(busDetail)
+                            }
+                        }}>
                             <Text style={{
                                 fontSize: moderateScale(22), textAlign: 'center',
                                 padding: moderateScale(10),
@@ -415,6 +483,77 @@ function BusProfileView(props) {
                             }}>NEXT</Text>
                         </TouchableOpacity>
 
+
+
+
+
+
+                        <Dialog
+                            visible={dialogVisibleStatus}
+                            width={Dimensions.get("screen").width - 100}
+                            height={Dimensions.get("screen").height / 6}
+                            onTouchOutside={() => {
+                                setDialogVisibleStatus(false);
+                            }}
+                            dialogTitle={<DialogTitle title="Profile Picture" />}
+                            dialogAnimation={new ScaleAnimation({
+                                toValue: 0,
+                                useNativeDriver: true,
+                            })}
+                        >
+                            <DialogContent
+                                style={{
+                                    flex: 1,
+                                    flexDirection: 'row',
+                                    justifyContent: 'flex-end',
+                                    alignItems: 'flex-end',
+                                }}>
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        flex: 5,
+                                        height: 50,
+                                        borderWidth: 2,
+                                        borderColor: 'black',
+                                        borderRadius: 10,
+                                        marginRight: 10,
+                                        justifyContent: 'center',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                        }}
+                                        onPress={() => {
+                                            capturePic('gallery');
+                                            setDialogVisibleStatus(false);
+                                        }}>
+                                        Gallery
+                                    </Text>
+                                </View>
+                                <View
+                                    style={{
+                                        backgroundColor: 'white',
+                                        flex: 5,
+                                        height: 50,
+                                        borderWidth: 2,
+                                        borderColor: 'black',
+                                        borderRadius: 10,
+                                        marginRight: 10,
+                                        justifyContent: 'center',
+                                    }}>
+                                    <Text
+                                        style={{
+                                            textAlign: 'center',
+                                        }}
+                                        onPress={() => {
+                                            capturePic('camera');
+                                            setDialogVisibleStatus(false);
+                                        }}>
+                                        Camera
+                                    </Text>
+                                </View>
+                            </DialogContent>
+                        </Dialog>
                     </View>
                 </ScrollView>
             </KeyboardAvoidingView>
@@ -422,12 +561,12 @@ function BusProfileView(props) {
 
 
 
-        </View>
+        </View >
     )
 
     function getSkipBtn() {
         return (
-            <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(e)}>
+            <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(null)}>
                 <Text style={{ ...styles.generalTxt, fontSize: moderateScale(18), marginStart: moderateScale(5), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-8) }}>Skip</Text>
                 <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0, height: verticalScale(12), width: moderateScale(48) }} resizeMode='contain' />
 
@@ -520,7 +659,7 @@ function BusProfileView(props) {
                     }}
                         onPress={() => {
                             setTimeout(() => {
-                                setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
+                                setHolidays({ id: indexHoliday, holi_name: valueHolidays, holi_date: selected, markedDate: markedDates });
                                 sheetRef.current.close()
                             }, 200)
                         }}>
@@ -583,7 +722,7 @@ function BusProfileView(props) {
                                 alignItems: 'center',
                                 marginStart: moderateScale(5),
                             }} onPress={() => setWeekFrequency(
-                                { day: item }
+                                item
                             )}>
 
                                 <AutoSizeText
@@ -608,7 +747,7 @@ function BusProfileView(props) {
         let tmp = selectWeekFrequency;
         if (tmp.length === 0) { tmp.push(e); }
         else {
-            let itemService = tmp.find(item => item.day === e.day);
+            let itemService = tmp.find(item => item === e);
             if (itemService) {
                 tmp.splice(tmp.indexOf(itemService), 1);
             } else {
@@ -616,13 +755,13 @@ function BusProfileView(props) {
             }
 
         }
-        setSelectWeekFrequency(result => [...result, tmp])
+        setSelectWeekFrequency([...tmp])
     }
 
     function isDaySelect(item) {
 
         console.log("day select-->", selectWeekFrequency.length + "-" + item);
-        let itemService = selectWeekFrequency.find(e => e.day === item);
+        let itemService = selectWeekFrequency.find(e => e === item);
         if (itemService) {
             return true;
         } else {
@@ -695,7 +834,7 @@ function BusProfileView(props) {
                             style={{
                                 ...styles.generalTxt,
                                 color: '#777777',
-                                paddingEnd:moderateScale(5),
+                                paddingEnd: moderateScale(5),
                                 flex: moderateScale(7),
                             }}>Start {valueStartBusTiming ? moment(valueStartBusTiming).format('hh:mm A') : ''}
                         </AutoSizeText>
@@ -846,6 +985,36 @@ function BusProfileView(props) {
 
             </View>
         )
+    }
+
+    function validateSpecificFields() {
+
+        if (!Util.isLengthGreater(valueDesc)) {
+
+            Util.topAlertError("Business Info is required");
+            setValidateDesc(false)
+            return false;
+        }
+        else if (accountType === INDIVIDUAL) {
+            return true;
+        }
+        else if (selectWeekFrequency.length === 0) {
+
+            Util.topAlertError("Select atleast one day");
+            return false;
+        }
+        else if (!valueStartBusTiming || !valueEndBusTiming) {
+
+            console.log('valueStartBusTiming-- >', valueStartBusTiming)
+            Util.topAlertError("Operating hours are required");
+            return false;
+        }
+        else if (!valueStartTiming || !valueEndTiming) {
+
+            Util.topAlertError("Break timing are required");
+            return false;
+        }
+        return true
     }
 }
 

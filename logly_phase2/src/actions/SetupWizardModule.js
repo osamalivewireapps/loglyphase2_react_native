@@ -1,35 +1,32 @@
 /* eslint-disable prettier/prettier */
-import { GET_TEAM_MEMBERS,MEMBER_DETAILS } from './ActionTypes';
-import axios from 'axios';
-import { baseUrl } from '../webconfig/globalConfig';
-import { EnableLoader, DisableLoader } from './LoaderProgress';
-import utils from '../utils';
+import { GET_FORMS } from './ActionTypes';
+import axios from "axios";
+import { baseUrl } from "../webconfig/globalConfig";
+import { EnableLoader, DisableLoader } from "./LoaderProgress";
+import utils from '../utils'
 import DataHandler from '../utils/DataHandler';
 
 const timeOut = 500;
 
-export const getTeamMembers = () => async (dispatch) => {
+export const getSetupWizardForm = () => async (dispatch) => {
 
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('config-->', config);
+    console.log("config-->", config)
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .get(`${baseUrl}/user/breeder/employees`, config)
+            .get(`${baseUrl}/form/all/forms`, config)
             .then(response => {
 
-                console.log('response-->', response);
+                console.log("response-->", response);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
-                    let tmp = [];
-                    console.log('response--->', response.data.data);
-
-                    dispatch({ type: GET_TEAM_MEMBERS, payload: response.data.data });
-                    resolve({ type: GET_TEAM_MEMBERS, payload: response.data.data });
+                    dispatch({ type: GET_FORMS, payload: response.data.data });
+                    resolve({ type: GET_FORMS, payload: response.data.data });
                 }
                 else {
                     setTimeout(() => {
@@ -40,34 +37,34 @@ export const getTeamMembers = () => async (dispatch) => {
             })
             .catch(error => {
 
-                console.log('response error-->', error.message);
+                console.log("response error-->", error.message);
                 dispatch(DisableLoader());
                 setTimeout(() => {
                     utils.topAlertError(error.message);
                 }, timeOut);
             });
     });
-};
+}
 
-export const getMemberDetails = (id) => async (dispatch) => {
+export const getBusDetails = (id) => async (dispatch) => {
 
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('config-->', config);
+    console.log("config-->", config)
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .get(`${baseUrl}/user/employee/${id}`, config)
+            .get(`${baseUrl}/businessDetails/${id}`, config)
             .then(response => {
 
-                console.log('response-->', response);
+                console.log("response-->", response);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
-                    dispatch({ type: MEMBER_DETAILS, payload: response.data.data });
-                    resolve({ type: MEMBER_DETAILS, payload: response.data.data });
+                    //dispatch({ type: GET_FORMS, payload: response.data.data });
+                    resolve({ payload: response.data.data });
                 }
                 else {
                     setTimeout(() => {
@@ -78,33 +75,32 @@ export const getMemberDetails = (id) => async (dispatch) => {
             })
             .catch(error => {
 
-                console.log('response error-->', error.message);
+                console.log("response error-->", error.message);
                 dispatch(DisableLoader());
                 setTimeout(() => {
                     utils.topAlertError(error.message);
                 }, timeOut);
             });
     });
-};
+}
 
-export const addMemberDetails = (dataToSubmit) => async (dispatch) => {
+
+export const postSetupWizard = (dataToSubmit) => async (dispatch) => {
 
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('add member details dataToSubmit-->', dataToSubmit);
-    console.log('url---->', `${baseUrl}/user/employee/register`);
+    console.log('config-->', dataToSubmit);
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .post(`${baseUrl}/user/employee/register`, dataToSubmit, config)
+            .post(`${baseUrl}/user/v2/setupwizard`, dataToSubmit, config)
             .then(response => {
-
-                console.log('response-->', response);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
+                    console.log('response-->', response);
                     resolve(true);
                 }
                 else {
@@ -125,25 +121,25 @@ export const addMemberDetails = (dataToSubmit) => async (dispatch) => {
     });
 };
 
-export const editMemberDetails = (id, dataToSubmit) => async (dispatch) => {
+export const uploadSetupWizardImages = (dataToSubmit) => async (dispatch) => {
 
+    console.log("upload images--->", dataToSubmit)
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('config-->', config);
-    console.log("dataToSubmit--->", dataToSubmit + "--id--", id)
+    console.log('config-->', dataToSubmit);
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .put(`${baseUrl}/user/employee/${id}`, dataToSubmit, config)
+            .post(`${baseUrl}/user/v2/image/upload`, dataToSubmit, config)
             .then(response => {
 
-                console.log('response-->', response);
+                console.log('upload images--->', response);
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
-                    resolve(true);
+                    resolve(response.data.data.imageUrl);
                 }
                 else {
                     setTimeout(() => {
@@ -163,39 +159,5 @@ export const editMemberDetails = (id, dataToSubmit) => async (dispatch) => {
     });
 };
 
-export const removeMember = (id) => async (dispatch) => {
 
 
-    let config = { headers: { 'auth': await DataHandler.getAuth() } };
-
-    console.log('config-->', id);
-
-    return new Promise((resolve) => {
-        dispatch(EnableLoader());
-        axios
-            .delete(`${baseUrl}/user/employee/${id}`, config)
-            .then(response => {
-
-                console.log('response-->', response);
-
-                dispatch(DisableLoader());
-                if (response.data.status === 200) {
-                    resolve(true);
-                }
-                else {
-                    setTimeout(() => {
-                        utils.topAlertError(response.data.message);
-                    }, timeOut);
-                }
-
-            })
-            .catch(error => {
-
-                console.log('response error-->', error.message);
-                dispatch(DisableLoader());
-                setTimeout(() => {
-                    utils.topAlertError(error.message);
-                }, timeOut);
-            });
-    });
-};

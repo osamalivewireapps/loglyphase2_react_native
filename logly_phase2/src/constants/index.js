@@ -56,6 +56,9 @@ export const userObject = 'userObject';
 export const userPreferences = 'userPreferences';
 export const accountType = 'accountType';
 export const BUS_SERVICES = 'bus_services';
+export const BUS_DETAILS = 'bus_details';
+export const ANIMAL_LIST = 'animal_list';
+export const PRODUCT_LIST = 'product_list';
 
 export const TYPES_OF_SERVICES = [
     {

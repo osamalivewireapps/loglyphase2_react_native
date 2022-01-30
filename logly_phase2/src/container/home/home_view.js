@@ -9,7 +9,7 @@ import React, { useState, useRef } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { TYPES_OF_SERVICES } from '../../constants';
+import { INDIVIDUAL, TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
 import DeviceInfo from 'react-native-device-info';
 import * as Animatable from 'react-native-animatable';
@@ -18,12 +18,15 @@ import Util from '../../utils';
 
 function HomeView(props) {
 
-   
+
     const [isShow, setShow] = useState(false);
     const isTablet = DeviceInfo.isTablet();
 
-    const { toggleDrawer, userObject } = props;
-    const PET_ACTIVITY = [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' } ,{ bg: Images.img_activity, txt: 'Activity' }]
+    const { toggleDrawer, userObject, accountType } = props;
+    const PET_ACTIVITY =
+        accountType && accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ?
+            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_marketing, txt: 'Marketing' }, { bg: Images.img_activity, txt: 'Activity' }] :
+            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' }, { bg: Images.img_activity, txt: 'Activity' }]
     const actions = [
         {
             textStyle: {
@@ -136,7 +139,7 @@ function HomeView(props) {
                 </View>
             </View>
             <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ }}>
+                <View style={{}}>
 
 
                     <Text style={{
@@ -163,11 +166,15 @@ function HomeView(props) {
                                     onPress={() => {
                                         if (index === 0) {
                                             props.navigation.navigate('PetProfile')
-                                        } else if (index === 1){
-                                            props.navigation.navigate('ProductListing')
-                                        } else if (index === 3) {
-                                            props.navigation.navigate('ScheduleListingActivity')
+                                        } else if (index === 1) {
+                                            accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ?null:props.navigation.navigate('ProductListing')
                                         } 
+                                        else if (index === 2 && accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase())) {
+                                            props.navigation.navigate('ScheduleListingActivity')
+                                        }
+                                        else if (index === 3) {
+                                            props.navigation.navigate('ScheduleListingActivity')
+                                        }
                                     }}
                                     style={{
                                         borderRadius: moderateScale(10),
@@ -233,7 +240,7 @@ function HomeView(props) {
                                         alignItems: 'center',
                                         justifyContent: 'center',
                                         marginEnd: moderateScale(10),
-                                        marginStart:index===0?moderateScale(25):0,
+                                        marginStart: index === 0 ? moderateScale(25) : 0,
                                         backgroundColor: item.bg
                                     }}
                                 >
@@ -334,10 +341,10 @@ function HomeView(props) {
                     }}>Market place</Text>
 
                     <View style={{
-                        flexDirection: 'row', 
+                        flexDirection: 'row',
                         marginEnd: moderateScale(25),
-                        marginStart:moderateScale(25)
-                             }}>
+                        marginStart: moderateScale(25)
+                    }}>
                         <TouchableOpacity
                             style={{
                                 borderRadius: moderateScale(10),
@@ -445,21 +452,21 @@ function HomeView(props) {
                                 }}>
                                     {/* <Image source={Icons.icon_float_reg} resizeMode='contain'
                                 style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
-                                    
-                                    <TouchableOpacity
-                                    onPress={()=>{
-                                            props.navigation.navigate('RegisterPet');
-                                    }}
-                                    >
-                                    <Text style={{
-                                        ...styles.generalTxt,
-                                        color: 'white',
 
-                                        fontFamily: Fonts.type.medium,
-                                        fontSize: moderateScale(20),
-                                    }}>Register Animal</Text>
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            props.navigation.navigate('RegisterPet');
+                                        }}
+                                    >
+                                        <Text style={{
+                                            ...styles.generalTxt,
+                                            color: 'white',
+
+                                            fontFamily: Fonts.type.medium,
+                                            fontSize: moderateScale(20),
+                                        }}>Register Animal</Text>
                                     </TouchableOpacity>
-                                    </View>
+                                </View>
 
                                 <View style={{
                                     flexDirection: 'row',
@@ -468,21 +475,21 @@ function HomeView(props) {
                                 }}>
                                     {/* <Image source={Icons.icon_float_reg_products} resizeMode='contain'
                             style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
-                                    
+
                                     <TouchableOpacity
                                         onPress={() => {
                                             props.navigation.navigate('RegisterProduct');
                                         }}
                                     >
-                                    <Text style={{
-                                        ...styles.generalTxt,
-                                        color: 'white',
-                                        textAlign: 'center',
-                                        fontFamily: Fonts.type.medium,
-                                        fontSize: moderateScale(20),
-                                    }}>Register Product</Text>
+                                        <Text style={{
+                                            ...styles.generalTxt,
+                                            color: 'white',
+                                            textAlign: 'center',
+                                            fontFamily: Fonts.type.medium,
+                                            fontSize: moderateScale(20),
+                                        }}>Register Product</Text>
                                     </TouchableOpacity>
-                                    </View>
+                                </View>
 
                                 <View style={{
                                     flexDirection: 'row',

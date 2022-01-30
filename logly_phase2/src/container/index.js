@@ -28,4 +28,4 @@ export { CrmOrderCompleted,CRMPurchaseHistoryDetail,CRMCustomerDetail,CRMPayment
 export { GroupListing, CreateGroup} from './groups';
 export { EditScheduleActivity,ScheduleListingActivity,CreateActivity, AddScheduleActivity} from './activity_management';
 export { TeamListing, MemberDetails, AddTeamMember} from './team_management';
-export { ViewProfile} from './Profile'
+export { ViewProfile, EditProfile} from './Profile'

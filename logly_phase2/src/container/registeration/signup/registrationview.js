@@ -117,11 +117,27 @@ function RegistrationView(props) {
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10) }}>Register Account</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10) }}>Please fill the details below</Text>
             </View>
+            <KeyboardAvoidingView
+                style={{ flex: 1 }}
+                behavior={Platform.OS === "ios" ? "padding" : null}
+            >
             <ScrollView
                 ref={scroll}
                 keyboardShouldPersistTaps='handled'
             >
-                <View style={{height:Dimensions.get("screen").height+100}}
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                        setIsVisible(false);
+                        setIsCityVisible(false);
+                        setIsZipVisible(false)
+                    }} 
+                
+                
+                style={{
+                    flex:1
+                    //height:Dimensions.get("screen").height+100
+                    }}
                     // behavior={Platform.OS === "ios" ? "position" : null}
                     // keyboardVerticalOffset={keyboardVerticalOffset}
                 >
@@ -589,9 +605,9 @@ function RegistrationView(props) {
 
                     </View>
 
-                </View>
+                </TouchableOpacity>
             </ScrollView>
-
+            </KeyboardAvoidingView>
         </View>
     );
 }

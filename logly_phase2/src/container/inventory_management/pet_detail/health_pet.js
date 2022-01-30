@@ -41,17 +41,16 @@ function HealthPetView(props) {
     }, [healthRecord])
 
     return (
+
         <View style={{
-            flexDirection: 'column',
             paddingStart: moderateScale(20),
-            minHeight: Dimensions.get('screen').height / 2,
-            paddingBottom: verticalScale(30)
+            height: '80%',
+            paddingBottom: verticalScale(0)
 
         }}>
 
             <View style={{
                 ...styles.boxcontainer,
-                marginTop: verticalScale(20),
                 marginBottom: 0, width: '90%', flexDirection: 'row',
             }}>
 
@@ -113,141 +112,150 @@ function HealthPetView(props) {
             </RBSheet>
             {isBottonSheetVisible ? sheetRef.current.open() : null}
 
-            {initialPg === 0 && arrHealthRecord.length > 0 ? arrHealthRecord.map((item) => {
-                return (
-                    <View style={{
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: moderateScale(10),
-                        marginTop: verticalScale(10),
-                        marginEnd: moderateScale(35),
-                        height: verticalScale(60),
-                        flexDirection: 'row',
-                        padding: moderateScale(10)
+            {initialPg === 0 && arrHealthRecord.length > 0 ?
+                    <FlatList
+                        contentContainerStyle={{
+                            flex:1
+                        }}
+                        data={arrHealthRecord}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <View style={{
+                                    backgroundColor: '#F5F5F5',
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
+                                    marginEnd: moderateScale(35),
+                                    height: verticalScale(60),
+                                    flexDirection: 'row',
+                                    padding: moderateScale(10)
 
-                    }} onPress={() => {
+                                }} onPress={() => {
 
-                    }}>
+                                }}>
 
-                        <ImagePlaceholder
-                            showActivityIndicator={false}
-                            activityIndicatorProps={{
-                                size: 'small',
-                                color: '#777777',
-                            }}
-                            resizeMode='cover'
-                            placeholderStyle={{
-                                height: '100%',
-                                width: '100%',
-                                borderWidth: moderateScale(1),
-                                borderColor: Colors.appBgColor,
-                                borderRadius: moderateScale(8)
+                                    <ImagePlaceholder
+                                        showActivityIndicator={false}
+                                        activityIndicatorProps={{
+                                            size: 'small',
+                                            color: '#777777',
+                                        }}
+                                        resizeMode='cover'
+                                        placeholderStyle={{
+                                            height: '100%',
+                                            width: '100%',
+                                            borderWidth: moderateScale(1),
+                                            borderColor: Colors.appBgColor,
+                                            borderRadius: moderateScale(8)
 
-                            }}
-                            imgStyle={{
-                                height: '100%',
-                                width: '100%',
-                                borderWidth: moderateScale(1),
-                                borderColor: Colors.appBgColor,
-                                borderRadius: moderateScale(8)
-                            }}
+                                        }}
+                                        imgStyle={{
+                                            height: '100%',
+                                            width: '100%',
+                                            borderWidth: moderateScale(1),
+                                            borderColor: Colors.appBgColor,
+                                            borderRadius: moderateScale(8)
+                                        }}
 
-                            style={{
-                                flex: 0.2,
-                            }}
+                                        style={{
+                                            flex: 0.2,
+                                        }}
 
-                            src={item.filename}
-                            placeholder={item.filename.includes('.pdf') ? Icons.icon_file_pdf : Icons.icon_paw}
+                                        src={item.filename}
+                                        placeholder={item.filename.includes('.pdf') ? Icons.icon_file_pdf : Icons.icon_paw}
+                                    />
+
+
+                                    <View style={{
+                                        flex: 0.6,
+                                        justifyContent: 'center'
+                                    }}>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(14)}
+                                            fontSize={moderateScale(16)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                paddingStart: moderateScale(10),
+                                                paddingEnd: moderateScale(10),
+                                                color: Colors.appBgColor
+                                            }}>{item.fileNamed}
+                                        </AutoSizeText>
+                                        <AutoSizeText
+                                            numberOfLines={2}
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(14)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                fontFamily: Fonts.type.base,
+                                                paddingStart: moderateScale(10),
+                                                paddingEnd: moderateScale(10),
+                                                color: '#585858'
+                                            }}>{item.note}
+                                        </AutoSizeText>
+                                    </View>
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            if (item.filename.includes('pdf'))
+                                                props.navigation.navigate('PdfReader', { uri: item.filename })
+                                            else {
+
+                                                let tmp = [];
+                                                tmp.push(item)
+                                                props.navigation.navigate('ImageGallery', { style: { flex: 1 }, listCollection: tmp })
+
+                                            }
+                                        }
+                                        }
+                                        style={{
+                                            flex: 0.2,
+                                            justifyContent: 'center'
+                                        }}>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(14)}
+                                            fontSize={moderateScale(14)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                textAlign: 'center',
+                                                borderColor: Colors.appBgColor,
+                                                padding: moderateScale(2),
+                                                paddingStart: moderateScale(10),
+                                                paddingEnd: moderateScale(10),
+                                                color: Colors.appBgColor,
+                                                borderWidth: moderateScale(1),
+                                                borderRadius: moderateScale(10)
+                                            }}>View
+                                        </AutoSizeText>
+                                    </TouchableOpacity>
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            delHealthRecords(props.animalData._id, item._id)
+                                        }
+                                        }
+                                        style={{
+                                            justifyContent: 'center',
+                                            marginStart: moderateScale(10)
+                                        }}>
+                                        <Image source={Icons.icon_close} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                    </TouchableOpacity>
+                                </View>
+                            )
+                        }}
                         />
-
-
-                        <View style={{
-                            flex: 0.6,
-                            justifyContent: 'center'
-                        }}>
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    paddingStart: moderateScale(10),
-                                    paddingEnd: moderateScale(10),
-                                    color: Colors.appBgColor
-                                }}>{item.fileNamed}
-                            </AutoSizeText>
-                            <AutoSizeText
-                                numberOfLines={2}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    fontFamily: Fonts.type.base,
-                                    paddingStart: moderateScale(10),
-                                    paddingEnd: moderateScale(10),
-                                    color: '#585858'
-                                }}>{item.note}
-                            </AutoSizeText>
-                        </View>
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                if (item.filename.includes('pdf'))
-                                    props.navigation.navigate('PdfReader', { uri: item.filename })
-                                else {
-
-                                    let tmp = [];
-                                    tmp.push(item)
-                                    props.navigation.navigate('ImageGallery', { style: { flex: 1 }, listCollection: tmp })
-
-                                }
-                            }
-                            }
-                            style={{
-                                flex: 0.2,
-                                justifyContent: 'center'
-                            }}>
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    textAlign: 'center',
-                                    borderColor: Colors.appBgColor,
-                                    padding: moderateScale(2),
-                                    paddingStart: moderateScale(10),
-                                    paddingEnd: moderateScale(10),
-                                    color: Colors.appBgColor,
-                                    borderWidth: moderateScale(1),
-                                    borderRadius: moderateScale(10)
-                                }}>View
-                            </AutoSizeText>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                            onPress={() => {
-                                delHealthRecords(props.animalData._id, item._id)  
-                            }
-                            }
-                            style={{
-                                justifyContent: 'center',
-                                marginStart:moderateScale(10)
-                            }}>
-                            <Image source={Icons.icon_close} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                        </TouchableOpacity>
-                    </View>
-                )
-            }) : <View />}
+            
+             : <View style={{flex:1}}/>}
 
             {initialPg === 0 ?
                 <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0,
                     margin: verticalScale(25),
                     marginStart: 0,
-                    marginTop: verticalScale(65)
+                    marginTop: verticalScale(10)
                 }} onPress={() => { docPicker() }}>
                     <Text style={{
                         ...styles.generalTxt,
@@ -257,6 +265,7 @@ function HealthPetView(props) {
                     }}>Add Document</Text>
                 </TouchableOpacity> : null}
         </View>
+        //</ScrollView>
     );
 
     function showAddDocUI() {

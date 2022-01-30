@@ -3,7 +3,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, TextInput, TouchableHighlight } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
 import { Platform } from 'react-native';
@@ -15,13 +15,21 @@ import { TYPES_OF_SERVICES } from "../../../constants";
 import { FlatList } from "react-native-gesture-handler";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
-const AnimalCategories = ["Dog", "Cat", "Horse", "Parrot", "Deer", "Rabbit"];
 
 function AnimalInfoView(props) {
 
-    const { backScreen, stackComp, nextScreen, skipBtn, selectedServices, addServices} = props;
+    const { AnimalCategories, backScreen, stackComp, nextScreen, skipBtn, selectedServices, addServices } = props;
     const pagerRef = useRef(null);
-   
+
+    const [animalList, setAnimalList] = useState([]);
+
+    useEffect(()=>{
+        if (AnimalCategories.length > 0) {
+        let tmp = AnimalCategories.filter((value) => value.categoryId.type === 'animal')
+        setAnimalList(tmp);
+    }
+}
+        , [AnimalCategories])
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -52,55 +60,51 @@ function AnimalInfoView(props) {
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>Animal Care</Text>
                 <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10), textAlign: 'center' }}> Select Animals You Care for</Text>
             </View>
-            <View style={{padding:moderateScale(30),flex:1}}>
-            <FlatList
-                numColumns={2}
-                data={AnimalCategories}
-                style={{}}
-                renderItem={({ item, index }) => {
-                    return (
-                        <TouchableOpacity style={{
-                            backgroundColor: isSelectService(selectedServices, index, item) ? '#FFC081' : '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(20),
-                            flex: 1,
-                            height: verticalScale(40),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginStart: (index % 2) === 0 ? 0 : moderateScale(10),
-                        }} onPress={() => addServices({
-                            type: item,
-                            isSelect: selectedServices.length === 0 ? true : !isSelectService(selectedServices, index, item),
-                            index: index
-                        })}>
+            <View style={{ padding: moderateScale(30), flex: 1 }}>
+                <FlatList
+                    numColumns={2}
+                    data={animalList}
+                    style={{}}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: isSelectService(selectedServices, index, item) ? '#FFC081' : '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(20),
+                                flex: 1,
+                                height: verticalScale(40),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginStart: (index % 2) === 0 ? 0 : moderateScale(10),
+                            }} onPress={() => addServices(item)}>
 
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: Colors.appBgColor,
-                                }}>{item}
-                            </AutoSizeText>
-                        </TouchableOpacity>
-                    )
-                }}
-                keyExtractor={(item) => item.id}
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor,
+                                    }}>{item.categoryId.name}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
+                    }}
+                    keyExtractor={(item) => item.id}
 
-            />
+                />
 
-            <TouchableOpacity style={{
-                ...styles.styleButtons, flex: 0,
-                marginTop: verticalScale(35)
-            }} onPress={() => { nextScreen() }}>
-                <Text style={{
+                <TouchableOpacity style={{
+                    ...styles.styleButtons, flex: 0,
+                    marginTop: verticalScale(35)
+                }} onPress={() => { nextScreen() }}>
+                    <Text style={{
                         fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
                         paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
-                    ...styles.generalTxt
-                }}>NEXT</Text>
-            </TouchableOpacity>
+                        ...styles.generalTxt
+                    }}>NEXT</Text>
+                </TouchableOpacity>
 
             </View>
         </View>
@@ -108,9 +112,9 @@ function AnimalInfoView(props) {
 
     function isSelectService(selectedServices, index, item) {
 
-        let itemService = selectedServices.find(e => e.type === item);
+        let itemService = selectedServices.find(e => e._id === item._id);
         if (itemService) {
-            return itemService.isSelect;
+            return true;
         } else {
             return false;
         }
@@ -148,7 +152,7 @@ const styles = StyleSheet.create({
 
     },
     styleButtons: {
-        backgroundColor: Colors.appBgColor, 
+        backgroundColor: Colors.appBgColor,
         borderRadius: moderateScale(30)
     }
 });

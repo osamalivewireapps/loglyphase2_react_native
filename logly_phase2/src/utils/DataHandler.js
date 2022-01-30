@@ -1,7 +1,7 @@
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
 import AsyncStorage from '@react-native-community/async-storage';
-import { userObject, userPreferences, accountType, BUS_SERVICES } from './../constants'
+import { userObject, userPreferences, accountType, BUS_SERVICES, BUS_DETAILS, ANIMAL_LIST, PRODUCT_LIST } from './../constants'
 
 export default class DataHandler {
 
@@ -32,7 +32,10 @@ export default class DataHandler {
     static async saveAccountType(type) {
         console.log("accountType--->", type);
         try {
-            await AsyncStorage.setItem(accountType, type);
+            if (type !== null)
+                await AsyncStorage.setItem(accountType, type);
+            else
+                await AsyncStorage.removeItem(accountType, type);
             return true;
         } catch (error) {
             console.log("saving error is", error);
@@ -44,7 +47,7 @@ export default class DataHandler {
         try {
             let value = await AsyncStorage.getItem(accountType);
             if (value !== null) {
-                console.log("accountType---->", value);
+                console.log("get accountType---->", value);
                 return value;
             }
 
@@ -123,6 +126,89 @@ export default class DataHandler {
         } catch (error) {
             console.log("saving error is", error);
             return false;
+        }
+    }
+
+    static async saveBusDetails(userData) {
+        console.log("DataHandler--->", userData);
+        try {
+            if (userData!==null)
+                await AsyncStorage.setItem(BUS_DETAILS, userData);
+            else
+                await AsyncStorage.removeItem(BUS_DETAILS, userData);
+            return true;
+        } catch (error) {
+            console.log("saving error is", error);
+            return false;
+        }
+    }
+
+    static async getBusDetails() {
+        try {
+            let value = await AsyncStorage.getItem(BUS_DETAILS);
+            if (value !== null) {
+                console.log("DataHandler=>getBusDetails---->", value);
+                return value;
+            }
+
+        } catch (error) {
+            console.log("saving error is", error);
+        }
+    }
+
+    static async saveAnimalList(userData) {
+        console.log("DataHandler--->", userData);
+        try {
+            if (userData !== null)
+                await AsyncStorage.setItem(ANIMAL_LIST, userData);
+            else
+                await AsyncStorage.removeItem(ANIMAL_LIST, userData);
+            return true;
+        } catch (error) {
+            console.log("saving error is", error);
+            return false;
+        }
+    }
+
+    static async getAnimalList() {
+        try {
+            let value = await AsyncStorage.getItem(ANIMAL_LIST);
+            if (value !== null) {
+                console.log("DataHandler=>getAnimals List---->", value);
+                return value;
+            } else
+                return null
+
+        } catch (error) {
+            console.log("saving error is", error);
+        }
+    }
+
+    static async saveProductList(userData) {
+        console.log("DataHandler--->", userData === null ? true : false);
+        try {
+            if (userData !== null)
+                await AsyncStorage.setItem(PRODUCT_LIST, userData);
+            else
+                await AsyncStorage.removeItem(PRODUCT_LIST, userData);
+            return true;
+        } catch (error) {
+            console.log("saving error is", error);
+            return false;
+        }
+    }
+
+    static async getProductList() {
+        try {
+            let value = await AsyncStorage.getItem(PRODUCT_LIST);
+            if (value !== null) {
+                console.log("DataHandler=>getProduct List---->", value);
+                return value;
+            } else
+                return null
+
+        } catch (error) {
+            console.log("saving error is", error);
         }
     }
 }

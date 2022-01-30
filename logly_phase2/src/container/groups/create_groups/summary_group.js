@@ -5,36 +5,46 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo, { useFirstInstallTime } from 'react-native-device-info';
 import styles from '../styles'
-import { TextInput } from 'react-native';
-import moment from 'moment';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import Util from '../../../utils';
 import AddAnimalsGroups from './add_animals_groups';
 import AddTeamGroups from './add_team_groups';
+import { editGroup, addGroup } from '../../../actions/GroupsModule';
+import { useDispatch } from 'react-redux';
+import utils from '../../../utils';
+
 
 
 function SummaryGroups(props) {
 
-    const { nextScreen, animals,team } = props;
+    const { nextScreen, animals, team, getAnimalList, getTeamList, groupName } = props;
 
-    
-    const sheetRef = useRef(null);
+    console.log('sumaary prop--->', props)
+
 
     const [tabs, setTab] = useState(-1);
-    const [searchTxt, setSearchTxt] = useState('');
-    const [addItems, setAddItems] = useState([]);
-    const [listAnimals, setListAnimals] = useState([{ id: 0, isSelect: false }, { id: 1, isSelect: false }, { id: 2, isSelect: false }]);
-    const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
-    const [isEdit, setIsEdit] = useState(false);
+    const [finalAnimalList, setFinalAnimalList] = useState(animals);
+    const [finalTeamList, setFinalTeamList] = useState(team);
 
+    let dispatch = useDispatch();
 
+    useEffect(() => setFinalAnimalList(animals), [animals]);
+    useEffect(() => setFinalTeamList(team), [team]);
+
+    useEffect(() => {
+    }, [finalAnimalList]);
+
+    useEffect(() => {
+    }, [finalTeamList]);
+
+    useEffect(() => {
+        console.log('group Name-->', groupName)
+    }, [groupName])
 
     return (
         <View style={{ flex: 1 }}>
@@ -86,21 +96,21 @@ function SummaryGroups(props) {
                     }}>Team Members</Text>
                     {tabs === 1 ? getHorizontalLine() : <View />}
                 </TouchableOpacity>
-       
+
             </View>
-                <View style={{minHeight:Dimensions.get('screen').height/2}}>
+            <View style={{ minHeight: Dimensions.get('screen').height / 2 }}>
 
 
-                    {getInnerScreens()}
+                {getInnerScreens()}
 
-                </View>
+            </View>
 
             <TouchableOpacity style={{
                 ...styles.styleButtons,
                 width: '100%',
 
 
-            }} onPress={() => { nextScreen() }}>
+            }} onPress={() => { editGroups(props.route.params.groupData?._id) }}>
                 <Text style={{
                     fontSize: moderateScale(22), textAlign: 'center',
                     padding: moderateScale(10),
@@ -109,8 +119,8 @@ function SummaryGroups(props) {
                     ...styles.generalTxt
                 }}>Done</Text>
             </TouchableOpacity>
-     
-       
+
+
 
 
         </View>
@@ -118,14 +128,17 @@ function SummaryGroups(props) {
 
 
     function getInnerScreens() {
+
         switch (tabs) {
             case 0:
-                return <AddAnimalsGroups {...props} isSummary animals={animals}/>;
+                return <AddAnimalsGroups {...props} isSummary animals={animals} getAnimalList={getAnimalList} getFinalAnimalList={(e) => {
+                    setFinalAnimalList(e)
+                }} />;
 
             case 1:
-                return <AddTeamGroups {...props} isSummary team={team}/>;
+                return <AddTeamGroups {...props} isSummary team={team} getTeamList={getTeamList} getFinalTeamList={(e) => setFinalTeamList(e)} />;
 
-  
+
         }
     }
 
@@ -138,6 +151,40 @@ function SummaryGroups(props) {
                 height: verticalScale(3), width: moderateScale(30)
             }} />
         )
+    }
+
+    function editGroups(id) {
+
+        if (!utils.isLengthGreater(groupName)) {
+            utils.topAlertError("Group name is required");
+            return
+        }
+
+        let animals = [], employees = []
+        finalAnimalList.forEach((value) => {
+            animals.push({ id: value._id })
+        })
+        finalTeamList.forEach((value) => {
+            employees.push({ id: value._id })
+        })
+        let postData = { animals, employees, name: groupName }
+
+        if (props.route.params.groupData)
+            dispatch(editGroup(id, postData)).then((response) => {
+                if (response) {
+                    props.navigation.pop()
+                    props.route.params.updateContacts();
+                }
+            })
+        else {
+            dispatch(addGroup(postData)).then((response) => {
+                if (response) {
+                    props.navigation.pop()
+                    props.route.params.updateContacts();
+                }
+            })
+        }
+
     }
 
 

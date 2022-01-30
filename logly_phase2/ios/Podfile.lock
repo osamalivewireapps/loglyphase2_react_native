@@ -258,11 +258,16 @@ PODS:
     - React-Core
   - react-native-document-picker (6.1.1):
     - React-Core
-  - react-native-image-picker (4.3.0):
+  - react-native-image-picker (3.8.1):
     - React-Core
   - react-native-pdf (6.4.0):
     - React-Core
   - react-native-safe-area-context (3.3.2):
+    - React-Core
+  - react-native-video (5.2.0):
+    - React-Core
+    - react-native-video/Video (= 5.2.0)
+  - react-native-video/Video (5.2.0):
     - React-Core
   - react-native-viewpager (5.0.11):
     - React-Core
@@ -382,6 +387,8 @@ PODS:
     - React-Core
   - RNSVG (12.1.1):
     - React
+  - RNVectorIcons (9.0.0):
+    - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -429,6 +436,7 @@ DEPENDENCIES:
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
   - react-native-pdf (from `../node_modules/react-native-pdf`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - react-native-video (from `../node_modules/react-native-video`)
   - "react-native-viewpager (from `../node_modules/@react-native-community/viewpager`)"
   - react-native-webview (from `../node_modules/react-native-webview`)
   - React-perflogger (from `../node_modules/react-native/ReactCommon/reactperflogger`)
@@ -454,6 +462,7 @@ DEPENDENCIES:
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNSnackbar (from `../node_modules/react-native-snackbar`)
   - RNSVG (from `../node_modules/react-native-svg`)
+  - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -514,6 +523,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-pdf"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-video:
+    :path: "../node_modules/react-native-video"
   react-native-viewpager:
     :path: "../node_modules/@react-native-community/viewpager"
   react-native-webview:
@@ -564,6 +575,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-snackbar"
   RNSVG:
     :path: "../node_modules/react-native-svg"
+  RNVectorIcons:
+    :path: "../node_modules/react-native-vector-icons"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -597,9 +610,10 @@ SPEC CHECKSUMS:
   react-native-blob-util: d2919a2243cba497cd5713f72faeec283c69fde4
   react-native-date-picker: 414fe8f73392bae030dc4efec39d743b5c5de283
   react-native-document-picker: 855e3468ac80f886d46cfc9ed132a4469ecaf817
-  react-native-image-picker: 1dbc397ab78be161bf08bc4f3ad9c39bec12be11
+  react-native-image-picker: 5a7dd93d4f9dd0d910da5dde3707fd96f70d03b3
   react-native-pdf: a6a5a3f0bdf340eb2eed6c96034424d2cc3f84b0
   react-native-safe-area-context: 5cf05f49df9d17261e40e518481f2e334c6cd4b5
+  react-native-video: 77ce22be7abff9e373527ca10106a99dea3ba56c
   react-native-viewpager: d054b58bf3d377e6b99558da6766463ff7e9b220
   react-native-webview: 1bd31adaa34e9c360271373ce66cc67a956c13ff
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
@@ -625,9 +639,10 @@ SPEC CHECKSUMS:
   RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3
   RNSnackbar: b6cbf294923b8d6c6056592bca87527c81a0130b
   RNSVG: 551acb6562324b1d52a4e0758f7ca0ec234e278f
+  RNVectorIcons: 4143ba35feebab8fdbe6bc43d1e776b393d47ac8
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: e918b45a0a1cbc6dd8e46e90e2db709f96356314
+PODFILE CHECKSUM: 2f18e0b3a0a1add37b75363a914f09fb211e53e9
 
 COCOAPODS: 1.10.1

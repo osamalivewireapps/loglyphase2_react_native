@@ -6,7 +6,7 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable quotes */
 /* eslint-disable prettier/prettier */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Platform, StyleSheet, Text, View, SafeAreaView, TouchableOpacity, Image, ScrollView, Dimensions, ImageBackground, Modal, Keyboard } from "react-native";
 import { AutoSizeText, ResizeTextMode } from "react-native-auto-size-text";
 import { FlatList, TextInput } from "react-native-gesture-handler";
@@ -17,12 +17,18 @@ import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
 import TeamListing from "./team_listing";
 import DataHandler from "../../../utils/DataHandler";
-import { BUS_SER_PROVIDER } from "../../../constants";
+import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import DeviceInfo from 'react-native-device-info';
+import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
+import utils from '../../../utils';
 
 function TeamSetupView(props) {
 
-    const { accountType, backScreen, clickNextButton,
+    const {
+        arrStates, userState, arrCity, userStateLocation, userCity,
+        userCityLocation, chooseState, validateState, validateCity, chooseCity,
+        accountType, backScreen, clickNextButton, capturePic, imgUri,
         delMember, addMember, wholeServices } = props;
 
 
@@ -44,8 +50,55 @@ function TeamSetupView(props) {
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
     const [arrIndex, setArrIndex] = useState(0);
     const [currentObj, setCurrentObj] = useState({})
-
+    const [validateDesc, setValidateDesc] = useState(true)
+    const [valueDesc, setDesc] = useState('')
+    const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
+    const [photoUri, setPhotoUri] = useState('');
     const sheetRef = React.useRef(null);
+    const [isExistProfile, setIsExistProfile] = useState(false);
+    const [isEmailEnable, setIsEmailEnable] = useState(true);
+
+    //STATES...
+    const inputEl = useRef(null);
+    const [isVisible, setIsVisible] = useState(false);
+    const [filterArray, setFilterArr] = useState([]);
+
+    //CITY...
+    const inputCity = useRef(null);
+    const [isCityVisible, setIsCityVisible] = useState(false);
+    const [filterCityArray, setFilterCityArr] = useState([]);
+
+    //SCROLLVIEW
+    const scroll = useRef(null);
+
+    const isTablet = DeviceInfo.isTablet();
+
+    useEffect(() => {
+        if (imgUri && imgUri.length > 0) {
+            setPhotoUri(imgUri)
+            setCloseBottonSheet(true)
+        }
+    }, [imgUri])
+
+    useEffect(() => {
+
+
+        if (isVisible && arrStates) {
+
+            setFilterArr(arrStates.filter((e) => {
+                return (e && e.name.toLowerCase().startsWith(userState.toLowerCase()) || e.name.toLowerCase().includes(userState.toLowerCase()));
+            }));
+        }
+    }, [userStateLocation]);
+
+    useEffect(() => {
+        if (isCityVisible && arrCity) {
+
+            setFilterCityArr(arrCity.filter((e) => {
+                return (e.name.toLowerCase().startsWith(userCity.toLowerCase()) || e.name.toLowerCase().includes(userCity.toLowerCase()));
+            }));
+        }
+    }, [userCityLocation]);
 
 
     return (
@@ -67,7 +120,7 @@ function TeamSetupView(props) {
                         <Text style={{ ...styles.generalTxt2, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-1) }}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(e)}>
+                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => clickNextButton(true)}>
                         <Text style={{ ...styles.generalTxt2, marginStart: moderateScale(5), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-8) }}>Skip</Text>
                         <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0, height: verticalScale(12), width: moderateScale(48) }} resizeMode='contain' />
 
@@ -177,6 +230,7 @@ function TeamSetupView(props) {
                             }} onPress={() => {
                                 setBtnLabel(false)
                                 updateServiceValues(null);
+                                userStateLocation({ name:null, stateId: -1 });
                                 setCloseBottonSheet(true)
                             }
                             }>
@@ -204,7 +258,7 @@ function TeamSetupView(props) {
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
                         marginTop: verticalScale(35), width: '85%', alignSelf: 'center'
-                    }} onPress={() => { clickNextButton() }}>
+                    }} onPress={() => { clickNextButton(false) }}>
                         <Text style={{
                             fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
                             paddingTop: verticalScale(10), paddingBottom: verticalScale(10),
@@ -231,6 +285,73 @@ function TeamSetupView(props) {
                     }}>Add a Team Member</Text>
                 </TouchableOpacity>}
             {modalVisible ? showCondPopUp() : null}
+
+            <Dialog
+                visible={dialogVisibleStatus}
+                width={Dimensions.get("screen").width - 100}
+                height={Dimensions.get("screen").height / 6}
+                onTouchOutside={() => {
+                    setDialogVisibleStatus(false);
+                }}
+                dialogTitle={<DialogTitle title="Profile Picture" />}
+                dialogAnimation={new ScaleAnimation({
+                    toValue: 0,
+                    useNativeDriver: true,
+                })}
+            >
+                <DialogContent
+                    style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'flex-end',
+                    }}>
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            flex: 5,
+                            height: 50,
+                            borderWidth: 2,
+                            borderColor: 'black',
+                            borderRadius: 10,
+                            marginRight: 10,
+                            justifyContent: 'center',
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                            }}
+                            onPress={() => {
+                                capturePic('gallery');
+                                setDialogVisibleStatus(false);
+                            }}>
+                            Gallery
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            flex: 5,
+                            height: 50,
+                            borderWidth: 2,
+                            borderColor: 'black',
+                            borderRadius: 10,
+                            marginRight: 10,
+                            justifyContent: 'center',
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                            }}
+                            onPress={() => {
+                                capturePic('camera');
+                                setDialogVisibleStatus(false);
+                            }}>
+                            Camera
+                        </Text>
+                    </View>
+                </DialogContent>
+            </Dialog>
         </View>
     )
 
@@ -312,41 +433,70 @@ function TeamSetupView(props) {
 
         return (
 
-            <ScrollView keyboardShouldPersistTaps='handled'>
+            <ScrollView keyboardShouldPersistTaps='handled'
+                ref={scroll}
 
-
-
-                <View style={{
-                    padding: moderateScale(30),
-                    alignItems: 'center',
-                    alignItems: 'flex-start',
-                    flex: 1
-
-                }}>
-
-                    <View style={{
-                        backgroundColor: '#F4F4F4', alignSelf: 'center',
-                        height: moderateScale(90), width: moderateScale(90), borderRadius: moderateScale(100),
-                        justifyContent: 'center',
+            >
+                <TouchableOpacity
+                    activeOpacity={1}
+                    onPress={() => {
+                        setIsVisible(false);
+                        setIsCityVisible(false)
+                    }}
+                    style={{
+                        padding: moderateScale(30),
                         alignItems: 'center',
-                        paddingTop: verticalScale(10)
+                        alignItems: 'flex-start',
+                        flex: 1,
                     }}>
 
-                        <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={moderateScale(14)}
-                            fontSize={moderateScale(16)}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                color: Colors.appBgColor,
-                                textAlign: 'center',
-                                width: '100%',
-                            }}>Photo
-                        </AutoSizeText>
+                    <TouchableOpacity
+                        onPress={() => {
+                            setCloseBottonSheet(false)
+                            sheetRef.current.close()
+                            setDialogVisibleStatus(true)
+                        }}
+                        style={{
+                            backgroundColor: '#F4F4F4', alignSelf: 'center',
+                            height: moderateScale(90), width: moderateScale(90),
+                            borderRadius: moderateScale(100),
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            paddingTop: verticalScale(10)
+                        }}>
 
-                    </View>
+                        <Image
+                            source={{ uri: photoUri }}
+                            style={{
+                                height: moderateScale(90),
+                                width: moderateScale(90),
+                                borderRadius: moderateScale(100),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                position: 'absolute'
+                            }} />
+                        {!photoUri || photoUri.length === 0 ?
+                            <View style={{ alignItems: 'center' }}>
+                                <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor,
+                                        textAlign: 'center',
+                                        width: '100%',
+                                    }}>Photo
+                                </AutoSizeText>
+                            </View>
+                            : <View />
+                        }
+
+
+
+                    </TouchableOpacity>
                     <Text style={{
                         ...styles.bottomSheetHeader,
                         marginStart: moderateScale(5),
@@ -356,7 +506,7 @@ function TeamSetupView(props) {
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateName ? 'black' : 'darkred',
+                        shadowColor: validateName ? 'transparent' : 'darkred',
                         shadowOpacity: validateName ? 0.25 : 1,
                         padding: moderateScale(15),
                     }}>
@@ -388,7 +538,7 @@ function TeamSetupView(props) {
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateEmail ? 'black' : 'darkred',
+                        shadowColor: validateEmail ? 'transparent' : 'darkred',
                         shadowOpacity: validateEmail ? 0.25 : 1,
                         padding: moderateScale(15),
                     }}>
@@ -399,6 +549,8 @@ function TeamSetupView(props) {
                             flex: 1,
                             textAlign: 'left',
                         }}
+                            editable={isEmailEnable}
+                            focusable={isEmailEnable}
                             underlineColorAndroid='transparent'
                             require={true}
                             numberOfLines={1}
@@ -422,7 +574,7 @@ function TeamSetupView(props) {
                     <View style={{
                         ...styles.boxcontainer,
                         flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validatePhone ? 'black' : 'darkred',
+                        shadowColor: validatePhone ? 'transparent' : 'darkred',
                         shadowOpacity: validatePhone ? 0.25 : 1,
                         padding: moderateScale(15),
                     }}>
@@ -447,10 +599,239 @@ function TeamSetupView(props) {
                             value={valuePhone} />
                     </View>
 
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginStart: moderateScale(5),
+                        marginTop: verticalScale(25),
+                        marginBottom: verticalScale(5)
+                    }}>State</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        shadowColor: validateState ? 'white' : 'darkred',
+                        shadowOpacity: validateState ? 0.25 : 1,
+                        flexDirection: 'row',
+                        padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                        alignItems: 'center',
+                    }}>
 
-                    {getWeeklyRecurring()}
-                    {getBusTiming()}
-                    {getServiceType(true)}
+                        <TextInput placeholder=""
+                            ref={inputEl}
+                            autoCapitalize="none"
+
+                            onPressIn={() => {
+
+                                inputEl.current.focus();
+                                if (inputCity.current.isFocused()) { return; }
+
+                                setIsVisible(true);
+                                setIsCityVisible(false);
+                                setFilterArr(arrStates);
+                                scroll.current.scrollTo({ x: 0, y: 250, animated: true });
+                            }}
+                            onChangeText={(e) => {
+                                userStateLocation({ name: e, stateId: -1 });
+                                setIsVisible(isVisible);
+                            }}
+                            style={{
+                                ...styles.styleTextInput,
+                                flex: 8,
+                                marginEnd: moderateScale(10),
+
+                            }}
+                            keyboardType="default"
+                            value={userState} />
+                        <TouchableOpacity
+                            onPress={() => {
+                                //setIsVisible(!isVisible);
+                                //setIsCityVisible(false)
+                                //setIsZipVisible(false)
+
+
+                            }}
+                        >
+                            <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
+                        </TouchableOpacity>
+
+
+                    </View>
+
+                    {(isVisible) ? <View style={{
+                        width: '100%',
+                        marginTop: verticalScale(10),
+                        ...styles.boxcontainer,
+                        height: moderateScale(150),
+                        shadowRadius: 4,
+                        borderRadius: moderateScale(10),
+                        zIndex: 1,
+
+                    }}>
+
+                        <FlatList
+                            keyboardShouldPersistTaps="handled"
+                            data={filterArray}
+                            renderItem={(item) => {
+                                return (
+                                    <TouchableOpacity onPress={() => {
+                                        Keyboard.dismiss();
+                                        chooseState({ name: item.item.name, stateId: item.item.id });
+                                        setIsVisible(false);
+
+                                    }}>
+                                        <View >
+                                            <Text style={{
+                                                ...styles.generalTxt, borderColor: 'black',
+                                                borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                                borderRadius: moderateScale(10), marginTop: 0,
+                                                backgroundColor: 'white',
+                                                color: 'black', fontSize: moderateScale(14),
+
+                                            }}>{item.item.name}</Text>
+                                        </View>
+                                    </TouchableOpacity>);
+                            }}
+                            keyExtractor={item => item.Country}
+                        />
+
+                    </View> : null}
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginStart: moderateScale(5),
+                        marginTop: verticalScale(25),
+                        marginBottom: verticalScale(5)
+                    }}>City</Text>
+                    <View style={{
+                        ...styles.boxcontainer,
+                        shadowColor: validateCity ? 'white' : 'darkred',
+                        shadowOpacity: validateCity ? 0.25 : 1,
+                        flexDirection: 'row',
+                        padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                        alignItems: 'center',
+                    }}>
+
+                        <TextInput placeholder=""
+                            ref={inputCity}
+                            onPressIn={() => {
+                                setIsVisible(false);
+                                if (userState && userState.length !== 0) {
+                                    setIsCityVisible(true);
+                                    setFilterCityArr(arrCity);
+                                    scroll.current.scrollTo({ x: 0, y: 350, animated: true });
+                                } else {
+                                    alert('Please select state first..');
+                                    setIsCityVisible(false);
+                                }
+                            }
+                            }
+                            onChangeText={(e) => {
+                                setIsVisible(false);
+                                userCityLocation({ name: e, cityId: -1 });
+                                setIsCityVisible(true);
+                                scroll.current.scrollTo({ x: 0, y: 350, animated: true });
+
+                            }}
+                            style={{
+                                ...styles.styleTextInput,
+                                flex: 8,
+                                marginEnd: moderateScale(10),
+
+                            }}
+                            keyboardType="default"
+                            autoCapitalize="none"
+                            value={userCity}
+
+                        />
+
+                        <TouchableOpacity
+                            onPress={() => {
+
+                            }}
+                        >
+                            <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
+                        </TouchableOpacity>
+                    </View>
+
+                    {(isCityVisible) ? <View style={{
+                        zIndex: 1,
+                        width: '100%',
+                        marginTop: verticalScale(10),
+                        ...styles.boxcontainer,
+                        height: moderateScale(150),
+                        shadowRadius: 4,
+                        borderRadius: moderateScale(10),
+
+                    }}>
+                        <FlatList
+                            keyboardShouldPersistTaps="handled"
+                            data={filterCityArray}
+                            renderItem={(item) => {
+                                return (
+                                    <TouchableOpacity onPress={() => {
+                                        Keyboard.dismiss();
+                                        chooseCity({ name: item.item.name, cityId: item.item.id });
+                                        setIsCityVisible(false);
+
+                                    }}>
+                                        <View >
+                                            <Text style={{
+                                                ...styles.generalTxt, borderColor: 'black',
+                                                borderWidth: 0, width: '100%',
+                                                padding: moderateScale(10),
+                                                borderRadius: moderateScale(10), marginTop: 0,
+                                                backgroundColor: 'white',
+                                                color: 'black', fontSize: moderateScale(14),
+
+                                            }}>{item.item.name}</Text>
+                                        </View>
+                                    </TouchableOpacity>);
+                            }}
+                            keyExtractor={item => item.Country}
+                        />
+                    </View> : null}
+
+                    <Text style={{
+                        ...styles.bottomSheetHeader,
+                        marginStart: moderateScale(5),
+                        marginTop: verticalScale(25),
+                        marginBottom: verticalScale(5)
+                    }}>Address</Text>
+
+                    <View style={{
+                        ...styles.boxcontainer,
+                        height: verticalScale(100),
+                        flexDirection: 'row', alignItems: 'center',
+                        shadowColor: validateDesc ? 'transparent' : 'darkred',
+                        shadowOpacity: validateDesc ? 0.25 : 1,
+                    }}>
+
+
+                        <TextInput placeholder="" style={{
+                            ...styles.styleTextInput,
+                            flex: 1,
+                            paddingTop: verticalScale(15),
+                            padding: moderateScale(15),
+                            textAlign: 'left',
+                            height: verticalScale(100),
+                        }}
+                            underlineColorAndroid="transparent"
+                            require={true}
+                            multiline={true}
+                            numberOfLines={50}
+                            maxLength={75}
+                            autoCapitalize="none"
+                            keyboardType="default"
+                            onChangeText={(e) => {
+                                setValidateDesc(Util.isLengthGreater(e));
+                                setDesc(e);
+                            }
+                            }
+                            value={valueDesc} />
+                    </View>
+
+
+                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getWeeklyRecurring() : <View />}
+                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getBusTiming() : <View />}
+                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getServiceType(true) : <View />}
 
                     <TouchableOpacity style={{
                         ...styles.styleButtons, flex: 0,
@@ -460,12 +841,20 @@ function TeamSetupView(props) {
                     }}
                         onPress={() => {
                             setTimeout(() => {
-                                addMember({
-                                    name: valueName,
-                                    email: valueEmail,
-                                    id: arrIndex,
-                                })
-                                sheetRef.current.close()
+                                if (validateFields()) {
+                                    addMember({
+                                        name: valueName,
+                                        email: valueEmail,
+                                        id: arrIndex,
+                                        phone: valuePhone,
+                                        address: valueDesc,
+                                        state: userState,
+                                        city: userCity,
+                                        isExist: isExistProfile,
+                                        id: arrIndex + ''
+                                    })
+                                    sheetRef.current.close()
+                                }
                             }, 200)
                         }}>
                         <Text style={{
@@ -496,11 +885,51 @@ function TeamSetupView(props) {
                         }}>Cancel</Text>
                     </TouchableOpacity>
 
-                </View>
+                </TouchableOpacity>
 
 
             </ScrollView>
-        )
+        );
+
+
+        function validateFields() {
+
+
+            Keyboard.dismiss();
+
+            if (!utils.isLengthGreater(valueName)) {
+
+                utils.topAlertError("Name is required");
+                setValidateName(false)
+                return false;
+            }
+            else if (!utils.isEmailValid(valueEmail)) {
+
+                utils.topAlertError("Email is required");
+
+                setValidateEmail(false)
+                return false;
+            }
+            else if (!valuePhone || !utils.isValidPhone(valuePhone)) {
+
+                utils.topAlertError("Phone is required");
+
+                setValidatePhone(false)
+                return false;
+            }
+            else if (!utils.isLengthGreater(userState)) {
+
+                utils.topAlertError("State is required");
+                return false;
+            }
+            else if (!utils.isLengthGreater(userCity)) {
+
+                utils.topAlertError("City is required");
+                return false;
+            }
+            return true;
+
+        }
     }
 
 
@@ -736,11 +1165,19 @@ function TeamSetupView(props) {
 
 
     function updateServiceValues(item) {
-        setArrIndex(item ? item.id : wholeServices.length)
+        console.log("update service--->", item)
+        setArrIndex(item ? item._id : wholeServices.length)
         setValueName(item ? item.name : '')
-        setValidateName(item ? setValidateName(Util.isLengthGreater(item.name)) : true);
+        setValidateName(item ? Util.isLengthGreater(item.name) : true);
         setValueEmail(item ? item.email : '');
-        setValidateEmail(item ? setValidateEmail(Util.isEmailValid(item.email)) : true);
+        setValidateEmail(item ? Util.isEmailValid(item.email) : true);
+        setIsEmailEnable(item && item.notificationSettings ? !Util.isEmailValid(item.email) : true);
+        setPhone(item ? item.phone : '');
+        setValidatePhone(item ? Util.isValidPhone(item.phone) : true);
+        setPhotoUri(item ? item.image : '')
+        setDesc(item && item.address ? item.address : '');
+        setValidateDesc(item && item.address ? Util.isLengthGreater(item.address) : true);
+        setIsExistProfile(item && item.notificationSettings ? true : false)
     }
 }
 

@@ -22,7 +22,7 @@ class LoginController extends Component {
         super(props);
         this.state = {
             email: '',//'faizan@livewireapps.com',//'osama@livewirelabs.co',
-            password:'' ,//'Lwa12345',
+            password: '',//'Lwa12345',
             userEmail: true,
             userPassword: true,
             isCheckOnTerms: true
@@ -71,8 +71,7 @@ class LoginController extends Component {
 
             this.props.userLoginRequest(this.state).then((response) => {
 
-                console.log("login-->", response);
-
+           
                 if (response.status === 200) {
                     DataHandler.saveAuth(response.loginResponse.token);
                     DataHandler.saveUserObject(JSON.stringify(response.loginResponse.user));

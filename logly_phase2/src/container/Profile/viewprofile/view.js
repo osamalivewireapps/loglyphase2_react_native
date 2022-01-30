@@ -15,30 +15,70 @@ import moment, { duration } from "moment";
 import RBSheet from "react-native-raw-bottom-sheet";
 import { Calendar, CalendarList, Agenda } from 'react-native-calendars';
 import { LocaleConfig } from 'react-native-calendars';
-import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
+import { BUS_LISTING, BUS_SER_PROVIDER, INDIVIDUAL } from "../../../constants";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import AboutUserView from "./about_user";
+import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
+import GalleryUser from "./gallery_user";
+import GalleryUserVideos from "./videos_user";
+import PetListing from "./pet_listing";
 
 function ProfileView(props) {
 
     const [tabs, setTab] = useState(1);
+    const { userObject, accountType, updateUser, capturePic, imgUri } = props;
+
+    const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
+
 
     return (
         <View style={{ flex: 1, }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
 
-            <ImageBackground
-                source={Images.img_friend_sample}
+            <View
                 style={{
-                    //backgroundColor: Colors.appBgColor,
                     height: verticalScale(200),
-                    borderBottomLeftRadius: moderateScale(20),
-                    borderBottomRightRadius: moderateScale(20),
-                    padding: verticalScale(20),
-                    paddingStart: moderateScale(25),
-                    paddingTop: verticalScale(30),
-                    paddingBottom: verticalScale(75)
-                }}>
-                <View flexDirection='row' width='100%'>
+                }}
+            >
+                <View
+                    style={{
+                        height: '100%',
+                        width: '100%',
+                        position: 'absolute'
+                    }}
+                >
+                    <ImagePlaceholder
+                        showActivityIndicator={false}
+                        activityIndicatorProps={{
+                            size: 'small',
+                            color: '#777777',
+                        }}
+                        resizeMode='cover'
+                        placeholderStyle={{
+                            height: '100%',
+                            width: '100%',
+
+                        }}
+                        imgStyle={{
+                            height: '100%',
+                            width: '100%',
+                        }}
+
+                        style={{
+                        }}
+
+                        src={userObject.coverImage}
+                        placeholder={Icons.icon_paw}
+                    />
+
+                </View>
+                <View flexDirection='row' width='100%'
+                    style={{
+                        paddingStart: moderateScale(25),
+                        paddingTop: verticalScale(30),
+                    }}
+                >
                     <TouchableOpacity onPress={() => { props.navigation.goBack() }}>
                         <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
                     </TouchableOpacity>
@@ -48,7 +88,7 @@ function ProfileView(props) {
                 <View
                     style={{ position: 'absolute', right: moderateScale(25), top: verticalScale(140) }}
                     flexDirection='row'>
-                    <TouchableOpacity onPress={() => { }}>
+                    <TouchableOpacity onPress={() => { setDialogVisibleStatus(true); }}>
                         <Image source={Icons.icon_black_edit_profile}
                             resizeMode='contain'
                             style={{
@@ -59,10 +99,10 @@ function ProfileView(props) {
 
                 </View>
 
-            </ImageBackground>
+            </View>
 
 
-            <View style={{ marginTop: verticalScale(-60),backgroundColor:'yellow' }}>
+            <View style={{ marginTop: verticalScale(-60) }}>
                 <ImageBackground
                     style={{
                         backgroundColor: 'white',
@@ -86,8 +126,8 @@ function ProfileView(props) {
                 alignItems: 'center',
                 alignItems: 'flex-start',
                 flexDirection: 'row',
-                paddingBottom:moderateScale(10)
-            
+                paddingBottom: moderateScale(10)
+
             }}>
 
                 <View style={{
@@ -106,7 +146,7 @@ function ProfileView(props) {
 
                         }}
                     >
-                        Sterlie Max
+                        {userObject.name}
                     </AutoSizeText>
 
                     <AutoSizeText
@@ -119,15 +159,14 @@ function ProfileView(props) {
 
                         }}
                     >
-                        Pet Lover
+                        {accountType ? (accountType.toLowerCase().includes(INDIVIDUAL) ? 'Pet Lover' : accountType) : ''}
                     </AutoSizeText>
 
 
 
 
                 </View>
-                <Image
-                    resizeMode='contain'
+                <TouchableOpacity
                     style={{
                         flex: 0.1,
                         tintColor: '#464646',
@@ -136,7 +175,20 @@ function ProfileView(props) {
                         marginTop: verticalScale(10)
 
                     }}
-                    source={Icons.icon_edit_petprofile} />
+                    onPress={() => props.navigation.navigate('EditProfile', { updateUser: updateUser })}
+                >
+
+
+                    <Image
+                        resizeMode='contain'
+                        style={{
+                            tintColor: '#464646',
+                            width: '100%',
+                            height: '100%',
+
+                        }}
+                        source={Icons.icon_edit_petprofile} />
+                </TouchableOpacity>
             </View>
 
             <View style={{
@@ -278,7 +330,7 @@ function ProfileView(props) {
                     width: '100%',
                     backgroundColor: '#DCDCDC',
                     height: verticalScale(2),
-                    marginBottom:verticalScale(10)
+                    marginBottom: verticalScale(10)
                 }}
             />
             <View>
@@ -289,7 +341,72 @@ function ProfileView(props) {
             </View>
 
 
-
+            <Dialog
+                visible={dialogVisibleStatus}
+                width={Dimensions.get("screen").width - 100}
+                height={Dimensions.get("screen").height / 6}
+                onTouchOutside={() => {
+                    setDialogVisibleStatus(false);
+                }}
+                dialogTitle={<DialogTitle title="Profile Picture" />}
+                dialogAnimation={new ScaleAnimation({
+                    toValue: 0,
+                    useNativeDriver: true,
+                })}
+            >
+                <DialogContent
+                    style={{
+                        flex: 1,
+                        flexDirection: 'row',
+                        justifyContent: 'flex-end',
+                        alignItems: 'flex-end',
+                    }}>
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            flex: 5,
+                            height: 50,
+                            borderWidth: 2,
+                            borderColor: 'black',
+                            borderRadius: 10,
+                            marginRight: 10,
+                            justifyContent: 'center',
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                            }}
+                            onPress={() => {
+                                capturePic('gallery');
+                                setDialogVisibleStatus(false);
+                            }}>
+                            Gallery
+                        </Text>
+                    </View>
+                    <View
+                        style={{
+                            backgroundColor: 'white',
+                            flex: 5,
+                            height: 50,
+                            borderWidth: 2,
+                            borderColor: 'black',
+                            borderRadius: 10,
+                            marginRight: 10,
+                            justifyContent: 'center',
+                        }}>
+                        <Text
+                            style={{
+                                textAlign: 'center',
+                            }}
+                            onPress={() => {
+                                capturePic('camera');
+                                setDialogVisibleStatus(false);
+                            }}>
+                            Camera
+                        </Text>
+                    </View>
+                </DialogContent>
+            </Dialog>
 
 
 
@@ -305,129 +422,25 @@ function ProfileView(props) {
 
             case 1:
                 return (
-                    <View>
-
-                        <View style={{
-                            flexDirection: 'row',
-                            paddingStart:moderateScale(50),
-                            paddingEnd: moderateScale(80),
-                            paddingTop:verticalScale(0),
-                            paddingBottom:verticalScale(10)
-            
-                        }}>
-
-                            <Image
-                                resizeMode='contain'
-                                style={{
-                                    width: moderateScale(20),
-                                    height: verticalScale(20),
-                                    marginEnd:moderateScale(25),
-                        
-                                }}
-                                source={Icons.icon_profile_location_on} />
-                            <AutoSizeText
-                                numberOfLines={2}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                style={{
-                                    fontFamily: Fonts.type.medium,
-                                    color: '#464646',
-                                    marginStart: moderateScale(10)
-
-                                }}
-                            >
-                                20 S Steve St, Denver , CO 80209,United Stated
-                            </AutoSizeText>
-                        </View>
-                      <View
-                          style={{
-                              width:'100%',
-                                backgroundColor:'#DCDCDC',
-                                height:verticalScale(1)
-                          }}
-                      />
-                        <View style={{
-                            flexDirection: 'row',
-                            paddingStart: moderateScale(50),
-                            paddingEnd: moderateScale(80),
-                            paddingTop: verticalScale(10),
-                            paddingBottom: verticalScale(10)
-
-                        }}>
-
-                            <Image
-                                resizeMode='contain'
-                                style={{
-                                    width: moderateScale(20),
-                                    height: verticalScale(20),
-                                    marginEnd: moderateScale(25),
-
-                                }}
-                                source={Icons.icon_profile_email} />
-                            <AutoSizeText
-                                numberOfLines={2}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                style={{
-                                    fontFamily: Fonts.type.medium,
-                                    color: '#464646',
-                                    marginStart: moderateScale(10)
-
-                                }}
-                            >
-                                jack@test.com
-                            </AutoSizeText>
-                        </View>
-
-                        <View
-                            style={{
-                                width: '100%',
-                                backgroundColor: '#DCDCDC',
-                                height: verticalScale(1)
-                            }}
-                        />
-                        <View style={{
-                            flexDirection: 'row',
-                            paddingStart: moderateScale(50),
-                            paddingEnd: moderateScale(80),
-                            paddingTop: verticalScale(10),
-                            paddingBottom: verticalScale(10)
-
-                        }}>
-
-                            <Image
-                                resizeMode='contain'
-                                style={{
-                                    width: moderateScale(20),
-                                    height: verticalScale(20),
-                                    marginEnd: moderateScale(25),
-
-                                }}
-                                source={Icons.icon_profile_phone} />
-                            <AutoSizeText
-                                numberOfLines={2}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                style={{
-                                    fontFamily: Fonts.type.medium,
-                                    color: '#464646',
-                                    marginStart: moderateScale(10)
-
-                                }}
-                            >
-                                +12121212121
-                            </AutoSizeText>
-                        </View>
-
-                        <View
-                            style={{
-                                width: '100%',
-                                backgroundColor: '#DCDCDC',
-                                height: verticalScale(1)
-                            }}
-                        />
-                    </View>
+                    <AboutUserView {...props} />
                 );
+
+
+            case 2:
+                return (
+                    <GalleryUser {...props} />
+                );
+
+
+            case 3:
+                return (
+                    <GalleryUserVideos {...props} />
+                );
+
+            case 4:
+                return (<PetListing {...props} />)
+
+
 
         }
     }
