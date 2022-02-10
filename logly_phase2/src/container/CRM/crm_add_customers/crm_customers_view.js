@@ -22,7 +22,7 @@ function CRMAddCustomersView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { toggleDrawer, userObject } = props;
+    const { toggleDrawer, userObject, addBreeder } = props;
 
     const [tabs, setTab] = useState(0);
 
@@ -406,7 +406,7 @@ function CRMAddCustomersView(props) {
                         />
                     </View> : null}
 
-                    <View style={{
+                    {/* <View style={{
                         ...CRMStyles.boxcontainer,
                         shadowColor: validateZipCode ? 'white' : 'darkred',
                         shadowOpacity: validateZipCode ? 0.25 : 1,
@@ -504,7 +504,7 @@ function CRMAddCustomersView(props) {
                             }}
                             keyExtractor={item => item.City}
                         />
-                    </View> : null}
+                    </View> : null} */}
 
 
 
@@ -515,7 +515,14 @@ function CRMAddCustomersView(props) {
                         backgroundColor: Colors.appBgColor,
                         marginTop: verticalScale(25),
                     }} onPress={() => {
-                        props.navigation.pop()
+                        addBreeder({
+                            address: valueDesc,
+                            city: userCity,
+                            state: userState,
+                            name: valueName,
+                            email: valueEmail,
+                            phone: valuePhone,
+                        })
 
                     }}>
                         <Text style={{

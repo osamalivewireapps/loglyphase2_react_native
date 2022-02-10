@@ -38,7 +38,7 @@ function AllAnimal(props) {
     useEffect(() => {
         if (orgAnimalList.length > 0) {
             setAnimalList(orgAnimalList.filter((e) => {
-                return (e.data.name.toLowerCase().startsWith(searchTxt.toLowerCase()) || e.categoryName.toLowerCase().includes(searchTxt.toLowerCase()))
+                return (e.data.name?.toLowerCase().startsWith(searchTxt.toLowerCase()) || e.categoryName.toLowerCase().includes(searchTxt.toLowerCase()))
             }))
         }
     }, [searchTxt]);
@@ -236,7 +236,7 @@ function AllAnimal(props) {
                                                     borderRadius: moderateScale(10)
                                                 }}
 
-                                                src={item.image}
+                                                src={item.image ? item.image:''}
                                                 placeholder={Icons.icon_paw}
                                             />
 

@@ -84,7 +84,7 @@ function ImageGallery(props) {
                                         style={{
                                         }}
 
-                                        src={item.filename}
+                                        src={item.filename?item.filename:''}
                                         placeholder={Icons.icon_paw}
                                     />
 

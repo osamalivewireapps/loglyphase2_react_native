@@ -125,6 +125,44 @@ export const addMemberDetails = (dataToSubmit) => async (dispatch) => {
     });
 };
 
+export const addBreeder = (dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('add member details dataToSubmit-->', dataToSubmit);
+    console.log('url---->', `${baseUrl}/user/breeder/register`);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/user/breeder/register`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve(response.data.data);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
 export const editMemberDetails = (id, dataToSubmit) => async (dispatch) => {
 
 
@@ -199,3 +237,42 @@ export const removeMember = (id) => async (dispatch) => {
             });
     });
 };
+
+export const getTeamMembersByEmail = (keyword) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log("config-->", config)
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .get(`${baseUrl}/user/userData?email=${keyword}`, config)
+            .then(response => {
+
+                console.log("response-->", response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    resolve({ payload: response.data.data });
+                }
+                else {
+                    //setTimeout(() => {
+                        //utils.topAlertError(response.data.message);
+                    //}, timeOut);
+                    resolve({ payload: false });
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    //utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+}
+

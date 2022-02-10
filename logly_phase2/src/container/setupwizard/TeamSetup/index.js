@@ -22,13 +22,13 @@ class TeamSetup extends React.Component {
         this.state = {
             arrServices: [],
             accountType: '',
-            state: '',//props.route.params.contactData?.state,
-            city: '',//props.route.params.contactData?.city,
-            userState: '',//props.route.params.contactData?.state,
-            userCity: '',//props.route.params.contactData?.city,
+            state: '',
+            city: '',
+            userState: '',
+            userCity: '',
             selectCity: true,
             selectState: true,
-            fileUri: '',//props.route.params.contactData ? props.route.params.contactData?.image : '',
+            fileUri: '',
         };
 
         DataHandler.getAccountType().then((value) => {
@@ -60,8 +60,8 @@ class TeamSetup extends React.Component {
         this.setState({
             userState: txt.name ===null?'':txt.name,
             userCity: "",
-            stateId: -1,//txt.stateId,
-            selectState: txt.name === null ?true:xUtil.isLengthGreaterZero(txt.name),
+            stateId: -1,
+            selectState: txt.name === null ?true:Util.isLengthGreaterZero(txt.name),
         });
     }
 
@@ -130,11 +130,11 @@ class TeamSetup extends React.Component {
 
     clickNextButton(e) {
 
-        if (e) {
-            DataHandler.saveBusDetails(null)
-            this.forwardScreen();
-            return
-        }
+        // if (e) {
+        //     DataHandler.saveBusDetails(null)
+        //     this.forwardScreen();
+        //     return
+        // }
 
         let tmpEmp = {}
         tmpEmp.employeeArray = this.state.arrServices;
@@ -171,24 +171,17 @@ class TeamSetup extends React.Component {
 
         let tmp = this.state.arrServices;
         if (!tmp || tmp.length === 0) {
-            //add member service
-            //tmp.push(e);
             this.addContact(e)
         }
         else {
             let itemService = tmp.find(item => item.id === e.id);
             if (itemService) {
-                //update member api
-                //tmp = tmp.map(x => (x.id === e.id ? { ...e } : x));
                 this.addContact(e)
             } else {
-                //add member service
-                //tmp.push(e);
                 this.addContact(e)
             }
 
         }
-        //this.setState({ arrServices: tmp })
     }
 
     delMember(e) {
@@ -239,7 +232,7 @@ class TeamSetup extends React.Component {
         formdata.append('name', name);
         formdata.append('phone', phone);
         formdata.append('state', state);
-        formdata.append('emergencyContact', '{}');//JSON.stringify(emergencyContact));
+        formdata.append('emergencyContact', '{}');
         formdata.append('canAccessMobileApp', true);
         formdata.append('canAccessInventoryManagement', true);
         formdata.append('active', true);

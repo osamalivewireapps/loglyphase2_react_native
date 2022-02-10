@@ -5,6 +5,7 @@ import React, { Component } from 'react';
 import DataHandler from '../../../utils/DataHandler';
 import { connect } from 'react-redux';
 import CRMPaymentDetailsView from './crm_payment_view';
+import { getSalesInvoice} from '../../../actions/Sales'
 
 class CRMPaymentDetails extends Component {
 
@@ -20,6 +21,7 @@ class CRMPaymentDetails extends Component {
         DataHandler.getUserObject().then((value) => {
             this.setState({ userObject: JSON.parse(value) });
         });
+
     }
 
     render() {
@@ -31,12 +33,18 @@ class CRMPaymentDetails extends Component {
     }
 }
 
+const mapStateToProps = ({ sale }) => {
+    return {
+        saleDetail: sale.payDetail,
+    };
+};
+
 const mapDispatchToProps = dispatch => ({
-   
+    getSalesInvoice: (id) => dispatch(getSalesInvoice(id))
 });
 
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
 )(CRMPaymentDetails);

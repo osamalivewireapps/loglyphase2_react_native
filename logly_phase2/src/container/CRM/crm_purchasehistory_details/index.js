@@ -5,6 +5,9 @@ import React, { Component } from 'react';
 import DataHandler from '../../../utils/DataHandler';
 import { connect } from 'react-redux';
 import CRMPurchaseHistoryDetailsView from './crm_purchasehistory_view';
+import { getSale} from '../../../actions/Sales';
+
+
 
 class CRMPurchaseHistoryDetail extends Component {
 
@@ -20,6 +23,8 @@ class CRMPurchaseHistoryDetail extends Component {
         DataHandler.getUserObject().then((value) => {
             this.setState({ userObject: JSON.parse(value) });
         });
+
+        this.props.getSale(this.props.route.params.id)
     }
 
     render() {
@@ -31,12 +36,18 @@ class CRMPurchaseHistoryDetail extends Component {
     }
 }
 
+const mapStateToProps = ({ sale }) => {
+    return {
+        saleDetail: sale.saleDetail,
+    };
+};
+
 const mapDispatchToProps = dispatch => ({
-   
+    getSale: (id) => dispatch(getSale(id))
 });
 
 
 export default connect(
-    null,
+    mapStateToProps,
     mapDispatchToProps,
 )(CRMPurchaseHistoryDetail);

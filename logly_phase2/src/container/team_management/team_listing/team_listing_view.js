@@ -184,7 +184,7 @@ function TeamListingView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('AddTeamMember', { updateContacts: updateContacts })
+                    props.navigation.navigate('AddTeamMember', { updateContacts: updateContacts, isTransfer: false })
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{
@@ -259,7 +259,7 @@ function TeamListingView(props) {
                             height: moderateScale(50),
                         }}
 
-                        src={item.image}
+                        src={item.image ? item.image:''}
                         placeholder={Images.img_user_placeholder}
                     />
                     {/* <Image
@@ -347,7 +347,7 @@ function TeamListingView(props) {
                             }}
                             onPress={() => {
                                 setEditShow(-1)
-                                props.navigation.navigate('AddTeamMember', { contactData: item, updateContacts: updateContacts })
+                                props.navigation.navigate('AddTeamMember', { contactData: item, updateContacts: updateContacts, isTransfer: false })
                             }}>
                             <Image source={Icons.icon_services_edit}
                                 resizeMode='contain' style={{
@@ -388,7 +388,7 @@ function TeamListingView(props) {
                     style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
 
                     onPress={() => {
-                        setEditShow(index)
+                        isEditShow === index ? setEditShow(-1) : setEditShow(index)
                     }}>
                     <Image source={Icons.icon_three_colons}
                         resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}

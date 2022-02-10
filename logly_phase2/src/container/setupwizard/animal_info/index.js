@@ -10,6 +10,7 @@ import DataHandler from "../../../utils/DataHandler";
 import AnimalInfoView from "./animalinfo_view";
 import { connect } from 'react-redux';
 import { getSetupWizardForm } from '../../../actions/SetupWizardModule';
+import Util from "../../../utils";
 
 
 
@@ -35,7 +36,7 @@ class AnimalInfo extends Component {
 
         DataHandler.getAnimalList().then(value => {
             this.animalList = JSON.parse(value);
-            console.log("product info--->", this.animalList)
+            console.log("animal info--->", this.animalList)
             this.props.getSetupWizardForm().then((response) => {
                 if (response) {
                     let tmp = [];
@@ -46,15 +47,15 @@ class AnimalInfo extends Component {
                                     tmp.push(element)
                             });
                         })
-                    }else if(tmp.length===0){
+                    } else if (tmp.length === 0) {
                         response.payload.forEach(element => {
-                            if (element.breedersId.includes(this.userObject._id))//element.categoryId.active
+                            if (element.categoryId.type === 'animal' && element.breedersId.includes(this.userObject._id))
                                 tmp.push(element)
                         });
                     }
 
                     console.log("animal categories--->", tmp)
-                    this.setState({ listAnimals: response.payload, animalCategory: tmp})
+                    this.setState({ listAnimals: response.payload, animalCategory: tmp })
                 }
             })
         })
@@ -87,10 +88,15 @@ class AnimalInfo extends Component {
     }
 
     nextScreen(e) {
-        if (this.state.animalCategory)
-            DataHandler.saveAnimalList(JSON.stringify(this.state.animalCategory));
+        console.log('animal category--->', this.state.animalCategory);
 
-        this.switchScreen();
+        if (this.state.animalCategory.length>0) {
+            DataHandler.saveAnimalList(JSON.stringify(this.state.animalCategory));
+            this.switchScreen();
+        }else{
+            Util.topAlert('Please select atleast one animal')
+        }
+
     }
 
     switchScreen() {

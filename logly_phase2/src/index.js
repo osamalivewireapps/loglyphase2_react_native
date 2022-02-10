@@ -22,3 +22,4 @@ export { EditScheduleActivity,ScheduleListingActivity,CreateActivity, AddSchedul
 export { TeamListing, MemberDetails, AddTeamMember} from './container/team_management';
 export { ViewProfile, EditProfile} from './container/Profile';
 export { AppointmentListing, SelectServices, SelectDateServices} from './container/appointments';
+export { TransferListing, SummaryAnimalsView } from './container/transferanimal'

@@ -116,17 +116,12 @@ function ServicesListing(props) {
                     style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
 
                     onPress={() => {
-                        setEditShow(index)
+                        isEditShow === index ? setEditShow(-1) : setEditShow(index)
                     }}>
                     <Image source={Icons.icon_three_colons}
                         resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
                     />
                 </TouchableOpacity>
-                {/* <TouchableOpacity onPress={() => {
-                    updateServiceValues(item)
-                }}>
-                    <Image source={Icons.icon_three_colons} />
-                </TouchableOpacity> */}
             </View>
         )
     }

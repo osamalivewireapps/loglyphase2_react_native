@@ -54,6 +54,7 @@ function BusProfileView(props) {
     const [verticalOffSet, setVerticalOffSet] = useState(50);
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
     const [photoUri, setPhotoUri] = useState('');
+    const [validateTax, setValidateTax] = useState(true);
 
     const sheetRef = React.useRef(null);
     //SCROLLVIEW
@@ -417,8 +418,8 @@ function BusProfileView(props) {
                             <View style={{
                                 ...styles.boxcontainer,
                                 flexDirection: 'row', alignItems: 'center',
-                                shadowColor: 'black',
-                                shadowOpacity: 0.25,
+                                shadowColor: validateTax ? 'black' : 'darkred',
+                                shadowOpacity: validateTax ? 0.25 : 1,
                                 padding: moderateScale(15),
                             }}>
 
@@ -439,6 +440,7 @@ function BusProfileView(props) {
                                     autoCapitalize='none'
                                     keyboardType="number-pad"
                                     onChangeText={(e) => {
+                                        setValidateTax(Util.isTwoDecimalPlaces(e))
                                         setValueTaxPercentage(e)
                                     }
                                     }

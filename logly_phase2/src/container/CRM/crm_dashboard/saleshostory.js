@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable react/self-closing-comp */
@@ -5,7 +6,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
@@ -16,17 +17,32 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import {
     BarChart,
 } from "react-native-chart-kit";
-
-
+import { getSalesHistory } from '../../../actions/Sales';
+import { useDispatch } from 'react-redux';
+import moment from 'moment';
+import Util from '../../../utils';
+import { fontSize } from 'styled-system';
 
 function SalesHistoryView(props) {
 
     const ACTIVITY_TYPE = ['All Time', 'Today', 'This Week', 'Yesterday', 'Last Week']
     const [searchTxt, setSearchTxt] = useState('');
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
-    const [historyIndex, setHistoryIndex] = useState(-1);
+    const [historyIndex, setHistoryIndex] = useState(2);
+
+    const [salesHistory, setSalesHistory] = useState([]);
+    const [orgHistoryList, setOrgHistoryList] = useState([]);
 
     const sheetRef = useRef(null);
+
+    //for chart
+    const [chartData, setchartData] = useState([])
+    const [chartLabel, setchartLabel] = useState([])
+    const [filterSalesHistory, setfilterSalesHistory] = useState([])
+
+    //for axis
+    const [xaxis, setxaxis] = useState("Week days")
+    //
 
     const chartConfig = {
         //backgroundColor: '#553E90',
@@ -35,25 +51,164 @@ function SalesHistoryView(props) {
         backgroundGradientTo: "#341897",
         backgroundGradientToOpacity: 0.5,
         color: (opacity = 1) => `white`,
+        decimalPlaces: 1,
         // strokeWidth: 2, // optional, default 3
         barPercentage: moderateScale(0.5),
         useShadowColorFromDataset: false, // optional
         style: {
-            padding: 100,
+            padding: moderateScale(100),
         },
         fillShadowGradient: 'white', // THIS
         fillShadowGradientOpacity: 1, // THIS
-
     };
     const screenWidth = Dimensions.get("window").width;
-    const data = {
-        labels: ["Mon", "Tues", "Wed", "Thu", "Fri", "Sat", "Sun"],
-        datasets: [
-            {
-                data: [70, 55, 55, 80, 99, 55, 0]
+    
+    let dispatch = useDispatch();
+
+    //////////////////////////  CALENDAR ////////////////////
+    let from_date, to_date, result;
+
+    useEffect(() => {
+        dispatch(getSalesHistory()).then((response) => {
+            setSalesHistory(response.payload);
+            setOrgHistoryList(response.payload);
+
+            from_date = moment().startOf('isoweek').format("YYYY-MM-DD");
+            to_date = moment().endOf('isoweek').format("YYYY-MM-DD");
+            let data = response.payload.filter(e => moment(e.createdAt).format("YYYY-MM-DD") >= from_date && moment(e.createdAt).format("YYYY-MM-DD") <= to_date)
+            setfilterSalesHistory(data)
+            result = WeekHandler(data)
+            HandleChartWeek(result)
+            setfilterSalesHistory(data)
+        })
+    }, []);
+
+    const HandleChartData = (data) => {
+        setchartData(data.map(e => e.price))
+        setchartLabel(data.map((e, index) => index + 1))
+    }
+
+    const HandleChartDataDay = (data) => {
+        setchartData(data.map(e => e.price))
+        setchartLabel(data.map(e => moment(e.createdAt).format("hh:ss")))
+    }
+
+
+    const HandleChartWeek = (data) => {
+        let dataWeek = [{ createdAt: 1, price: 0 },
+        { createdAt: 2, price: 0 }, { createdAt: 3, price: 0 }, { createdAt: 4, price: 0 }, { createdAt: 5, price: 0 },
+        { createdAt: 6, price: 0 }, { createdAt: 0, price: 0 },]
+
+        dataWeek = dataWeek.map(el => {
+            var found = data.find(s => moment(s.createdAt).day() === el["createdAt"]);
+            if (found) {
+                el = Object.assign(el, found);
             }
-        ]
-    };
+            return el;
+        });
+        //console.log(dataWeek);
+        setchartData(dataWeek.map(e => e.price))
+        setchartLabel(dataWeek.map(e => [1, 2, 3, 4, 5, 6, 0].includes(e.createdAt) ? weekName(e.createdAt) : weekName(moment(e.createdAt).day())))
+    }
+
+    const weekName = (num) => {
+        switch (num) {
+            case 1:
+                return "Mon"
+            case 2:
+                return "Tue"
+            case 3:
+                return "Wed"
+            case 4:
+                return "Thu"
+            case 5:
+                return "Fri"
+            case 6:
+                return "Sat"
+            case 0:
+                return "Sun"
+
+            default:
+                return null;
+        }
+    }
+
+    const WeekHandler = (data) => {
+        let result = []
+        data.forEach(function (e) {
+            if (!this[moment(e.createdAt).format("YYYY-MM-DD")]) {
+                this[moment(e.createdAt).format("YYYY-MM-DD")] = { createdAt: moment(e.createdAt).format("YYYY-MM-DD"), price: 0 };
+                result.push(this[moment(e.createdAt).format("YYYY-MM-DD")]);
+            }
+            this[moment(e.createdAt).format("YYYY-MM-DD")].price += Util.calculateTax(e.price, e.tax);
+        }, {});
+        return result
+    }
+
+    useEffect(() => {
+        const today = moment().subtract(0, 'days').format("YYYY-MM-DD");
+        let data = {};
+
+        switch (ACTIVITY_TYPE[historyIndex].toLowerCase()) {
+            case "all time":
+                setfilterSalesHistory(salesHistory)
+                HandleChartData(salesHistory)
+                setxaxis("Count")
+                return
+
+            case "yesterday":
+                let pre = moment().subtract(1, 'days').format("YYYY-MM-DD")
+                data = salesHistory.filter(e => moment(e.createdAt).format("YYYY-MM-DD") <= pre && moment(e.createdAt).format("YYYY-MM-DD") >= pre)
+                setfilterSalesHistory(data)
+                HandleChartDataDay(data)
+                setxaxis("Time")
+                return
+
+            case "today":
+                data = salesHistory.filter(e => (moment(e.createdAt).format("YYYY-MM-DD") === today))
+                setfilterSalesHistory(data)
+                HandleChartDataDay(data)
+                setxaxis("Time")
+                return
+
+
+            case "this week":
+                from_date = moment().startOf('isoweek').format("YYYY-MM-DD");
+                to_date = moment().endOf('isoweek').format("YYYY-MM-DD");
+                data = salesHistory.filter(e => moment(e.createdAt).format("YYYY-MM-DD") >= from_date && moment(e.createdAt).format("YYYY-MM-DD") <= to_date)
+                setfilterSalesHistory(data)
+                result = WeekHandler(data)
+                HandleChartWeek(result)
+                setxaxis("Week Days")
+                return
+
+            case "last week":
+                from_date = moment().startOf('isoweek').subtract(7, 'days').format("YYYY-MM-DD");
+                to_date = moment().endOf('isoweek').subtract(7, 'days').format("YYYY-MM-DD");
+                data = salesHistory.filter(e => moment(e.createdAt).format("YYYY-MM-DD") >= from_date && moment(e.createdAt).format("YYYY-MM-DD") <= to_date)
+                setfilterSalesHistory(data)
+
+                result = WeekHandler(data)
+                HandleChartWeek(result)
+                setxaxis("Week Days")
+                return
+
+            default:
+                setfilterSalesHistory(salesHistory)
+                break;
+        }
+    }, [historyIndex])
+
+    useEffect(() => {
+        if (orgHistoryList.length > 0) {
+            setSalesHistory(orgHistoryList.filter((e) => {
+                return (
+                    e.saleUniqueId.includes(searchTxt)) ||
+                    e.buyerId?.name.toLowerCase().includes(searchTxt.toLowerCase())
+            }))
+        }
+    }, [searchTxt]);
+
     return (
         <View style={{}}>
             <ScrollView keyboardShouldPersistTaps='handled'>
@@ -151,8 +306,17 @@ function SalesHistoryView(props) {
                     }}>
 
                         <BarChart
-                            data={data}
-                            width={screenWidth * 0.85}
+                            fromZero={true}
+                            data={{
+                                labels: chartLabel,
+                                datasets: [
+                                    {
+                                        data: chartData,
+                                        color: ["#dfe4ea", "#ced6e0", "#a4b0be", "#ced6e0", "#a4b0be"],
+                                    },
+                                ],
+                            }}
+                            width={screenWidth * 0.86}
                             height={moderateVerticalScale(190)}
                             withInnerLines={false}
                             style={{ borderRadius: moderateScale(10) }}
@@ -160,30 +324,31 @@ function SalesHistoryView(props) {
                             chartConfig={{
                                 ...chartConfig,
                                 borderRadius: moderateScale(10),
-                                barRadius: moderateScale(10)
+                                barRadius: moderateScale(10),
+                               
                             }}
                             showBarTops={false}
-                            yAxisLabel="$ "
-                            yLabelsOffset={moderateScale(10)}
+                            yAxisLabel="$"
+                            //yLabelsOffset=moderateScale(10)
                         />
                     </ImageBackground>
 
 
-                    
+
 
 
 
 
 
                     <FlatList
-                        data={ACTIVITY_TYPE}
+                        data={salesHistory}
                         contentContainerStyle={{
                             marginTop: verticalScale(10),
                         }}
                         renderItem={({ item }) => {
                             return (
                                 <TouchableOpacity
-                                    onPress={() => props.navigation.navigate('CRMSalesDetails')}
+                                    onPress={() => props.navigation.navigate('CRMSalesDetails', { id: item._id })}
                                     style={{
                                         backgroundColor: '#F5F5F5',
                                         padding: moderateScale(5),
@@ -222,7 +387,7 @@ function SalesHistoryView(props) {
 
                                                 }}
                                             >
-                                                123456
+                                                {item.saleUniqueId}
                                             </AutoSizeText>
                                         </View>
 
@@ -263,7 +428,7 @@ function SalesHistoryView(props) {
 
                                                 }}
                                             >
-                                                26 Nov,2021
+                                                {moment(item.updatedAt).format('DD MMM,YYYY')}
                                             </AutoSizeText>
                                         </View>
                                         <View style={{
@@ -303,7 +468,7 @@ function SalesHistoryView(props) {
 
                                                 }}
                                             >
-                                                $500
+                                                ${item.totalPrice}
                                             </AutoSizeText>
                                         </View>
 
@@ -344,7 +509,7 @@ function SalesHistoryView(props) {
 
                                                 }}
                                             >
-                                                Jack
+                                                {item.buyerId?.name}
                                             </AutoSizeText>
                                         </View>
 

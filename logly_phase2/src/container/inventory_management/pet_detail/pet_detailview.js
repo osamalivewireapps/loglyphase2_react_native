@@ -23,7 +23,7 @@ function PetDetailView(props) {
     const [initialPg, setInitialPg] = useState(0);
     const [isEditShow, setIsEditShow] = useState(false);
     const { updateAnimal } = props.route.params;
-    const { removeAnimal} = props;
+    const { removeAnimal } = props;
 
     const isTablet = DeviceInfo.isTablet();
     const TABS = ["About", "Gallery", "Health", "Family\nTree"]
@@ -38,39 +38,37 @@ function PetDetailView(props) {
                 borderBottomRightRadius: moderateScale(30),
                 height: !isTablet ? verticalScale(260) : verticalScale(320)
             }}>
-           
+
                 <View style={{
                     height: isTablet ? verticalScale(250) : verticalScale(200),
                     width: '100%',
-                    position:'absolute'}}>
-                <ImagePlaceholder
-                    showActivityIndicator={false}
-                    activityIndicatorProps={{
-                        size: 'small',
-                        color: '#777777',
-                    }}
-                    resizeMode='cover'
-                    placeholderStyle={{
-                        height: isTablet ? verticalScale(250) : verticalScale(200),
-                        width: '100%',
-                        borderBottomLeftRadius: moderateScale(30),
-                        borderBottomRightRadius: moderateScale(30),
+                    position: 'absolute'
+                }}>
+                    <ImagePlaceholder
+                        showActivityIndicator={false}
+                        activityIndicatorProps={{
+                            size: 'small',
+                            color: '#777777',
+                        }}
+                        resizeMode='cover'
+                        placeholderStyle={{
+                            height: isTablet ? verticalScale(250) : verticalScale(200),
+                            width: '100%',
+                            borderBottomLeftRadius: moderateScale(30),
+                            borderBottomRightRadius: moderateScale(30),
 
-                    }}
-                    imgStyle={{
-                        height: isTablet ? verticalScale(250) : verticalScale(200),
-                        width: '100%',
-                        borderBottomLeftRadius: moderateScale(30),
-                        borderBottomRightRadius: moderateScale(30),
-                    }}
+                        }}
+                        imgStyle={{
+                            height: isTablet ? verticalScale(250) : verticalScale(200),
+                            width: '100%',
+                            borderBottomLeftRadius: moderateScale(30),
+                            borderBottomRightRadius: moderateScale(30),
+                        }}
 
-                    style={{
 
-                    }}
-
-                    src={props.animalData.image}
-                    placeholder={Icons.icon_paw}
-                />
+                        src={props.animalData.image ? props.animalData.image : ''}
+                        placeholder={Icons.icon_paw}
+                    />
                 </View>
                 <View style={{
                     padding: moderateScale(25), flexDirection: 'row', flex: 1
@@ -125,7 +123,7 @@ function PetDetailView(props) {
                     </AutoSizeText>
 
                     <TouchableOpacity
-                        style={{ flex: 0.1}}
+                        style={{ flex: 0.1 }}
                         onPress={() => { ShareProfile() }}>
                         <Image source={Icons.icon_detail_share} resizeMode='contain'
                             style={{ height: moderateScale(20) }} />
@@ -155,8 +153,8 @@ function PetDetailView(props) {
                                 }}>
                                 <Image source={Icons.icon_services_edit}
                                     resizeMode='contain' style={{
-                                        marginEnd: moderateScale(2), 
-                                        height: verticalScale(15), 
+                                        marginEnd: moderateScale(2),
+                                        height: verticalScale(15),
                                         width: moderateScale(15)
                                     }}
 
@@ -185,8 +183,8 @@ function PetDetailView(props) {
                                     }} />
                             </TouchableOpacity>
                         </View> : <View style={{ flex: 0.1 }} />}
-                    
-                    
+
+
                     <TouchableOpacity
                         style={{ flex: 0.1, height: moderateScale(25) }}
                         onPress={() => isEditShow ? setIsEditShow(false) : setIsEditShow(true)}>
@@ -198,52 +196,52 @@ function PetDetailView(props) {
 
             </View>
             {/* <ScrollView keyboardShouldPersistTaps='handled'> */}
-                <View style={{ flex: 1}}>
+            <View style={{ flex: 1 }}>
 
-                    <FlatList
-                        data={TABS}
-                        numColumns={4}
-                        contentContainerStyle={{ padding: moderateScale(20) }}
-                        renderItem={({ item, index }) => {
+                <FlatList
+                    data={TABS}
+                    numColumns={4}
+                    contentContainerStyle={{ padding: moderateScale(20) }}
+                    renderItem={({ item, index }) => {
 
-                            return (
-                                <TouchableOpacity style={{
-                                    backgroundColor: tabsSelect === index ? '#FE8B19' : '#F5F5F5',
-                                    borderRadius: moderateScale(10),
-                                    marginTop: verticalScale(5),
-                                    height: verticalScale(40),
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    flex: 1,
-                                    marginEnd: moderateScale(10),
-                                }} onPress={() => {
-                                    setTabsSelect(index);
-                                }}>
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: tabsSelect === index ? '#FE8B19' : '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
+                                height: verticalScale(40),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flex: 1,
+                                marginEnd: moderateScale(10),
+                            }} onPress={() => {
+                                setTabsSelect(index);
+                            }}>
 
-                                    <AutoSizeText
-                                        numberOfLines={2}
-                                        minFontSize={moderateScale(14)}
-                                        fontSize={moderateScale(16)}
-                                        mode={ResizeTextMode.max_lines}
-                                        style={{
-                                            ...styles.generalTxt,
-                                            color: tabsSelect === index ? 'white' : '#464646',
-                                            textAlign: 'center',
-                                            fontFamily: Fonts.type.medium,
-                                        }}>{item}
-                                    </AutoSizeText>
-                                </TouchableOpacity>
+                                <AutoSizeText
+                                    numberOfLines={2}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: tabsSelect === index ? 'white' : '#464646',
+                                        textAlign: 'center',
+                                        fontFamily: Fonts.type.medium,
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
 
-                            );
-                        }}
+                        );
+                    }}
 
-                    />
-
-
-                    {getSelectedView()}
+                />
 
 
-                </View>
+                {getSelectedView()}
+
+
+            </View>
             {/* </ScrollView> */}
         </View>
 

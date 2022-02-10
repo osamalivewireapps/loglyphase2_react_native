@@ -145,7 +145,7 @@ function PetListing(props) {
                                             borderRadius: moderateScale(10)
                                         }}
 
-                                        src={item.image}
+                                        src={item.image ? item.image : ''}
                                         placeholder={Icons.icon_paw}
                                     />
 

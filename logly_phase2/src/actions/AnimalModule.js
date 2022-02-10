@@ -17,7 +17,7 @@ export const getAnimals = (activationType = 'Active') => async (dispatch) => {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log("config-->", config)
+    console.log("getAnimals config---------------->", activationType)
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());
@@ -155,8 +155,8 @@ export const deleteAnimal = (id) => async (dispatch) => {
 export async function getFormCategory(catId) {
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log("token-------->",config);
-    
+    console.log("token-------->", config);
+
     let url = catId.startsWith('type') ? `${baseUrl}/form/byBreeder?${catId}` : `${baseUrl}/form/category/${catId}`;
 
     return new Promise((resolve, reject) => {
@@ -208,7 +208,7 @@ export const addAnimal = (dataToSubmit) => async (dispatch) => {
 
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
-                    
+                    utils.topAlertError(response.data.message);
                     resolve({ data: response.data.data });
                 }
                 else {
@@ -235,12 +235,12 @@ export const editAnimal = (id, dataToSubmit) => async (dispatch) => {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('config-->', dataToSubmit);
+    console.log('config-->', `${baseUrl}/animal/updateAnimal/${id}`);
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .patch(`${baseUrl}/animal/${id}`, dataToSubmit, config)
+            .put(`${baseUrl}/animal/updateAnimal/${id}`, dataToSubmit, config)
             .then(response => {
 
                 console.log('response-edit-product-->', response);
@@ -362,7 +362,7 @@ export const uploadHealth = (dataToSubmit) => async (dispatch) => {
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
                     utils.topAlertError(response.data.message);
-                    resolve({ responseData: response});
+                    resolve({ responseData: response });
                 }
                 else {
                     setTimeout(() => {
@@ -382,9 +382,9 @@ export const uploadHealth = (dataToSubmit) => async (dispatch) => {
     });
 };
 
-export const delHealthRecord = (id,healthId) => async (dispatch) => {
+export const delHealthRecord = (id, healthId) => async (dispatch) => {
 
-    console.log("upload pdf--->", id+''+healthId)
+    console.log("upload pdf--->", id + '' + healthId)
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
@@ -425,7 +425,7 @@ export const addParent = (data) => async (dispatch) => {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('data------->',data)
+    console.log('data------->', data)
 
     dispatch(EnableLoader());
     return new Promise((resolve, reject) => {
@@ -590,6 +590,44 @@ export const updatePrivacy = (id, dataToSubmit) => async (dispatch) => {
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
                     resolve({ data: response.data.data });
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response error-->', error.message);
+                dispatch(DisableLoader());
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const transferAnimal = (dataToSubmit) => async (dispatch) => {
+
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', config);
+
+    return new Promise((resolve) => {
+        dispatch(EnableLoader());
+        axios
+            .post(`${baseUrl}/animal/transferanimal`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response-->', response);
+
+                dispatch(DisableLoader());
+                if (response.data.status === 200) {
+                    utils.topAlertError(response.data.message);
+                    resolve(true);
                 }
                 else {
                     setTimeout(() => {

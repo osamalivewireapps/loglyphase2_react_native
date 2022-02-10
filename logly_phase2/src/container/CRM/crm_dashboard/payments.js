@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable react/self-closing-comp */
@@ -5,17 +6,20 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+import DeviceInfo, { getApiLevelSync } from 'react-native-device-info';
 import CRMStyles from '../crm_styles';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {
     BarChart,
 } from "react-native-chart-kit";
+import { getSalesInvoice } from '../../../actions/Sales';
+import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 function PaymentsView(props) {
 
@@ -49,6 +53,37 @@ function PaymentsView(props) {
             }
         ]
     };
+
+    const [payHistory, setPayHistory] = useState([]);
+    const [completePayHistory, setCompletePayHistory] = useState([]);
+
+    let dispatch = useDispatch();
+
+    useEffect(() => {
+        getPaymentList()
+    }, []);
+
+    useEffect(()=>{
+        if (tabUpcoming === 0) {
+            setPayHistory(completePayHistory.filter(e => e.installmentId ? e.installmentId.isPaid === false : e.saleId.isPaid === false))
+        }
+        else {
+            setPayHistory(completePayHistory.filter(e => e.installmentId ? e.installmentId.isPaid === true : e.saleId.isPaid === true))
+        }
+    },[tabUpcoming])
+
+    function getPaymentList(){
+        dispatch(getSalesInvoice()).then((response) => {
+            setCompletePayHistory(response.payload)
+            if (tabUpcoming === 0) {
+                setPayHistory(response.payload.filter(e => e.installmentId ? e.installmentId.isPaid === false : e.saleId.isPaid === false))
+            }
+            else {
+                setPayHistory(response.payload.filter(e => e.installmentId ? e.installmentId.isPaid === true : e.saleId.isPaid === true))
+            }
+        })
+    }
+
     return (
         <View style={{}}>
             <ScrollView keyboardShouldPersistTaps='handled'>
@@ -121,7 +156,7 @@ function PaymentsView(props) {
                         </TouchableOpacity>
                     </View>
 
-                    <ImageBackground style={{
+                    {/* <ImageBackground style={{
                         width: '100%',
                         marginTop: verticalScale(20),
                         height: moderateVerticalScale(190),
@@ -146,17 +181,17 @@ function PaymentsView(props) {
                             yAxisLabel="$ "
                             yLabelsOffset={moderateScale(10)}
                         />
-                    </ImageBackground>
+                    </ImageBackground> */}
                     <FlatList
-                        data={ACTIVITY_TYPE}
+                        data={payHistory}
                         contentContainerStyle={{
-                            marginTop: verticalScale(20),
+                            marginTop: verticalScale(10),
                         }}
                         renderItem={({ item }) => {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        props.navigation.navigate('CRMPaymentDetails')}}
+                                        props.navigation.navigate('CRMPaymentDetails',{paymentDetails:item,updateList:()=>getPaymentList()})}}
                                     style={{
                                         backgroundColor: '#F5F5F5',
                                         padding: moderateScale(5),
@@ -208,7 +243,7 @@ function PaymentsView(props) {
 
                                                 }}
                                             >
-                                                123456
+                                                {item.invoiceNumber}
                                             </AutoSizeText>
                                         </View>
 
@@ -249,7 +284,7 @@ function PaymentsView(props) {
 
                                                 }}
                                             >
-                                                26 Nov,2021
+                                                {moment(item.updatedAt).format('DD MMM,YYYY')}
                                             </AutoSizeText>
                                         </View>
                                         <View style={{
@@ -289,7 +324,7 @@ function PaymentsView(props) {
 
                                                 }}
                                             >
-                                                $500
+                                                ${item.saleId.totalPrice}
                                             </AutoSizeText>
                                         </View>
 
@@ -330,7 +365,7 @@ function PaymentsView(props) {
 
                                                 }}
                                             >
-                                                Jack
+                                                {item.buyerId?.name}
                                             </AutoSizeText>
                                         </View>
 

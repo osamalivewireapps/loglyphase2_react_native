@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable react/self-closing-comp */
@@ -5,14 +6,16 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, TextInput } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles';
-import RBSheet from 'react-native-raw-bottom-sheet';
+import { getBreederListSimple, getBreederForSale} from '../../../actions/Sales';
+import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 function CustomersCRMView(props) {
 
@@ -21,6 +24,34 @@ function CustomersCRMView(props) {
     const [historyIndex, setHistoryIndex] = useState(-1);
 
     const sheetRef = useRef(null);
+
+    const [customerList, setCustomerList] = useState([]);
+    const [orgCustomerList, setOrgCustomerList] = useState([]);
+
+    let dispatch = useDispatch();
+
+  
+    useEffect(() => {
+        dispatch(getBreederListSimple()).then((response) => {
+            setOrgCustomerList(response.payload)
+            setCustomerList(response.payload);
+        })
+    }, []);
+
+    useEffect(() => {
+        if (searchTxt.length >= 3) {
+            getGlobalTeamMembers();
+        } else if (searchTxt.length === 0) {
+            setCustomerList(orgCustomerList);
+        }
+    }, [searchTxt]);
+
+    function getGlobalTeamMembers() {
+        dispatch(getBreederForSale(searchTxt)).then((response) => {
+            setCustomerList(response.payload)
+        });
+    }
+
     return (
 
         <ScrollView keyboardShouldPersistTaps='handled'>
@@ -52,14 +83,14 @@ function CustomersCRMView(props) {
                 </View>
 
                 <FlatList
-                    data={ACTIVITY_TYPE}
+                    data={customerList}
                     contentContainerStyle={{
                         marginTop: verticalScale(20),
                     }}
                     renderItem={({ item }) => {
                         return (
                             <TouchableOpacity
-                                onPress={() => props.navigation.navigate('CRMCustomerDetail')}
+                                onPress={() => props.navigation.navigate('CRMCustomerDetail', { id: item._id,customerInfo:item})}
                              style={{
                                 backgroundColor: '#F5F5F5',
                                 padding: moderateScale(5),
@@ -100,7 +131,7 @@ function CustomersCRMView(props) {
 
                                             }}
                                         >
-                                            Jack
+                                            {item.name}
                                         </AutoSizeText>
                                     </View>
                                     <View style={{
@@ -127,7 +158,7 @@ function CustomersCRMView(props) {
 
                                             }}
                                         >
-                                            Jack@gmail.com
+                                            {item.email}
                                         </AutoSizeText>
                                     </View>
 
@@ -155,7 +186,7 @@ function CustomersCRMView(props) {
 
                                             }}
                                         >
-                                            +123456789
+                                            {item.phone}
                                         </AutoSizeText>
 
                                     </View>
@@ -183,7 +214,7 @@ function CustomersCRMView(props) {
 
                                             }}
                                         >
-                                            Lake Worth , Florida
+                                            {item.city+", "+item.state}
                                         </AutoSizeText>
 
                                     </View>

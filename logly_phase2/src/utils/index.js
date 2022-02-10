@@ -81,7 +81,7 @@ class Util {
   }
 
   static isTwoDecimalPlaces(name) {
-    console.log('decimal--->', name.includes('.'))
+    console.log('decimal45--->', name)
     if (name.includes('.'))
       return /^(\d+(\.\d{0,2})?|\.?\d{1,2})$/.test(name);
     else
@@ -167,6 +167,15 @@ class Util {
     if (date) return moment(date, format).toDate();
     return "";
   };
+
+  static calculateTax = (price, tax = 0) => {
+    return price + price * tax / 100
+  }
+
+  static CalculateTaxAmount = (price, tax = 0) => {
+    return price * tax / 100
+  }
+
 
   //   showLoader = (instance, loadingFor = "") => {
   //     if (!instance.state.loading) {

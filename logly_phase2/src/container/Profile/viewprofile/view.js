@@ -68,7 +68,7 @@ function ProfileView(props) {
                         style={{
                         }}
 
-                        src={userObject.coverImage}
+                        src={userObject.coverImage ? userObject.coverImage:''}
                         placeholder={Icons.icon_paw}
                     />
 

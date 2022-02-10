@@ -41,7 +41,7 @@ function PetProfileView(props) {
     useEffect(() => {
         if (listAnimal.length > 0) {
             setAnimalList(props.animalData.filter((e) => {
-                return (e.data.name.toLowerCase().startsWith(searchTxt.toLowerCase()) || e.categoryName.toLowerCase().includes(searchTxt.toLowerCase()))
+                return (e?.data?.name?.toLowerCase().startsWith(searchTxt.toLowerCase()) || e.categoryName.toLowerCase().includes(searchTxt.toLowerCase()))
             }))
         }
     }, [searchTxt]);
@@ -222,7 +222,7 @@ function PetProfileView(props) {
                                                     borderRadius: moderateScale(10)
                                                 }}
 
-                                                src={item.image}
+                                                src={item.image ? item.image : ''}
                                                 placeholder={Icons.icon_paw}
                                             />
 

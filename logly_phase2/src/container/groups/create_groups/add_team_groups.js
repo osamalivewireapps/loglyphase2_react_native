@@ -20,9 +20,9 @@ import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 function AddTeamGroups(props) {
 
-    const { nextScreen, isSummary, team, getTeamList, getFinalTeamList} = props;
+    const { nextScreen, isSummary, team, getTeamList, getFinalTeamList } = props;
 
-    console.log("teams--->",team)
+    console.log("teams--->", team)
     const sheetRef = useRef(null);
 
     const [searchTxt, setSearchTxt] = useState('');
@@ -40,7 +40,7 @@ function AddTeamGroups(props) {
             }))
         }
     }, [searchTxt]);
-    
+
     return (
         <View style={{ flex: 1 }}>
 
@@ -133,7 +133,7 @@ function AddTeamGroups(props) {
 
                             }}
                             renderItem={({ item, index }) => {
-                                return renderBreedItem(item, index, true);
+                                return renderBreedItem(item, index, true, false);
                             }}
                         />
                     </View>
@@ -155,24 +155,24 @@ function AddTeamGroups(props) {
                         }
                         }
                     >
-                        {showBottomSheet(false)}
+                        {showBottomSheet(true)}
                     </RBSheet>
 
-                    {isSummary?null:
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons,
-                        width: '100%',
+                    {isSummary ? null :
+                        <TouchableOpacity style={{
+                            ...styles.styleButtons,
+                            width: '100%',
 
 
-                    }} onPress={() => { nextScreen(addItems) }}>
-                        <Text style={{
-                            fontSize: moderateScale(22), textAlign: 'center',
-                            padding: moderateScale(10),
-                            paddingTop: moderateScale(12),
-                            paddingBottom: moderateScale(12),
-                            ...styles.generalTxt
-                        }}>NEXT</Text>
-                    </TouchableOpacity>}
+                        }} onPress={() => { nextScreen(addItems) }}>
+                            <Text style={{
+                                fontSize: moderateScale(22), textAlign: 'center',
+                                padding: moderateScale(10),
+                                paddingTop: moderateScale(12),
+                                paddingBottom: moderateScale(12),
+                                ...styles.generalTxt
+                            }}>NEXT</Text>
+                        </TouchableOpacity>}
 
 
 
@@ -185,7 +185,7 @@ function AddTeamGroups(props) {
     );
 
 
-    function renderBreedItem(item, index, isDeleteIcon) {
+    function renderBreedItem(item, index, isDeleteIcon, isAddBreeder) {
 
         return (
             <View style={{
@@ -225,12 +225,13 @@ function AddTeamGroups(props) {
                         flex: 0
                     }}
 
-                    src={item.image}
+                    src={item.image ? item.image : ''}
                     placeholder={Images.img_user_placeholder}
                 />
 
                 <TouchableOpacity
-                    onPress={() => addBreeder(index)}
+                    onPress={() => isAddBreeder ? addBreeder(index) : false}
+                    activeOpacity={isAddBreeder ? 0.25 : 1}
                     style={{
                         flex: 0.95,
                     }}>
@@ -278,7 +279,7 @@ function AddTeamGroups(props) {
 
                                 }}
                             >
-                                {item.phone ? item.phone:''}
+                                {item.phone ? item.phone : ''}
                             </AutoSizeText>
                         </View>
 
@@ -320,7 +321,7 @@ function AddTeamGroups(props) {
     }
 
     function addBreeder(index) {
-     
+
         let addItem = addItems;
 
         let finIndex = addItem.findIndex(value => value._id === listAnimals[index]._id);
@@ -328,9 +329,9 @@ function AddTeamGroups(props) {
             addItem.splice(finIndex, 1)
         } else
             addItem.push(listAnimals[index])
-        setAddItems([...addItem])
 
         getFinalTeamList ? getFinalTeamList(addItem) : null
+        setAddItems([...addItem])
     }
 
     function manipulateAnimaList() {
@@ -345,118 +346,122 @@ function AddTeamGroups(props) {
     }
 
     //////////////////// BOTTOM SHEET /////////////
-    function showBottomSheet() {
+
+    function showBottomSheet(isAddBreeder) {
 
         return (
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View
-                    style={{
-                        backgroundColor: 'white',
-                        height: '100%',
-                        flex: 1,
-                        justifyContent: 'flex-start'
-                    }}>
+            // <View keyboardShouldPersistTaps='handled'>
+            <View
+                style={{
+                    backgroundColor: 'white',
+                    height: '100%',
+                    flex: 1,
+                    justifyContent: 'flex-start'
+                }}>
 
-                    <View style={{
-                        alignItems: 'flex-end', justifyContent: 'center',
-                        height: verticalScale(50)
-                    }}>
+                <View style={{
+                    alignItems: 'flex-end', justifyContent: 'center',
+                    height: verticalScale(50)
+                }}>
 
-                        <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
-                            <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
-                                tintColor: '#404040',
-                                position: 'absolute',
-                                top:verticalScale(8),
-                                right:moderateScale(20),
-                                alignSelf: 'flex-end',
-                                height: moderateScale(15),
-                                width: moderateScale(15)
-                            }} />
-                        </TouchableOpacity>
-                        <Text style={{
-                            ...styles.generalTxt, color: '#464646',
-                            textAlign: 'center',
-                            alignSelf:'center',
-                            fontSize: moderateScale(18),
-                            fontFamily: Fonts.type.medium,
-                            marginTop: verticalScale(10)
-                        }}>Add Team Members</Text>
-                        <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
-
-
-                    </View>
-
-                    <View style={{
-                        flexDirection: 'row', alignItems: 'center',
-                        margin: moderateScale(25),
-                        marginTop: verticalScale(15),
-                        marginBottom: verticalScale(15),
-
-                        justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
-                    }}>
-
-                        <TextInput
-                            onChangeText={(e) => {
-                                setSearchTxt(e)
-                            }}
-                            value={searchTxt}
-                            placeholder='Search'
-                            numberOfLines={1}
-                            keyboardType='default'
-                            autoCapitalize='none'
-                            style={{
-                                keyboardShouldPersistTaps: true,
-                                flex: 0.9,
-                                height: verticalScale(40),
-                                ...styles.generalTxt,
-                                color: '#777777',
-                                fontSize: moderateScale(14),
-                            }} />
-                        <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
-
-                    </View>
-
-                    <FlatList
-                        data={listAnimals}
-                        contentContainerStyle={{
-                            margin: moderateScale(25),
-                            marginTop: verticalScale(0),
-                        }}
-                        renderItem={({ item, index }) => {
-                            return renderBreedItem(item, index, false);
-                        }}
-                    />
-
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons, flex: 0,
-                        width: '60%', alignSelf: 'center',
-                        marginTop: verticalScale(75), backgroundColor: '#FFC081'
-                    }}
-                        onPress={() => {
-                            setTimeout(() => {
-                                //setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
-                                // let tmp = listAnimals.filter((value) => value.isSelect === true);
-                                // setAddItems(tmp)
-
-                                sheetRef.current.close();
-                            }, 200)
-                        }}>
-                        <Text style={{
-                            ...styles.generalTxt,
-                            fontFamily: Fonts.type.base,
-                            color: Colors.appBgColor,
-                            fontSize: moderateScale(18), textAlign: 'center',
-                            padding: moderateScale(10),
-                            paddingTop: verticalScale(5),
-                            paddingBottom: verticalScale(5),
-
-                        }}>{!isEdit ? 'Add to group' : 'Edit'}</Text>
+                    <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
+                        <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
+                            tintColor: '#404040',
+                            position: 'absolute',
+                            top: verticalScale(8),
+                            right: moderateScale(20),
+                            alignSelf: 'flex-end',
+                            height: moderateScale(15),
+                            width: moderateScale(15)
+                        }} />
                     </TouchableOpacity>
-
+                    <Text style={{
+                        ...styles.generalTxt, color: '#464646',
+                        textAlign: 'center',
+                        alignSelf: 'center',
+                        fontSize: moderateScale(18),
+                        fontFamily: Fonts.type.medium,
+                        marginTop: verticalScale(10)
+                    }}>Add Team Members</Text>
+                    <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
 
 
                 </View>
-            </ScrollView>
+
+                <View style={{
+                    flexDirection: 'row', alignItems: 'center',
+                    margin: moderateScale(25),
+                    marginTop: verticalScale(15),
+                    marginBottom: verticalScale(15),
+
+                    justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                }}>
+
+                    <TextInput
+                        onChangeText={(e) => {
+                            setSearchTxt(e)
+                        }}
+                        value={searchTxt}
+                        placeholder='Search'
+                        numberOfLines={1}
+                        keyboardType='default'
+                        autoCapitalize='none'
+                        style={{
+                            keyboardShouldPersistTaps: true,
+                            flex: 0.9,
+                            height: verticalScale(40),
+                            ...styles.generalTxt,
+                            color: '#777777',
+                            fontSize: moderateScale(14),
+                        }} />
+                    <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
+
+                </View>
+
+                <FlatList
+                    data={listAnimals}
+                    contentContainerStyle={{
+                        margin: moderateScale(25),
+                        marginTop: verticalScale(0),
+                        marginBottom: verticalScale(25),
+                    }}
+                    renderItem={({ item, index }) => {
+                        return renderBreedItem(item, index, false, isAddBreeder);
+                    }}
+                />
+
+                <TouchableOpacity style={{
+                    ...styles.styleButtons, flex: 0,
+                    width: '60%', alignSelf: 'center',
+                    marginTop: 0,//verticalScale(75), 
+                    backgroundColor: '#FFC081',
+                    marginBottom: verticalScale(25)
+                }}
+                    onPress={() => {
+                        setTimeout(() => {
+                            //setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
+                            //let tmp = listAnimals.filter((value) => value.isSelect === true);
+                            //setAddItems(tmp)
+
+                            sheetRef.current.close();
+                        }, 200)
+                    }}>
+                    <Text style={{
+                        ...styles.generalTxt,
+                        fontFamily: Fonts.type.base,
+                        color: Colors.appBgColor,
+                        fontSize: moderateScale(18), textAlign: 'center',
+                        padding: moderateScale(10),
+                        paddingTop: verticalScale(5),
+                        paddingBottom: verticalScale(5),
+
+                    }}>{!isEdit ? 'Add to group' : 'Edit'}</Text>
+                </TouchableOpacity>
+
+
+
+            </View>
+            //</View>
         )
     }
 

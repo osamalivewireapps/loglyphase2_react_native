@@ -25,7 +25,7 @@ function HomeView(props) {
     const { toggleDrawer, userObject, accountType } = props;
     const PET_ACTIVITY =
         accountType && accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ?
-            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_marketing, txt: 'Marketing' }, { bg: Images.img_activity, txt: 'Activity' }] :
+            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }, { bg: Icons.icon_marketing, txt: 'Marketing' }] :
             [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' }, { bg: Images.img_activity, txt: 'Activity' }]
     const actions = [
         {
@@ -167,10 +167,10 @@ function HomeView(props) {
                                         if (index === 0) {
                                             props.navigation.navigate('PetProfile')
                                         } else if (index === 1) {
-                                            accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ?null:props.navigation.navigate('ProductListing')
-                                        } 
-                                        else if (index === 2 && accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase())) {
-                                            props.navigation.navigate('ScheduleListingActivity')
+                                            accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ? props.navigation.navigate('ScheduleListingActivity') : props.navigation.navigate('ProductListing')
+                                        }
+                                        else if (index === 2) {
+                                            Util.topAlert('Coming Soon')
                                         }
                                         else if (index === 3) {
                                             props.navigation.navigate('ScheduleListingActivity')
@@ -232,7 +232,10 @@ function HomeView(props) {
                             return (
                                 <TouchableOpacity
 
-                                    onPress={() => props.navigation.navigate('AppointmentListing')}
+                                    onPress={() =>
+                                        //props.navigation.navigate('AppointmentListing')
+                                        Util.topAlert('Coming Soon')
+                                    }
                                     style={{
                                         borderRadius: moderateScale(15),
                                         width: Dimensions.get('screen').width / moderateScale(2.2),
@@ -271,6 +274,10 @@ function HomeView(props) {
                     />
 
                     <TouchableOpacity
+
+                        onPress={() =>
+                            Util.topAlert('Coming soon')
+                        }
                         style={{
                             borderRadius: moderateScale(15),
                             flexDirection: 'row',
@@ -338,7 +345,7 @@ function HomeView(props) {
                         marginEnd: moderateScale(25),
                         marginStart: moderateScale(25),
                         marginTop: verticalScale(20)
-                    }}>Market place</Text>
+                    }}>Marketplace</Text>
 
                     <View style={{
                         flexDirection: 'row',
@@ -346,6 +353,9 @@ function HomeView(props) {
                         marginStart: moderateScale(25)
                     }}>
                         <TouchableOpacity
+                            onPress={() =>
+                                Util.topAlert('Coming soon')
+                            }
                             style={{
                                 borderRadius: moderateScale(10),
                                 justifyContent: 'center',
@@ -365,11 +375,14 @@ function HomeView(props) {
                                     fontFamily: Fonts.type.bold,
                                     color: 'white',
                                     textAlign: 'center',
-                                }}>Buy Animals
+                                }}>Animals
                             </AutoSizeText>
                         </TouchableOpacity>
 
                         <TouchableOpacity
+                            onPress={() =>
+                                Util.topAlert('Coming soon')
+                            }
                             style={{
                                 borderRadius: moderateScale(10),
                                 justifyContent: 'center',
@@ -390,7 +403,7 @@ function HomeView(props) {
                                     fontFamily: Fonts.type.bold,
                                     color: 'white',
                                     textAlign: 'center',
-                                }}>Buy Products
+                                }}>Products
                             </AutoSizeText>
                         </TouchableOpacity>
                     </View>

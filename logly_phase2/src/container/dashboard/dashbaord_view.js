@@ -251,14 +251,18 @@ function DashBoardView(props) {
                 zIndex: 0
             }}>
 
-                <Text style={{
-                    fontFamily: Fonts.type.bold,
-                    fontSize: moderateScale(22),
-                    color: '#503A9F',
-                    flex: 0.6
-                }}>
-                    {catType === 'All Categories' ? (invType === arrInvType[0] ? 'Total Animals' : 'Total Products') : catType}
-                </Text>
+                <AutoSizeText
+                    numberOfLines={2}
+                    minFontSize={moderateScale(12)}
+                    fontSize={moderateScale(22)}
+                    mode={ResizeTextMode.max_lines}
+                    style={{
+                        color: '#503A9F',
+                        flex: 0.6,
+                        fontFamily: Fonts.type.bold,
+                    }}>{ catType === 'All Categories' ? (invType === arrInvType[0] ? 'Total Animals' : 'Total Products') : catType}
+                </AutoSizeText>
+           
                 <Text style={{
                     fontFamily: Fonts.type.bold,
                     fontSize: moderateScale(28),

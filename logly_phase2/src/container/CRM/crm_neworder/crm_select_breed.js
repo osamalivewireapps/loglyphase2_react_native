@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable react/self-closing-comp */
@@ -5,7 +6,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
@@ -14,18 +15,51 @@ import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles'
 import CRMHeaderView from '../crm_header';
 import { TextInput } from 'react-native';
-
+import { useDispatch } from 'react-redux';
+import { getBreederListSimple, getBreederForSale } from '../../../actions/Sales';
+import Util from '../../../utils';
 
 function CRMAddBreedView(props) {
 
-    const { nextScreen } = props;
+    const { nextScreen, buyer } = props;
 
     const isTablet = DeviceInfo.isTablet();
-    const initialBreeder = [{ id: 0 }, { id: 1 }, { id: 2 }]
+    //const initialBreeder = [{ id: 0 }, { id: 1 }, { id: 2 }]
     const [isSelect, setIsSelect] = useState(-1);
 
     const [searchTxt, setSearchTxt] = useState('');
-    const [addItems, setAddItems] = useState(initialBreeder);
+    const [addItems, setAddItems] = useState([]);
+    const [orgCustomerList, setOrgCustomerList] = useState([]);
+
+    let dispatch = useDispatch();
+
+    useEffect(() => {
+        getCustomerList()
+    }, []);
+
+
+    useEffect(() => {
+        if (searchTxt.length >= 3) {
+            getGlobalTeamMembers();
+        } else if (searchTxt.length === 0) {
+            setAddItems(orgCustomerList);
+        }
+    }, [searchTxt]);
+
+    function getCustomerList() {
+        dispatch(getBreederListSimple(false))
+            .then((response) => {
+                setOrgCustomerList(response.payload);
+                setAddItems(response.payload);
+            });
+    }
+
+    function getGlobalTeamMembers() {
+        dispatch(getBreederForSale(searchTxt)).then((response) => {
+            setAddItems(response.payload)
+        });
+    }
+
 
     return (
         <View style={{ flex: 1 }}>
@@ -34,7 +68,7 @@ function CRMAddBreedView(props) {
 
                 <View style={{
                     height: '100%', backgroundColor: 'white', borderBottomRightRadius: moderateScale(30),
-                    justifyContent:'flex-end'
+                    justifyContent: 'flex-end'
                 }}>
 
 
@@ -122,11 +156,16 @@ function CRMAddBreedView(props) {
                             position: 'absolute',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            bottom:moderateScale(20)
+                            bottom: moderateScale(20)
 
                         }}
                         onPress={() => {
-                            props.navigation.navigate('CRMAddCustomers')
+                            props.navigation.navigate('CRMAddCustomers', {
+                                updateContacts: (e) => {
+                                    buyer(e);
+                                    nextScreen();
+                                }
+                            })
                         }}>
                         <Image backgroundColor={Colors.appBgColor}
                             style={{
@@ -150,7 +189,7 @@ function CRMAddBreedView(props) {
 
                 </View>
 
-              
+
             </ImageBackground>
 
             <View style={{
@@ -206,7 +245,18 @@ function CRMAddBreedView(props) {
                     style={{
                         flex: 0.2,
                     }}
-                    onPress={(e) => nextScreen(e)}>
+                    onPress={(e) => {
+                        if (isSelect >= 0) {
+                            buyer(addItems[isSelect])
+                            setTimeout(()=>{
+                                nextScreen(e)
+                            },200)
+                        }
+                        else {
+                            Util.topAlert('Please select breeder')
+                        }
+                    }
+                    }>
                     <Image resizeMode='contain'
                         source={Icons.icon_blue_forwardbtn}
                         style={{
@@ -234,7 +284,7 @@ function CRMAddBreedView(props) {
                 marginEnd: moderateScale(25),
             }}>
                 <Image
-                    source={Images.img_friend_sample}
+                    source={Images.img_user_placeholder}
                     resizeMode='cover'
                     style={{
                         width: moderateScale(75),
@@ -272,7 +322,7 @@ function CRMAddBreedView(props) {
 
                                 }}
                             >
-                                Nagtile
+                                {item.name}
                             </AutoSizeText>
 
 
@@ -303,7 +353,7 @@ function CRMAddBreedView(props) {
 
                                 }}
                             >
-                                Jack@gmail.com
+                                {item.email}
                             </AutoSizeText>
                         </View>
 
@@ -333,7 +383,7 @@ function CRMAddBreedView(props) {
 
                                 }}
                             >
-                                +123456789
+                                {item.phone}
                             </AutoSizeText>
 
                         </View>

@@ -6,7 +6,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Alert, Platform } from 'react-native';
+import { Modal, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Alert, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
@@ -40,6 +40,10 @@ function GalleryPetView(props) {
     const { animalData, route } = props;
     const dispatch = useDispatch();
     const [listFileUri, setListFileUri] = useState([])
+    const [modalVisible, setModalVisible] = useState(false);
+    const [imgPop, setImgPop] = useState('');
+
+    const videoRef = useRef();
 
     const isTablet = DeviceInfo.isTablet();
 
@@ -56,7 +60,7 @@ function GalleryPetView(props) {
 
         }}>
 
-         
+
             {listFileUri && listFileUri.length > 0 ?
 
                 <FlatList
@@ -65,105 +69,137 @@ function GalleryPetView(props) {
                         padding: moderateScale(25),
                     }}
                     data={listFileUri}
-                    renderItem={({ item, index})=>{
-                        console.log('item---->',item)
-                        return(
+                    renderItem={({ item, index }) => {
+                        console.log('item---->', item)
+                        return (
                             <View
-
                                 style={{
                                     flex: 0.5,
-                                    backgroundColor:'yellow',
-                                    marginTop:verticalScale(10),
+                                    marginTop: verticalScale(10),
                                     height: isTablet ? verticalScale(195) : verticalScale(120),
                                     marginEnd: (index % 2 === 0) ? (index === listFileUri.length - 1) ? 0 : verticalScale(10) : 0,
 
-                                }}>
-                                {item.type ? !item.type.toLowerCase().includes('video') ?
-                                    <View
-                                        style={{
-                                            ...styles.boxcontainer,
+                                }}
+                            >
+                                <View
+                                    onPress={() => {
+                                        setImgPop(item);
+                                        setModalVisible(true);
+                                    }}
+                                    style={{
+                                        position: 'absolute',
+                                        width: '100%',
+                                        height: '100%'
+
+                                    }}>
+                                    {item.type ? !item.type.toLowerCase().includes('video') ?
+                                        <View
+                                            style={{
+                                                ...styles.boxcontainer,
+                                                width: '100%',
+                                                position: 'absolute',
+                                                height: isTablet ? verticalScale(195) : verticalScale(120),
+
+
+                                            }}>
+
+
+                                            <ImagePlaceholder
+                                                showActivityIndicator={false}
+                                                activityIndicatorProps={{
+                                                    size: 'small',
+                                                    color: '#777777',
+                                                }}
+                                                resizeMode='cover'
+                                                placeholderStyle={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    borderRadius: moderateScale(10),
+
+
+                                                }}
+                                                imgStyle={{
+                                                    width: '100%',
+                                                    height: '100%',
+                                                    borderRadius: moderateScale(10),
+                                                    borderWidth: 1,
+                                                    borderColor: '#4747',
+                                                }}
+
+                                                style={{
+                                                    width: '100%',
+                                                    borderRadius: moderateScale(10),
+                                                }}
+
+
+                                                src={item.filename ? item.filename : ''}
+                                                placeholder={Icons.icon_paw}
+                                            />
+
+
+
+                                        </View> :
+                                        <View
+                                            style={{
+                                                width: '100%',
+                                                position: 'absolute',
+                                                height: isTablet ? verticalScale(195) : verticalScale(120),
+
+                                            }}
+                                        >
+                                            <VideoPlayer
+                                                ref={videoRef}
+                                                style={{
+                                                    height: '100%',
+                                                    width: '100%',
+                                                    borderRadius: moderateScale(10),
+                                                }}
+                                                video={{ uri: item.filename }}
+                                                videoWidth={1600}
+                                                videoHeight={900}
+                                            />
+                                        </View>
+                                        : <View style={{
                                             width: '100%',
-                                            position: 'absolute',
-                                            height: isTablet ? verticalScale(195) : verticalScale(120),
+                                            height: isTablet ? verticalScale(195) : verticalScale(120)
+                                        }} />}
 
-
+                                    <TouchableOpacity
+                                        onPress={() => removeImage(item._id)}
+                                        style={{
+                                            alignSelf: 'flex-end',
+                                            margin: moderateScale(10),
+                                            width: moderateScale(20),
+                                            height: moderateScale(20),
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
                                         }}>
-                                    
-                                      
-                                        <ImagePlaceholder
-                                            showActivityIndicator={false}
-                                            activityIndicatorProps={{
-                                                size: 'small',
-                                                color: '#777777',
-                                            }}
-                                            resizeMode='cover'
-                                            placeholderStyle={{
-                                                width: '100%',
-                                                height: '100%',
-                                                borderRadius: moderateScale(10),
-                                                
-
-                                            }}
-                                            imgStyle={{
-                                                borderRadius: moderateScale(10),
-                                                borderWidth: 1,
-                                                borderColor: 'transparent',
-                                            }}
-
-                                            style={{
-                                                width:'100%',
-                                                borderRadius: moderateScale(10),
-                                            }}
-
-                                          
-                                            src={item.filename}
-                                            placeholder={Icons.icon_paw}
-                                        />
-
-
-
-                                    </View> :
-                                    <View
-                                        style={{
-                                            width: '100%',
-                                            position: 'absolute',
-                                            height: isTablet ? verticalScale(195) : verticalScale(120),
-
-                                        }}
-                                    >
-                                        <VideoPlayer
-                                            style={{
-                                                height: '100%',
-                                                width: '100%',
-                                                borderRadius: moderateScale(10),
-                                            }}
-                                            video={{ uri: item.filename }}
-                                            videoWidth={1600}
-                                            videoHeight={900}
-                                        />
-                                    </View>
-                                    : <View style={{
-                                        width:'100%',
-                                        backgroundColor:'red',
-                                        height:Dimensions.get('window').height/2}}/>}
+                                        <Image source={Icons.icon_close} resizeMode='contain' style={{
+                                            tintColor: '#707070',
+                                            height: verticalScale(10), width: verticalScale(10)
+                                        }} />
+                                    </TouchableOpacity>
+                                </View>
 
                                 <TouchableOpacity
-                                    onPress={() => removeImage(item._id)}
                                     style={{
-                                        alignSelf:'flex-end',
-                                        margin: moderateScale(10),
-                                    }}>
-                                    <Image source={Icons.icon_close} resizeMode='contain' style={{
-                                        tintColor: 'white',
-                                        height: verticalScale(10), width: verticalScale(10)
-                                    }} />
+                                        width: '100%',
+                                        height: '100%'
+                                    }}
+                                    onPress={() => {
+                                        setImgPop(item)
+                                        setModalVisible(true);
+                                    }}
+
+                                >
+
                                 </TouchableOpacity>
                             </View>
                         )
                     }}
                 />
 
-                : <View style={{flex:1}}/>}
+                : <View style={{ flex: 1 }} />}
 
             <TouchableOpacity style={{
                 ...styles.styleButtons, flex: 0,
@@ -178,6 +214,9 @@ function GalleryPetView(props) {
 
                 }}>Add Photos / Videos</Text>
             </TouchableOpacity>
+
+
+            {modalVisible ? showPicsOnly() : null}
         </View>
     )
 
@@ -284,6 +323,99 @@ function GalleryPetView(props) {
             });
         }
     }
+
+    function showPicsOnly(item) {
+
+        return (
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+                }}>
+                <View style={{ ...styles.centeredView }}>
+                    <View style={{ ...styles.modalView }}>
+                        <TouchableOpacity
+                            style={{
+                                alignSelf: 'flex-end', position: 'absolute',
+                                top: 15, right: 15,
+                                width: moderateScale(30),
+                                height: moderateScale(30),
+                                justifyContent: 'center',
+                                alignItems: 'center'
+                            }}
+                            onPress={() => {
+                                setModalVisible(!modalVisible)
+                            }}
+                        >
+                            <Image source={Icons.icon_close} resizeMode='contain' style={{
+                                tintColor: '#707070',
+                                height: verticalScale(10), width: verticalScale(10)
+                            }} />
+                        </TouchableOpacity>
+                        {imgPop.type && !imgPop.type.toLowerCase().includes('video') ?
+                            <ImagePlaceholder
+                                showActivityIndicator={false}
+                                activityIndicatorProps={{
+                                    size: 'small',
+                                    color: '#777777',
+                                }}
+                                resizeMode='contain'
+                                placeholderStyle={{
+                                    width: '100%',
+                                    height: '100%',
+                                    borderRadius: moderateScale(10),
+
+
+                                }}
+                                imgStyle={{
+                                    borderRadius: moderateScale(10),
+                                    borderWidth: 1,
+                                    borderColor: 'transparent',
+                                }}
+
+                                style={{
+                                    width: '100%',
+                                    borderRadius: moderateScale(10),
+                                }}
+
+
+                                src={imgPop.filename}
+                                placeholder={Icons.icon_paw}
+                            />
+                            :
+                            <View
+                                style={{
+                                    height: '100%',
+                                    width: '100%',
+                                    marginTop: verticalScale(10),
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    borderRadius: moderateScale(10),
+                                }}
+                            >
+                                <VideoPlayer
+
+                                    style={{
+                                        height: '100%',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        width: Dimensions.get("screen").width,
+                                    }}
+                                    autoplay={true}
+                                    video={{ uri: imgPop.filename }}
+                                    resizeMode="none"
+                                />
+                            </View>
+                        }
+                    </View>
+                </View>
+            </Modal>
+        )
+
+    }
+
 }
 
 const styles = StyleSheet.create({
@@ -318,7 +450,30 @@ const styles = StyleSheet.create({
     styleButtons: {
         backgroundColor: Colors.appBgColor,
         borderRadius: moderateScale(10)
-    }
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        marginTop: verticalScale(22),
+        backgroundColor: 'rgba(255,255,255,0.7)'
+    },
+    modalView: {
+        width: Dimensions.get("screen").width - moderateScale(0),
+        height: Dimensions.get("screen").height - moderateScale(0),
+        margin: moderateScale(10),
+        borderRadius: moderateScale(20),
+        backgroundColor: 'white',
+        padding: moderateScale(30),
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: verticalScale(2)
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: moderateScale(4),
+        elevation: moderateScale(5)
+    },
 });
 
 export default GalleryPetView;

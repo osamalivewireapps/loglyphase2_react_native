@@ -12,6 +12,7 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/
 import utils from '../../../utils';
 import { debug } from 'react-native-reanimated';
 import moment from 'moment';
+import DataHandler from '../../../utils/DataHandler';
 
 class RegisterPet extends Component {
 
@@ -30,6 +31,11 @@ class RegisterPet extends Component {
 
     componentDidMount() {
         this.setState({ isLoad: true });
+
+        DataHandler.getAccountType().then(value => {
+            this.accountType = value
+        })
+
         getAnimalCategories().then((response) => {
             console.log("animalCategories-->", response.animalCategory);
             this.setState({ animalCategories: response.animalCategory, isLoad: false })
@@ -68,6 +74,7 @@ class RegisterPet extends Component {
             addProduct={(e) => { this.createAnimal(e); }}
             listPhotoCollections={this.state.listFileUri}
             deletePic={(e) => { this.deletePic(e) }}
+            accountType={this.accountType}
         />);
     }
 
@@ -105,6 +112,7 @@ class RegisterPet extends Component {
     }
 
     createAnimal(e) {
+        console.log('edit animals--->', e)
         if (this.validateFields(e)) {
             this.createAnimalProfile(e);
         }
@@ -179,7 +187,7 @@ class RegisterPet extends Component {
         formdata.append('categoryName', categoryName);
         formdata.append('data', JSON.stringify(e));
 
-       
+
         if (!this.animalData)
             formdata.append('family', JSON.stringify(e.family))
 
@@ -195,7 +203,11 @@ class RegisterPet extends Component {
 
             this.props.editAnimal(this.animalData._id, formdata).then((response) => {
 
-                this.uploadImages(response.data._id)
+                if (this.props.route?.params?.animalData)
+                    this.props.getAnimal(response.data._id);
+
+                this.props.route?.params?.updateAnimal();
+                this.props.navigation.pop();
 
             });
         } else {
@@ -209,6 +221,7 @@ class RegisterPet extends Component {
 
     uploadImages(id) {
 
+        console.log('formdata upload images--->', '1')
 
         if (this.state.listFileUri.length === 0) {
             if (this.props.route?.params?.animalData)
@@ -220,27 +233,45 @@ class RegisterPet extends Component {
         }
         let formdata2 = new FormData();
         formdata2.append("id", id);
+
+        console.log('formdata upload images--->', '2');
+
+        let isFileExist = false;
+
         this.state.listFileUri.forEach((file, inn) => {
             if (!file.includes('http') && (file.includes('jpg') || file.includes('png') || file.includes('jpeg'))) {
                 formdata2.append('file', {
                     uri: file,
                     name: 'animalImage' + inn + ".jpg", type: 'image/jpg'
                 });
+                isFileExist = true;
             } else if (!file.includes('http')) {
                 formdata2.append('file', {
                     uri: Platform.OS === "android" ? file : file.replace("file://", ""),
                     name: 'animal_video' + moment().unix() + ".mp4", type: 'video/quicktime',
                 });
+                isFileExist = true;
             }
         })
 
-        this.props.UploadAnimalImages(formdata2).then((response) => {
+        console.log('formdata upload images--->', isFileExist);
+
+        if (isFileExist) {
+            this.props.UploadAnimalImages(formdata2).then((response) => {
+                if (this.props.route?.params?.animalData)
+                    this.props.getAnimal(id);
+
+                this.props.route?.params?.updateAnimal();
+                this.props.navigation.pop();
+            })
+        } else {
             if (this.props.route?.params?.animalData)
                 this.props.getAnimal(id);
 
             this.props.route?.params?.updateAnimal();
             this.props.navigation.pop();
-        })
+        }
+
     }
 
 

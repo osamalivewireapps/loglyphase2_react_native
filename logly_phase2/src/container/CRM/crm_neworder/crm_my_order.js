@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable quotes */
 /* eslint-disable react/self-closing-comp */
@@ -5,28 +6,30 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo, { useFirstInstallTime } from 'react-native-device-info';
-import CRMStyles from '../crm_styles'
+import CRMStyles from '../crm_styles';
 import CRMHeaderView from '../crm_header';
 import { TextInput } from 'react-native';
 import moment from 'moment';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { Calendar } from 'react-native-calendars';
 import Util from '../../../utils';
-
+import { getTax } from '../../../actions/Sales';
+import { useDispatch } from 'react-redux';
 
 function CRMMyOrder(props) {
 
-    const { nextScreen } = props;
+    const { nextScreen, cartAnimals, cartProducts, setInvoice } = props;
 
     const isTablet = DeviceInfo.isTablet();
 
     const sheetRef = useRef(null);
+    const discountRef = useRef(null);
 
     const [isToggleClick, setIsToggleClick] = useState(false);
     const [searchTxt, setSearchTxt] = useState('');
@@ -36,8 +39,19 @@ function CRMMyOrder(props) {
     const [downPayment, setDownPayment] = useState('');
     const [isEdit, setIsEdit] = useState(false);
 
+
+    const [cartList, setCartList] = useState([]);
+    const [datadiscount, setdatadiscount] = useState(0);
+    const [discount, setdiscount] = useState(0);
+    const [amount, setAmount] = useState(null);
+    const [tax, settax] = useState(0);
+
+
     //TEMPORARY
     const [isEditObj, setIsEditObj] = useState({});
+    const [currentIndex, setCurrentIndex] = useState(0)
+
+    let dispatch = useDispatch();
 
     //////////////////////////  CALENDAR ////////////////////////
     const initialDate = moment().format('YYYY-MM-DD');
@@ -54,6 +68,27 @@ function CRMMyOrder(props) {
     const onDayPress = day => {
         setSelected(day.dateString);
     };
+
+    useEffect(() => {
+        if (cartAnimals.length > 0 || cartProducts.length > 0) {
+            let tmp = [];
+            tmp = cartAnimals.concat(cartProducts).filter((value) => value.cart);
+            setCartList(tmp);
+            handlePrice(tmp, tax, datadiscount);
+        }
+    }, [cartAnimals, cartProducts]);
+
+    useEffect(() => {
+        dispatch(getTax()).then(response => {
+            if (response.payload) {
+                settax(response.payload.tax);
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        changeDiscount(datadiscount.length === 0 ? 0 : datadiscount)
+    }, [datadiscount]);
 
     return (
         <View style={{ flex: 1 }}>
@@ -79,115 +114,123 @@ function CRMMyOrder(props) {
                             My Order
                         </Text>
 
-                        <View style={{
-                            ...CRMStyles.boxcontainer,
-                            shadowOpacity: 0.09,
-                            marginTop: verticalScale(20),
-                            height: moderateVerticalScale(60),
-                            borderRadius: moderateScale(15),
-                            flexDirection: 'row', alignItems: 'center',
-                            marginStart: moderateScale(25),
-                            marginEnd: moderateScale(25),
+                        <FlatList
 
-                        }}>
-                            <Image
-                                source={Icons.icon_paw}
-                                resizeMode='cover'
-                                style={{
-                                    width: moderateScale(65),
-                                    height: '100%',
-                                    borderRadius: moderateScale(15)
-                                    , marginEnd: moderateScale(15)
-                                }}
-                            />
-
-                            <View style={{
-                                flex: 1, alignItems: 'center',
-                                justifyContent: 'center',
-
-                            }}>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    paddingEnd: moderateScale(15)
-                                }}>
-
-                                    <AutoSizeText
-                                        numberOfLines={1}
-                                        minFontSize={moderateScale(12)}
-                                        fontSize={moderateScale(16)}
-                                        style={{
-                                            fontFamily: Fonts.type.bold,
-                                            color: '#464646',
-
-                                        }}
-                                    >
-                                        Nagtile
-                                    </AutoSizeText>
-                                    <AutoSizeText
-                                        numberOfLines={1}
-                                        minFontSize={moderateScale(12)}
-                                        fontSize={moderateScale(14)}
-                                        style={{
-                                            fontFamily: Fonts.type.medium,
-                                            color: Colors.appBgColor,
-                                            flex: 1,
-                                            textAlign: 'right',
-                                            marginStart: moderateScale(10)
-
-                                        }}
-                                    >
-                                        $100
-                                    </AutoSizeText>
-                                </View>
-                                <View style={{
-                                    flexDirection: 'row',
-                                    paddingEnd: moderateScale(15),
-                                    width: '100%',
-                                    alignItems: 'flex-end',
-                                    height: verticalScale(16),
-                                }}>
-
-                                    <AutoSizeText
-                                        numberOfLines={1}
-                                        minFontSize={moderateScale(12)}
-                                        fontSize={moderateScale(12)}
-                                        style={{
-                                            fontFamily: Fonts.type.base,
-                                            color: '#A1A1A1',
-                                            flex: 1
-
-                                        }}
-                                    >
-                                        Parrot
-                                    </AutoSizeText>
+                            data={cartList}
+                            renderItem={({ item, index }) => {
+                                return (
                                     <View style={{
-                                        backgroundColor: '#E27F0E',
-                                        justifyContent: 'center',
-                                        paddingStart: moderateScale(5),
-                                        paddingEnd: moderateScale(5),
-                                        borderRadius: moderateScale(10)
-                                    }}>
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={moderateScale(12)}
-                                            fontSize={moderateScale(14)}
+                                        ...CRMStyles.boxcontainer,
+                                        marginTop: verticalScale(10),
+                                        shadowOpacity: 0.09,
+                                        height: verticalScale(55),
+                                        borderRadius: moderateScale(15),
+                                        flexDirection: 'row', alignItems: 'center', marginStart: moderateScale(25),
+                                        marginEnd: moderateScale(25)
+                                    }}
+                                    >
+                                        <Image
+                                            source={Images.img_user_placeholder}
+                                            resizeMode='cover'
                                             style={{
-                                                fontFamily: Fonts.type.medium,
-                                                color: 'white',
-
+                                                width: moderateScale(65),
+                                                height: verticalScale(55),
+                                                borderRadius: moderateScale(15)
+                                                , marginEnd: moderateScale(15)
                                             }}
-                                        >
-                                            1
-                                        </AutoSizeText>
+                                        />
+
+                                        <View style={{
+                                            flex: 1, alignItems: 'center',
+                                            justifyContent: 'center',
+
+                                        }}>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                                paddingEnd: moderateScale(15)
+                                            }}>
+
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(16)}
+                                                    style={{
+                                                        fontFamily: Fonts.type.bold,
+                                                        color: '#464646',
+
+                                                    }}
+                                                >
+                                                    {item.data.name}
+                                                </AutoSizeText>
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(14)}
+                                                    style={{
+                                                        fontFamily: Fonts.type.medium,
+                                                        color: Colors.appBgColor,
+                                                        flex: 1,
+                                                        textAlign: 'right',
+                                                        marginStart: moderateScale(10)
+
+                                                    }}
+                                                >
+                                                    ${item.data.price}
+                                                </AutoSizeText>
+                                            </View>
+                                            <View style={{
+                                                flexDirection: 'row',
+                                                paddingEnd: moderateScale(15),
+                                                width: '100%',
+                                                alignItems: 'flex-end',
+                                                height: verticalScale(16),
+                                            }}>
+
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(12)}
+                                                    style={{
+                                                        fontFamily: Fonts.type.base,
+                                                        color: '#A1A1A1',
+                                                        flex: 1
+
+                                                    }}
+                                                >
+                                                    {item._id.substring(0, 8)}
+                                                </AutoSizeText>
+                                                <View style={{
+                                                    backgroundColor: '#E27F0E',
+                                                    justifyContent: 'center',
+                                                    paddingStart: moderateScale(5),
+                                                    paddingEnd: moderateScale(5),
+                                                    borderRadius: moderateScale(10)
+                                                }}>
+                                                    <AutoSizeText
+                                                        numberOfLines={1}
+                                                        minFontSize={moderateScale(12)}
+                                                        fontSize={moderateScale(14)}
+                                                        style={{
+                                                            fontFamily: Fonts.type.medium,
+                                                            color: 'white',
+
+                                                        }}
+                                                    >
+                                                        {item.cart}
+                                                    </AutoSizeText>
+                                                </View>
+                                            </View>
+
+                                        </View>
+
                                     </View>
-                                </View>
+                                );
+                            }}
 
-                            </View>
-
-                        </View>
-
+                        />
+        
 
                         <View style={{
                             padding: moderateScale(25),
@@ -212,13 +255,15 @@ function CRMMyOrder(props) {
                                 }}>
 
                                     <TextInput
+                                        ref={discountRef}
                                         onChangeText={(e) => {
-                                            setSearchTxt(e)
+                                            setdatadiscount(e);
                                         }}
-                                        value={searchTxt}
+                                        keyboardType="numeric"
+                                        maxLength={5}
+                                        value={datadiscount}
                                         placeholder='Discount Amount'
                                         numberOfLines={1}
-                                        keyboardType='default'
                                         autoCapitalize='none'
                                         style={{
                                             keyboardShouldPersistTaps: true,
@@ -241,7 +286,10 @@ function CRMMyOrder(props) {
                                     borderColor: '#503A9F',
                                     borderWidth: 1,
                                 }} onPress={() => {
-
+                                    // if (Util.isTwoDecimalPlaces(datadiscount))
+                                    //     changeDiscount(datadiscount)
+                                    // else
+                                    //     Util.topAlertError('Please enter value correctly')
                                 }}>
 
                                     <Text
@@ -296,7 +344,7 @@ function CRMMyOrder(props) {
 
                                 }}
                             >
-                                $0
+                                ${discount}
                             </AutoSizeText>
                         </View>
                         <View style={{
@@ -333,7 +381,7 @@ function CRMMyOrder(props) {
 
                                 }}
                             >
-                                $100
+                                ${amount && amount.subTotal}
                             </AutoSizeText>
                         </View>
                         <View style={{
@@ -355,7 +403,7 @@ function CRMMyOrder(props) {
 
                                 }}
                             >
-                                Salex Tax @10 %
+                                Salex Tax
                             </AutoSizeText>
                             <AutoSizeText
                                 numberOfLines={1}
@@ -370,7 +418,7 @@ function CRMMyOrder(props) {
 
                                 }}
                             >
-                                $10
+                                {tax.toFixed(2)} %
                             </AutoSizeText>
                         </View>
 
@@ -414,7 +462,7 @@ function CRMMyOrder(props) {
 
                                 }}
                             >
-                                $10
+                                $ {amount?.totalAmount && amount.totalAmount}
                             </AutoSizeText>
                         </View>
 
@@ -474,10 +522,11 @@ function CRMMyOrder(props) {
                                     marginEnd: moderateScale(25)
                                 }} onPress={() => {
                                     if (addItems.length < 5) {
-                                        setSelected(initialDate)
-                                        setCloseBottonSheet(true)
-                                    }else{
-                                        Util.topAlert('Only five installments are allowed')
+                                        setInstallAmount('')
+                                        setSelected(initialDate);
+                                        setCloseBottonSheet(true);
+                                    } else {
+                                        Util.topAlert('Only five installments are allowed');
                                     }
                                 }
                                 }>
@@ -510,7 +559,7 @@ function CRMMyOrder(props) {
                             </View>
                             : <View />}
 
-                        {isEdit || isBottonSheetVisible ? sheetRef.current.open() : null}
+                        {isBottonSheetVisible ? sheetRef.current.open() : null}
                         <RBSheet
                             ref={sheetRef}
                             height={Dimensions.get('screen').height - moderateScale(130)}
@@ -521,8 +570,8 @@ function CRMMyOrder(props) {
                                 }
                             }}
                             onClose={() => {
-                                setIsEdit(false)
-                                setCloseBottonSheet(false)
+                                //setIsEdit(false);
+                                setCloseBottonSheet(false);
                             }
                             }
                         >
@@ -591,7 +640,9 @@ function CRMMyOrder(props) {
                     style={{
                         flex: 0.2,
                     }}
-                    onPress={(e) => nextScreen(e)}>
+                    onPress={(e) => {
+                        handleNavigation();
+                    }}>
                     <Image resizeMode='contain'
                         source={Icons.icon_blue_forwardbtn}
                         style={{
@@ -643,9 +694,13 @@ function CRMMyOrder(props) {
                     </AutoSizeText>
                     <TouchableOpacity
                         onPress={() => {
-                            setIsEditObj({ downPayment: index === 0 ? true : false, installNo: index + 1 })
-                            setIsEdit(true)
-           
+                            setIsEditObj({ downPayment: index === 0 ? true : false, installNo: index + 1 });
+                            setIsEdit(true);
+                            setCurrentIndex(index);
+                            setInstallAmount(item.amount)
+                            setSelected(item.date);
+                            setCloseBottonSheet(true);
+
                         }}>
                         <Image source={Icons.icon_services_edit}
                             resizeMode='contain' style={{
@@ -728,7 +783,7 @@ function CRMMyOrder(props) {
 
                         }}
                     >
-                        5 Jan,2021
+                        {moment(item.date).format('DD MMM,YYYY')}
                     </AutoSizeText>
                 </View>
                 <View style={{
@@ -763,12 +818,12 @@ function CRMMyOrder(props) {
 
                         }}
                     >
-                        $50
+                        ${item.amount}
                     </AutoSizeText>
                 </View>
 
             </View>
-        )
+        );
     }
 
     //////////////////// BOTTOM SHEET /////////////
@@ -808,7 +863,7 @@ function CRMMyOrder(props) {
 
                                 <TextInput
                                     onChangeText={(e) => {
-                                        setDownPayment(e)
+                                        setDownPayment(e);
                                     }}
                                     value={downPayment}
                                     placeholder='Down Payment'
@@ -896,7 +951,7 @@ function CRMMyOrder(props) {
                                 autoCapitalize='none'
                                 keyboardType="default"
                                 onChangeText={(e) => {
-                                    setInstallAmount(e)
+                                    setInstallAmount(e);
                                 }
                                 }
                                 value={installAmount} />
@@ -916,12 +971,18 @@ function CRMMyOrder(props) {
                             setTimeout(() => {
                                 //setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
                                 let tmp = addItems;
-                                tmp.push({})
-                                if (!isEdit)
-                                    setAddItems(tmp)
+                                if (!isEdit) {
+                                    tmp.push({ name: humanize(currentIndex+1), date: selected, amount: installAmount });
+                                    setAddItems(tmp);
+                                }
+                                else {
+                                    addItems[currentIndex] = { name: tmp.name, date: selected, amount: installAmount }
+                                    setAddItems(addItems);
+                                    setIsEdit(false)
+                                }
 
                                 sheetRef.current.close();
-                            }, 200)
+                            }, 200);
                         }}>
                         <Text style={{
                             ...CRMStyles.generalTxt,
@@ -939,7 +1000,7 @@ function CRMMyOrder(props) {
                         ...CRMStyles.styleButtons, flex: 0,
                         width: '40%', alignSelf: 'center',
                         marginTop: verticalScale(15), backgroundColor: 'white'
-                    }} onPress={() => { sheetRef.current.close() }}>
+                    }} onPress={() => { sheetRef.current.close(); }}>
                         <Text style={{
                             ...CRMStyles.generalTxt,
                             fontFamily: Fonts.type.base,
@@ -954,8 +1015,70 @@ function CRMMyOrder(props) {
 
                 </View>
             </ScrollView>
-        )
+        );
     }
+
+    function handleNavigation(){
+        if (isToggleClick && addItems.length > 0) {
+            let pay, filter;
+
+
+            pay = addItems.reduce((total, e) => total + parseFloat(e.amount), 0)
+            pay = downPayment ? parseFloat(downPayment) + pay : pay
+            if (parseFloat(pay).toFixed(2) === parseFloat(amount.totalAmount).toFixed(2)) {
+                filter = addItems.filter((e) => e.amount !== 0)
+                setInvoice({ downPayment, tax, amount, installments: filter, discount, cartList: cartList })
+                nextScreen()
+            }
+            else {
+                Util.topAlert("Installments and down payment not matched with total amount");
+            }
+        }
+        else {
+            setDownPayment(null)
+            //props.navigation.navigate("ConfirmOrder", { CartAnimals: filterAnimal, CartProducts: filterProduct, downpayment, tax, amount, buyer, installments: installments, discount })
+            setInvoice({ downPayment, tax, amount, installments: [], discount, cartList: cartList })
+            nextScreen()
+        }
+    }
+
+    function changeDiscount(datadiscount) {
+        if (!amount)
+            return
+        if (parseFloat(datadiscount) < parseFloat(amount.totalAmount)) {
+            setdiscount(datadiscount);
+            handlePrice(cartList, tax, datadiscount);
+        }
+        else if (!datadiscount) {
+            Util.topAlert("Kindly enter discount amount");
+        }
+        else {
+            Util.topAlert("Discount price must be less than total Amount");
+        }
+    }
+
+    function handlePrice(cartList, tax = 0, discount = 0) {
+        let price = 0;
+        console.log('cartList--->', cartList);
+        if (cartList.length > 0) { price = cartList.reduce((total, num) => total + parseInt(num.data.price) * num.cart, 0); }
+        let data = { subTotal: price, totalAmount: parseFloat(price + price * tax / 100 - discount).toFixed(2) };
+        setAmount(data);
+    }
+
+    function humanize(number){
+        if (number % 100 >= 11 && number % 100 <= 13) return number + "th";
+
+        switch (number % 10) {
+            case 1:
+                return number + "st";
+            case 2:
+                return number + "nd";
+            case 3:
+                return number + "rd";
+        }
+
+        return number + "th";
+    };
 
 
 }

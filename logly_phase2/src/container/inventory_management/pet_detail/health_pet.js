@@ -160,7 +160,7 @@ function HealthPetView(props) {
                                             flex: 0.2,
                                         }}
 
-                                        src={item.filename}
+                                        src={item.filename?item.filename:''}
                                         placeholder={item.filename.includes('.pdf') ? Icons.icon_file_pdf : Icons.icon_paw}
                                     />
 

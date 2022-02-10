@@ -24,7 +24,7 @@ function SummaryGroups(props) {
 
     const { nextScreen, animals, team, getAnimalList, getTeamList, groupName } = props;
 
-    console.log('sumaary prop--->', props)
+    console.log('sumaary prop getAnimalList--->', props)
 
 
     const [tabs, setTab] = useState(-1);
@@ -44,7 +44,12 @@ function SummaryGroups(props) {
 
     useEffect(() => {
         console.log('group Name-->', groupName)
-    }, [groupName])
+    }, [groupName]);
+
+    useEffect(() => {
+        setTab(0)
+
+    }, [props.isAllData])
 
     return (
         <View style={{ flex: 1 }}>
@@ -131,12 +136,16 @@ function SummaryGroups(props) {
 
         switch (tabs) {
             case 0:
-                return <AddAnimalsGroups {...props} isSummary animals={animals} getAnimalList={getAnimalList} getFinalAnimalList={(e) => {
+                return <AddAnimalsGroups {...props} isSummary animals={finalAnimalList} getAnimalList={getAnimalList} getFinalAnimalList={(e) => {
+                    console.log('final animals--->', e)
                     setFinalAnimalList(e)
                 }} />;
 
             case 1:
-                return <AddTeamGroups {...props} isSummary team={team} getTeamList={getTeamList} getFinalTeamList={(e) => setFinalTeamList(e)} />;
+                return <AddTeamGroups {...props} isSummary team={finalTeamList} getTeamList={getTeamList} getFinalTeamList={(e) =>{
+                    console.log('final teams--->',e)
+                    setFinalTeamList(e)}
+                 } />;
 
 
         }

@@ -50,11 +50,11 @@ function AnimalInfoView(props) {
                         <Text style={{ ...styles.generalTxt, marginStart: moderateScale(10), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-1) }}>Back</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => skipBtn(e)}>
+                    {/* <TouchableOpacity style={{ alignSelf: 'flex-end' }} onPress={(e) => skipBtn(e)}>
                         <Text style={{ ...styles.generalTxt, marginStart: moderateScale(5), marginTop: Platform.OS === 'android' ? verticalScale(-2) : verticalScale(-8) }}>Skip</Text>
                         <Image source={Icons.icon_feather_arrow_right} style={{ marginTop: 0, height: verticalScale(12), width: moderateScale(48) }} resizeMode='contain' />
 
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
 
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>Animal Care</Text>
@@ -72,6 +72,7 @@ function AnimalInfoView(props) {
                                 borderRadius: moderateScale(10),
                                 marginTop: verticalScale(20),
                                 flex: 1,
+                                padding: moderateScale(5),
                                 height: verticalScale(40),
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -79,9 +80,9 @@ function AnimalInfoView(props) {
                             }} onPress={() => addServices(item)}>
 
                                 <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(14)}
-                                    fontSize={moderateScale(16)}
+                                    numberOfLines={2}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(14)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,

@@ -156,7 +156,7 @@ function MemberDetailView(props) {
                                     alignItems: 'center'
                                 }}
                                 onPress={() => {
-                                    props.navigation.navigate('AddTeamMember', { contactData: contactData, updateContacts: props.route.params.updateContacts })
+                                    props.navigation.navigate('AddTeamMember', { contactData: contactData, updateContacts: props.route.params.updateContacts, isTransfer: false })
                                     setIsEditShow(false)
 
                                 }}>

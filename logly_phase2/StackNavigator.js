@@ -20,7 +20,7 @@ import {
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
   CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted,
   GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile,
-  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile
+  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile, TransferListing, SummaryAnimalsView
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -43,12 +43,12 @@ function StackNavigator(props) {
   useEffect(() => {
     DataHandler.getAccountType().then((value) => {
       if (value) {
-        console.log('sccccc----->', value)
         setCurrentType(value);
         setInitialRoute('HomeDrawer')
       }
       else
-        setInitialRoute('Splash')
+        setInitialRoute('Splash');
+
     }).catch(() => setInitialRoute('Splash'));
   }, [])
 
@@ -126,6 +126,8 @@ function StackNavigator(props) {
             <Stack.Screen name='AppointmentListing' component={AppointmentListing} />
             <Stack.Screen name='SelectServices' component={SelectServices} />
             <Stack.Screen name='AllAnimal' component={AllAnimal} />
+            <Stack.Screen name='TransferListing' component={TransferListing} />
+            <Stack.Screen name='SummaryAnimalsView' component={SummaryAnimalsView} />
             <Stack.Screen name='SelectDateServices' component={SelectDateServices} />
           </Stack.Navigator>
         </NavigationContainer>
@@ -183,7 +185,7 @@ function StackNavigator(props) {
           }} />
 
           {currentType && currentType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ? null :
-            <Drawer.Screen name='DashBoard' component={DashBoard} options={{
+            <Drawer.Screen name='Dashboard' component={DashBoard} options={{
               drawerLabelStyle: {
                 fontSize: moderateScale(18)
               },
@@ -212,7 +214,7 @@ function StackNavigator(props) {
                   }}
                 />),
             }} />}
-          <Drawer.Screen name='Team Member' component={TeamListing} options={{
+          <Drawer.Screen name='Team Members' component={TeamListing} options={{
             drawerLabelStyle: {
               fontSize: moderateScale(18)
             },

@@ -27,7 +27,9 @@ function FilterAnimal(props) {
     const modalBreed = useRef(null);
     const modalAnimal = useRef(null);
 
-    const [initialPg, setInitialPg] = useState(customFilters.animalType === 'Active' ? 0 : 1);
+    console.log('customFilters--->', customFilters);
+
+    const [initialPg, setInitialPg] = useState(customFilters.animalType.toLowerCase().includes('active') ? 0 : 1);
     const [tabsSelect, setTabsSelect] = useState(!customFilters.status ? -1 : TABS.findIndex((value) => value === customFilters.status));
     const [arrCategory, setArrCategory] = useState([]);
     const [breedId, setBreedId] = useState(null);
@@ -370,6 +372,12 @@ function FilterAnimal(props) {
     function resetFilter() {
         setTabsSelect(-1);
         setInitialPg(0);
+        filterList({
+            animalType: 'Active',
+            status: TABS[0],
+            animalId: '',
+            breedId: ''
+        })
         props.navigation.pop()
     }
 

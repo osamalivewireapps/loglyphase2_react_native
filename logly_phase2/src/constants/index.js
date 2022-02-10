@@ -59,6 +59,7 @@ export const BUS_SERVICES = 'bus_services';
 export const BUS_DETAILS = 'bus_details';
 export const ANIMAL_LIST = 'animal_list';
 export const PRODUCT_LIST = 'product_list';
+export const IS_SETUP_WIZARD = 'IS_SETUP_WIZARD';
 
 export const TYPES_OF_SERVICES = [
     {

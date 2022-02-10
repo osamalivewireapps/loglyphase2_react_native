@@ -22,6 +22,9 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import DeviceInfo from 'react-native-device-info';
 import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 import utils from '../../../utils';
+import { getTeamMembersByEmail } from '../../../actions/TeamMembersModule';
+import { useDispatch } from 'react-redux';
+import AppLoader from "../../../components/AppLoader";
 
 function TeamSetupView(props) {
 
@@ -57,6 +60,9 @@ function TeamSetupView(props) {
     const sheetRef = React.useRef(null);
     const [isExistProfile, setIsExistProfile] = useState(false);
     const [isEmailEnable, setIsEmailEnable] = useState(true);
+    const [showLoader, setShowLoader] = useState(false)
+    const [removeFocus, setRemoveFocus] = useState(false);
+    const [allFieldEditable, setAllFieldEditable] = useState(true);
 
     //STATES...
     const inputEl = useRef(null);
@@ -70,8 +76,11 @@ function TeamSetupView(props) {
 
     //SCROLLVIEW
     const scroll = useRef(null);
+    const txtInpEmail = useRef(null);
 
     const isTablet = DeviceInfo.isTablet();
+
+    let dispatch = useDispatch();
 
     useEffect(() => {
         if (imgUri && imgUri.length > 0) {
@@ -100,6 +109,37 @@ function TeamSetupView(props) {
         }
     }, [userCityLocation]);
 
+  
+    useEffect(() => {
+
+        console.log('email textinput-->', txtInpEmail.current?.isFocused());
+
+        if (validateEmail && valueEmail.length > 0 && removeFocus) {
+            setShowLoader(true)
+            dispatch(getTeamMembersByEmail(valueEmail)).then((respose) => {
+                setShowLoader(false)
+                if (respose.payload) {
+                    let tmp = respose.payload;
+                    setValueName(tmp.name)
+                    setPhone(tmp.phone)
+                    userStateLocation({ name: tmp.state, stateId: 99 })
+                    userCityLocation({ name: tmp.city, cityId: 99 })
+                    setPhotoUri(tmp.image)
+                    setIsEmailEnable(false)
+                    setAllFieldEditable(false)
+                } else {
+                    updateServiceValues(null);
+                    userStateLocation({ name: null, stateId: -1 });
+                    setAllFieldEditable(true)
+
+                }
+                setRemoveFocus(false)
+            }).catch(() => {
+                setShowLoader(false)
+                setRemoveFocus(false)
+            });
+        }
+    }, [removeFocus])
 
     return (
         <View style={{ flex: 1, backgroundColor: Colors.appBgColor }}>
@@ -212,6 +252,8 @@ function TeamSetupView(props) {
                                     updateServiceValues={(e) => {
                                         setBtnLabel(true)
                                         setCloseBottonSheet(true)
+                                        userStateLocation({ name: e.state, stateId: 11 });
+                                        userCityLocation({ name: e.city, stateId: 12 });
                                         updateServiceValues(e)
                                     }} /> :
                                 null}
@@ -230,7 +272,7 @@ function TeamSetupView(props) {
                             }} onPress={() => {
                                 setBtnLabel(false)
                                 updateServiceValues(null);
-                                userStateLocation({ name:null, stateId: -1 });
+                                userStateLocation({ name: null, stateId: -1 });
                                 setCloseBottonSheet(true)
                             }
                             }>
@@ -435,6 +477,7 @@ function TeamSetupView(props) {
 
             <ScrollView keyboardShouldPersistTaps='handled'
                 ref={scroll}
+                style={{}}
 
             >
                 <TouchableOpacity
@@ -444,447 +487,493 @@ function TeamSetupView(props) {
                         setIsCityVisible(false)
                     }}
                     style={{
+                        height: '100%',
+                        position: 'relative'
+                    }}>
+
+                    <View style={{
                         padding: moderateScale(30),
                         alignItems: 'center',
                         alignItems: 'flex-start',
-                        flex: 1,
+                        width: '100%',
                     }}>
-
-                    <TouchableOpacity
-                        onPress={() => {
-                            setCloseBottonSheet(false)
-                            sheetRef.current.close()
-                            setDialogVisibleStatus(true)
-                        }}
-                        style={{
-                            backgroundColor: '#F4F4F4', alignSelf: 'center',
-                            height: moderateScale(90), width: moderateScale(90),
-                            borderRadius: moderateScale(100),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            paddingTop: verticalScale(10)
-                        }}>
-
-                        <Image
-                            source={{ uri: photoUri }}
+                        <TouchableOpacity
+                            onPress={() => {
+                                setCloseBottonSheet(false)
+                                sheetRef.current.close()
+                                setDialogVisibleStatus(true)
+                            }}
                             style={{
-                                height: moderateScale(90),
-                                width: moderateScale(90),
+                                backgroundColor: '#F4F4F4', alignSelf: 'center',
+                                height: moderateScale(90), width: moderateScale(90),
                                 borderRadius: moderateScale(100),
                                 justifyContent: 'center',
                                 alignItems: 'center',
-                                position: 'absolute'
-                            }} />
-                        {!photoUri || photoUri.length === 0 ?
-                            <View style={{ alignItems: 'center' }}>
-                                <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(14)}
-                                    fontSize={moderateScale(16)}
-                                    mode={ResizeTextMode.max_lines}
+                                paddingTop: verticalScale(10)
+                            }}>
+
+                            <Image
+                                source={{ uri: photoUri }}
+                                style={{
+                                    height: moderateScale(90),
+                                    width: moderateScale(90),
+                                    borderRadius: moderateScale(100),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    position: 'absolute'
+                                }} />
+                            {!photoUri || photoUri.length === 0 ?
+                                <View style={{ alignItems: 'center' }}>
+                                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15) }} />
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: Colors.appBgColor,
+                                            textAlign: 'center',
+                                            width: '100%',
+                                        }}>Photo
+                                    </AutoSizeText>
+                                </View>
+                                : <View />
+                            }
+
+
+
+                        </TouchableOpacity>
+
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginStart: moderateScale(5),
+                            marginTop: verticalScale(15),
+                            marginBottom: verticalScale(5)
+                        }}>Email</Text>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            flexDirection: 'row', alignItems: 'center',
+                            shadowColor: validateEmail ? 'transparent' : 'darkred',
+                            shadowOpacity: validateEmail ? 0.25 : 1,
+                            padding: moderateScale(15),
+                        }}>
+
+
+                            <TextInput
+                                ref={txtInpEmail}
+                                placeholder="" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                onEndEditing={(e) => {
+                                    console.log("remove focus--->", removeFocus)
+                                    setRemoveFocus(true)
+                                }}
+                                editable={isEmailEnable}
+                                underlineColorAndroid='transparent'
+                                require={true}
+                                numberOfLines={1}
+                                autoCapitalize='none'
+                                keyboardType="email-address"
+                                onChangeText={(e) => {
+                                    setValidateEmail(Util.isEmailValid(e))
+                                    setValueEmail(e)
+                                }
+                                }
+                                value={valueEmail} />
+
+                            {!allFieldEditable ?
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        updateServiceValues(null);
+                                        userStateLocation({ name: null, stateId: -1 });
+                                        setAllFieldEditable(true)
+                                        setIsEmailEnable(true)
+                                    }
+                                    }
                                     style={{
-                                        ...styles.generalTxt,
-                                        color: Colors.appBgColor,
-                                        textAlign: 'center',
-                                        width: '100%',
-                                    }}>Photo
-                                </AutoSizeText>
-                            </View>
-                            : <View />
-                        }
+                                        margin: moderateScale(10),
+                                        width: moderateScale(15),
+                                        height: moderateScale(20),
+                                        justifyContent: 'center',
+                                        alignItems: 'flex-end',
+                                    }}>
+                                    <Image source={Icons.icon_close} resizeMode='contain' style={{
+                                        tintColor: '#707070',
+                                        height: verticalScale(8), width: moderateScale(8)
+                                    }} />
+                                </TouchableOpacity>
+                                : <View />}
+                        </View>
+
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginStart: moderateScale(5),
+                            marginTop: verticalScale(25),
+                            marginBottom: verticalScale(5)
+
+                        }}>Name</Text>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            flexDirection: 'row', alignItems: 'center',
+                            shadowColor: validateName ? 'transparent' : 'darkred',
+                            shadowOpacity: validateName ? 0.25 : 1,
+                            padding: moderateScale(15),
+                        }}>
+
+
+                            <TextInput
+                                editable={allFieldEditable}
+                                placeholder="" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                underlineColorAndroid='transparent'
+                                require={true}
+                                numberOfLines={1}
+                                autoCapitalize='none'
+                                keyboardType="default"
+                                onChangeText={(e) => {
+                                    setValidateName(Util.isLengthGreater(e))
+                                    setValueName(e)
+                                }
+                                }
+                                value={valueName} />
+                        </View>
 
 
 
-                    </TouchableOpacity>
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: moderateScale(5),
-                        marginTop: verticalScale(15),
-                        marginBottom: verticalScale(5)
-                    }}>Name</Text>
-                    <View style={{
-                        ...styles.boxcontainer,
-                        flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateName ? 'transparent' : 'darkred',
-                        shadowOpacity: validateName ? 0.25 : 1,
-                        padding: moderateScale(15),
-                    }}>
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginStart: moderateScale(5),
+                            marginTop: verticalScale(25),
+                            marginBottom: verticalScale(5)
+                        }}>Phone</Text>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            flexDirection: 'row', alignItems: 'center',
+                            shadowColor: validatePhone ? 'transparent' : 'darkred',
+                            shadowOpacity: validatePhone ? 0.25 : 1,
+                            padding: moderateScale(15),
+                        }}>
 
 
-                        <TextInput placeholder="" style={{
-                            ...styles.styleTextInput,
-                            flex: 1,
-                            textAlign: 'left',
-                        }}
-                            underlineColorAndroid='transparent'
-                            require={true}
-                            numberOfLines={1}
-                            autoCapitalize='none'
-                            keyboardType="default"
-                            onChangeText={(e) => {
-                                setValidateName(Util.isLengthGreater(e))
-                                setValueName(e)
-                            }
-                            }
-                            value={valueName} />
-                    </View>
+                            <TextInput
+                                maxLength={12}
+                                editable={allFieldEditable}
+                                placeholder="" style={{
+                                    ...styles.styleTextInput,
+                                    flex: 1,
+                                    textAlign: 'left',
+                                }}
+                                underlineColorAndroid='transparent'
+                                require={true}
+                                numberOfLines={1}
+                                autoCapitalize='none'
+                                keyboardType="phone-pad"
+                                onChangeText={(e) => {
+                                    setPhoneNo(e)
+                                }
+                                }
+                                value={valuePhone} />
+                        </View>
 
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: moderateScale(5),
-                        marginTop: verticalScale(25), marginBottom: verticalScale(5)
-                    }}>Email</Text>
-                    <View style={{
-                        ...styles.boxcontainer,
-                        flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateEmail ? 'transparent' : 'darkred',
-                        shadowOpacity: validateEmail ? 0.25 : 1,
-                        padding: moderateScale(15),
-                    }}>
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginStart: moderateScale(5),
+                            marginTop: verticalScale(25),
+                            marginBottom: verticalScale(5)
+                        }}>State</Text>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            shadowColor: validateState ? 'white' : 'darkred',
+                            shadowOpacity: validateState ? 0.25 : 1,
+                            flexDirection: 'row',
+                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                            alignItems: 'center',
+                        }}>
+
+                            <TextInput placeholder=""
+                                ref={inputEl}
+                                autoCapitalize="none"
+                                editable={allFieldEditable}
+                                onPressIn={() => {
+                                    if (!allFieldEditable)
+                                        return
+                                    inputEl.current.focus();
+                                    if (inputCity.current.isFocused()) { return; }
+
+                                    setIsVisible(true);
+                                    setIsCityVisible(false);
+                                    setFilterArr(arrStates);
+                                    scroll.current.scrollTo({ x: 0, y: 250, animated: true });
+                                }}
+                                onChangeText={(e) => {
+                                    userStateLocation({ name: e, stateId: -1 });
+                                    setIsVisible(isVisible);
+                                }}
+                                style={{
+                                    ...styles.styleTextInput,
+                                    flex: 8,
+                                    marginEnd: moderateScale(10),
+
+                                }}
+                                keyboardType="default"
+                                value={userState} />
+                            <TouchableOpacity
+                                onPress={() => {
+                                    //setIsVisible(!isVisible);
+                                    //setIsCityVisible(false)
+                                    //setIsZipVisible(false)
 
 
-                        <TextInput placeholder="" style={{
-                            ...styles.styleTextInput,
-                            flex: 1,
-                            textAlign: 'left',
-                        }}
-                            editable={isEmailEnable}
-                            focusable={isEmailEnable}
-                            underlineColorAndroid='transparent'
-                            require={true}
-                            numberOfLines={1}
-                            autoCapitalize='none'
-                            keyboardType="email-address"
-                            onChangeText={(e) => {
-                                setValidateEmail(Util.isEmailValid(e))
-                                setValueEmail(e)
-                            }
-                            }
-                            value={valueEmail} />
-                    </View>
+                                }}
+                            >
+                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
+                            </TouchableOpacity>
 
 
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: moderateScale(5),
-                        marginTop: verticalScale(25),
-                        marginBottom: verticalScale(5)
-                    }}>Phone</Text>
-                    <View style={{
-                        ...styles.boxcontainer,
-                        flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validatePhone ? 'transparent' : 'darkred',
-                        shadowOpacity: validatePhone ? 0.25 : 1,
-                        padding: moderateScale(15),
-                    }}>
+                        </View>
+
+                        {(isVisible) ? <View style={{
+                            width: '100%',
+                            marginTop: verticalScale(10),
+                            ...styles.boxcontainer,
+                            height: moderateScale(150),
+                            shadowRadius: 4,
+                            borderRadius: moderateScale(10),
+                            zIndex: 1,
+
+                        }}>
+
+                            <FlatList
+                                keyboardShouldPersistTaps="handled"
+                                data={filterArray}
+                                renderItem={(item) => {
+                                    return (
+                                        <TouchableOpacity onPress={() => {
+                                            Keyboard.dismiss();
+                                            chooseState({ name: item.item.name, stateId: item.item.id });
+                                            setIsVisible(false);
+
+                                        }}>
+                                            <View >
+                                                <Text style={{
+                                                    ...styles.generalTxt, borderColor: 'black',
+                                                    borderWidth: 0, width: '100%', padding: moderateScale(10),
+                                                    borderRadius: moderateScale(10), marginTop: 0,
+                                                    backgroundColor: 'white',
+                                                    color: 'black', fontSize: moderateScale(14),
+
+                                                }}>{item.item.name}</Text>
+                                            </View>
+                                        </TouchableOpacity>);
+                                }}
+                                keyExtractor={item => item.Country}
+                            />
+
+                        </View> : null}
+
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginStart: moderateScale(5),
+                            marginTop: verticalScale(25),
+                            marginBottom: verticalScale(5)
+                        }}>City</Text>
+                        <View style={{
+                            ...styles.boxcontainer,
+                            shadowColor: validateCity ? 'white' : 'darkred',
+                            shadowOpacity: validateCity ? 0.25 : 1,
+                            flexDirection: 'row',
+                            padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
+                            alignItems: 'center',
+                        }}>
+
+                            <TextInput placeholder=""
+                                ref={inputCity}
+                                editable={allFieldEditable}
+                                onPressIn={() => {
+                                    if (!allFieldEditable)
+                                        return
+                                    setIsVisible(false);
+                                    if (userState && userState.length !== 0) {
+                                        setIsCityVisible(true);
+                                        setFilterCityArr(arrCity);
+                                        scroll.current.scrollTo({ x: 0, y: 350, animated: true });
+                                    } else {
+                                        alert('Please select state first..');
+                                        setIsCityVisible(false);
+                                    }
+                                }
+                                }
+                                onChangeText={(e) => {
+                                    setIsVisible(false);
+                                    userCityLocation({ name: e, cityId: -1 });
+                                    setIsCityVisible(true);
+                                    scroll.current.scrollTo({ x: 0, y: 350, animated: true });
+
+                                }}
+                                style={{
+                                    ...styles.styleTextInput,
+                                    flex: 8,
+                                    marginEnd: moderateScale(10),
+
+                                }}
+                                keyboardType="default"
+                                autoCapitalize="none"
+                                value={userCity}
+
+                            />
+
+                            <TouchableOpacity
+                                onPress={() => {
+
+                                }}
+                            >
+                                <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
+                            </TouchableOpacity>
+                        </View>
+
+                        {(isCityVisible) ? <View style={{
+                            zIndex: 1,
+                            width: '100%',
+                            marginTop: verticalScale(10),
+                            ...styles.boxcontainer,
+                            height: moderateScale(150),
+                            shadowRadius: 4,
+                            borderRadius: moderateScale(10),
+
+                        }}>
+                            <FlatList
+                                keyboardShouldPersistTaps="handled"
+                                data={filterCityArray}
+                                renderItem={(item) => {
+                                    return (
+                                        <TouchableOpacity onPress={() => {
+                                            Keyboard.dismiss();
+                                            chooseCity({ name: item.item.name, cityId: item.item.id });
+                                            setIsCityVisible(false);
+
+                                        }}>
+                                            <View >
+                                                <Text style={{
+                                                    ...styles.generalTxt, borderColor: 'black',
+                                                    borderWidth: 0, width: '100%',
+                                                    padding: moderateScale(10),
+                                                    borderRadius: moderateScale(10), marginTop: 0,
+                                                    backgroundColor: 'white',
+                                                    color: 'black', fontSize: moderateScale(14),
+
+                                                }}>{item.item.name}</Text>
+                                            </View>
+                                        </TouchableOpacity>);
+                                }}
+                                keyExtractor={item => item.Country}
+                            />
+                        </View> : null}
+
+                        <Text style={{
+                            ...styles.bottomSheetHeader,
+                            marginStart: moderateScale(5),
+                            marginTop: verticalScale(25),
+                            marginBottom: verticalScale(5)
+                        }}>Address</Text>
+
+                        <View style={{
+                            ...styles.boxcontainer,
+                            height: verticalScale(100),
+                            flexDirection: 'row', alignItems: 'center',
+                            shadowColor: validateDesc ? 'transparent' : 'darkred',
+                            shadowOpacity: validateDesc ? 0.25 : 1,
+                        }}>
 
 
-                        <TextInput
-                            maxLength={12}
-                            placeholder="" style={{
+                            <TextInput placeholder="" style={{
                                 ...styles.styleTextInput,
                                 flex: 1,
+                                paddingTop: verticalScale(15),
+                                padding: moderateScale(15),
                                 textAlign: 'left',
+                                height: verticalScale(100),
                             }}
-                            underlineColorAndroid='transparent'
-                            require={true}
-                            numberOfLines={1}
-                            autoCapitalize='none'
-                            keyboardType="phone-pad"
-                            onChangeText={(e) => {
-                                setPhoneNo(e)
-                            }
-                            }
-                            value={valuePhone} />
-                    </View>
-
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: moderateScale(5),
-                        marginTop: verticalScale(25),
-                        marginBottom: verticalScale(5)
-                    }}>State</Text>
-                    <View style={{
-                        ...styles.boxcontainer,
-                        shadowColor: validateState ? 'white' : 'darkred',
-                        shadowOpacity: validateState ? 0.25 : 1,
-                        flexDirection: 'row',
-                        padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
-                        alignItems: 'center',
-                    }}>
-
-                        <TextInput placeholder=""
-                            ref={inputEl}
-                            autoCapitalize="none"
-
-                            onPressIn={() => {
-
-                                inputEl.current.focus();
-                                if (inputCity.current.isFocused()) { return; }
-
-                                setIsVisible(true);
-                                setIsCityVisible(false);
-                                setFilterArr(arrStates);
-                                scroll.current.scrollTo({ x: 0, y: 250, animated: true });
-                            }}
-                            onChangeText={(e) => {
-                                userStateLocation({ name: e, stateId: -1 });
-                                setIsVisible(isVisible);
-                            }}
-                            style={{
-                                ...styles.styleTextInput,
-                                flex: 8,
-                                marginEnd: moderateScale(10),
-
-                            }}
-                            keyboardType="default"
-                            value={userState} />
-                        <TouchableOpacity
-                            onPress={() => {
-                                //setIsVisible(!isVisible);
-                                //setIsCityVisible(false)
-                                //setIsZipVisible(false)
-
-
-                            }}
-                        >
-                            <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
-                        </TouchableOpacity>
-
-
-                    </View>
-
-                    {(isVisible) ? <View style={{
-                        width: '100%',
-                        marginTop: verticalScale(10),
-                        ...styles.boxcontainer,
-                        height: moderateScale(150),
-                        shadowRadius: 4,
-                        borderRadius: moderateScale(10),
-                        zIndex: 1,
-
-                    }}>
-
-                        <FlatList
-                            keyboardShouldPersistTaps="handled"
-                            data={filterArray}
-                            renderItem={(item) => {
-                                return (
-                                    <TouchableOpacity onPress={() => {
-                                        Keyboard.dismiss();
-                                        chooseState({ name: item.item.name, stateId: item.item.id });
-                                        setIsVisible(false);
-
-                                    }}>
-                                        <View >
-                                            <Text style={{
-                                                ...styles.generalTxt, borderColor: 'black',
-                                                borderWidth: 0, width: '100%', padding: moderateScale(10),
-                                                borderRadius: moderateScale(10), marginTop: 0,
-                                                backgroundColor: 'white',
-                                                color: 'black', fontSize: moderateScale(14),
-
-                                            }}>{item.item.name}</Text>
-                                        </View>
-                                    </TouchableOpacity>);
-                            }}
-                            keyExtractor={item => item.Country}
-                        />
-
-                    </View> : null}
-
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: moderateScale(5),
-                        marginTop: verticalScale(25),
-                        marginBottom: verticalScale(5)
-                    }}>City</Text>
-                    <View style={{
-                        ...styles.boxcontainer,
-                        shadowColor: validateCity ? 'white' : 'darkred',
-                        shadowOpacity: validateCity ? 0.25 : 1,
-                        flexDirection: 'row',
-                        padding: moderateScale(20), paddingTop: 0, paddingBottom: 0,
-                        alignItems: 'center',
-                    }}>
-
-                        <TextInput placeholder=""
-                            ref={inputCity}
-                            onPressIn={() => {
-                                setIsVisible(false);
-                                if (userState && userState.length !== 0) {
-                                    setIsCityVisible(true);
-                                    setFilterCityArr(arrCity);
-                                    scroll.current.scrollTo({ x: 0, y: 350, animated: true });
-                                } else {
-                                    alert('Please select state first..');
-                                    setIsCityVisible(false);
+                                underlineColorAndroid="transparent"
+                                require={true}
+                                multiline={true}
+                                numberOfLines={50}
+                                maxLength={75}
+                                autoCapitalize="none"
+                                keyboardType="default"
+                                onChangeText={(e) => {
+                                    setValidateDesc(Util.isLengthGreater(e));
+                                    setDesc(e);
                                 }
-                            }
-                            }
-                            onChangeText={(e) => {
-                                setIsVisible(false);
-                                userCityLocation({ name: e, cityId: -1 });
-                                setIsCityVisible(true);
-                                scroll.current.scrollTo({ x: 0, y: 350, animated: true });
-
-                            }}
-                            style={{
-                                ...styles.styleTextInput,
-                                flex: 8,
-                                marginEnd: moderateScale(10),
-
-                            }}
-                            keyboardType="default"
-                            autoCapitalize="none"
-                            value={userCity}
-
-                        />
-
-                        <TouchableOpacity
-                            onPress={() => {
-
-                            }}
-                        >
-                            <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
-                        </TouchableOpacity>
-                    </View>
-
-                    {(isCityVisible) ? <View style={{
-                        zIndex: 1,
-                        width: '100%',
-                        marginTop: verticalScale(10),
-                        ...styles.boxcontainer,
-                        height: moderateScale(150),
-                        shadowRadius: 4,
-                        borderRadius: moderateScale(10),
-
-                    }}>
-                        <FlatList
-                            keyboardShouldPersistTaps="handled"
-                            data={filterCityArray}
-                            renderItem={(item) => {
-                                return (
-                                    <TouchableOpacity onPress={() => {
-                                        Keyboard.dismiss();
-                                        chooseCity({ name: item.item.name, cityId: item.item.id });
-                                        setIsCityVisible(false);
-
-                                    }}>
-                                        <View >
-                                            <Text style={{
-                                                ...styles.generalTxt, borderColor: 'black',
-                                                borderWidth: 0, width: '100%',
-                                                padding: moderateScale(10),
-                                                borderRadius: moderateScale(10), marginTop: 0,
-                                                backgroundColor: 'white',
-                                                color: 'black', fontSize: moderateScale(14),
-
-                                            }}>{item.item.name}</Text>
-                                        </View>
-                                    </TouchableOpacity>);
-                            }}
-                            keyExtractor={item => item.Country}
-                        />
-                    </View> : null}
-
-                    <Text style={{
-                        ...styles.bottomSheetHeader,
-                        marginStart: moderateScale(5),
-                        marginTop: verticalScale(25),
-                        marginBottom: verticalScale(5)
-                    }}>Address</Text>
-
-                    <View style={{
-                        ...styles.boxcontainer,
-                        height: verticalScale(100),
-                        flexDirection: 'row', alignItems: 'center',
-                        shadowColor: validateDesc ? 'transparent' : 'darkred',
-                        shadowOpacity: validateDesc ? 0.25 : 1,
-                    }}>
+                                }
+                                value={valueDesc} />
+                        </View>
 
 
-                        <TextInput placeholder="" style={{
-                            ...styles.styleTextInput,
-                            flex: 1,
-                            paddingTop: verticalScale(15),
-                            padding: moderateScale(15),
-                            textAlign: 'left',
-                            height: verticalScale(100),
+                        {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getWeeklyRecurring() : <View />}
+                        {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getBusTiming() : <View />}
+                        {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getServiceType(true) : <View />}
+
+                        <TouchableOpacity style={{
+                            ...styles.styleButtons, flex: 0,
+                            width: '40%', alignSelf: 'center',
+                            marginTop: verticalScale(45),
+                            backgroundColor: '#FFC081'
                         }}
-                            underlineColorAndroid="transparent"
-                            require={true}
-                            multiline={true}
-                            numberOfLines={50}
-                            maxLength={75}
-                            autoCapitalize="none"
-                            keyboardType="default"
-                            onChangeText={(e) => {
-                                setValidateDesc(Util.isLengthGreater(e));
-                                setDesc(e);
-                            }
-                            }
-                            value={valueDesc} />
+                            onPress={() => {
+                                setTimeout(() => {
+                                    if (validateFields()) {
+                                        addMember({
+                                            name: valueName,
+                                            email: valueEmail,
+                                            id: arrIndex,
+                                            phone: valuePhone,
+                                            address: valueDesc,
+                                            state: userState,
+                                            city: userCity,
+                                            isExist: isExistProfile,
+                                            id: arrIndex + ''
+                                        })
+                                        sheetRef.current.close()
+                                    }
+                                }, 200)
+                            }}>
+                            <Text style={{
+                                ...styles.generalTxt,
+                                fontFamily: Fonts.type.base,
+                                color: Colors.appBgColor,
+                                fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
+                                paddingTop: verticalScale(5),
+                                paddingBottom: verticalScale(5),
+
+                            }}>{!btnLabel ? 'Add' : 'Save'}</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={{
+                            ...styles.styleButtons, flex: 0,
+                            width: '40%', alignSelf: 'center',
+                            marginTop: verticalScale(15),
+                            backgroundColor: 'white'
+                        }} onPress={() => { sheetRef.current.close() }}>
+                            <Text style={{
+                                ...styles.generalTxt,
+                                fontFamily: Fonts.type.base,
+                                color: 'black',
+                                fontSize: moderateScale(18), textAlign: 'center', padding: moderateScale(10),
+                                paddingTop: verticalScale(5),
+                                paddingBottom: verticalScale(5),
+
+                            }}>Cancel</Text>
+                        </TouchableOpacity>
                     </View>
-
-
-                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getWeeklyRecurring() : <View />}
-                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getBusTiming() : <View />}
-                    {accountType === BUS_SER_PROVIDER || accountType === BUS_LISTING ? getServiceType(true) : <View />}
-
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons, flex: 0,
-                        width: '40%', alignSelf: 'center',
-                        marginTop: verticalScale(45),
-                        backgroundColor: '#FFC081'
-                    }}
-                        onPress={() => {
-                            setTimeout(() => {
-                                if (validateFields()) {
-                                    addMember({
-                                        name: valueName,
-                                        email: valueEmail,
-                                        id: arrIndex,
-                                        phone: valuePhone,
-                                        address: valueDesc,
-                                        state: userState,
-                                        city: userCity,
-                                        isExist: isExistProfile,
-                                        id: arrIndex + ''
-                                    })
-                                    sheetRef.current.close()
-                                }
-                            }, 200)
-                        }}>
-                        <Text style={{
-                            ...styles.generalTxt,
-                            fontFamily: Fonts.type.base,
-                            color: Colors.appBgColor,
-                            fontSize: moderateScale(22), textAlign: 'center', padding: moderateScale(10),
-                            paddingTop: verticalScale(5),
-                            paddingBottom: verticalScale(5),
-
-                        }}>{!btnLabel ? 'Add' : 'Save'}</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={{
-                        ...styles.styleButtons, flex: 0,
-                        width: '40%', alignSelf: 'center',
-                        marginTop: verticalScale(15),
-                        backgroundColor: 'white'
-                    }} onPress={() => { sheetRef.current.close() }}>
-                        <Text style={{
-                            ...styles.generalTxt,
-                            fontFamily: Fonts.type.base,
-                            color: 'black',
-                            fontSize: moderateScale(18), textAlign: 'center', padding: moderateScale(10),
-                            paddingTop: verticalScale(5),
-                            paddingBottom: verticalScale(5),
-
-                        }}>Cancel</Text>
-                    </TouchableOpacity>
-
+                    {showLoader ? <AppLoader
+                        style={{ position: 'absolute' }}
+                        loader={{ isLoading: true }} /> : <View />}
                 </TouchableOpacity>
 
 
@@ -1166,11 +1255,28 @@ function TeamSetupView(props) {
 
     function updateServiceValues(item) {
         console.log("update service--->", item)
+
+        setValueEmail(item ? item.email : '');
+        setValidateEmail(item ? Util.isEmailValid(item.email) : true);
+
+        updateRestValues(item)
+
+    }
+
+    function updateServiceValues2(item) {
+        console.log("update service--->", item)
+
+        //setValueEmail(item ? item.email : '');
+        //setValidateEmail(item ? Util.isEmailValid(item.email) : true);
+
+        updateRestValues(item)
+
+    }
+
+    function updateRestValues(item) {
         setArrIndex(item ? item._id : wholeServices.length)
         setValueName(item ? item.name : '')
         setValidateName(item ? Util.isLengthGreater(item.name) : true);
-        setValueEmail(item ? item.email : '');
-        setValidateEmail(item ? Util.isEmailValid(item.email) : true);
         setIsEmailEnable(item && item.notificationSettings ? !Util.isEmailValid(item.email) : true);
         setPhone(item ? item.phone : '');
         setValidatePhone(item ? Util.isValidPhone(item.phone) : true);

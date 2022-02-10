@@ -89,7 +89,7 @@ function ProductDetailView(props) {
 
                                         }}
 
-                                        src={item?.filename}
+                                        src={item?.filename ? (item?.filename ? item.filename:''):''}
                                         placeholder={Icons.icon_paw}
                                     />
 

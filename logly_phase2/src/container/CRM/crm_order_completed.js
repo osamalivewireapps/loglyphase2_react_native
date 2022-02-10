@@ -53,7 +53,12 @@ function CrmOrderCompleted(props) {
 
                 <TouchableOpacity
                     onPress={() => {
-                        props.navigation.navigate('CRMNewOrder')
+                        const resetAction = CommonActions.reset({
+                            index: 2,
+                            routes: [{ name: "Splash" }, { name: "HomeDrawer" },{ name: "CRMNewOrder" }],
+                        });
+
+                        props.navigation.dispatch(resetAction);
                     }}
                     style={{
                         ...CRMStyles.styleButtons,  marginTop: verticalScale(50),

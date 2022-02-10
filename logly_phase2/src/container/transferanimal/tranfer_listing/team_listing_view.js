@@ -5,37 +5,39 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useRef, useState, useEffect } from 'react';
-import { RefreshControl, TextInput, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { RefreshControl, TextInput, FlatList, View, SafeAreaView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
-import { CommonActions } from '@react-navigation/routers';
-import moment from 'moment';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
-import { VET_ID } from '../../../constants';
-import Util from '../../../utils';
+import { getBreederForSale } from '../../../actions/Sales';
+import { useDispatch } from 'react-redux';
 
-function ContactListingView(props) {
+
+function TransferListingView(props) {
 
     const [searchTxt, setSearchTxt] = useState('');
     const [contactList, setContactList] = useState([]);
 
     const isTablet = DeviceInfo.isTablet();
 
-    const { listContacts, applyFilter, filterObj, updateContacts, removeMember } = props;
+    const { listContacts, updateContacts, removeMember, refreshList } = props;
+    const { animalData, updateAnimalList } = props.route.params;
 
     const listBorderColors = ['#FE8B19', '#F044F7'];
     const [isEditShow, setEditShow] = useState(-1);
 
     console.log('contacts--->', listContacts);
 
+    let disptach = useDispatch();
+
     useEffect(() => {
-        if (listContacts.length > 0) {
-            setContactList(listContacts.filter((e) => {
-                return (e.name.toLowerCase().startsWith(searchTxt.toLowerCase()))
-            }))
+        if (searchTxt.length > 3) {
+            getGlobalTeamMembers();
+        } else if (searchTxt.length ===0){
+            refreshList()
         }
     }, [searchTxt]);
 
@@ -44,12 +46,18 @@ function ContactListingView(props) {
         setRefreshing(false);
     }, [listContacts]);
 
+
     const [refreshing, setRefreshing] = React.useState(false);
 
     const onRefresh = () => {
-        updateContacts();
+        refreshList();
     }
 
+    function getGlobalTeamMembers() {
+        disptach(getBreederForSale(searchTxt)).then((response) => {
+            setContactList(response.payload)
+        });
+    }
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -63,17 +71,9 @@ function ContactListingView(props) {
                 height: verticalScale(140)
             }}>
                 <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                    <TouchableOpacity onPress={() => { props.navigation.toggleDrawer() }}>
-                        <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
+                    <TouchableOpacity onPress={() => { props.navigation.pop(); }}>
+                        <Image source={Icons.icon_whitebg_back} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
-                    <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-
-                        <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
-                            <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
-                        </TouchableOpacity>
-                        <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                    </View>
 
                 </View>
 
@@ -94,7 +94,7 @@ function ContactListingView(props) {
                             paddingStart: moderateScale(25),
                             fontFamily: Fonts.type.bold
                         }}>
-                        Contacts
+                        Transfer Animals
 
                     </AutoSizeText>
                     <Image source={Icons.icon_header_teammember} resizeMode='contain'
@@ -111,9 +111,11 @@ function ContactListingView(props) {
                         alignItems: 'center'
                     }}>
                         <View style={{
-                            marginEnd: moderateScale(20),
-                            flex: 1, flexDirection: 'row', alignItems: 'center',
-                            justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                            flex: 1,
+                            flexDirection: 'row', alignItems: 'center',
+                            justifyContent: 'flex-end',
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: moderateScale(10)
                         }}>
 
                             <TextInput
@@ -121,7 +123,7 @@ function ContactListingView(props) {
                                     setSearchTxt(e)
                                 }}
                                 value={searchTxt}
-                                placeholder='Search Contacts'
+                                placeholder='Search Team Members'
                                 numberOfLines={1}
                                 keyboardType='default'
                                 autoCapitalize='none'
@@ -137,9 +139,6 @@ function ContactListingView(props) {
 
                         </View>
 
-                        <TouchableOpacity onPress={() => { props.navigation.navigate('FilterContacts', { ...props, filterList: ((e) => applyFilter(e)), customFilters: filterObj }) }}>
-                            <Image source={Icons.icon_filter_list} resizeMode='contain' style={{ height: moderateScale(20), width: moderateScale(20) }} />
-                        </TouchableOpacity>
 
                     </View>
                 </View>
@@ -148,7 +147,7 @@ function ContactListingView(props) {
                 <FlatList
                     contentContainerStyle={{
                         padding: moderateScale(25),
-                        paddingBottom:verticalScale(80)
+                        paddingBottom: verticalScale(80)
                     }}
                     refreshControl={
                         <RefreshControl
@@ -184,7 +183,7 @@ function ContactListingView(props) {
 
                 }}
                 onPress={() => {
-                    props.navigation.navigate('AddContacts', { updateContacts: updateContacts })
+                    props.navigation.navigate('AddTeamMember', { updateContacts: updateContacts, isTransfer: true })
                 }}>
                 <Image backgroundColor={Colors.appBgColor}
                     style={{
@@ -210,10 +209,13 @@ function ContactListingView(props) {
     );
 
     function getFriendItem(item, index) {
+
+        console.log("image--->", item.image);
+
         return (
             <TouchableOpacity
-                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id, updateContacts: updateContacts })}
-                
+
+                onPress={() => props.navigation.navigate('SummaryAnimalsView', { id: item._id, updateContacts: updateContacts, staffData: item, animalData: animalData, popScreen: 2, updateList: updateAnimalList })}
                 style={{
                     borderRadius: moderateScale(10),
                     marginTop: verticalScale(10),
@@ -229,30 +231,36 @@ function ContactListingView(props) {
                     alignItems: 'center',
                     height: verticalScale(50), width: moderateScale(60)
                 }} >
-                    <Image
-                        resizeMode='contain'
-                        style={{
-                            backgroundColor: '#097D3B',
-                            position: 'absolute',
-                            borderRadius: moderateScale(50),
-                            borderColor: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
-                            borderWidth: moderateScale(2),
-                            height: verticalScale(42), 
-                            width: moderateScale(50)
-                        }}
-                    />
 
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={moderateScale(12)}
-                        fontSize={moderateScale(18)}
-                        mode={ResizeTextMode.max_lines}
+                    <ImagePlaceholder
+                        showActivityIndicator={false}
+                        activityIndicatorProps={{
+                            size: 'small',
+                            color: '#777777',
+                        }}
+                        resizeMode='cover'
+                        placeholderStyle={{
+                            width: moderateScale(50),
+                            height: moderateScale(50),
+                            borderRadius: moderateScale(50),
+
+                        }}
+                        imgStyle={{
+                            borderRadius: moderateScale(50),
+                            borderColor: 'transparent',
+                            borderWidth: moderateScale(2),
+                            width: moderateScale(50),
+                            height: moderateScale(50),
+                        }}
+
                         style={{
-                            ...styles.generalTxt,
-                            fontFamily: Fonts.type.bold,
-                            color: 'white',
-                        }}>{Util.getInitials(item.name)}
-                    </AutoSizeText>
+                            borderRadius: moderateScale(50),
+                            height: moderateScale(50),
+                        }}
+
+                        src={item.image ? item.image : ''}
+                        placeholder={Images.img_user_placeholder}
+                    />
                 </View>
 
                 <View style={{
@@ -284,20 +292,7 @@ function ContactListingView(props) {
                                 paddingEnd: moderateScale(10),
                                 color: '#464646',
                                 marginTop: verticalScale(5)
-                            }}>{item.phone.length > 0 ? item.phone[0] : ''}
-                        </AutoSizeText>
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={moderateScale(10)}
-                            fontSize={moderateScale(12)}
-                            mode={ResizeTextMode.max_lines}
-                            style={{
-                                ...styles.generalTxt,
-                                fontFamily: Fonts.type.base,
-                                paddingEnd: moderateScale(10),
-                                color: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
-                                marginTop: verticalScale(5)
-                            }}>{item.category === VET_ID ? 'Veterinary' : 'Vendor'}
+                            }}>{item.phone && item.phone.length > 0 ? item.phone : ''}
                         </AutoSizeText>
                     </View>
 
@@ -322,11 +317,11 @@ function ContactListingView(props) {
                             flex={moderateScale(0.1)}
                             style={{
                                 justifyContent: 'center', width: '90%', height: verticalScale(15),
-                                alignItems: 'center',
+                                alignItems: 'center'
                             }}
                             onPress={() => {
-                                props.navigation.navigate('AddContacts', { contactData: item, updateContacts: updateContacts })
                                 setEditShow(-1)
+                                props.navigation.navigate('AddTeamMember', { contactData: item, updateContacts: updateContacts,isTransfer:true })
                             }}>
                             <Image source={Icons.icon_services_edit}
                                 resizeMode='contain' style={{
@@ -363,16 +358,6 @@ function ContactListingView(props) {
                         </TouchableOpacity>
                     </View> : <View flex={moderateScale(0.1)} />}
 
-                <TouchableOpacity
-                    style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
-
-                    onPress={() => {
-                        isEditShow === index ? setEditShow(-1) : setEditShow(index)
-                    }}>
-                    <Image source={Icons.icon_three_colons}
-                        resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
-                    />
-                </TouchableOpacity>
             </TouchableOpacity>
         )
     }
@@ -414,4 +399,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default ContactListingView;
+export default TransferListingView;

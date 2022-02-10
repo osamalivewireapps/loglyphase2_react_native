@@ -58,25 +58,38 @@ class LoginController extends Component {
         this.props.navigation.navigate('PolicyScreen', { header: txt });
     }
 
+    componentDidMount() {
+        DataHandler.getSetupWizard().then(value => {
+            this.setupWizard = JSON.parse(value);
+            console.log('setupWizard-->', this.setupWizard)
+        })
+    }
+
     loginAccount() {
 
-        //TEMPORARY..
-        // if(true){
-        //     DataHandler.saveAccountType(BUS_LISTING);
-        //     this.props.navigation.navigate("WelcomeRegistration");
-        //     return
-        // }
 
         if (this._validateForm()) {
 
             this.props.userLoginRequest(this.state).then((response) => {
 
-           
+
                 if (response.status === 200) {
                     DataHandler.saveAuth(response.loginResponse.token);
                     DataHandler.saveUserObject(JSON.stringify(response.loginResponse.user));
                     DataHandler.saveAccountType(response.accountType);
-                    this.props.navigation.navigate("HomeDrawer");
+
+                    console.log('setupwizard--->', this.setupWizard);
+                    console.log('login--->', response.loginResponse.user.setupWizardCompleted)
+
+                    if (response.accountType.toLowerCase().includes(BUS_LISTING.toLowerCase()) || response.accountType.toLowerCase().includes(BUS_SER_PROVIDER.toLowerCase())) {
+                        utils.topAlert('Work In-Progress. We will let u know');
+                        this.props.navigation.navigate("HomeDrawer");
+                        return
+                    }
+                    if (!this.setupWizard && !response.loginResponse.user.setupWizardCompleted)
+                        this.props.navigation.navigate("WelcomeRegistration");
+                    else
+                        this.props.navigation.navigate("HomeDrawer");
                 }
                 else if (response.status === 400) {
                     if (!response.message.startsWith("Email") && !response.message.startsWith("Incorrect")) {

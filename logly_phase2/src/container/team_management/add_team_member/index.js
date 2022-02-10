@@ -8,7 +8,7 @@ import { Keyboard, View } from 'react-native';
 import { connect } from 'react-redux';
 import Util from '../../../utils';
 import utils from '../../../utils';
-import { addMemberDetails, editMemberDetails, getTeamMembers, getMemberDetails } from '../../../actions/TeamMembersModule'
+import { addBreeder, addMemberDetails, editMemberDetails, getTeamMembers, getMemberDetails} from '../../../actions/TeamMembersModule'
 import { getStateRequest, getCityRequest } from '../../../actions/SignUpModule';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
 import AddTeamMemberView from './add_team_member_view';
@@ -41,7 +41,7 @@ class AddTeamMember extends Component {
             userState: txt.name,
             userCity: "",
             stateId: -1,//txt.stateId,
-            selectState: Util.isLengthGreaterZero(txt.name),
+            selectState: txt.isByPass?true:Util.isLengthGreaterZero(txt.name),
         });
     }
 
@@ -94,6 +94,7 @@ class AddTeamMember extends Component {
             capturePic={(e) => { this.getPic(e) }}
 
             imgUri={this.state.fileUri}
+            setImgUri={(e)=>this.setState({fileUri:e})}
 
         />);
     }
@@ -110,11 +111,14 @@ class AddTeamMember extends Component {
         formdata.append('name', name);
         formdata.append('phone', phone);
         formdata.append('state', state);
-        formdata.append('emergencyContact', JSON.stringify(emergencyContact));
-        formdata.append('canAccessMobileApp', true);
-        formdata.append('canAccessInventoryManagement', true);
-        formdata.append('active', true);
-        
+
+        if (!this.props.route.params.isTransfer) {
+            formdata.append('emergencyContact', JSON.stringify(emergencyContact));
+            formdata.append('canAccessMobileApp', true);
+            formdata.append('canAccessInventoryManagement', true);
+            formdata.append('active', true);
+        }
+
         if (this.state.fileUri && this.state.fileUri.length > 0 && !this.state.fileUri.includes('https'))
             formdata.append('file', {
                 uri: this.state.fileUri,
@@ -135,13 +139,27 @@ class AddTeamMember extends Component {
                 });
 
             } else {
-                this.props.addContactDetails(formdata).then((proceed) => {
+                console.log('istransfer--->', this.props.route.params.isTransfer)
+                if (!this.props.route.params.isTransfer) {
+                    formdata.append('password', this.generatePassword());
+                    this.props.addContactDetails(formdata).then((proceed) => {
 
-                    if (proceed) {
-                        this.props.route.params.updateContacts();
-                        this.props.navigation.pop();
-                    }
-                });
+                        if (proceed) {
+                            this.props.route.params.updateContacts();
+                            this.props.navigation.pop();
+                        }
+                    });
+                }
+                else {
+                    formdata.append('password', this.generatePassword());
+                    this.props.addBreeder(formdata).then((proceed) => {
+
+
+                        if (proceed) {
+                            this.props.route.params.updateContacts(proceed);
+                        }
+                    });
+                }
             }
 
         }
@@ -213,6 +231,15 @@ class AddTeamMember extends Component {
         return true;
     };
 
+    generatePassword = () => {
+        var length = 10,
+            charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+            retVal = "";
+        for (var i = 0, n = charset.length; i < length; ++i) {
+            retVal += charset.charAt(Math.floor(Math.random() * n));
+        }
+        return retVal;
+    }
 
 
     //////////////////////////  CAMERA && GALLERY //////////////////
@@ -280,6 +307,7 @@ const mapDispatchToProps = dispatch => ({
     getStateRequest: () => dispatch(getStateRequest()),
     getCityRequest: (data) => dispatch(getCityRequest(data)),
     addContactDetails: (data) => dispatch(addMemberDetails(data)),
+    addBreeder: (data) => dispatch(addBreeder(data)),
     editContactDetails: (id, data) => dispatch(editMemberDetails(id, data)),
     getContacts: (data) => dispatch(getTeamMembers(data)),
     getContactDetails: (data) => dispatch(getMemberDetails(data)),

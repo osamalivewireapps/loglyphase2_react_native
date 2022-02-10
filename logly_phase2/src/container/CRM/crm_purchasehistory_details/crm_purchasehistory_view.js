@@ -5,7 +5,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
@@ -13,7 +13,8 @@ import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles'
 import CRMHeaderView from '../crm_header';
-
+import moment from 'moment';
+import utils from './../../../utils'
 
 function CRMPurchaseHistoryDetailsView(props) {
 
@@ -23,13 +24,27 @@ function CRMPurchaseHistoryDetailsView(props) {
     const { toggleDrawer, userObject } = props;
 
     const [tabs, setTab] = useState(0);
+    const [orderSummaryList, setOrderSummaryList]=useState([])
 
+    const [saleDetail, setSaleDetail] = useState({});
+    useEffect(() => {
+        let tmp = [];
+        tmp = props.saleDetail.animals.concat(props.saleDetail.products)
+        setOrderSummaryList(tmp)
+        setSaleDetail(props.saleDetail)
+    }, [props.saleDetail])
+
+    useEffect(() => {
+        setSaleDetail({})
+        setOrderSummaryList([])
+
+    }, [])
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <CRMHeaderView
-                iconStyles={{flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(35) }}
+                iconStyles={{ flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(35) }}
                 name="Customer" icon={Icons.icon_crm_customer} bgColor='#1CB875'
                 {...props}
             />
@@ -55,7 +70,7 @@ function CRMPurchaseHistoryDetailsView(props) {
                         marginEnd: moderateScale(25)
                     }}>
                         <Image
-                            source={Images.img_friend_sample}
+                            source={(saleDetail && saleDetail.buyerId?.image) ? (saleDetail.buyerId.image) : Images.img_user_placeholder}
                             resizeMode='cover'
                             style={{
                                 width: moderateScale(65),
@@ -101,7 +116,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                                     }}
                                 >
-                                    123456
+                                    {saleDetail?.saleUniqueId}
                                 </AutoSizeText>
                             </View>
                             <View style={{
@@ -135,7 +150,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                                     }}
                                 >
-                                    26 Nov, 2021
+                                    {saleDetail.updatedAt ? moment(saleDetail.updatedAt).format('DD MMM,YYYY') : ''}
                                 </AutoSizeText>
                             </View>
                             <View style={{
@@ -169,7 +184,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                                     }}
                                 >
-                                    Jack
+                                    {saleDetail?.buyerId?.name}
                                 </AutoSizeText>
                             </View>
                         </View>
@@ -201,113 +216,122 @@ function CRMPurchaseHistoryDetailsView(props) {
 
 
 
-                    <View style={{
-                        ...CRMStyles.boxcontainer,
-                        shadowOpacity:0.09,
-                        height: verticalScale(55),
-                        borderRadius: moderateScale(15),
-                        flexDirection: 'row', alignItems: 'center', marginStart: moderateScale(25),
-                        marginEnd: moderateScale(25),
+                    <FlatList
 
-                    }}>
-                        <Image
-                            source={Images.img_user_placeholder}
-                            resizeMode='cover'
-                            style={{
-                                width: moderateScale(65),
-                                height: verticalScale(55),
-                                borderRadius: moderateScale(15)
-                                , marginEnd: moderateScale(15)
-                            }}
-                        />
-
-                        <View style={{
-                            flex: 1, alignItems: 'center',
-                            justifyContent: 'center',
-
-                        }}>
-                            <View style={{
-                                flexDirection: 'row',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                paddingEnd:moderateScale(15)
-                            }}>
-
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(12)}
-                                    fontSize={moderateScale(16)}
-                                    style={{
-                                        fontFamily: Fonts.type.bold,
-                                        color: '#464646',
-
-                                    }}
-                                >
-                                    Nagtile
-                                </AutoSizeText>
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(12)}
-                                    fontSize={moderateScale(14)}
-                                    style={{
-                                        fontFamily: Fonts.type.medium,
-                                        color: Colors.appBgColor,
-                                        flex: 1,
-                                        textAlign: 'right',
-                                        marginStart: moderateScale(10)
-
-                                    }}
-                                >
-                                    $100
-                                </AutoSizeText>
-                            </View>
-                            <View style={{
-                                flexDirection: 'row',
-                                paddingEnd: moderateScale(15),
-                                width:'100%',
-                                alignItems:'flex-end',
-                                height:verticalScale(16),
-                            }}>
-
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(12)}
-                                    fontSize={moderateScale(12)}
-                                    style={{
-                                        fontFamily: Fonts.type.base,
-                                        color: '#A1A1A1',
-                                        flex:1
-                     
-                                    }}
-                                >
-                                    Parrot
-                                </AutoSizeText>
+                        data={orderSummaryList}
+                        renderItem={({ item, index }) => {
+                            return (
                                 <View style={{
-                                    backgroundColor: '#E27F0E',
-                                    justifyContent:'center',
-                                    paddingStart:moderateScale(5),
-                                    paddingEnd:moderateScale(5),
-                                    borderRadius:moderateScale(10)
-                              }}>
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(12)}
-                                    fontSize={moderateScale(14)}
-                                    style={{
-                                        fontFamily: Fonts.type.medium,
-                                        color: 'white',
-                            
-                                    }}
+                                    ...CRMStyles.boxcontainer,
+                                    shadowOpacity: 0.09,
+                                    marginTop: verticalScale(10),
+                                    height: verticalScale(55),
+                                    borderRadius: moderateScale(15),
+                                    flexDirection: 'row', alignItems: 'center', marginStart: moderateScale(25),
+                                    marginEnd: moderateScale(25)
+                                }}
                                 >
-                                    1
-                                </AutoSizeText>
+                                    <Image
+                                        source={Images.img_user_placeholder}
+                                        resizeMode='cover'
+                                        style={{
+                                            width: moderateScale(65),
+                                            height: verticalScale(55),
+                                            borderRadius: moderateScale(15)
+                                            , marginEnd: moderateScale(15)
+                                        }}
+                                    />
+
+                                    <View style={{
+                                        flex: 1, alignItems: 'center',
+                                        justifyContent: 'center',
+
+                                    }}>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center',
+                                            paddingEnd: moderateScale(15)
+                                        }}>
+
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={moderateScale(12)}
+                                                fontSize={moderateScale(16)}
+                                                style={{
+                                                    fontFamily: Fonts.type.bold,
+                                                    color: '#464646',
+
+                                                }}
+                                            >
+                                                {item.animalId ? item.animalId.data.name : item.productId.data.name}
+                                            </AutoSizeText>
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={moderateScale(12)}
+                                                fontSize={moderateScale(14)}
+                                                style={{
+                                                    fontFamily: Fonts.type.medium,
+                                                    color: Colors.appBgColor,
+                                                    flex: 1,
+                                                    textAlign: 'right',
+                                                    marginStart: moderateScale(10)
+
+                                                }}
+                                            >
+                                                ${item.price}
+                                            </AutoSizeText>
+                                        </View>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            paddingEnd: moderateScale(15),
+                                            width: '100%',
+                                            alignItems: 'flex-end',
+                                            height: verticalScale(16),
+                                        }}>
+
+                                            <AutoSizeText
+                                                numberOfLines={1}
+                                                minFontSize={moderateScale(12)}
+                                                fontSize={moderateScale(12)}
+                                                style={{
+                                                    fontFamily: Fonts.type.base,
+                                                    color: '#A1A1A1',
+                                                    flex: 1
+
+                                                }}
+                                            >
+                                                {item.animalId ? item.animalId.categoryName : item.productId.categoryName}
+                                            </AutoSizeText>
+                                            <View style={{
+                                                backgroundColor: '#E27F0E',
+                                                justifyContent: 'center',
+                                                paddingStart: moderateScale(5),
+                                                paddingEnd: moderateScale(5),
+                                                borderRadius: moderateScale(10)
+                                            }}>
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(14)}
+                                                    style={{
+                                                        fontFamily: Fonts.type.medium,
+                                                        color: 'white',
+
+                                                    }}
+                                                >
+                                                    {item.quantity}
+                                                </AutoSizeText>
+                                            </View>
+                                        </View>
+
+                                    </View>
+
                                 </View>
-                            </View>
+                            )
+                        }}
 
-                        </View>
-
-                    </View>
-
+                    />
                     <View style={{
                         backgroundColor: '#EBEBEB',
                         width: '100%',
@@ -320,9 +344,9 @@ function CRMPurchaseHistoryDetailsView(props) {
                         flexDirection: 'row',
                         justifyContent: 'center',
                         alignItems: 'center',
-                        paddingStart:moderateScale(25),
-                        paddingEnd:moderateScale(25),
-                        paddingBottom:moderateScale(10)
+                        paddingStart: moderateScale(25),
+                        paddingEnd: moderateScale(25),
+                        paddingBottom: moderateScale(10)
                     }}>
 
                         <AutoSizeText
@@ -350,7 +374,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                             }}
                         >
-                            $0
+                            ${saleDetail.discount ? saleDetail.discount : 0}
                         </AutoSizeText>
                     </View>
                     <View style={{
@@ -387,7 +411,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                             }}
                         >
-                            $100
+                            ${saleDetail?.price}
                         </AutoSizeText>
                     </View>
                     <View style={{
@@ -409,7 +433,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                             }}
                         >
-                            Salex Tax @10 %
+                            Sales Tax
                         </AutoSizeText>
                         <AutoSizeText
                             numberOfLines={1}
@@ -424,7 +448,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                             }}
                         >
-                            $10
+                            {saleDetail.tax ? saleDetail.tax.toFixed(2) : ''}%
                         </AutoSizeText>
                     </View>
                     <View style={{
@@ -461,7 +485,7 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                             }}
                         >
-                            $10
+                            ${saleDetail.price ? Math.round((utils.CalculateTaxAmount(saleDetail.price, saleDetail.tax) + Number.EPSILON) * 100) / 100 : ''}
                         </AutoSizeText>
                     </View>
 
@@ -506,13 +530,176 @@ function CRMPurchaseHistoryDetailsView(props) {
 
                             }}
                         >
-                            $111.250
+                            ${saleDetail.price ? (saleDetail.totalPrice ? saleDetail.totalPrice : utils.CalculateTaxAmount(saleDetail.price, saleDetail.tax)) : ''}
                         </AutoSizeText>
                     </View>
+
+                    {saleDetail.installmentData ?
+                        <FlatList
+                            data={props.saleDetail.installmentData}
+                            contentContainerStyle={{
+                                marginBottom: verticalScale(10)
+                            }}
+                            renderItem={({ item, index }) => {
+                                return renderBreedItem(item, index);
+                            }}
+                        /> : null}
                 </View>
             </ScrollView>
-        </View>
-    )
+        </View >
+    );
+
+    function renderBreedItem(item, index) {
+
+        return (
+            <View style={{
+                backgroundColor: '#F5F5F5',
+                marginTop: verticalScale(10),
+                borderRadius: moderateScale(15),
+                padding: moderateScale(10),
+                paddingStart: moderateScale(15),
+                paddingEnd: moderateScale(15),
+                alignItems: 'center',
+                marginStart: moderateScale(20),
+                marginEnd: moderateScale(20),
+                marginBottom: moderateScale(10)
+            }}>
+
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginBottom: verticalScale(10)
+                }}>
+
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(12)}
+                        style={{
+                            fontFamily: Fonts.type.medium,
+                            color: '#404040',
+                            flex: 1
+
+                        }}
+                    >
+                        Installment {index + 1}
+                    </AutoSizeText>
+                </View>
+
+                {index === 0 ?
+                    <View style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: '#A1A1A1',
+                        padding: moderateScale(10),
+                        borderRadius: moderateScale(5),
+                        marginBottom: verticalScale(10)
+                    }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={moderateScale(12)}
+                            fontSize={moderateScale(12)}
+                            style={{
+                                fontFamily: Fonts.type.medium,
+                                color: 'white',
+
+                            }}
+                        >
+                            Down Payment
+                        </AutoSizeText>
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={moderateScale(12)}
+                            fontSize={moderateScale(12)}
+                            style={{
+                                fontFamily: Fonts.type.medium,
+                                color: 'white',
+                                flex: 1,
+                                textAlign: 'right',
+                                marginStart: moderateScale(10)
+
+                            }}
+                        >
+                            ${props.saleDetail?.downpayment}
+                        </AutoSizeText>
+                    </View> : <View />}
+
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                }}>
+
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(12)}
+                        style={{
+                            fontFamily: Fonts.type.medium,
+                            color: '#777777',
+
+                        }}
+                    >
+                        Date
+                    </AutoSizeText>
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(12)}
+                        style={{
+                            fontFamily: Fonts.type.medium,
+                            color: '#777777',
+                            flex: 1,
+                            textAlign: 'right',
+                            marginStart: moderateScale(10)
+
+                        }}
+                    >
+                        {moment(item.date).format('DD MMM,YYYY')}
+                    </AutoSizeText>
+                </View>
+                <View style={{
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: verticalScale(5)
+                }}>
+
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(12)}
+                        style={{
+                            fontFamily: Fonts.type.medium,
+                            color: '#777777',
+
+                        }}
+                    >
+                        Installment Amount
+                    </AutoSizeText>
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(12)}
+                        style={{
+                            fontFamily: Fonts.type.medium,
+                            color: '#777777',
+                            flex: 1,
+                            textAlign: 'right',
+                            marginStart: moderateScale(10)
+
+                        }}
+                    >
+                        ${item.amount}
+                    </AutoSizeText>
+                </View>
+
+            </View>
+        );
+    }
 }
 
 export default CRMPurchaseHistoryDetailsView;

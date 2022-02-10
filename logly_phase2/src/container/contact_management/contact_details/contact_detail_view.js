@@ -70,7 +70,7 @@ function ContactDetailView(props) {
 
                         }}
 
-                        src={contactData?.image}
+                        src={contactData?.image ? (contactData?.image ? contactData.image:''):''}
                         placeholder={Images.img_user_placeholder}
                     />
                 </View>

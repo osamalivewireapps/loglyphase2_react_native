@@ -172,7 +172,7 @@ function CreateGroupView(props) {
 
             </View>
 
-            <View style={{ flex: 1, padding: moderateScale(25) }}>
+            {/* <View style={{ flex: 1, padding: moderateScale(25) }}>
 
                 {props.route.params?.groupData ?
                     getSummaryView()
@@ -189,10 +189,28 @@ function CreateGroupView(props) {
                 }
 
 
-            </View>
-            {props.route.params.groupData && ((props.route.params.groupData.animals.length > 0 || props.route.params.groupData.length > 0) && addTeams.length === 0 && addAnimals.length === 0) ?
+            </View> */}
+            {/* {props.route.params.groupData && ((props.route.params.groupData.animals.length > 0 || props.route.params.groupData.length > 0) && addTeams.length === 0 && addAnimals.length === 0) ? */}
+            {props.route.params.groupData && (props.route.params.groupData.animals.length > 0 || props.route.params.groupData.employees.length > 0)&&(props.route.params.groupData.animals.length > 0 ? addAnimals.length === 0 : false || props.route.params.groupData.employees.length > 0 ? addTeams.length === 0 : false) ?
                 <AppLoader loader={{ isLoading: true }} />
-                : <View />}
+                : <View style={{ flex: 1, padding: moderateScale(25) }}>
+
+                    {props.route.params?.groupData ?
+                        getSummaryView()
+                        : <ViewPager
+
+                            style={{ flex: 1 }} scrollEnabled={false} ref={pagerRef}>
+
+                            {getCreateView()}
+                            {getFirstView()}
+                            {getSecondView()}
+                            {getSummaryView()}
+
+                        </ViewPager>
+                    }
+
+
+                </View>}
 
 
         </View>);
@@ -300,7 +318,7 @@ function CreateGroupView(props) {
         return (
             <View key={3} style={{ height: '100%' }}>
                 <SummaryGroups {...props} nextScreen={() => nextScreen()} animals={addAnimals} team={addTeams}
-                    
+                    isAllData={true}
                     groupName={valueName}
                     getAnimalList={() => {
                         return new Promise((resolve) => {

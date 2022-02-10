@@ -19,18 +19,22 @@ class WelcomeRegistration extends Component {
 
     constructor(props) {
         super(props);
-        this.state={
-            name:''
+        this.state = {
+            name: ''
         }
     }
 
     componentDidMount() {
+
+
+        DataHandler.saveSetupWizard(JSON.stringify(true))
+
         DataHandler.getAccountType().then((value) => {
             this.accountType = value;
         });
         DataHandler.getUserObject().then((value) => {
             this.userObject = JSON.parse(value);
-            this.setState({name:this.userObject.name})
+            this.setState({ name: this.userObject.name })
         });
     }
 
@@ -43,10 +47,10 @@ class WelcomeRegistration extends Component {
                 <TouchableOpacity onPress={() => {
                     this.switchToServicesScreen();
                 }}>
-                    <Image 
-                    resizeMode="contain"
-                    style={{height:verticalScale(90),width:moderateScale(90)}}
-                    source={Images.img_btn_forward} marginTop={verticalScale(80)} />
+                    <Image
+                        resizeMode="contain"
+                        style={{ height: verticalScale(90), width: moderateScale(90) }}
+                        source={Images.img_btn_forward} marginTop={verticalScale(80)} />
                 </TouchableOpacity>
             </View>
         )

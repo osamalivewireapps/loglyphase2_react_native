@@ -73,6 +73,7 @@ function ProductInfoView(props) {
                                 borderRadius: moderateScale(10),
                                 marginTop: verticalScale(20),
                                 flex: 1,
+                                padding:moderateScale(5),
                                 height: verticalScale(40),
                                 justifyContent: 'center',
                                 alignItems: 'center',
@@ -86,12 +87,13 @@ function ProductInfoView(props) {
                             )}>
 
                                 <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(14)}
-                                    fontSize={moderateScale(16)}
+                                    numberOfLines={2}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(14)}
                                     mode={ResizeTextMode.max_lines}
                                     style={{
                                         ...styles.generalTxt,
+                                        textAlign:'center',
                                         color: Colors.appBgColor
                                     }}>{item.categoryId.name}
                                 </AutoSizeText>

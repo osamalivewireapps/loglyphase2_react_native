@@ -20,7 +20,6 @@ import Util from '../../../utils';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 
-
 function AddAnimalsGroups(props) {
 
     const { nextScreen, isSummary, animals, getAnimalList, getFinalAnimalList } = props;
@@ -31,7 +30,7 @@ function AddAnimalsGroups(props) {
 
     const [searchTxt, setSearchTxt] = useState('');
     const [addItems, setAddItems] = useState(animals);
-    const [listAnimals, setListAnimals] = useState([]);//useState([{ id: 0, isSelect: false }, { id: 1, isSelect: false }, { id: 2, isSelect: false }]);
+    const [listAnimals, setListAnimals] = useState([]);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [orgAnimalList, setOrgAnimalList] = useState([]);
@@ -140,7 +139,7 @@ function AddAnimalsGroups(props) {
 
                                 }}
                                 renderItem={({ item, index }) => {
-                                    return renderBreedItem(item, index, true);
+                                    return renderBreedItem(item, index, true,false);
                                 }}
                             /> 
                     </View>
@@ -162,7 +161,7 @@ function AddAnimalsGroups(props) {
                         }
                         }
                     >
-                        {showBottomSheet(false)}
+                        {showBottomSheet(true)}
                     </RBSheet>
 
 
@@ -191,7 +190,7 @@ function AddAnimalsGroups(props) {
     );
 
 
-    function renderBreedItem(item, index, isDeleteIcon) {
+    function renderBreedItem(item, index, isDeleteIcon, isAddBreeder) {
 
         return (
             <View style={{
@@ -232,12 +231,13 @@ function AddAnimalsGroups(props) {
                         flex: 0
                     }}
 
-                    src={item.image}
+                    src={item.image ? item.image:''}
                     placeholder={Icons.icon_paw}
                 />
 
                 <TouchableOpacity
-                    onPress={() => addBreeder(index)}
+                    onPress={() => isAddBreeder ? addBreeder(index) : false}
+                    activeOpacity={isAddBreeder ? 0.25 : 1}
                     style={{
                         flex: 0.95,
                     }}>
@@ -263,7 +263,7 @@ function AddAnimalsGroups(props) {
 
                                 }}
                             >
-                                {item.data.name}
+                                {item?.data?.name}
                             </AutoSizeText>
 
 
@@ -391,7 +391,7 @@ function AddAnimalsGroups(props) {
     }
 
     //////////////////// BOTTOM SHEET /////////////
-    function showBottomSheet() {
+    function showBottomSheet(isAddBreeder) {
 
         return (
             // <View keyboardShouldPersistTaps='handled'>
@@ -470,7 +470,7 @@ function AddAnimalsGroups(props) {
                         marginBottom: verticalScale(25),
                     }}
                     renderItem={({ item, index }) => {
-                        return renderBreedItem(item, index, false);
+                        return renderBreedItem(item, index, false, isAddBreeder);
                     }}
                 />
 

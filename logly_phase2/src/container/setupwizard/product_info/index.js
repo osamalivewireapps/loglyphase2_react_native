@@ -46,7 +46,7 @@ class ProductInfo extends Component {
                     }
                     else if (tmp.length === 0) {
                         response.payload.forEach(element => {
-                            if (element.breedersId.includes(this.userObject._id))//element.categoryId.active
+                            if (element.categoryId.type === 'product' && element.breedersId.includes(this.userObject._id))//element.categoryId.active
                                 tmp.push(element)
                         });
                     }

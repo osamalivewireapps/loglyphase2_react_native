@@ -271,6 +271,11 @@ function ProductRegView(props) {
 
                                 </AutoSizeText>
 
+                                <Text style={{
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                    marginBottom:verticalScale(5)
+                                }}>Name</Text>
                                 <View style={{
                                     ...styles.boxcontainer,
                                     flexDirection: 'row', alignItems: 'center',
@@ -298,9 +303,15 @@ function ProductRegView(props) {
                                         value={valueName} />
                                 </View>
 
+                                <Text style={{
+                                    marginTop: verticalScale(15),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                    marginBottom: verticalScale(5)
+                                }}>Bulk Quantity</Text>
+
                                 <View style={{
                                     ...styles.boxcontainer,
-                                    marginTop: verticalScale(10),
                                     flexDirection: 'row', alignItems: 'center',
                                     shadowColor: validateBulkQuantity ? 'transparent' : 'darkred',
                                     shadowOpacity: validateBulkQuantity ? 0.25 : 1,
@@ -326,9 +337,14 @@ function ProductRegView(props) {
                                         value={valueBulk} />
                                 </View>
 
+                                <Text style={{
+                                    marginTop: verticalScale(15),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                    marginBottom: verticalScale(5)
+                                }}>Unit Quantity</Text>
                                 <View style={{
                                     ...styles.boxcontainer,
-                                    marginTop: verticalScale(10),
                                     flexDirection: 'row', alignItems: 'center',
                                     shadowColor: validateUnitQuantity ? 'transparent' : 'darkred',
                                     shadowOpacity: validateUnitQuantity ? 0.25 : 1,
@@ -354,9 +370,15 @@ function ProductRegView(props) {
                                         value={valueUnitQuantity} />
                                 </View>
 
+
+                                <Text style={{
+                                    marginTop: verticalScale(15),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                    marginBottom: verticalScale(5)
+                                }}>Price</Text>
                                 <View style={{
                                     ...styles.boxcontainer,
-                                    marginTop: verticalScale(10),
                                     flexDirection: 'row', alignItems: 'center',
                                     shadowColor: validatePrice ? 'transparent' : 'darkred',
                                     shadowOpacity: validatePrice ? 0.25 : 1,
@@ -384,10 +406,15 @@ function ProductRegView(props) {
 
 
 
+                                <Text style={{
+                                    marginTop: verticalScale(15),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                    marginBottom: verticalScale(5)
+                                }}>Sub-Category</Text>
                                 <TouchableOpacity
                                     style={{
                                         ...styles.boxcontainer,
-                                        marginTop: verticalScale(10),
                                         flexDirection: 'row', padding: 0, alignItems: 'center',
                                         paddingStart: moderateScale(15), paddingEnd: moderateScale(15),
                                     }} onPress={() => {

@@ -45,6 +45,7 @@ class BusProfile extends React.Component {
                     }
                 })
         });
+
     }
     backScreen() {
         if (this.state.accountType !== INDIVIDUAL && this.state.accountType !== CHARITY_ID && this.state.accountType !== BUSINESS)

@@ -5,7 +5,7 @@ import product from './product';
 import contacts from './contacts';
 import team_members from './team_members';
 import group from './groups';
-;
+import sales from './sales';
 
 
 import { combineReducers } from 'redux';
@@ -19,7 +19,8 @@ const allReducers = combineReducers({
     product: product,
     contacts: contacts,
     team_members: team_members,
-    group:groups
+    group:groups,
+    sale:sales
 
 });
 

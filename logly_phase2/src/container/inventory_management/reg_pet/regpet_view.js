@@ -20,11 +20,12 @@ import AppLoader from '../../../components/AppLoader';
 import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import VideoPlayer from 'react-native-video-player';
+import { INDIVIDUAL } from '../../../constants';
 
 function RegisterPetView(props) {
 
 
-    const { deletePic, isLoad, animalCategories, animalBreed, getAnimalBreed,
+    const { accountType, deletePic, isLoad, animalCategories, animalBreed, getAnimalBreed,
         capturePic, imgUri, addProduct, capturePicCollections, listPhotoCollections } = props;
 
     const animalData = props.route?.params?.animalData;
@@ -45,7 +46,7 @@ function RegisterPetView(props) {
     const [listAnimalBreed, setListAnimalBreed] = useState([]);
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
     const [validateQuantity, setValidateQuantity] = useState(true);
-    const [valueQuantity, setValueQuantity] = useState(animalData ? animalData.data.quantity + "" : '');
+    const [valueQuantity, setValueQuantity] = useState(animalData && animalData.data.quantity != null ? animalData.data.quantity + "" : '1');
     const [captureCollection, setCaptureCollection] = useState(false);
     const [validatePrice, setValidatePrice] = useState(true);
     const [valuePrice, setValuePrice] = useState(animalData ? animalData.data.price : '');
@@ -91,13 +92,13 @@ function RegisterPetView(props) {
 
     useEffect(() => {
         if (animalBreed.length > 0) {
-          setListAnimalBreed(animalBreed)
+            setListAnimalBreed(animalBreed)
         }
     }, [animalBreed]);
 
     //////////////////////////  CALENDAR ////////////////////////
     const initialDate = moment().format('YYYY-MM-DD');
-    const [selected, setSelected] = useState(animalData ? animalData.data.DOB : initialDate);
+    const [selected, setSelected] = useState(animalData ? (animalData.data.DOB ? moment(animalData.data.DOB).format('YYYY-MM-DD') : initialDate) : initialDate);
 
     let markedDates = {
         [selected]: {
@@ -329,7 +330,8 @@ function RegisterPetView(props) {
                                     flexDirection: 'row', alignItems: 'center',
                                     shadowColor: validateName ? 'transparent' : 'darkred',
                                     shadowOpacity: validateName ? 0.25 : 1,
-                                    padding: moderateScale(15),
+                                    paddingStart: moderateScale(15),
+                                    paddingEnd: moderateScale(15),
                                 }}>
 
 
@@ -421,34 +423,47 @@ function RegisterPetView(props) {
                                 </RBSheet>
 
                                 {animalBreed.length > 0 && isBreedSheetVisible ? sheetBreedRef.current.open() : null}
-                                <View style={{
-                                    ...styles.boxcontainer,
-                                    marginTop: verticalScale(10),
-                                    flexDirection: 'row', alignItems: 'center',
-                                    shadowColor: validateQuantity ? 'transparent' : 'darkred',
-                                    shadowOpacity: validateQuantity ? 0.25 : 1,
-                                    padding: moderateScale(15),
-                                }}>
+
+                                {accountType === INDIVIDUAL ? <View /> : <View>
+                                    <Text style={{
+                                        marginTop: verticalScale(25),
+                                        ...styles.generalTxt, color: '#464646',
+                                        fontFamily: Fonts.type.medium,
+                                    }}>Quantity</Text>
+
+                                    <View style={{
+                                        ...styles.boxcontainer,
+                                        marginTop: verticalScale(10),
+                                        flexDirection: 'row', alignItems: 'center',
+                                        shadowColor: validateQuantity ? 'transparent' : 'darkred',
+                                        shadowOpacity: validateQuantity ? 0.25 : 1,
+                                        padding: moderateScale(15),
+                                    }}>
 
 
-                                    <TextInput placeholder="Quantity" style={{
-                                        ...styles.styleTextInput,
-                                        flex: 1,
-                                        textAlign: 'left',
-                                    }}
-                                        underlineColorAndroid="transparent"
-                                        require={true}
-                                        numberOfLines={1}
-                                        autoCapitalize="none"
-                                        keyboardType="number-pad"
-                                        onChangeText={(e) => {
-                                            setValidateQuantity(Util.isGraterThanZero(e));
-                                            setValueQuantity(e);
-                                        }
-                                        }
-                                        value={valueQuantity} />
-                                </View>
-
+                                        <TextInput placeholder="Quantity" style={{
+                                            ...styles.styleTextInput,
+                                            flex: 1,
+                                            textAlign: 'left',
+                                        }}
+                                            underlineColorAndroid="transparent"
+                                            require={true}
+                                            numberOfLines={1}
+                                            autoCapitalize="none"
+                                            keyboardType="number-pad"
+                                            onChangeText={(e) => {
+                                                setValidateQuantity(Util.isGraterThanZero(e));
+                                                setValueQuantity(e);
+                                            }
+                                            }
+                                            value={valueQuantity} />
+                                    </View>
+                                </View>}
+                                <Text style={{
+                                    marginTop: verticalScale(25),
+                                    ...styles.generalTxt, color: '#464646',
+                                    fontFamily: Fonts.type.medium,
+                                }}>Price</Text>
                                 <View style={{
                                     ...styles.boxcontainer,
                                     marginTop: verticalScale(10),
@@ -458,12 +473,20 @@ function RegisterPetView(props) {
                                     padding: moderateScale(15),
                                 }}>
 
+                                    <Text
+                                        style={{
+                                            ...styles.styleTextInput,
+                                            textAlign: 'left',
+                                            width:'5%',
+                                        }}>$
+                                    </Text>
 
-                                    <TextInput placeholder="Price" style={{
-                                        ...styles.styleTextInput,
-                                        flex: 1,
-                                        textAlign: 'left',
-                                    }}
+                                    <TextInput
+                                        placeholder="Price" style={{
+                                            ...styles.styleTextInput,
+                                            flex: 1,
+                                            textAlign: 'left',
+                                        }}
                                         underlineColorAndroid="transparent"
                                         require={true}
                                         numberOfLines={1}
@@ -727,100 +750,103 @@ function RegisterPetView(props) {
                             </View> : null}
                     </View>
 
-                    {petIndex > -1 && listPhotoCollections.length > 0 ?
-                        <FlatList
-                            horizontal
-                            data={listPhotoCollections}
-                            style={{
-                                height: verticalScale(80),
-                                width: '100%',
-                                marginStart: moderateScale(25),
-                                marginTop: verticalScale(0),
-                                marginBottom: verticalScale(20),
-                            }}
-                            contentContainerStyle={{
-                            }}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            deletePic(index)
-                                        }}
-                                        style={{
-                                            flexDirection: 'row',
-                                            marginEnd: verticalScale(10)
-                                        }}>
+                    {petIndex > -1 && !animalData ?
 
-                                        {item.includes('jpg') || item.includes('png') || item.includes('jpeg')?
-                                        <View
-                                            style={{
+                        <View style={{
 
-                                                width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
-                                            }}
-                                        >
-                                            <Image
-                                                source={{ uri: item }}
-                                                resizeMode="cover" style={{
-                                                    position: 'absolute',
-                                                    borderRadius: moderateScale(20),
-                                                    height: '100%', width: '100%'
+                        }}>
+                            {listPhotoCollections.length > 0 ?
+                                <FlatList
+                                    horizontal
+                                    data={listPhotoCollections}
+                                    style={{
+                                        width: '100%',
+                                        marginStart: moderateScale(25),
+                                        marginBottom: verticalScale(20),
+                                    }}
+                                    contentContainerStyle={{
+                                        height: verticalScale(80)
+                                    }}
+                                    renderItem={({ item, index }) => {
+                                        return (
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    deletePic(index)
                                                 }}
-                                            />
-
-                                            <Image
-                                                source={Icons.icon_metro_cancel}
-                                                resizeMode="contain" style={{
-                                                    margin: moderateScale(5),
-                                                    height: verticalScale(20), width: moderateScale(20)
-                                                }}
-                                            />
-                                        </View>:
-
-                                            <View
                                                 style={{
+                                                    flexDirection: 'row',
+                                                    marginEnd: verticalScale(10)
+                                                }}>
 
-                                                    width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
-                                                }}
-                                            >
-      
-                                                <View
-                                                    style={{
-                                                        position: 'absolute',
-                                                        borderRadius: moderateScale(20),
-                                                        height: '100%', width: '100%'
-                                                    }}
-                                                > 
-                                                <VideoPlayer
-                                                    style={{
-                                                        height: '100%', width: '100%',
-                                                            borderRadius: moderateScale(20),
-                                                    }}
-                                                    video={{ uri: item }}
-                                                    videoWidth={1600}
-                                                    videoHeight={900}
-                                                    duration={1}
-                                                />
-                                                </View>
-                                            
-                                                <Image
-                                                    source={Icons.icon_metro_cancel}
-                                                    resizeMode="contain" style={{
-                                                        margin: moderateScale(5),
-                                                        height: verticalScale(20), width: moderateScale(20),
-                                                        tintColor:'white'
-                                                    }}
-                                                />
-                                            </View>
-                                        
-                                        }
-                                    </TouchableOpacity>
-                                );
-                            }}
-                            keyExtractor={(item) => item.id}
+                                                {item.includes('jpg') || item.includes('png') || item.includes('jpeg') ?
+                                                    <View
+                                                        style={{
 
-                        /> : null}
-                    {petIndex > -1 ?
-                        <View>
+                                                            width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            source={{ uri: item }}
+                                                            resizeMode="cover" style={{
+                                                                position: 'absolute',
+                                                                borderRadius: moderateScale(20),
+                                                                height: '100%', width: '100%'
+                                                            }}
+                                                        />
+
+                                                        <Image
+                                                            source={Icons.icon_metro_cancel}
+                                                            resizeMode="contain" style={{
+                                                                margin: moderateScale(5),
+                                                                height: verticalScale(20), width: moderateScale(20)
+                                                            }}
+                                                        />
+                                                    </View> :
+
+                                                    <View
+                                                        style={{
+
+                                                            width: moderateScale(100), height: '100%', alignItems: 'flex-end', justifyContent: 'flex-start'
+                                                        }}
+                                                    >
+
+                                                        <View
+                                                            style={{
+                                                                position: 'absolute',
+                                                                borderRadius: moderateScale(20),
+                                                                height: '100%', width: '100%'
+                                                            }}
+                                                        >
+                                                            <VideoPlayer
+                                                                style={{
+                                                                    height: '100%', width: '100%',
+                                                                    borderRadius: moderateScale(20),
+                                                                }}
+                                                                video={{ uri: item }}
+                                                                videoWidth={1600}
+                                                                videoHeight={900}
+                                                                duration={1}
+                                                            />
+                                                        </View>
+
+                                                        <Image
+                                                            source={Icons.icon_metro_cancel}
+                                                            resizeMode="contain" style={{
+                                                                margin: moderateScale(5),
+                                                                height: verticalScale(20), width: moderateScale(20),
+                                                                tintColor: 'white'
+                                                            }}
+                                                        />
+                                                    </View>
+
+                                                }
+                                            </TouchableOpacity>
+                                        );
+                                    }}
+                                    keyExtractor={(item) => item.id}
+
+                                /> : <View />}
+
                             <TouchableOpacity style={{
                                 ...styles.styleButtons, flex: 0,
                                 margin: verticalScale(25),
@@ -839,6 +865,10 @@ function RegisterPetView(props) {
                                     color: Colors.appBgColor
                                 }}>Add Videos / Photos</Text>
                             </TouchableOpacity>
+                        </View>
+                        : null}
+                    {petIndex > -1 ?
+                        <View>
 
                             <TouchableOpacity style={{
                                 ...styles.styleButtons, flex: 0,
@@ -1085,7 +1115,7 @@ function RegisterPetView(props) {
                         data={listAnimalBreed}
                         contentContainerStyle={{
                             padding: moderateScale(30),
-                            paddingTop:0,
+                            paddingTop: 0,
                         }}
                         renderItem={({ item, index }) => {
                             return (
@@ -1225,6 +1255,7 @@ function RegisterPetView(props) {
         let parent2 = { id: mother ? mother._id : null, name: mother ? mother.data.name : '' }
         family.parent1 = parent1;
         family.parent2 = parent2;
+        console.log('family--->', family);
         return family;
     }
     function addAnimalasParent(e, isFather) {
