@@ -9,7 +9,7 @@ import React, { useState, useRef } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
-import { INDIVIDUAL, TYPES_OF_SERVICES } from '../../constants';
+import { INDIVIDUAL, LOGLY_COMMUNITY, TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
 import DeviceInfo from 'react-native-device-info';
 import * as Animatable from 'react-native-animatable';
@@ -26,80 +26,7 @@ function HomeView(props) {
     const PET_ACTIVITY =
         accountType && accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ?
             [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }, { bg: Icons.icon_marketing, txt: 'Marketing' }] :
-            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' }, { bg: Images.img_activity, txt: 'Activity' }]
-    const actions = [
-        {
-            textStyle: {
-                fontSize: isTablet ? moderateScale(11) : moderateScale(14),
-                shadowColor: 'transparent',
-            },
-            textBackground: 'transparent',
-            size: moderateScale(40),
-            buttonSize: moderateScale(40),
-            text: "Register Animals",
-            color: '#021C41',
-            icon: Icons.icon_float_reg,
-            name: "Register Animals",
-            position: 1,
-
-        },
-        {
-            textStyle: {
-                fontSize: isTablet ? moderateScale(11) : moderateScale(14),
-                shadowColor: 'transparent'
-            },
-            textBackground: 'transparent',
-            size: moderateScale(40),
-            buttonSize: moderateScale(40),
-            text: "Register Products",
-            icon: Icons.icon_float_reg_products,
-            name: "Register Products",
-            color: '#C90F22',
-            position: 2
-        },
-        {
-            textStyle: {
-                fontSize: isTablet ? moderateScale(11) : moderateScale(14),
-                shadowColor: 'transparent'
-            },
-            textBackground: 'transparent',
-            size: moderateScale(40),
-            buttonSize: moderateScale(40),
-            text: "Book a Sale",
-            icon: Icons.icon_float_book_sale,
-            name: "Book a Sale",
-            color: Colors.appBgColor,
-            position: 3
-        },
-        {
-            textStyle: {
-                fontSize: isTablet ? moderateScale(11) : moderateScale(14),
-                shadowColor: 'transparent'
-            },
-            textBackground: 'transparent',
-            size: moderateScale(40),
-            buttonSize: moderateScale(40),
-            text: "Book an Appointment",
-            color: '#1689EB',
-            icon: Icons.icon_float_book_app,
-            name: "Book an Appointment",
-            position: 4
-        },
-        {
-            textStyle: {
-                fontSize: isTablet ? moderateScale(11) : moderateScale(14),
-                shadowColor: 'transparent'
-            },
-            textBackground: 'transparent',
-            size: moderateScale(40),
-            buttonSize: moderateScale(40),
-            text: "Add a Team Member",
-            icon: Icons.icon_float_add_team,
-            name: "Add a Team Member",
-            color: '#09C127',
-            position: 5
-        }
-    ];
+            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' }]
 
 
     const rotateValueHolder = useRef(new Animated.Value(0)).current;
@@ -167,13 +94,17 @@ function HomeView(props) {
                                         if (index === 0) {
                                             props.navigation.navigate('PetProfile')
                                         } else if (index === 1) {
-                                            accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ? props.navigation.navigate('ScheduleListingActivity') : props.navigation.navigate('ProductListing')
+                                            props.navigation.navigate('ScheduleListingActivity')
                                         }
                                         else if (index === 2) {
-                                            Util.topAlert('Coming Soon')
+                                            if (accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()))
+                                                Util.topAlert('Coming Soon')
+                                            else {
+                                                props.navigation.navigate('ProductListing')
+                                            }
                                         }
                                         else if (index === 3) {
-                                            props.navigation.navigate('ScheduleListingActivity')
+                                            Util.topAlert('Coming Soon')
                                         }
                                     }}
                                     style={{
@@ -345,68 +276,55 @@ function HomeView(props) {
                         marginEnd: moderateScale(25),
                         marginStart: moderateScale(25),
                         marginTop: verticalScale(20)
-                    }}>Marketplace</Text>
+                    }}>Logly Community</Text>
 
-                    <View style={{
-                        flexDirection: 'row',
-                        marginEnd: moderateScale(25),
-                        marginStart: moderateScale(25)
-                    }}>
-                        <TouchableOpacity
-                            onPress={() =>
-                                Util.topAlert('Coming soon')
-                            }
-                            style={{
-                                borderRadius: moderateScale(10),
-                                justifyContent: 'center',
-                                backgroundColor: '#EEB208',
-                                height: moderateScale(60),
-                                flex: 0.5,
-                                marginTop: moderateScale(20),
-                            }}
-                        >
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    fontFamily: Fonts.type.bold,
-                                    color: 'white',
-                                    textAlign: 'center',
-                                }}>Animals
-                            </AutoSizeText>
-                        </TouchableOpacity>
+                    <FlatList
+                        showsHorizontalScrollIndicator={false}
+                        horizontal
+                        contentContainerStyle={{
+                            justifyContent: 'center', alignItems: 'center', marginTop: verticalScale(10),
+                            marginBottom: verticalScale(10)
+                        }}
+                        data={LOGLY_COMMUNITY}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity
 
-                        <TouchableOpacity
-                            onPress={() =>
-                                Util.topAlert('Coming soon')
-                            }
-                            style={{
-                                borderRadius: moderateScale(10),
-                                justifyContent: 'center',
-                                backgroundColor: '#097D3B',
-                                height: moderateScale(60),
-                                flex: 0.5,
-                                marginStart: moderateScale(10),
-                                marginTop: moderateScale(20),
-                            }}
-                        >
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    fontFamily: Fonts.type.bold,
-                                    color: 'white',
-                                    textAlign: 'center',
-                                }}>Products
-                            </AutoSizeText>
-                        </TouchableOpacity>
-                    </View>
+                                    onPress={() =>
+                                        //props.navigation.navigate('AppointmentListing')
+                                        Util.topAlert('Coming Soon')
+                                    }
+                                    style={{
+                                        borderRadius: moderateScale(15),
+                                        width: Dimensions.get('screen').width / moderateScale(2.2),
+                                        height: verticalScale(100),
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        marginEnd: moderateScale(10),
+                                        marginStart: index === 0 ? moderateScale(25) : 0,
+                                        backgroundColor: item.bg
+                                    }}
+                                >
+
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            fontFamily: Fonts.type.bold,
+                                            color: 'white',
+                                            paddingTop: verticalScale(10)
+                                        }}>{item.name}
+                                    </AutoSizeText>
+                                </TouchableOpacity>
+                            )
+                        }}
+
+
+                    />
+
                 </View>
             </ScrollView>
 
@@ -486,12 +404,9 @@ function HomeView(props) {
                                     marginTop: moderateScale(30),
 
                                 }}>
-                                    {/* <Image source={Icons.icon_float_reg_products} resizeMode='contain'
-                            style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
-
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('RegisterProduct');
+                                            props.navigation.navigate('RegisterProduct', { updateProduct: {} });
                                         }}
                                     >
                                         <Text style={{
@@ -509,11 +424,6 @@ function HomeView(props) {
                                     marginTop: moderateScale(30),
 
                                 }}>
-                                    {/* <Image source={Icons.icon_float_book_sale} style={{
-                            marginStart: moderateScale(-50),
-                            height: moderateScale(20),
-                            width: moderateScale(20)
-                        }} /> */}
                                     <Text style={{
                                         ...styles.generalTxt,
                                         color: 'white',
@@ -528,11 +438,6 @@ function HomeView(props) {
                                     marginTop: moderateScale(30),
 
                                 }}>
-                                    {/* <Image source={Icons.icon_float_book_app} style={{
-                            marginStart: moderateScale(40),
-                            height: moderateScale(20),
-                            width: moderateScale(20)
-                        }} /> */}
                                     <Text style={{
                                         ...styles.generalTxt,
                                         color: 'white',
@@ -547,21 +452,44 @@ function HomeView(props) {
 
                                 }}>
 
-                                    {/* <Image source={Icons.icon_float_add_team}
-                            style={{
-                                marginStart: moderateScale(30),
-                                height: moderateScale(20),
-                                width: moderateScale(20)
-                            }}
-                            /> */}
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            props.navigation.navigate('AddTeamMember', { updateContacts: {}, isTransfer: false })
+                                        }}
+                                    >
                                     <Text style={{
                                         ...styles.generalTxt,
                                         color: 'white',
 
                                         fontFamily: Fonts.type.medium,
                                         fontSize: moderateScale(20),
-                                    }}>Add a Team Member</Text></View>
+                                    }}>Add a Team Member</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: moderateScale(30),
+
+                                }}>
+
+                                    <TouchableOpacity
+                                        onPress={() => {
+                                            props.navigation.navigate('WelcomeRegistration');
+                                        }}
+                                    >
+                                        <Text style={{
+                                            ...styles.generalTxt,
+                                            color: 'white',
+
+                                            fontFamily: Fonts.type.medium,
+                                            fontSize: moderateScale(20),
+                                        }}>Setup Wizard</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
+
+
                         </Animated.View>
                     </TouchableOpacity>
                 </Animatable.View>

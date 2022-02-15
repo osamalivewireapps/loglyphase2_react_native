@@ -12,33 +12,86 @@ import { moderateScale, moderateVerticalScale, verticalScale } from 'react-nativ
 import { Colors, Fonts, Icons, Images } from '../../../theme';
 import { TextInput } from 'react-native';
 import RBSheet from 'react-native-raw-bottom-sheet';
-
+import { getAllCategories, addCategory, updateCategory, removeCategory, updateTypeCategory } from '../../../actions/ActivityManagement'
+import { useDispatch } from 'react-redux';
+import { ImageBackground } from 'react-native';
+import Util from '../../../utils';
+import DropDownPicker from 'react-native-dropdown-picker';
 
 function AddCategory(props) {
 
 
-    const { name} = props;
+    const { name, getCategoryData, filterCategories } = props;
     const sheetRef = useRef(null);
     const sheetActivityType = useRef(null);
 
-    const [addCategory, setAddCategory] = useState([]);
+    const [allCategory, setAllCategory] = useState([]);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
     const [isBottonSheetActivityVisible, setCloseBottonSheetActivity] = useState(false);
 
-    const [searchTxt, setSearchTxt] = useState('');
+    const [currentActivityIndex, setCurrentActivityIndex] = useState(-1);
+    const [categoryName, setCategoryName] = useState('');
+    const [activityName, setActivityName] = useState('');
+    const [updateActivityName, setUpdateActivityName] = useState('');
+    const [isEditShow, setEditShow] = useState(-1);
+    const [selectedCategory, setSelectedCategory] = useState({});
+    const [addCategoryActivityType, setAddCategoryActivityType] = useState([]);
+    const [arrCategoryList, setArrCategoryList] = useState([]);
+
+    let dispatch = useDispatch();
+
+    useEffect(() => {
+        getAllCategoriesList();
+    }, []);
+
+    useEffect(() => {
+        setAllCategory(filterCategories)
+    }, [filterCategories]);
+
+
+    function getAllCategoriesList() {
+        dispatch(getAllCategories()).then((response) => {
+            if (response.payload) {
+                setAllCategory(response.payload)
+                getCategoryData(response.payload)
+                setCategoryListing(response.payload)
+            }
+        })
+    }
+
+    function setCategoryListing(response) {
+        console.log('filter category2---->', response);
+        let tmp = [];
+        response.forEach((element, index) => {
+            tmp.push({ label: element.name, value: element._id })
+        });
+        setArrCategoryList(tmp)
+    }
 
     useEffect(() => {
 
         if (name.length === 0)
             return
 
-            if (name && name.substring(0, name.lastIndexOf('_')) === 'Add Category')
-            setCloseBottonSheet(true)
-        else if (name && name.length > 0) {
-            setCloseBottonSheetActivity(true)
+        if (name && name.length > 0 && name.toLowerCase().includes('category')) {
+            emptyValues(true)
+        }
+        else if (name && name.length > 0 && name.toLowerCase().includes('type')) {
+            console.log('name----->', name)
+            emptyValues(false)
         }
     }, [name])
 
+    function emptyValues(isShowCategory) {
+        setCategoryName('')
+        setSelectedCategory({})
+        setEditShow(-1);
+        setActivityName('')
+        setCloseBottonSheet(isShowCategory)
+        setCloseBottonSheetActivity(!isShowCategory);
+        setCurrentActivityIndex(-1)
+        setAddCategoryActivityType([])
+    }
     return (
         <View style={{ flex: 1 }}>
 
@@ -63,6 +116,9 @@ function AddCategory(props) {
                             alignItems: 'center',
                             flexDirection: 'row',
                         }} onPress={() => {
+                            setCategoryName('')
+                            setSelectedCategory({})
+                            setEditShow(-1);
                             setCloseBottonSheet(true)
                         }
                         }>
@@ -85,7 +141,7 @@ function AddCategory(props) {
 
 
                         <FlatList
-                            data={['']}
+                            data={allCategory}
                             contentContainerStyle={{
                                 minHeight: Dimensions.get('screen').height / 2
 
@@ -93,7 +149,8 @@ function AddCategory(props) {
                             renderItem={({ item, index }) => {
                                 return (
                                     <TouchableOpacity
-                                    onPress={()=>setCloseBottonSheetActivity(true)}
+                                        activeOpacity={1}
+                                        //onPress={() => setCloseBottonSheetActivity(true)}
 
                                         style={{
                                             backgroundColor: '#F5F5F5',
@@ -134,55 +191,129 @@ function AddCategory(props) {
 
                                                 }}
                                             >
-                                                Cat Cleaning
+                                                {item.name}
                                             </AutoSizeText>
 
-                                            <View
+                                            {item.subType.length > 0 ? <View>
+                                                <View
 
-                                                style={{
-                                                    height:verticalScale(1),
-                                                    width:'90%',
-                                                    marginTop: verticalScale(5),
-                                                    marginBottom:verticalScale(5),
-                                                    backgroundColor:'#CDCDCD'
-                                                }}
-                                            />
+                                                    style={{
+                                                        height: verticalScale(1),
+                                                        width: '90%',
+                                                        marginTop: verticalScale(5),
+                                                        marginBottom: verticalScale(5),
+                                                        backgroundColor: '#CDCDCD'
+                                                    }}
+                                                />
 
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(14)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
+                                                <AutoSizeText
+                                                    numberOfLines={1}
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(14)}
+                                                    style={{
+                                                        fontFamily: Fonts.type.medium,
+                                                        color: '#777777',
 
-                                                }}
-                                            >
-                                                Activity Type
-                                            </AutoSizeText>
+                                                    }}
+                                                >
+                                                    Activity Type
+                                                </AutoSizeText>
 
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#232323',
-                                                    marginTop: verticalScale(5),
+                                                <AutoSizeText
+                                                    minFontSize={moderateScale(12)}
+                                                    fontSize={moderateScale(16)}
+                                                    style={{
+                                                        fontFamily: Fonts.type.medium,
+                                                        color: '#232323',
+                                                        marginTop: verticalScale(5),
 
-                                                }}
-                                            >
-                                                Paw Cleaning
-                                            </AutoSizeText>
+                                                    }}
+                                                >
+                                                    {item.subType.join("\n")}
+                                                </AutoSizeText>
+                                            </View> : <View />}
 
                                         </View>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{
-                                                flex: 0.1,
 
-                                            }}
-                                            source={Icons.icon_three_colons} />
+                                        {isEditShow === index ?
+                                            <View style={{
+                                                height: verticalScale(50),
+                                                flex: moderateScale(0.1),
+                                                marginTop: 0,
+                                                marginBottom: 0,
+                                                justifyContent: 'center',
+                                                alignItems: 'center',
+                                            }}>
+                                                <ImageBackground
+                                                    source={Images.img_popup_services}
+                                                    style={{
+                                                        position: 'absolute', height: '100%',
+                                                        width: '100%'
+                                                    }} />
+                                                <TouchableOpacity
+                                                    flex={moderateScale(0.1)}
+                                                    style={{
+                                                        justifyContent: 'center', width: '90%',
+                                                        height: verticalScale(5),
+                                                        alignItems: 'center'
+                                                    }}
+                                                    onPress={() => {
+                                                        if (item.subType.length > 0) {
+                                                            setSelectedCategory(item)
+                                                            setCategoryName(item.name)
+                                                            setAddCategoryActivityType(item.subType)
+                                                            setCloseBottonSheetActivity(true)
+                                                        } else {
+                                                            setSelectedCategory(item)
+                                                            setCategoryName(item.name)
+                                                            setCloseBottonSheet(true)
+                                                        }
+                                                    }}>
+                                                    <Image source={Icons.icon_services_edit}
+                                                        resizeMode='contain' style={{
+                                                            marginEnd: moderateScale(2), height: verticalScale(10), width: moderateScale(15)
+                                                        }}
+
+                                                    />
+                                                </TouchableOpacity>
+                                                <View style={{
+                                                    width: '50%',
+                                                    height: verticalScale(0.5),
+                                                    backgroundColor: '#585858',
+                                                    marginEnd: moderateScale(5),
+                                                    marginTop: verticalScale(8),
+                                                    marginBottom: verticalScale(8)
+                                                }} />
+                                                <TouchableOpacity
+                                                    flex={moderateScale(0.1)}
+                                                    style={{
+                                                        justifyContent: 'center', width: '90%',
+                                                        height: verticalScale(5),
+                                                        alignItems: 'center',
+                                                    }}
+                                                    onPress={() => {
+                                                        removeCategoryApi(item._id);
+                                                    }}>
+                                                    <Image source={Icons.icon_services_delete}
+                                                        resizeMode='contain'
+                                                        style={{
+                                                            marginEnd: moderateScale(3),
+                                                            height: verticalScale(12),
+                                                            width: moderateScale(15)
+                                                        }} />
+                                                </TouchableOpacity>
+                                            </View> : <View flex={moderateScale(0.1)} />}
+
+                                        <TouchableOpacity
+                                            style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
+
+                                            onPress={() => {
+                                                isEditShow === index ? setEditShow(-1) : setEditShow(index)
+                                            }}>
+                                            <Image source={Icons.icon_three_colons}
+                                                resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
+                                            />
+                                        </TouchableOpacity>
                                     </TouchableOpacity>
                                 )
                             }}
@@ -280,41 +411,6 @@ function AddCategory(props) {
 
                     </View>
 
-                    <FlatList
-                        data={addCategory}
-                        contentContainerStyle={{
-
-                        }}
-                        renderItem={({ item, index }) => {
-                            return (<View>
-
-                                <View style={{
-                                    marginStart: moderateScale(25),
-                                    marginEnd: moderateScale(65),
-                                    marginTop: verticalScale(10),
-                                    backgroundColor: '#F5F5F5',
-                                    borderRadius: moderateScale(10),
-                                    height: verticalScale(32),
-                                    justifyContent: 'center',
-                                    paddingStart: moderateScale(10),
-                                    paddingEnd: moderateScale(10)
-                                }}>
-
-                                    <Text
-                                        numberOfLines={1}
-                                        style={{
-                                            width: '100%',
-                                            textAlignVertical: 'center',
-                                            ...styles.generalTxt,
-                                            color: '#777777',
-                                            fontSize: moderateScale(14),
-                                        }} >{item}
-                                    </Text>
-
-                                </View>
-                            </View>);
-                        }}
-                    />
                     <View style={{
                         paddingTop: verticalScale(10),
                         padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%'
@@ -325,16 +421,17 @@ function AddCategory(props) {
                             alignItems: 'center'
                         }}>
                             <View style={{
-                                marginEnd: moderateScale(10),
+                                marginEnd: moderateScale(0),
                                 flex: 1, flexDirection: 'row', alignItems: 'center',
                                 justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
                             }}>
 
                                 <TextInput
                                     onChangeText={(e) => {
-                                        setSearchTxt(e)
+                                        setCategoryName(e)
                                     }}
-                                    value={searchTxt}
+                                    maxLength={80}
+                                    value={categoryName}
                                     placeholder='Category Name'
                                     numberOfLines={1}
                                     keyboardType='default'
@@ -352,16 +449,19 @@ function AddCategory(props) {
 
                             </View>
 
-                            <TouchableOpacity
+                            {/* <TouchableOpacity
                                 style={{ backgroundColor: '#F5F5F5', height: verticalScale(32), width: moderateScale(30), justifyContent: "center", alignItems: 'center', borderRadius: moderateScale(5) }}
                                 onPress={() => {
-                                    let tmp = addCategory;
-                                    tmp.push(searchTxt);
-                                    setAddCategory([...tmp])
+                                    if (isEditShow === -1)
+                                        addCategoryApi()
+                                    else {
+                                        console.log('selected category--->', selectedCategory)
+                                        updateCategoryApi(selectedCategory._id)
+                                    }
 
                                 }}>
                                 <Image source={Icons.icon_white_plus} resizeMode='contain' style={{ tintColor: 'black', height: verticalScale(10), width: moderateScale(12) }} />
-                            </TouchableOpacity>
+                            </TouchableOpacity> */}
 
                         </View>
                     </View>
@@ -374,10 +474,12 @@ function AddCategory(props) {
                         marginTop: verticalScale(75), backgroundColor: '#FFC081'
                     }}
                         onPress={() => {
-                            setTimeout(() => {
-
-                                sheetRef.current.close();
-                            }, 200)
+                            if (isEditShow === -1)
+                                addCategoryApi()
+                            else {
+                                console.log('selected category--->', selectedCategory)
+                                updateCategoryApi(selectedCategory._id)
+                            }
                         }}>
                         <Text style={{
                             ...styles.generalTxt,
@@ -388,7 +490,7 @@ function AddCategory(props) {
                             paddingTop: verticalScale(5),
                             paddingBottom: verticalScale(5),
 
-                        }}>Add</Text>
+                        }}>{isEditShow > -1 ? 'Save' : 'Add'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{
@@ -486,45 +588,53 @@ function AddCategory(props) {
                         //shadowOpacity: validateState ? 0.25 : 1,
                         marginTop: 0,
                         marginStart: verticalScale(20),
-                        marginEnd: verticalScale(20),
+                        marginEnd: verticalScale(25),
+                        paddingEnd: verticalScale(100),
                         flexDirection: 'row',
-                        padding: moderateScale(20),
-                        paddingTop: 0, paddingBottom: 0,
                         alignItems: 'center',
                         backgroundColor: '#F5F5F5',
                         borderRadius: moderateScale(10),
+                        zIndex: 2
                     }}>
 
-                        <TextInput placeholder=""
-                            autoCapitalize="none"
+                        <DropDownPicker
+                            showArrow={false}
+                            disabled={isEditShow > -1 ? true : false}
+                            labelStyle={{
+                                fontSize: moderateScale(14),
+                                color: 'black',
+                                width: '100%',
 
-                            onChangeText={(e) => {
 
+                            }}
+                            itemStyle={{
+                                width: '100%', justifyContent: 'flex-start',
+                            }}
+                            dropDownStyle={{
+                                width: Dimensions.get('screen').width - moderateScale(55)
                             }}
                             style={{
                                 ...styles.styleTextInput,
-                                flex: 1,
+                                width: Dimensions.get('screen').width - moderateScale(90),
+                                height: verticalScale(40),
                                 color: '#404040',
                                 marginEnd: moderateScale(10),
+                                backgroundColor: 'transparent',
+                                borderColor: 'transparent',
+                                justifyContent: 'center', alignItems: 'center',
 
                             }}
-                            value='Cat Cleaning'
-                            keyboardType="default"
+                            placeholder={categoryName ? categoryName : arrCategoryList[0]?.label}
+                            items={arrCategoryList}
+                            onChangeItem={(item) => {
+                                setSelectedCategory({ name: item.label, _id: item.value });
+                            }}
                         />
-                        <TouchableOpacity
-                            onPress={() => {
-                                //setIsVisible(!isVisible);
-                                //setIsCityVisible(false)
-                                //setIsZipVisible(false)
 
-
-                            }}
-                        >
-                            <Image source={Icons.icon_ios_arrow_down} style={{ height: moderateScale(5), width: moderateScale(8) }} />
-                        </TouchableOpacity>
-
+                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
                     </View>
+
 
 
                     <Text
@@ -543,60 +653,114 @@ function AddCategory(props) {
                         Activity Type
                     </Text>
                     <FlatList
-                        data={addCategory}
+                        data={addCategoryActivityType}
                         contentContainerStyle={{
 
                         }}
                         renderItem={({ item, index }) => {
-                            return (<View>
+                            return (<View style={{
+                                flexDirection: 'row', width: '100%'
+                            }}>
 
                                 <View style={{
                                     marginStart: moderateScale(25),
-                                    marginEnd: moderateScale(65),
+                                    marginEnd: moderateScale(10),
                                     marginTop: verticalScale(10),
                                     backgroundColor: '#F5F5F5',
                                     borderRadius: moderateScale(10),
                                     height: verticalScale(32),
                                     justifyContent: 'center',
                                     paddingStart: moderateScale(10),
-                                    paddingEnd: moderateScale(10)
+                                    paddingEnd: moderateScale(10),
+                                    flex: 0.8
                                 }}>
 
-                                    <Text
+                                    <TextInput
+                                        onChangeText={(e) => {
+                                            console.log('current--->', index === currentActivityIndex)
+                                            if (index === currentActivityIndex)
+                                                setUpdateActivityName(e)
+                                        }}
+
+
+                                        onFocus={() => {
+                                            setCurrentActivityIndex(index)
+                                            setUpdateActivityName(item)
+                                        }}
+                                        onEndEditing={(e) => {
+                                            let tmp = [];
+                                            tmp = tmp.concat(addCategoryActivityType);
+                                            tmp[index] = updateActivityName;
+                                            setAddCategoryActivityType([...tmp])
+                                            setCurrentActivityIndex(-1)
+                                        }}
+
+                                        value={index === currentActivityIndex ? updateActivityName : item}
+                                        placeholder='Activity Type'
                                         numberOfLines={1}
+                                        keyboardType='default'
+                                        autoCapitalize='none'
                                         style={{
-                                            width: '100%',
-                                            textAlignVertical: 'center',
+                                            keyboardShouldPersistTaps: true,
+                                            flex: 1,
+                                            paddingStart: moderateScale(10),
+                                            paddingEnd: moderateScale(10),
+                                            height: verticalScale(32),
                                             ...styles.generalTxt,
                                             color: '#777777',
                                             fontSize: moderateScale(14),
-                                        }} >{item}
-                                    </Text>
+                                        }} />
 
                                 </View>
+
+                                <TouchableOpacity
+                                    style={{
+                                        backgroundColor: '#F5F5F5', height: verticalScale(32),
+                                        flex: 0.1,
+                                        justifyContent: "center", alignItems: 'center',
+                                        borderRadius: moderateScale(5),
+                                        marginTop: verticalScale(10),
+
+                                    }}
+                                    onPress={() => {
+                                        let tmp = addCategoryActivityType;
+                                        tmp.splice(index, 1)
+                                        setUpdateActivityName('')
+                                        setAddCategoryActivityType([...tmp])
+
+                                    }}>
+                                    <Text
+                                        style={{
+                                            tintColor: 'black', height: verticalScale(10)
+                                        }}>
+                                        -
+                                    </Text>
+                                </TouchableOpacity>
                             </View>);
                         }}
                     />
                     <View style={{
                         paddingTop: verticalScale(10),
-                        padding: moderateScale(25), paddingBottom: 0, flexDirection: 'row', width: '100%'
+                        padding: moderateScale(25), paddingBottom: 0,
+                        flexDirection: 'row', width: '100%'
                     }}>
                         <View style={{
-                            width: '100%',
+                            width: '98%',
                             flexDirection: 'row',
                             alignItems: 'center'
                         }}>
                             <View style={{
                                 marginEnd: moderateScale(10),
                                 flex: 1, flexDirection: 'row', alignItems: 'center',
-                                justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                                justifyContent: 'flex-end', backgroundColor: '#F5F5F5',
+                                borderRadius: moderateScale(10)
                             }}>
 
                                 <TextInput
                                     onChangeText={(e) => {
-                                        setSearchTxt(e)
+                                        setActivityName(e)
                                     }}
-                                    value={searchTxt}
+                                    value={activityName}
                                     placeholder='Activity Type'
                                     numberOfLines={1}
                                     keyboardType='default'
@@ -615,11 +779,18 @@ function AddCategory(props) {
                             </View>
 
                             <TouchableOpacity
-                                style={{ backgroundColor: '#F5F5F5', height: verticalScale(32), width: moderateScale(30), justifyContent: "center", alignItems: 'center', borderRadius: moderateScale(5) }}
+                                style={{
+                                    backgroundColor: '#F5F5F5',
+                                    height: verticalScale(32),
+                                    width: moderateScale(30),
+                                    justifyContent: "center", alignItems: 'center', borderRadius: moderateScale(5)
+                                }}
                                 onPress={() => {
-                                    let tmp = addCategory;
-                                    tmp.push(searchTxt);
-                                    setAddCategory([...tmp])
+                                    let tmp = addCategoryActivityType;
+                                    tmp.push(activityName);
+                                    setActivityName('')
+                                    setUpdateActivityName('')
+                                    setAddCategoryActivityType([...tmp])
 
                                 }}>
                                 <Image source={Icons.icon_white_plus} resizeMode='contain' style={{ tintColor: 'black', height: verticalScale(10), width: moderateScale(12) }} />
@@ -637,8 +808,7 @@ function AddCategory(props) {
                     }}
                         onPress={() => {
                             setTimeout(() => {
-
-                                sheetActivityType.current.close();
+                                updateTypeWithCategoryApi(selectedCategory._id)
                             }, 200)
                         }}>
                         <Text style={{
@@ -650,7 +820,7 @@ function AddCategory(props) {
                             paddingTop: verticalScale(5),
                             paddingBottom: verticalScale(5),
 
-                        }}>Add</Text>
+                        }}>{isEditShow > -1 ? 'Save' : 'Add'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{
@@ -683,6 +853,76 @@ function AddCategory(props) {
         )
     }
 
+    function addCategoryApi() {
+
+        if (!Util.isLengthGraterThanZero(categoryName)) {
+            Util.topAlert('Please enter category Name')
+            return
+        }
+        let tmp = {
+            name: categoryName,
+            active: true,
+            type: 'activity'
+        }
+        sheetRef.current.close()
+
+        setTimeout(() => {
+            dispatch(addCategory(tmp)).then((response) => {
+                if (response) {
+                    setCategoryName('')
+                    getAllCategoriesList()
+                }
+            })
+        }, 200)
+
+    }
+
+    function updateCategoryApi(id) {
+
+        if (!Util.isLengthGraterThanZero(categoryName)) {
+            Util.topAlert('Please enter category Name')
+            return
+        }
+        sheetRef.current.close()
+
+        setTimeout(() => {
+            dispatch(updateCategory(id, { name: categoryName })).then((response) => {
+                if (response) {
+                    setCategoryName('')
+                    setEditShow(-1)
+                    getAllCategoriesList()
+                }
+            })
+        }, 200)
+    }
+
+    function removeCategoryApi(id) {
+
+        setTimeout(() => {
+            dispatch(removeCategory(id)).then((response) => {
+                if (response) {
+                    setCategoryName('')
+                    setEditShow(-1)
+                    getAllCategoriesList()
+                }
+            })
+        }, 200)
+    }
+
+    function updateTypeWithCategoryApi(id) {
+
+        sheetActivityType.current.close()
+
+        setTimeout(() => {
+            dispatch(updateTypeCategory(id, { subType: addCategoryActivityType })).then((response) => {
+                if (response) {
+                    setCategoryName('')
+                    setEditShow(-1)
+                    getAllCategoriesList()
+                }
+            })
+        }, 200)
+    }
 
 }
 

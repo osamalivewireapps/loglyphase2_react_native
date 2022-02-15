@@ -240,7 +240,7 @@ function AboutPetView(props) {
                             setTabsSelect(index);
 
                             if (index === 0)
-                                props.navigation.navigate('CreateActivity')
+                                props.navigation.navigate('CreateActivity',{id:animalData._id})
                             else if (index === 1) {
 
                                 if (animalData.data.quantity > 0)

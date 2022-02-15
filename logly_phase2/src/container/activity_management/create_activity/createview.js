@@ -22,12 +22,13 @@ import moment from 'moment';
 function CreateActivityView(props) {
 
 
+    const { getAllCategories, addScheduleActivity } = props;
     const initialDate = moment().format('YYYY-MM-DD');
 
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
 
-    const [petIndex, setPetIndex] = useState(-1);
-    const activityType = ['Pet Grooming', 'Veterinary', 'Transportation', 'Pet Training'];
+    const [petIndex, setPetIndex] = useState(0);
+    const [activityIndex, setActivityIndex] = useState(-1);
 
     const [valueDesc, setDesc] = useState('');
     const [validateDesc, setValidateDesc] = useState(true);
@@ -36,12 +37,35 @@ function CreateActivityView(props) {
     const [showDatePicker, setshowDatePicker] = useState(false);
     const [valuePickDate, setValuePickDate] = useState(initialDate);
 
+    const [category, setCategoryList] = useState([]);
+    const [activityType, setActivityType] = useState([]);
+    const [activityPress, setActivityPress] = useState(-1);
+
     const sheetRef = useRef(null);
     const sheetBreedRef = useRef(null);
 
     const isTablet = DeviceInfo.isTablet();
 
+    useEffect(() => {
+        setPetIndex(0)
+        setCategoryList([])
+    }, []);
 
+    useEffect(() => {
+
+        if (getAllCategories) {
+            setCategoryList(getAllCategories)
+        }
+    }, [getAllCategories]);
+
+    useEffect(() => {
+
+        setActivityIndex(-1);
+
+        if (petIndex > -1 && category[petIndex]?.subType)
+            setActivityType(category[petIndex].subType ? category[petIndex].subType : [])
+
+    }, [petIndex])
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -125,6 +149,7 @@ function CreateActivityView(props) {
 
                         <TouchableOpacity
                             onPress={() => {
+                                setActivityPress(1)
                                 setCloseBottonSheet(true);
                             }}
                             style={{
@@ -152,7 +177,7 @@ function CreateActivityView(props) {
                                         fontFamily: Fonts.type.base,
                                         width: '97%',
                                     }}>
-                                    {petIndex > -1 ? activityType[petIndex] : 'Select Activity'}
+                                    {category.length > 0 && category[petIndex].name ? category[petIndex].name : 'Select Activity'}
 
                                 </AutoSizeText>
                                 <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
@@ -281,6 +306,7 @@ function CreateActivityView(props) {
 
                         <TouchableOpacity
                             onPress={() => {
+                                setActivityPress(0)
                                 setCloseBottonSheet(true);
                             }}
                             style={{
@@ -309,7 +335,7 @@ function CreateActivityView(props) {
                                         fontFamily: Fonts.type.base,
                                         width: '97%',
                                     }}>
-                                    {petIndex > -1 ? activityType[petIndex] : 'Select Activity Type'}
+                                    {activityIndex > 0 && activityType[activityIndex] ? activityType[activityIndex] : 'Select Activity Type'}
 
                                 </AutoSizeText>
                                 <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
@@ -319,7 +345,7 @@ function CreateActivityView(props) {
 
                         <View style={{
                             ...styles.boxcontainer,
-                            marginTop:verticalScale(10),
+                            marginTop: verticalScale(10),
                             height: verticalScale(120),
                             flexDirection: 'row', alignItems: 'center',
                             shadowColor: validateDesc ? 'white' : 'darkred',
@@ -357,7 +383,7 @@ function CreateActivityView(props) {
                         <TouchableOpacity style={{
                             ...styles.styleButtons, flex: 0,
                             marginTop: verticalScale(35), width: '100%'
-                        }} onPress={() => { props.navigation.goBack() }}>
+                        }} onPress={() => { addScheduleActivities() }}>
                             <Text style={{
                                 fontSize: moderateScale(22), textAlign: 'center',
                                 padding: moderateScale(10),
@@ -371,6 +397,20 @@ function CreateActivityView(props) {
             </ScrollView>
 
         </View>);
+
+    function addScheduleActivities() {
+
+        let data = {};
+        data.categoryId = category[petIndex]._id;
+        data.categoryName = category[petIndex].name;
+        data.categoryType = activityType[activityIndex] ? activityType[activityIndex] : '';
+        data.assignToType = 'Animal'
+        data.animalId = ["" + props.route.params.id + ""]
+        data.date = moment(valuePickDate).format('YYYY-MM-DDThh:mm:ss')
+        data.time = moment(valuePickTime).format('hh:mm A');
+        data.description = valueDesc;
+        addScheduleActivity(data)
+    }
 
     function getTimePicker() {
 
@@ -422,7 +462,7 @@ function CreateActivityView(props) {
                         <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
                     <FlatList
-                        data={activityType}
+                        data={activityPress === 1 ? category : activityType}
                         contentContainerStyle={{
                             padding: moderateScale(30)
                         }}
@@ -430,7 +470,11 @@ function CreateActivityView(props) {
                             return (
                                 <TouchableOpacity
                                     onPress={() => {
-                                        setPetIndex(index);
+                                        if (activityPress === 1)
+                                            setPetIndex(index);
+                                        else
+                                            setActivityIndex(index);
+
                                         sheetRef.current.close();
                                         setCloseBottonSheet(false);
                                     }}
@@ -439,11 +483,13 @@ function CreateActivityView(props) {
                                         style={{ width: moderateScale(25), height: verticalScale(25), alignItems: 'center', justifyContent: 'center' }}
                                     >
                                         <Image
-                                            source={index === petIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
+                                            source={activityPress === 1 ?
+                                                (index === petIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow) :
+                                                index === activityIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
                                             resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
                                         />
                                     </View>
-                                    <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item}</Text>
+                                    <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{activityPress === 1 ? item.name : item}</Text>
                                 </TouchableOpacity>
                             )
                         }}

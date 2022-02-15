@@ -59,7 +59,7 @@ function ProductInfoView(props) {
                 </View>
 
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>Product Info</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10), textAlign: 'center' }}>Select the animals you love</Text>
+                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10), textAlign: 'center' }}>Select the Animals you love</Text>
             </View>
             <View style={{ padding: moderateScale(30), flex: 1 }}>
                 <FlatList

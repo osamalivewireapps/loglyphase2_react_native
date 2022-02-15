@@ -23,12 +23,12 @@ function AnimalInfoView(props) {
 
     const [animalList, setAnimalList] = useState([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (AnimalCategories.length > 0) {
-        let tmp = AnimalCategories.filter((value) => value.categoryId.type === 'animal')
-        setAnimalList(tmp);
+            let tmp = AnimalCategories.filter((value) => value.categoryId.type === 'animal')
+            setAnimalList(tmp);
+        }
     }
-}
         , [AnimalCategories])
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -58,7 +58,14 @@ function AnimalInfoView(props) {
                 </View>
 
                 <Text style={{ ...styles.generalTxt, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>Animal Care</Text>
-                <Text style={{ ...styles.generalTxt, marginTop: verticalScale(10), textAlign: 'center' }}> Select Animals You Care for</Text>
+                <AutoSizeText numberOfLines={1}
+                    minFontSize={moderateScale(12)}
+                    fontSize={moderateScale(16)}
+                    mode={ResizeTextMode.max_lines}
+                    style={{
+                        ...styles.generalTxt, marginTop: verticalScale(10),
+                        textAlign: 'center'
+                    }}> Select Animals You Care and Work With.</AutoSizeText>
             </View>
             <View style={{ padding: moderateScale(30), flex: 1 }}>
                 <FlatList

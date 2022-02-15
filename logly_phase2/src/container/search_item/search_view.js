@@ -15,6 +15,8 @@ import DeviceInfo from 'react-native-device-info';
 
 function SearchView(props) {
 
+    const { searchData, globalSearch } = props;
+
     const [searchTxt, setSearchTxt] = useState('');
 
     return (
@@ -36,12 +38,14 @@ function SearchView(props) {
 
                     <TextInput
                         onChangeText={(e) => {
+                            searchData(e)
                             setSearchTxt(e)
                         }}
                         value={searchTxt}
                         placeholder='Search'
                         numberOfLines={1}
                         keyboardType='default'
+                        autoCapitalize='none'
                         style={{
                             keyboardShouldPersistTaps: true,
                             flex: 0.9,
@@ -54,13 +58,84 @@ function SearchView(props) {
             </View>
 
             <View style={{ backgroundColor: '#707070', width: '100%', height: verticalScale(0.5) }} />
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
+            <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
 
+                {/* <FlatList
+                    contentContainerStyle={{
+                        padding: moderateScale(25),
+                        paddingBottom: verticalScale(80)
+                    }}
+                    data={globalSearch}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id, updateContacts: updateContacts })}
 
-                </View>
-            </ScrollView>
+                                style={{
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
+                                    height: verticalScale(50),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingEnd: moderateScale(0)
 
+                                }}>
+                                <View style={{
+                                    flex: 1,
+                                    marginStart: moderateScale(15),
+                                }}>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            fontFamily: Fonts.type.medium,
+                                            paddingEnd: moderateScale(10),
+                                            color: Colors.appBgColor
+                                        }}>{item.name}
+                                    </AutoSizeText>
+                                    <View style={{ flexDirection: 'row' }}>
+
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(10)}
+                                            fontSize={moderateScale(12)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                fontFamily: Fonts.type.base,
+                                                paddingEnd: moderateScale(10),
+                                                color: '#464646',
+                                                marginTop: verticalScale(5)
+                                            }}>{item.phone.length > 0 ? item.phone[0] : ''}
+                                        </AutoSizeText>
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(10)}
+                                            fontSize={moderateScale(12)}
+                                            mode={ResizeTextMode.max_lines}
+                                            style={{
+                                                ...styles.generalTxt,
+                                                fontFamily: Fonts.type.base,
+                                                paddingEnd: moderateScale(10),
+                                                color: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
+                                                marginTop: verticalScale(5)
+                                            }}>{item.category === VET_ID ? 'Veterinary' : 'Vendor'}
+                                        </AutoSizeText>
+                                    </View>
+
+                                </View>
+                            </TouchableOpacity>
+                        )
+                    }}
+                    keyExtractor={(item) => item.id}
+
+                /> */}
+
+            </View>
+ 
         </View>)
 
 }

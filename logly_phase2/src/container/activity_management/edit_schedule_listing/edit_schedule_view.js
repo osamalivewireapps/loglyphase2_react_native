@@ -14,14 +14,19 @@ import DeviceInfo from 'react-native-device-info';
 import { KeyboardAvoidingView } from 'react-native';
 import { Platform } from 'react-native';
 import Util from '../../../utils';
-import moment from 'moment';
+import { getScheduleData, updateActivityType } from '../../../actions/ActivityManagement';
+import { useDispatch } from 'react-redux';
 
 function EditScheduleView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
-    const [valueDesc, setDesc] = useState('');
+    const { data, updateList } = props.route.params;
+
+    const [valueDesc, setDesc] = useState(data.description);
     const [validateDesc, setValidateDesc] = useState(true);
+
+    let dispatch = useDispatch();
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'flex-end' }}>
@@ -95,7 +100,7 @@ function EditScheduleView(props) {
 
                             }}
                         >
-                            Cat Cleaning
+                            {data.categoryName}
                         </AutoSizeText>
 
                         <AutoSizeText
@@ -111,7 +116,7 @@ function EditScheduleView(props) {
 
                             }}
                         >
-                            Cat Wash
+                            {data.categoryType}
                         </AutoSizeText>
 
                         <View style={{ marginTop: verticalScale(10), marginBottom: verticalScale(10), width: '100%', height: verticalScale(5), backgroundColor: '#F5F5F5' }} />
@@ -136,32 +141,6 @@ function EditScheduleView(props) {
                             flexDirection: 'row', marginTop: verticalScale(5),
                             marginStart: moderateScale(25)
                         }}>
-                        <View style={{
-                            backgroundColor: 'white',
-                            borderRadius: moderateScale(10),
-                            height: verticalScale(30),
-                            paddingStart:moderateScale(5),
-                            paddingEnd:moderateScale(5),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderColor: Colors.appBgColor,
-                            borderWidth: moderateScale(1),
-                            marginEnd: moderateScale(10),
-                        }}>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    fontFamily:Fonts.type.medium,
-                                    color: Colors.appBgColor
-                                }}>12:30 PM
-                            </AutoSizeText>
-                        </View>
-
                             <View style={{
                                 backgroundColor: 'white',
                                 borderRadius: moderateScale(10),
@@ -184,92 +163,72 @@ function EditScheduleView(props) {
                                         ...styles.generalTxt,
                                         fontFamily: Fonts.type.medium,
                                         color: Colors.appBgColor
-                                    }}>05:30 PM
+                                    }}>{data.time[0]}
                                 </AutoSizeText>
                             </View>
-                        
+
                         </View>
 
-                    <View style={{ marginTop: verticalScale(10), marginBottom: verticalScale(10), width: '100%', height: verticalScale(5), backgroundColor: '#F5F5F5' }} />
 
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={moderateScale(12)}
-                        fontSize={moderateScale(16)}
-                        style={{
-                            fontFamily: Fonts.type.medium,
-                            color: '#404040',
-                            marginTop: 0,
-                            margin: moderateScale(25),
-                            marginBottom: 0
 
-                        }}
-                    >
-                        Day & Date
-                    </AutoSizeText>
-
-                        <View style={{
-                            flexDirection: 'row', marginTop: verticalScale(5),
-                            marginStart: moderateScale(25)
-                        }}>
-                        <View style={{
-                            backgroundColor: '#FFC081',
-                            borderRadius: moderateScale(10),
-                            height: verticalScale(30),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            width:moderateScale(75),
-                            marginEnd: moderateScale(10),
-                                paddingStart: moderateScale(5),
-                                paddingEnd: moderateScale(5),
-                        }}>
+                        {data.days.length > 0 ? <View>
+                            <View style={{ marginTop: verticalScale(10), marginBottom: verticalScale(10), width: '100%', height: verticalScale(5), backgroundColor: '#F5F5F5' }} />
 
                             <AutoSizeText
                                 numberOfLines={1}
                                 minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
+                                fontSize={moderateScale(16)}
                                 style={{
-                                    ...styles.generalTxt,
-                                    color: Colors.appBgColor
-                                }}>Mon
+                                    fontFamily: Fonts.type.medium,
+                                    color: '#404040',
+                                    marginTop: 0,
+                                    margin: moderateScale(25),
+                                    marginBottom: 0
+
+                                }}
+                            >
+                                Day
                             </AutoSizeText>
-                        </View>
 
                             <View style={{
-                                backgroundColor: '#FFC081',
-                                borderRadius: moderateScale(10),
-                                height: verticalScale(30),
-                                width:moderateScale(75),
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginEnd: moderateScale(10),
-                                paddingStart: moderateScale(5),
-                                paddingEnd: moderateScale(5),
+                                flexDirection: 'row', marginTop: verticalScale(5),
+                                marginStart: moderateScale(25)
                             }}>
+                                <View style={{
+                                    backgroundColor: '#FFC081',
+                                    borderRadius: moderateScale(10),
+                                    height: verticalScale(30),
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    width: moderateScale(75),
+                                    marginEnd: moderateScale(10),
+                                    paddingStart: moderateScale(5),
+                                    paddingEnd: moderateScale(5),
+                                }}>
 
-                                <AutoSizeText
-                                    numberOfLines={1}
-                                    minFontSize={moderateScale(12)}
-                                    fontSize={moderateScale(14)}
-                                    mode={ResizeTextMode.max_lines}
-                                    style={{
-                                        ...styles.generalTxt,
-                                        color: Colors.appBgColor
-                                    }}>Tues
-                                </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            color: Colors.appBgColor
+                                        }}>{data.days[0] ? data.days[0]:data.date}
+                                    </AutoSizeText>
+                                </View>
+
                             </View>
-                        </View>
-
-                    <View style={{ marginTop: verticalScale(10), marginBottom: verticalScale(10), width: '100%', height: verticalScale(5), backgroundColor: '#F5F5F5' }} />
+                        </View> : <View />}
+                        <View style={{ marginTop: verticalScale(10), marginBottom: verticalScale(10), width: '100%', height: verticalScale(5), backgroundColor: '#F5F5F5' }} />
                         <View style={{
                             ...styles.boxcontainer,
                             height: verticalScale(100),
                             flexDirection: 'row', alignItems: 'center',
                             shadowColor: validateDesc ? 'transparent' : 'darkred',
                             shadowOpacity: validateDesc ? 0.25 : 1,
-                            marginTop:verticalScale(5),
-                            margin:moderateScale(25)
+                            marginTop: verticalScale(5),
+                            margin: moderateScale(25)
                         }}>
 
 
@@ -297,27 +256,39 @@ function EditScheduleView(props) {
                         </View>
 
 
+                        {!data.description ?
+                            <TouchableOpacity style={{
+                                ...styles.styleButtons, flex: 0,
+                                marginTop: verticalScale(25),
+                                margin: moderateScale(25)
+                            }} onPress={() => {
 
-                        <TouchableOpacity style={{
-                            ...styles.styleButtons, flex: 0,
-                            marginTop: verticalScale(25),
-                            margin: moderateScale(25)
-                        }} onPress={() => {
-                            props.navigation.pop()
+                                if (!Util.isLengthGreater(e)) {
+                                    setValidateDesc(false);
+                                    return
+                                }
+                                
+                                dispatch(updateActivityType(data._id, { description: valueDesc })).then(value => {
+                                    if (value) {
+                                        dispatch(getScheduleData())
+                                        props.navigation.pop()
+                                    }
+                                })
 
-                        }}>
-                            <Text style={{
-                                ...styles.generalTxt,
-                                fontSize: moderateScale(20), textAlign: 'center',
-                                padding: moderateScale(10),
-                                paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
-                            }}>SUBMIT</Text>
-                        </TouchableOpacity>
-                
-                </View>
-            </KeyboardAvoidingView>
-        </ScrollView>
+                            }}>
+                                <Text style={{
+                                    ...styles.generalTxt,
+                                    fontSize: moderateScale(20), textAlign: 'center',
+                                    padding: moderateScale(10),
+                                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+
+                                }}>SUBMIT</Text>
+                            </TouchableOpacity> : null}
+
+                    </View>
+                </KeyboardAvoidingView>
+            </ScrollView>
 
         </View>);
 

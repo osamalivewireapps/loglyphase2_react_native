@@ -106,6 +106,35 @@ export const TYPES_OF_SERVICES = [
     }
 ];
 
+export const LOGLY_COMMUNITY = [
+    {
+        name: 'Marketplace',
+        url: require('../assets/Images/img_pet_boarding/img_pet_boarding.png'),
+        bg: '#C90F22',
+        id: 7,
+    },
+    {
+        name: 'Forum',
+        url: require('../assets/Images/img_breeding/img_breeding.png'),
+        bg: '#E58C45',
+        id: 6,
+    },
+    {
+        name: 'Training',
+        url: require('../assets/Images/img_pet_training/img_pet_training.png'),
+        bg: '#C737AF',
+        id: 4,
+    },
+    {
+        name: 'Support',
+        url: require('../assets/Images/img_pet_grooming/img_pet_grooming.png'),
+        bg: '#39A8D6',
+        id: 1,
+    },
+   
+   
+];
+
 export const PET_LOVER = "PET_LOVER";
 export const CHARITY_ACCOUNT = "CHARITY_ACCOUNT";
 export const PET_LOVER_ID = "5fac021fbd5c030e375233ad";

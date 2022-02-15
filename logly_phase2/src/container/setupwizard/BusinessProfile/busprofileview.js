@@ -138,7 +138,7 @@ function BusProfileView(props) {
                         </View>
 
                     </View> : <View />}
-                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>{accountType === INDIVIDUAL ? 'Profile Details' : accountType === BUS_SER_PROVIDER ? "Account Setup" : 'Business Details'}</Text>
+                <Text style={{ ...styles.generalTxt2, fontFamily: Fonts.type.bold, fontSize: moderateScale(30), marginTop: verticalScale(10), textAlign: 'center' }}>{accountType === INDIVIDUAL ? 'Pet Owners Profile' : accountType === BUS_SER_PROVIDER ? "Account Setup" : 'Business Details'}</Text>
                 <Text style={{ ...styles.generalTxt2, marginTop: verticalScale(10), textAlign: 'center' }}>{accountType === INDIVIDUAL ? 'Please setup your profile' : 'Please setup your business profile'}</Text>
             </View>
 
@@ -224,7 +224,7 @@ function BusProfileView(props) {
                             ...styles.bottomSheetHeader,
                             marginBottom: verticalScale(5), marginStart: moderateScale(5),
                             marginTop: 0
-                        }}>{accountType === INDIVIDUAL ? 'Bio *' : 'Business Info *'}</Text>
+                        }}>{accountType === INDIVIDUAL ? 'About Me *' : 'Business Info *'}</Text>
                         <View style={{
                             ...styles.boxcontainer,
                             height: verticalScale(100),
@@ -917,7 +917,7 @@ function BusProfileView(props) {
                 <Text style={{
                     ...styles.bottomSheetHeader,
                     marginStart: moderateScale(5)
-                }}>Break Timing *</Text>
+                }}>Lunch Break</Text>
                 <View flexDirection='row' marginTop={0}>
 
                     <TouchableOpacity style={{
@@ -1011,11 +1011,11 @@ function BusProfileView(props) {
             Util.topAlertError("Operating hours are required");
             return false;
         }
-        else if (!valueStartTiming || !valueEndTiming) {
+        // else if (!valueStartTiming || !valueEndTiming) {
 
-            Util.topAlertError("Break timing are required");
-            return false;
-        }
+        //     Util.topAlertError("Break timing are required");
+        //     return false;
+        // }
         return true
     }
 }

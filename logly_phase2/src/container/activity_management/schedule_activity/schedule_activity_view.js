@@ -26,9 +26,36 @@ function ScheduleListingActivityView(props) {
 
 
     const [tabs, setTab] = useState(0);
-    const [listAnimals, setListAnimals] = useState([{ id: 0, isSelect: false }, { id: 1, isSelect: false }, { id: 2, isSelect: false }]);
     const [searchTxt, setSearchTxt] = useState('');
     const [currentName, setCurrentName] = useState('')
+    const [listSchedule, setListSchedule] = useState([]);
+    const [filterDataSchedule, setFilterSchedule] = useState([]);
+    const [listCategories, setListCategories] = useState([]);
+    const [filterCategories, setFilterCategories] = useState([]);
+
+    useEffect(() => {
+
+        if (tabs === 0) {
+            if (listSchedule.length > 0) {
+                let tmp = listSchedule.filter((e) => {
+                    return (e.categoryName.toLowerCase().startsWith(searchTxt.toLowerCase()) ||
+                        e.subType?.find(value => value.toLowerCase().startsWith(searchTxt.toLowerCase()))>-1)
+                })
+                console.log('tmp filter data--->', tmp)
+                setFilterSchedule(tmp)
+            }
+        } else {
+            console.log('listCategories length--->', listCategories)
+            if (listCategories.length > 0) {
+                let tmp = listCategories.filter((e) => {
+                    return (e.name.toLowerCase().startsWith(searchTxt.toLowerCase()) ||
+                        e.subType?.find(value => value.toLowerCase().startsWith(searchTxt.toLowerCase())) > -1)
+                })
+                console.log('tmp filter data--->', tmp)
+                setFilterCategories(tmp)
+            }
+        }
+    }, [searchTxt]);
 
     const actions = [
         {
@@ -166,7 +193,7 @@ function ScheduleListingActivityView(props) {
                                             setSearchTxt(e)
                                         }}
                                         value={searchTxt}
-                                        placeholder='Search an activity'
+                                        placeholder={tabs === 0 ? 'Search an activity' :'Search a category'}
                                         numberOfLines={1}
                                         keyboardType='default'
                                         autoCapitalize='none'
@@ -310,7 +337,7 @@ function ScheduleListingActivityView(props) {
                     overlayColor="transparent"
                     color={Colors.appBgColor}
                     onPressItem={name => {
-                        setCurrentName(name+"_"+new Date().getMilliseconds());
+                        setCurrentName(name + "_" + new Date().getMilliseconds());
                     }}
 
                 />
@@ -321,10 +348,15 @@ function ScheduleListingActivityView(props) {
     function getInnerScreens() {
         switch (tabs) {
             case 0:
-                return <ScheduleListingView {...props} />;
+                return <ScheduleListingView {...props} getSchData={(e) => setListSchedule(e)}
+                    filterSchedule={filterDataSchedule}
+                />;
 
             case 1:
-                return <AddCategory {...props} name={currentName}/>;
+                return <AddCategory {...props} name={currentName}
+                    getCategoryData={(e) => setListCategories(e)}
+                    filterCategories={filterCategories}
+                 />;
 
         }
     }

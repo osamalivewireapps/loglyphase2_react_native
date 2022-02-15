@@ -11,6 +11,7 @@ import sales from './sales';
 import { combineReducers } from 'redux';
 import Loader from './Loader';
 import groups from './groups';
+import activity from './activitymanagment';
 
 const allReducers = combineReducers({
     user: users,
@@ -20,7 +21,8 @@ const allReducers = combineReducers({
     contacts: contacts,
     team_members: team_members,
     group:groups,
-    sale:sales
+    sale:sales,
+    activitymanagment: activity
 
 });
 
