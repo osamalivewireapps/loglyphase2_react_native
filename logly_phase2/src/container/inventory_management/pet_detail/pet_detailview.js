@@ -16,6 +16,7 @@ import HealthPetView from './health_pet';
 import FamilyTreePetView from './familytree_pet';
 import { CommonActions } from "@react-navigation/native";
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
+import CustomButton from '../../../components/CustomButton';
 
 function PetDetailView(props) {
 
@@ -23,11 +24,13 @@ function PetDetailView(props) {
     const [initialPg, setInitialPg] = useState(0);
     const [isEditShow, setIsEditShow] = useState(false);
     const { updateAnimal } = props.route.params;
-    const { removeAnimal } = props;
+    const { removeAnimal, userObject, animalData } = props;
 
     const isTablet = DeviceInfo.isTablet();
     const TABS = ["About", "Gallery", "Health", "Family\nTree"]
     const [tabsSelect, setTabsSelect] = useState(0);
+
+    const isSameUser = userObject?._id !==animalData.breederId ? false : true;
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -76,29 +79,6 @@ function PetDetailView(props) {
                     <TouchableOpacity onPress={() => { props.navigation.pop() }}>
                         <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
-                    {/* <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-
-                        <TouchableOpacity onPress={() => {
-                            props.navigation.navigate('SearchItem')
-                        }}
-                            style={{ height: moderateScale(45), width: moderateScale(45) }}>
-                            <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
-                        </TouchableOpacity>
-                        <TouchableOpacity onPress={() => {
-                            const resetAction = CommonActions.reset({
-                                index: 1,
-                                routes: [{ name: "Splash" }, { name: "HomeDrawer" }],
-                            });
-
-                            props.navigation.dispatch(resetAction);
-
-                        }}>
-
-
-                            <Image source={Icons.icon_header_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                        </TouchableOpacity>
-                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                    </View> */}
 
                 </View>
 
@@ -124,7 +104,10 @@ function PetDetailView(props) {
 
                     <TouchableOpacity
                         style={{ flex: 0.1 }}
-                        onPress={() => { ShareProfile() }}>
+                        onPress={() => {
+                            if (isSameUser || !props.animalData.isPrivate)
+                                ShareProfile()
+                        }}>
                         <Image source={Icons.icon_detail_share} resizeMode='contain'
                             style={{ height: moderateScale(20) }} />
 
@@ -185,13 +168,14 @@ function PetDetailView(props) {
                         </View> : <View style={{ flex: 0.1 }} />}
 
 
-                    <TouchableOpacity
-                        style={{ flex: 0.1, height: moderateScale(25) }}
+                    <CustomButton
+                        isSameUser={isSameUser}
+                        styles={{ flex: 0.1, height: moderateScale(25) }}
                         onPress={() => isEditShow ? setIsEditShow(false) : setIsEditShow(true)}>
                         <Image source={Icons.icon_kebab} resizeMode='contain'
                             style={{ height: moderateScale(25) }} />
 
-                    </TouchableOpacity>
+                    </CustomButton>
                 </View>
 
             </View>
@@ -238,7 +222,23 @@ function PetDetailView(props) {
                 />
 
 
-                {getSelectedView()}
+                {(isSameUser||!props.animalData.isPrivate) ? getSelectedView() : <View style={{
+                    height:'80%',
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                }}>
+                    <AutoSizeText
+                        minFontSize={moderateScale(14)}
+                        fontSize={moderateScale(16)}
+                        mode={ResizeTextMode.max_lines}
+                        style={{
+                            ...styles.generalTxt,
+                            color: '#464646',
+                            textAlign: 'center',
+                            fontFamily: Fonts.type.medium,
+                        }}>{userObject && animalData.isPrivate?'This is a Private Profile':''}
+                    </AutoSizeText>
+                </View>}
 
 
             </View>
@@ -250,16 +250,16 @@ function PetDetailView(props) {
     function getSelectedView() {
         switch (tabsSelect) {
             case 0:
-                return <AboutPetView {...props} />;
+                return <AboutPetView {...props} isSameUser={isSameUser} />;
 
             case 1:
-                return <GalleryPetView {...props} />
+                return <GalleryPetView {...props} isSameUser={isSameUser} />
 
             case 2:
-                return <HealthPetView {...props} />
+                return <HealthPetView {...props} isSameUser={isSameUser} />
 
             case 3:
-                return <FamilyTreePetView {...props} />
+                return <FamilyTreePetView {...props} isSameUser={isSameUser} />
         }
     }
 

@@ -63,16 +63,16 @@ function PaymentsView(props) {
         getPaymentList()
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (tabUpcoming === 0) {
             setPayHistory(completePayHistory.filter(e => e.installmentId ? e.installmentId.isPaid === false : e.saleId.isPaid === false))
         }
         else {
             setPayHistory(completePayHistory.filter(e => e.installmentId ? e.installmentId.isPaid === true : e.saleId.isPaid === true))
         }
-    },[tabUpcoming])
+    }, [tabUpcoming])
 
-    function getPaymentList(){
+    function getPaymentList() {
         dispatch(getSalesInvoice()).then((response) => {
             setCompletePayHistory(response.payload)
             if (tabUpcoming === 0) {
@@ -85,78 +85,76 @@ function PaymentsView(props) {
     }
 
     return (
-        <View style={{}}>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ flex: 1, minHeight: Dimensions.get('window').height }}>
+        <View style={{ height: '100%' }}>
 
-                    <View style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'center',
+            <View style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                justifyContent: 'center',
+
+            }}>
+
+                <TouchableOpacity
+                    onPress={() =>
+                        setTabUpcoming(0)}
+                    style={{
+                        flex: 0.5,
+                        borderColor: Colors.appBgColor,
+                        borderWidth: 1,
+                        padding: moderateScale(5),
+                        borderRadius: moderateScale(20),
+                        paddingTop: verticalScale(6),
+                        paddingBottom: verticalScale(6),
+                        backgroundColor: tabUpcoming === 0 ? Colors.appBgColor : 'white',
 
                     }}>
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(14)}
+                        style={{
+                            textAlign: 'center',
+                            fontFamily: Fonts.type.base,
+                            color: tabUpcoming === 0 ? 'white' : Colors.appBgColor,
 
-                        <TouchableOpacity
-                            onPress={() =>
-                                setTabUpcoming(0)}
-                            style={{
-                                flex: 0.5,
-                                borderColor: Colors.appBgColor,
-                                borderWidth: 1,
-                                padding: moderateScale(5),
-                                borderRadius: moderateScale(20),
-                                paddingTop: verticalScale(6),
-                                paddingBottom: verticalScale(6),
-                                backgroundColor: tabUpcoming === 0 ? Colors.appBgColor : 'white',
+                        }}
+                    >
+                        Upcoming
+                    </AutoSizeText>
 
-                            }}>
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                style={{
-                                    textAlign: 'center',
-                                    fontFamily: Fonts.type.base,
-                                    color: tabUpcoming === 0 ? 'white' : Colors.appBgColor,
+                </TouchableOpacity>
+                <TouchableOpacity
 
-                                }}
-                            >
-                                Upcoming
-                            </AutoSizeText>
+                    onPress={() => setTabUpcoming(1)} style={{
+                        flex: 0.5,
+                        marginStart: moderateScale(10),
+                        padding: moderateScale(5),
+                        borderRadius: moderateScale(20),
+                        paddingTop: verticalScale(6),
+                        paddingBottom: verticalScale(6),
+                        borderColor: Colors.appBgColor,
+                        borderWidth: 1,
+                        backgroundColor: tabUpcoming === 1 ? Colors.appBgColor : 'white',
 
-                        </TouchableOpacity>
-                        <TouchableOpacity
+                    }}>
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(14)}
+                        style={{
+                            textAlign: 'center',
+                            fontFamily: Fonts.type.base,
+                            color: tabUpcoming === 1 ? 'white' : Colors.appBgColor,
 
-                            onPress={() => setTabUpcoming(1)} style={{
-                                flex: 0.5,
-                                marginStart: moderateScale(10),
-                                padding: moderateScale(5),
-                                borderRadius: moderateScale(20),
-                                paddingTop: verticalScale(6),
-                                paddingBottom: verticalScale(6),
-                                borderColor: Colors.appBgColor,
-                                borderWidth: 1,
-                                backgroundColor: tabUpcoming === 1 ? Colors.appBgColor : 'white',
+                        }}
+                    >
+                        Received
+                    </AutoSizeText>
 
-                            }}>
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                style={{
-                                    textAlign: 'center',
-                                    fontFamily: Fonts.type.base,
-                                    color: tabUpcoming === 1 ? 'white' : Colors.appBgColor,
+                </TouchableOpacity>
+            </View>
 
-                                }}
-                            >
-                                Received
-                            </AutoSizeText>
-
-                        </TouchableOpacity>
-                    </View>
-
-                    {/* <ImageBackground style={{
+            {/* <ImageBackground style={{
                         width: '100%',
                         marginTop: verticalScale(20),
                         height: moderateVerticalScale(190),
@@ -182,213 +180,208 @@ function PaymentsView(props) {
                             yLabelsOffset={moderateScale(10)}
                         />
                     </ImageBackground> */}
-                    <FlatList
-                        data={payHistory}
-                        contentContainerStyle={{
-                            marginTop: verticalScale(10),
-                        }}
-                        renderItem={({ item }) => {
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => {
-                                        props.navigation.navigate('CRMPaymentDetails',{paymentDetails:item,updateList:()=>getPaymentList()})}}
-                                    style={{
-                                        backgroundColor: '#F5F5F5',
-                                        padding: moderateScale(5),
-                                        borderRadius: moderateScale(10),
-                                        marginTop: verticalScale(10),
-                                        flexDirection: 'row',
-                                        alignItems: 'center',
-                                        paddingTop: verticalScale(12),
-                                        paddingBottom: verticalScale(12)
-                                    }}>
+            <FlatList
+                data={payHistory}
+                contentContainerStyle={{
+                    marginTop: verticalScale(10),
+                }}
+                renderItem={({ item }) => {
+                    return (
+                        <TouchableOpacity
+                            onPress={() => {
+                                props.navigation.navigate('CRMPaymentDetails', { paymentDetails: item, updateList: () => getPaymentList() })
+                            }}
+                            style={{
+                                backgroundColor: '#F5F5F5',
+                                padding: moderateScale(5),
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(10),
+                                flexDirection: 'row',
+                                alignItems: 'center',
+                                paddingTop: verticalScale(12),
+                                paddingBottom: verticalScale(12)
+                            }}>
 
-                                    <View style={{
-                                        flex: 0.9,
-                                        marginStart: moderateScale(12)
-                                    }}>
-                                        <View style={{
-                                            flexDirection: 'row'
-                                        }}>
+                            <View style={{
+                                flex: 0.9,
+                                marginStart: moderateScale(12)
+                            }}>
+                                <View style={{
+                                    flexDirection: 'row'
+                                }}>
 
-                                            <Image
-                                                resizeMode='contain'
-                                                style={{
-                                                    width: moderateScale(15),
-                                                    height: verticalScale(15)
-
-                                                }}
-                                                source={Icons.icon_crm_paymentinvoice} />
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.base,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(10)
-
-                                                }}
-                                            >
-                                                Invoice Number:
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.bold,
-                                                    color: Colors.appBgColor,
-                                                    marginStart: moderateScale(2)
-
-                                                }}
-                                            >
-                                                {item.invoiceNumber}
-                                            </AutoSizeText>
-                                        </View>
-
-                                        <View style={{
-                                            flexDirection: 'row',
-                                            marginTop: verticalScale(5)
-                                        }}>
-
-                                            <Image
-                                                resizeMode='contain'
-                                                style={{
-                                                    width: moderateScale(15),
-                                                    height: verticalScale(15)
-
-                                                }}
-                                                source={Icons.icon_crm_daterange} />
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.base,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(10)
-
-                                                }}
-                                            >
-                                                Date:
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(2)
-
-                                                }}
-                                            >
-                                                {moment(item.updatedAt).format('DD MMM,YYYY')}
-                                            </AutoSizeText>
-                                        </View>
-                                        <View style={{
-                                            flexDirection: 'row',
-                                            marginTop: verticalScale(5)
-                                        }}>
-
-                                            <Image
-                                                resizeMode='contain'
-                                                style={{
-                                                    width: moderateScale(15),
-                                                    height: verticalScale(15)
-
-                                                }}
-                                                source={Icons.icon_crm_dollar} />
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.base,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(10)
-
-                                                }}
-                                            >
-                                                Amount:
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(2)
-
-                                                }}
-                                            >
-                                                ${item.saleId.totalPrice}
-                                            </AutoSizeText>
-                                        </View>
-
-                                        <View style={{
-                                            flexDirection: 'row',
-                                            marginTop: verticalScale(5)
-                                        }}>
-
-                                            <Image
-                                                resizeMode='contain'
-                                                style={{
-                                                    width: moderateScale(15),
-                                                    height: verticalScale(15)
-
-                                                }}
-                                                source={Icons.icon_crm_user} />
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.base,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(10)
-
-                                                }}
-                                            >
-                                                Client:
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
-                                                    marginStart: moderateScale(2)
-
-                                                }}
-                                            >
-                                                {item.buyerId?.name}
-                                            </AutoSizeText>
-                                        </View>
-
-                                    </View>
                                     <Image
                                         resizeMode='contain'
                                         style={{
-                                            flex: 0.1,
+                                            width: moderateScale(15),
+                                            height: verticalScale(15)
 
                                         }}
-                                        source={Icons.icon_arrow_blue} />
-                                </TouchableOpacity>
-                            )
-                        }}
+                                        source={Icons.icon_crm_paymentinvoice} />
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#777777',
+                                            marginStart: moderateScale(10)
 
-                    />
-                </View>
-            </ScrollView>
+                                        }}
+                                    >
+                                        Invoice Number:
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.bold,
+                                            color: Colors.appBgColor,
+                                            marginStart: moderateScale(2)
 
+                                        }}
+                                    >
+                                        {item.invoiceNumber}
+                                    </AutoSizeText>
+                                </View>
 
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: verticalScale(5)
+                                }}>
 
+                                    <Image
+                                        resizeMode='contain'
+                                        style={{
+                                            width: moderateScale(15),
+                                            height: verticalScale(15)
+
+                                        }}
+                                        source={Icons.icon_crm_daterange} />
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#777777',
+                                            marginStart: moderateScale(10)
+
+                                        }}
+                                    >
+                                        Date:
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: '#777777',
+                                            marginStart: moderateScale(2)
+
+                                        }}
+                                    >
+                                        {moment(item.updatedAt).format('DD MMM,YYYY')}
+                                    </AutoSizeText>
+                                </View>
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: verticalScale(5)
+                                }}>
+
+                                    <Image
+                                        resizeMode='contain'
+                                        style={{
+                                            width: moderateScale(15),
+                                            height: verticalScale(15)
+
+                                        }}
+                                        source={Icons.icon_crm_dollar} />
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#777777',
+                                            marginStart: moderateScale(10)
+
+                                        }}
+                                    >
+                                        Amount:
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: '#777777',
+                                            marginStart: moderateScale(2)
+
+                                        }}
+                                    >
+                                        ${item.saleId.totalPrice}
+                                    </AutoSizeText>
+                                </View>
+
+                                <View style={{
+                                    flexDirection: 'row',
+                                    marginTop: verticalScale(5)
+                                }}>
+
+                                    <Image
+                                        resizeMode='contain'
+                                        style={{
+                                            width: moderateScale(15),
+                                            height: verticalScale(15)
+
+                                        }}
+                                        source={Icons.icon_crm_user} />
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.base,
+                                            color: '#777777',
+                                            marginStart: moderateScale(10)
+
+                                        }}
+                                    >
+                                        Client:
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: '#777777',
+                                            marginStart: moderateScale(2)
+
+                                        }}
+                                    >
+                                        {item.buyerId?.name}
+                                    </AutoSizeText>
+                                </View>
+
+                            </View>
+                            <Image
+                                resizeMode='contain'
+                                style={{
+                                    flex: 0.1,
+
+                                }}
+                                source={Icons.icon_arrow_blue} />
+                        </TouchableOpacity>
+                    )
+                }}
+
+            />
         </View>
-
     );
 
 

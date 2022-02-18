@@ -93,11 +93,14 @@ function ScheduleListingView(props) {
 
     }
     return (
-        <View>
+        <View style={{height:'100%'}}>
 
             <SectionList
                 sections={listSchedule}
                 keyExtractor={(item, index) => item + index}
+                contentContainerStyle={{
+                    paddingBottom:verticalScale(50)
+                }}
                 renderItem={({ item }) => {
                     return (
                         <TouchableOpacity

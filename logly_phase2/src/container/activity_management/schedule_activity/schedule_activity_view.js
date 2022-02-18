@@ -129,7 +129,10 @@ function ScheduleListingActivityView(props) {
 
                             <Image source={Icons.icon_header_home} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
                         </TouchableOpacity>
-                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        <TouchableOpacity onPress={() => props.navigation.navigate('QrScan')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+
+                            <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        </TouchableOpacity>
                     </View>
 
                 </View>
@@ -159,17 +162,17 @@ function ScheduleListingActivityView(props) {
                 </View>
 
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <KeyboardAvoidingView
+            {/* <ScrollView keyboardShouldPersistTaps='handled'> */}
+                {/* <KeyboardAvoidingView
                     style={{ flex: 1 }}
                     keyboardVerticalOffset={50}
                     behavior={Platform.OS === "ios" ? "padding" : null}
 
-                >
+                > */}
 
 
                     <View style={{
-                        flex: 1,
+                        flex:1
 
                     }}>
 
@@ -270,7 +273,7 @@ function ScheduleListingActivityView(props) {
                             </TouchableOpacity>
 
                         </View>
-                        <View>
+                        <View style={{flex:1}}>
 
 
                             {getInnerScreens()}
@@ -280,8 +283,8 @@ function ScheduleListingActivityView(props) {
 
 
                     </View>
-                </KeyboardAvoidingView>
-            </ScrollView>
+                {/* </KeyboardAvoidingView> */}
+            {/* </ScrollView> */}
 
             {tabs === 0 ?
                 <TouchableOpacity

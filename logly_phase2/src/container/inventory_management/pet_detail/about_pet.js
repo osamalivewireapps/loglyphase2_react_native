@@ -17,10 +17,11 @@ import { useDispatch } from "react-redux";
 import { updateFeatured, getAnimal, updatePrivacy } from '../../../actions/AnimalModule';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import Util from '../../../utils';
+import CustomButton from '../../../components/CustomButton';
 
 function AboutPetView(props) {
 
-    const { animalData, route } = props;
+    const { animalData, route, isSameUser } = props;
 
     console.log('aboutpet----->', animalData);
 
@@ -139,8 +140,9 @@ function AboutPetView(props) {
                         }}>Featured
                     </Text>
                 </View>
-                <TouchableOpacity
-                    style={{ width: '75%', alignItems: 'flex-end' }}
+                <CustomButton
+                    styles={{ height: '100%', width: '75%', alignItems: 'flex-end' }}
+                    isSameUser={isSameUser}
                     onPress={() => updateStatusFeatured()}>
                     <Image
                         source={animalData.featured ? Icons.icon_toggle_on : Icons.icon_toggle_off}
@@ -148,7 +150,7 @@ function AboutPetView(props) {
                         style={{ height: verticalScale(15), width: moderateScale(30) }}
 
                     />
-                </TouchableOpacity>
+                </CustomButton>
             </View>
 
             <View style={{
@@ -181,8 +183,9 @@ function AboutPetView(props) {
 
                 </View>
 
-                <TouchableOpacity
-                    style={{ width: '75%', alignItems: 'flex-end' }}
+                <CustomButton
+                    isSameUser={isSameUser}
+                    styles={{ width: '75%', alignItems: 'flex-end' }}
                     onPress={() => updatePrivacyStatus()}>
                     <Image
                         source={animalData.isPrivate ? Icons.icon_toggle_on : Icons.icon_toggle_off}
@@ -190,7 +193,7 @@ function AboutPetView(props) {
                         style={{ height: verticalScale(15), width: moderateScale(30) }}
 
                     />
-                </TouchableOpacity>
+                </CustomButton>
             </View>
 
             <Text
@@ -228,7 +231,9 @@ function AboutPetView(props) {
                 renderItem={({ item, index }) => {
 
                     return (
-                        <TouchableOpacity style={{
+                        <CustomButton
+                            isSameUser={isSameUser} 
+                            styles={{
                             backgroundColor: '#F5F5F5',
                             borderRadius: moderateScale(10),
                             height: verticalScale(30),
@@ -240,7 +245,7 @@ function AboutPetView(props) {
                             setTabsSelect(index);
 
                             if (index === 0)
-                                props.navigation.navigate('CreateActivity',{id:animalData._id})
+                                props.navigation.navigate('CreateActivity', { id: animalData._id })
                             else if (index === 1) {
 
                                 if (animalData.data.quantity > 0)
@@ -271,7 +276,7 @@ function AboutPetView(props) {
                                     fontFamily: Fonts.type.base,
                                 }}>{item}
                             </AutoSizeText>
-                        </TouchableOpacity>
+                        </CustomButton>
 
                     );
                 }}

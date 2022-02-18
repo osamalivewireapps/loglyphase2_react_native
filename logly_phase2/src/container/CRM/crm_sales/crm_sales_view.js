@@ -30,7 +30,7 @@ function CRMSalesView(props) {
     const [saleDetail, setSaleDetail] = useState({});
     useEffect(() => {
         let tmp = [];
-        tmp = props.saleDetail.animals.concat(props.saleDetail.products)
+        tmp = props.saleDetail?.animals.concat(props.saleDetail?.products)
         setOrderSummaryList(tmp)
         setSaleDetail(props.saleDetail)
         console.log('installment data--->', props.saleDetail)

@@ -6,6 +6,7 @@ import { Alert, View } from 'react-native';
 import PetDetailView from './pet_detailview';
 import { getAnimal, deleteAnimal } from '../../../actions/AnimalModule'
 import { connect } from 'react-redux';
+import DataHandler from '../../../utils/DataHandler';
 
 class PetDetail extends Component {
 
@@ -15,11 +16,15 @@ class PetDetail extends Component {
 
     componentDidMount() {
         console.log("Pet Profile--->",this.props);
+        DataHandler.getUserObject().then(value=>{
+            this.userObject = JSON.parse(value)
+        })
         this.props.getAnimal(this.props.route.params.id)
     }
 
     render() {
         return (<PetDetailView {...this.props}
+            userObject={this.userObject}
             removeAnimal={() => this.confirmModal()}
 
         />);

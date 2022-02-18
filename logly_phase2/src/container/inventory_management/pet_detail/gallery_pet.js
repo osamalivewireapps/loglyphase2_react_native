@@ -20,6 +20,7 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/
 import ImageGallery from './ImageGallery';
 import moment from 'moment';
 import VideoPlayer from 'react-native-video-player';
+import CustomButton from '../../../components/CustomButton';
 
 function GalleryPetView(props) {
 
@@ -37,7 +38,7 @@ function GalleryPetView(props) {
         },
     };
 
-    const { animalData, route } = props;
+    const { animalData, route,isSameUser } = props;
     const dispatch = useDispatch();
     const [listFileUri, setListFileUri] = useState([])
     const [modalVisible, setModalVisible] = useState(false);
@@ -164,9 +165,10 @@ function GalleryPetView(props) {
                                             height: isTablet ? verticalScale(195) : verticalScale(120)
                                         }} />}
 
-                                    <TouchableOpacity
+                                    <CustomButton
+                                        isSameUser={isSameUser}
                                         onPress={() => removeImage(item._id)}
-                                        style={{
+                                        styles={{
                                             alignSelf: 'flex-end',
                                             margin: moderateScale(10),
                                             width: moderateScale(20),
@@ -178,7 +180,7 @@ function GalleryPetView(props) {
                                             tintColor: '#707070',
                                             height: verticalScale(10), width: verticalScale(10)
                                         }} />
-                                    </TouchableOpacity>
+                                    </CustomButton>
                                 </View>
 
                                 <TouchableOpacity
@@ -201,7 +203,8 @@ function GalleryPetView(props) {
 
                 : <View style={{ flex: 1 }} />}
 
-            <TouchableOpacity style={{
+            <CustomButton
+                isSameUser={isSameUser} styles={{
                 ...styles.styleButtons, flex: 0,
                 margin: verticalScale(25),
                 marginStart: moderateScale(25),
@@ -213,7 +216,7 @@ function GalleryPetView(props) {
                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                 }}>Add Photos / Videos</Text>
-            </TouchableOpacity>
+            </CustomButton>
 
 
             {modalVisible ? showPicsOnly() : null}

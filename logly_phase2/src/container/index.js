@@ -3,7 +3,8 @@ import LoginController from './Login';
 import PolicyController from './policy';
 import HomeScreen from './home';
 import SearchItem from './search_item';
-import DashBoard from './dashboard'
+import DashBoard from './dashboard';
+import QrScan from './QrCode';
  
 export { LoginController, PolicyController, HomeScreen, SearchItem, DashBoard };
 export {
@@ -29,4 +30,5 @@ export { GroupListing, CreateGroup} from './groups';
 export { EditScheduleActivity,ScheduleListingActivity,CreateActivity, AddScheduleActivity} from './activity_management';
 export { TeamListing, MemberDetails, AddTeamMember} from './team_management';
 export { ViewProfile, EditProfile} from './Profile';
-export { TransferListing} from './transferanimal'
+export { TransferListing} from './transferanimal';
+export {QrScan}

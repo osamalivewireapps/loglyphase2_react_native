@@ -40,7 +40,10 @@ function CRMDashBoardView(props) {
                         <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
                     </TouchableOpacity>
                     <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                    <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    <TouchableOpacity onPress={() => props.navigation.navigate('QrScan')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+
+                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    </TouchableOpacity>
                 </View>
             </View>
 
@@ -124,14 +127,14 @@ function CRMDashBoardView(props) {
                     {tabs === 2 ? getHorizontalLine() : <View />}
                 </TouchableOpacity>
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
-                <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
+            {/* <ScrollView keyboardShouldPersistTaps='handled'> */}
+                <View style={{ padding: moderateScale(25), paddingTop: 0,flex:1 }}>
 
 
                     {getInnerScreens()}
 
                 </View>
-            </ScrollView>
+            {/* </ScrollView> */}
 
             {tabs === 0 || tabs === 2 ?
                 <TouchableOpacity

@@ -172,25 +172,6 @@ function CreateGroupView(props) {
 
             </View>
 
-            {/* <View style={{ flex: 1, padding: moderateScale(25) }}>
-
-                {props.route.params?.groupData ?
-                    getSummaryView()
-                    : <ViewPager
-
-                        style={{ flex: 1 }} scrollEnabled={false} ref={pagerRef}>
-
-                        {getCreateView()}
-                        {getFirstView()}
-                        {getSecondView()}
-                        {getSummaryView()}
-
-                    </ViewPager>
-                }
-
-
-            </View> */}
-            {/* {props.route.params.groupData && ((props.route.params.groupData.animals.length > 0 || props.route.params.groupData.length > 0) && addTeams.length === 0 && addAnimals.length === 0) ? */}
             {props.route.params.groupData && (props.route.params.groupData.animals.length > 0 || props.route.params.groupData.employees.length > 0)&&(props.route.params.groupData.animals.length > 0 ? addAnimals.length === 0 : false || props.route.params.groupData.employees.length > 0 ? addTeams.length === 0 : false) ?
                 <AppLoader loader={{ isLoading: true }} />
                 : <View style={{ flex: 1, padding: moderateScale(25) }}>

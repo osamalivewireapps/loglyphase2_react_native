@@ -10,6 +10,7 @@ import { createDrawerNavigator } from '@react-navigation/drawer';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import QrScanning from './src/container/QrCode/QrSanning';
 
 import {
   HomeScreen, BusListing, ProductInfo, AnimalInfo, PolicyController, LoginController, ThanksRegistrationController, BusinessOwnerController,
@@ -20,7 +21,7 @@ import {
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
   CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted,
   GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile,
-  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile, TransferListing, SummaryAnimalsView
+  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile, TransferListing, SummaryAnimalsView, QrScan
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -129,6 +130,8 @@ function StackNavigator(props) {
             <Stack.Screen name='TransferListing' component={TransferListing} />
             <Stack.Screen name='SummaryAnimalsView' component={SummaryAnimalsView} />
             <Stack.Screen name='SelectDateServices' component={SelectDateServices} />
+            <Stack.Screen name='QrScan' component={QrScan} />
+            <Stack.Screen name='QrScanning' component={QrScanning}/>
           </Stack.Navigator>
         </NavigationContainer>
       </Loader>

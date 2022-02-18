@@ -18,7 +18,7 @@ export const getAllCategories = () => async (dispatch) => {
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .get(`${baseUrl}/category/activity/all`, config)
+            .get(`${baseUrl}/category/activity/all?type=activity`, config)
             .then(response => {
 
                 console.log('response-->', response);
@@ -171,7 +171,7 @@ export const updateTypeCategory = (id, dataToSubmit) => async (dispatch) => {
 
     let config = { headers: { 'auth': await DataHandler.getAuth() } };
 
-    console.log('config-->', config);
+    console.log('config-->', id+'<--->'+dataToSubmit);
 
     return new Promise((resolve) => {
         dispatch(EnableLoader());

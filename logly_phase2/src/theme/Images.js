@@ -22,4 +22,5 @@ const bg_splash3 = require('../assets/Images/bg_splash3/bg_splash3.png');
 const bg_splash4 = require('../assets/Images/bg_splash4/bg_splash4.png');
 const img_logo_splash = require('../assets/Images/img_logo_splash/img_logo_splash.png');
 const img_user_placeholder = require('../assets/Images/img_user_placeholder/img_user_placeholder.jpg');
-export default { bg_splash4,img_user_placeholder,img_logo_splash,bg_splash1, bg_splash2,bg_splash3,img_bg_quickmenu,sample_bird,img_inventory_home,img_reg_pet,img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };
+const scan = require('../assets/Images/scan.png');
+export default { scan,bg_splash4,img_user_placeholder,img_logo_splash,bg_splash1, bg_splash2,bg_splash3,img_bg_quickmenu,sample_bird,img_inventory_home,img_reg_pet,img_pet_profile,img_donate,img_activity,img_friend_sample,img_popup_services,img_btn_forward,img_fireworks, img_new_password, appBg, img_animals, logo_logly_splash, img_login_header };

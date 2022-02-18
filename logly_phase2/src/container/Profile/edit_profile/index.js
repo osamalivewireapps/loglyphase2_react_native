@@ -65,7 +65,7 @@ class EditProfile extends Component {
                 description: this.userObject.description ? this.userObject.description : '',
                 empQuantity: this.userObject.noOfEmployees ? this.userObject.noOfEmployees : '',
                 busName: this.userObject.businessName ? this.userObject.businessName + "" : '',
-                busUrl: this.userObject.busUrl ? this.userObject.busUrl + '' : ''
+                busUrl: this.userObject.website ? this.userObject.website + '' : ''
             })
         });
         this.props.getStateRequest();

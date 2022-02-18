@@ -748,7 +748,7 @@ function CRMMyOrder(props) {
 
                             }}
                         >
-                            {downPayment}
+                            ${downPayment}
                         </AutoSizeText>
                     </View> : <View />}
 
@@ -993,7 +993,7 @@ function CRMMyOrder(props) {
                             paddingTop: verticalScale(5),
                             paddingBottom: verticalScale(5),
 
-                        }}>{!isEdit ? 'Add' : 'Edit'}</Text>
+                        }}>{!isEdit ? 'Add' : 'Save'}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity style={{

@@ -62,6 +62,8 @@ class BusProfile extends React.Component {
 
     clickNextButton(e) {
 
+        console.log('bus-details--->', e)
+
         if (e) {
             if (this.state.fileUri && !this.state.fileUri.includes('http')) {
 
@@ -80,7 +82,7 @@ class BusProfile extends React.Component {
                     }
                 })
             }
-            else{
+            else {
                 DataHandler.saveBusDetails(JSON.stringify(e));
                 this.navigateScreens()
             }

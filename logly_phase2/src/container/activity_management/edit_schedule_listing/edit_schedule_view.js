@@ -263,7 +263,7 @@ function EditScheduleView(props) {
                                 margin: moderateScale(25)
                             }} onPress={() => {
 
-                                if (!Util.isLengthGreater(e)) {
+                                if (!Util.isLengthGreater(valueDesc)) {
                                     setValidateDesc(false);
                                     return
                                 }

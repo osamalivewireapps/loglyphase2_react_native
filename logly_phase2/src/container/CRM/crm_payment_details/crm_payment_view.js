@@ -56,7 +56,7 @@ function CRMPaymentDetailsView(props) {
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <CRMHeaderView
                 iconStyles={{ flex: isTablet ? 0.18 : 0.35, width: '100%', height: moderateScale(40) }}
-                name="Payments" icon={Icons.icon_crm_payment_details} bgColor='#CD1818'
+                name={`Invoice# ${paymentDetails.invoiceNumber}`} icon={Icons.icon_crm_payment_details} bgColor='#CD1818'
                 {...props}
             />
             <ScrollView keyboardShouldPersistTaps='handled'>
@@ -127,7 +127,7 @@ function CRMPaymentDetailsView(props) {
 
                                     }}
                                 >
-                                    {saleDetail.invoiceNumber}
+                                    {paymentDetails.saleId.saleUniqueId}
                                 </AutoSizeText>
                             </View>
                             <View style={{

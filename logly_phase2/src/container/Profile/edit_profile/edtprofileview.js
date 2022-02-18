@@ -30,7 +30,6 @@ function EditProfileView(props) {
         validateBusEmp, setEmpStrength, strengthEmp,
         urlBus, validateBusURL, setBusUrl, accountType } = props;
 
-    console.log('props--->', props);
 
 
     const [validateName, setValidateName] = useState(true);
@@ -46,7 +45,7 @@ function EditProfileView(props) {
     const [valueDescription, setDescription] = useState(description);
     const [validateDesc, setValidateDesc] = useState(true);
 
-    const [empIndex, setEmpIndex] = useState(0)
+    const [empIndex, setEmpIndex] = useState(-1)
 
 
     //STATES...
@@ -99,16 +98,11 @@ function EditProfileView(props) {
 
     useEffect(() => {
         if (name) {
-
             setValueName(name);
             setValueEmail(email);
             setValuePhone(phone);
             setDescription(description);
-
-            arrEmpStength.forEach((value, index) => {
-                if (value === strengthEmp)
-                    setEmpIndex(index)
-            })
+            console.log('url--->', urlBus)
         }
     }, [name]);
 
@@ -283,7 +277,7 @@ function EditProfileView(props) {
                                     value={valuePhone} />
                             </View>
 
-                            {accountType!==INDIVIDUAL ? <View>
+                            {accountType !== INDIVIDUAL ? <View>
                                 <View style={{
                                     ...styles.boxcontainer,
                                     marginTop: verticalScale(10),
@@ -347,21 +341,17 @@ function EditProfileView(props) {
                                     padding: moderateScale(15),
                                 }}>
 
+                                    {console.log('value employee--->', empIndex)}
                                     <ModalDropdown
                                         style={{
                                             backgroundColor: 'transparent',
                                             width: '96%',
                                             height: moderateScale(40),
-                                            //borderTopLeftRadius: moderateScale(30),
-                                            //borderTopRightRadius: moderateScale(30),
                                             justifyContent: 'center', alignItems: 'center',
                                             paddingTop: verticalScale(28),
-                                            //paddingStart: moderateScale(15),
-                                            //borderBottomLeftRadius: moderateScale(30),
-                                            //borderBottomRightRadius: moderateScale(30),
 
                                         }}
-                                        defaultValue={"Select No.of.Employees"}
+                                        defaultValue={strengthEmp ? strengthEmp : "Select No.of.Employees"}
                                         textStyle={{
                                             ...styles.styleTextInput,
                                             fontSize: moderateScale(16),
@@ -384,7 +374,7 @@ function EditProfileView(props) {
                                         onSelect={(item) => {
                                             setEmpStrength(arrEmpStength[item])
                                         }}
-                                        defaultIndex={empIndex}
+                                        //defaultIndex={empIndex}
                                         options={arrEmpStength} />
 
                                     <Image source={Icons.icon_ios_arrow_down} style={{ height: verticalScale(5), width: moderateScale(8) }} />

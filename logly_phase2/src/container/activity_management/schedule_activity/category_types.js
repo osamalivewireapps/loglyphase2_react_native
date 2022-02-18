@@ -84,283 +84,278 @@ function AddCategory(props) {
 
     function emptyValues(isShowCategory) {
         setCategoryName('')
-        setSelectedCategory({})
+        setSelectedCategory(!isShowCategory ? arrCategoryList.length > 0 ? { name: arrCategoryList[0].label, _id: arrCategoryList[0].value } : {} : {})
         setEditShow(-1);
         setActivityName('')
         setCloseBottonSheet(isShowCategory)
         setCloseBottonSheetActivity(!isShowCategory);
         setCurrentActivityIndex(-1)
         setAddCategoryActivityType([])
+
+        if (!isShowCategory && allCategory.length > 0) {
+            let tmp = [];
+            tmp = tmp.concat(allCategory[0].subType);
+            setAddCategoryActivityType([...tmp])
+            setCategoryName(allCategory[0].name)
+        }
     }
     return (
-        <View style={{ flex: 1 }}>
+        <View style={{ height: '100%', padding: moderateScale(25), paddingTop: 0 }}>
+
+
+            <View>
+
+
+                <TouchableOpacity style={{
+                    backgroundColor: Colors.appBgColor,
+                    borderRadius: moderateScale(10),
+                    height: verticalScale(35),
+                    paddingStart: moderateScale(20),
+                    paddingEnd: moderateScale(20),
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    flexDirection: 'row',
+                }} onPress={() => {
+                    setCategoryName('')
+                    setSelectedCategory({})
+                    setEditShow(-1);
+                    setCloseBottonSheet(true)
+                }
+                }>
+
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(14)}
+                        style={{
+                            fontFamily: Fonts.type.base,
+                            color: 'white',
+                            flex: 1
+
+                        }}
+                    >Add Category
+                    </AutoSizeText>
+                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(15), width: verticalScale(10), tintColor: 'white' }} />
+                </TouchableOpacity>
 
 
 
-            <ScrollView
-                style={{ height: '100%', backgroundColor: 'white' }}
-                keyboardShouldPersistTaps='handled'>
-                <View style={{ height: '100%', padding: moderateScale(25), paddingTop: 0 }}>
+                <FlatList
+                    data={allCategory}
+                    contentContainerStyle={{
 
+                        paddingBottom: verticalScale(50)
+                    }}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity
+                                activeOpacity={1}
+                                //onPress={() => setCloseBottonSheetActivity(true)}
 
-                    <View>
-
-
-                        <TouchableOpacity style={{
-                            backgroundColor: Colors.appBgColor,
-                            borderRadius: moderateScale(10),
-                            height: verticalScale(35),
-                            paddingStart: moderateScale(20),
-                            paddingEnd: moderateScale(20),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flexDirection: 'row',
-                        }} onPress={() => {
-                            setCategoryName('')
-                            setSelectedCategory({})
-                            setEditShow(-1);
-                            setCloseBottonSheet(true)
-                        }
-                        }>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
                                 style={{
-                                    fontFamily: Fonts.type.base,
-                                    color: 'white',
-                                    flex: 1
+                                    backgroundColor: '#F5F5F5',
+                                    padding: moderateScale(5),
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingTop: verticalScale(12),
+                                    paddingBottom: verticalScale(12),
+                                }}>
 
-                                }}
-                            >Add Category
-                            </AutoSizeText>
-                            <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(15), width: verticalScale(10), tintColor: 'white' }} />
-                        </TouchableOpacity>
+                                <View style={{
+                                    flex: 0.9,
+                                    marginStart: moderateScale(12)
+                                }}>
 
-
-
-                        <FlatList
-                            data={allCategory}
-                            contentContainerStyle={{
-                                minHeight: Dimensions.get('screen').height / 2
-
-                            }}
-                            renderItem={({ item, index }) => {
-                                return (
-                                    <TouchableOpacity
-                                        activeOpacity={1}
-                                        //onPress={() => setCloseBottonSheetActivity(true)}
-
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
                                         style={{
-                                            backgroundColor: '#F5F5F5',
-                                            padding: moderateScale(5),
-                                            borderRadius: moderateScale(10),
-                                            marginTop: verticalScale(10),
-                                            flexDirection: 'row',
-                                            alignItems: 'center',
-                                            paddingTop: verticalScale(12),
-                                            paddingBottom: verticalScale(12),
-                                        }}>
+                                            fontFamily: Fonts.type.medium,
+                                            color: '#777777',
 
-                                        <View style={{
-                                            flex: 0.9,
-                                            marginStart: moderateScale(12)
-                                        }}>
+                                        }}
+                                    >
+                                        Category Name
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(16)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: '#232323',
+                                            marginTop: verticalScale(5),
 
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(14)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#777777',
+                                        }}
+                                    >
+                                        {item.name}
+                                    </AutoSizeText>
 
-                                                }}
-                                            >
-                                                Category Name
-                                            </AutoSizeText>
-                                            <AutoSizeText
-                                                numberOfLines={1}
-                                                minFontSize={moderateScale(12)}
-                                                fontSize={moderateScale(16)}
-                                                style={{
-                                                    fontFamily: Fonts.type.medium,
-                                                    color: '#232323',
-                                                    marginTop: verticalScale(5),
+                                    {item.subType.length > 0 ? <View>
+                                        <View
 
-                                                }}
-                                            >
-                                                {item.name}
-                                            </AutoSizeText>
+                                            style={{
+                                                height: verticalScale(1),
+                                                width: '90%',
+                                                marginTop: verticalScale(5),
+                                                marginBottom: verticalScale(5),
+                                                backgroundColor: '#CDCDCD'
+                                            }}
+                                        />
 
-                                            {item.subType.length > 0 ? <View>
-                                                <View
+                                        <AutoSizeText
+                                            numberOfLines={1}
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(14)}
+                                            style={{
+                                                fontFamily: Fonts.type.medium,
+                                                color: '#777777',
 
-                                                    style={{
-                                                        height: verticalScale(1),
-                                                        width: '90%',
-                                                        marginTop: verticalScale(5),
-                                                        marginBottom: verticalScale(5),
-                                                        backgroundColor: '#CDCDCD'
-                                                    }}
-                                                />
+                                            }}
+                                        >
+                                            Activity Type
+                                        </AutoSizeText>
 
-                                                <AutoSizeText
-                                                    numberOfLines={1}
-                                                    minFontSize={moderateScale(12)}
-                                                    fontSize={moderateScale(14)}
-                                                    style={{
-                                                        fontFamily: Fonts.type.medium,
-                                                        color: '#777777',
+                                        <AutoSizeText
+                                            minFontSize={moderateScale(12)}
+                                            fontSize={moderateScale(16)}
+                                            style={{
+                                                fontFamily: Fonts.type.medium,
+                                                color: '#232323',
+                                                marginTop: verticalScale(5),
 
-                                                    }}
-                                                >
-                                                    Activity Type
-                                                </AutoSizeText>
+                                            }}
+                                        >
+                                            {item.subType.join("\n")}
+                                        </AutoSizeText>
+                                    </View> : <View />}
 
-                                                <AutoSizeText
-                                                    minFontSize={moderateScale(12)}
-                                                    fontSize={moderateScale(16)}
-                                                    style={{
-                                                        fontFamily: Fonts.type.medium,
-                                                        color: '#232323',
-                                                        marginTop: verticalScale(5),
+                                </View>
 
-                                                    }}
-                                                >
-                                                    {item.subType.join("\n")}
-                                                </AutoSizeText>
-                                            </View> : <View />}
-
-                                        </View>
-
-                                        {isEditShow === index ?
-                                            <View style={{
-                                                height: verticalScale(50),
-                                                flex: moderateScale(0.1),
-                                                marginTop: 0,
-                                                marginBottom: 0,
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                            }}>
-                                                <ImageBackground
-                                                    source={Images.img_popup_services}
-                                                    style={{
-                                                        position: 'absolute', height: '100%',
-                                                        width: '100%'
-                                                    }} />
-                                                <TouchableOpacity
-                                                    flex={moderateScale(0.1)}
-                                                    style={{
-                                                        justifyContent: 'center', width: '90%',
-                                                        height: verticalScale(5),
-                                                        alignItems: 'center'
-                                                    }}
-                                                    onPress={() => {
-                                                        if (item.subType.length > 0) {
-                                                            setSelectedCategory(item)
-                                                            setCategoryName(item.name)
-                                                            setAddCategoryActivityType(item.subType)
-                                                            setCloseBottonSheetActivity(true)
-                                                        } else {
-                                                            setSelectedCategory(item)
-                                                            setCategoryName(item.name)
-                                                            setCloseBottonSheet(true)
-                                                        }
-                                                    }}>
-                                                    <Image source={Icons.icon_services_edit}
-                                                        resizeMode='contain' style={{
-                                                            marginEnd: moderateScale(2), height: verticalScale(10), width: moderateScale(15)
-                                                        }}
-
-                                                    />
-                                                </TouchableOpacity>
-                                                <View style={{
-                                                    width: '50%',
-                                                    height: verticalScale(0.5),
-                                                    backgroundColor: '#585858',
-                                                    marginEnd: moderateScale(5),
-                                                    marginTop: verticalScale(8),
-                                                    marginBottom: verticalScale(8)
-                                                }} />
-                                                <TouchableOpacity
-                                                    flex={moderateScale(0.1)}
-                                                    style={{
-                                                        justifyContent: 'center', width: '90%',
-                                                        height: verticalScale(5),
-                                                        alignItems: 'center',
-                                                    }}
-                                                    onPress={() => {
-                                                        removeCategoryApi(item._id);
-                                                    }}>
-                                                    <Image source={Icons.icon_services_delete}
-                                                        resizeMode='contain'
-                                                        style={{
-                                                            marginEnd: moderateScale(3),
-                                                            height: verticalScale(12),
-                                                            width: moderateScale(15)
-                                                        }} />
-                                                </TouchableOpacity>
-                                            </View> : <View flex={moderateScale(0.1)} />}
-
+                                {isEditShow === index ?
+                                    <View style={{
+                                        height: verticalScale(60),
+                                        flex: moderateScale(0.1),
+                                        marginTop: 0,
+                                        marginBottom: 0,
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                    }}>
+                                        <ImageBackground
+                                            source={Images.img_popup_services}
+                                            style={{
+                                                position: 'absolute', height: '100%',
+                                                width: '100%'
+                                            }} />
                                         <TouchableOpacity
-                                            style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
-
+                                            flex={moderateScale(0.1)}
+                                            style={{
+                                                justifyContent: 'center', width: '100%',
+                                                height: verticalScale(30),
+                                                alignItems: 'center',
+                                            }}
                                             onPress={() => {
-                                                isEditShow === index ? setEditShow(-1) : setEditShow(index)
+                                                if (item.subType.length > 0) {
+                                                    setSelectedCategory(item)
+                                                    setCategoryName(item.name)
+                                                    setAddCategoryActivityType(item.subType)
+                                                    setCloseBottonSheetActivity(true)
+                                                } else {
+                                                    setSelectedCategory(item)
+                                                    setCategoryName(item.name)
+                                                    setCloseBottonSheet(true)
+                                                }
                                             }}>
-                                            <Image source={Icons.icon_three_colons}
-                                                resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
+                                            <Image source={Icons.icon_services_edit}
+                                                resizeMode='contain' style={{
+                                                    marginEnd: moderateScale(2), height: verticalScale(10), width: moderateScale(15)
+                                                }}
+
                                             />
                                         </TouchableOpacity>
-                                    </TouchableOpacity>
-                                )
-                            }}
-                        />
-                    </View>
+                                        <View style={{
+                                            width: '50%',
+                                            height: verticalScale(0.5),
+                                            backgroundColor: '#585858',
+                                            marginEnd: moderateScale(5),
+                                            //marginTop: verticalScale(8),
+                                            //marginBottom: verticalScale(8)
+                                        }} />
+                                        <TouchableOpacity
+                                            flex={moderateScale(0.1)}
+                                            style={{
+                                                justifyContent: 'center', width: '100%',
+                                                height: verticalScale(30),
+                                                alignItems: 'center',
+                                            }}
+                                            onPress={() => {
+                                                removeCategoryApi(item._id);
+                                            }}>
+                                            <Image source={Icons.icon_services_delete}
+                                                resizeMode='contain'
+                                                style={{
+                                                    marginEnd: moderateScale(3),
+                                                    height: verticalScale(12),
+                                                    width: moderateScale(15)
+                                                }} />
+                                        </TouchableOpacity>
+                                    </View> : <View flex={moderateScale(0.1)} />}
+
+                                <TouchableOpacity
+                                    style={{ width: moderateScale(20), height: verticalScale(20), alignItems: 'center', justifyContent: 'center' }}
+
+                                    onPress={() => {
+                                        isEditShow === index ? setEditShow(-1) : setEditShow(index)
+                                    }}>
+                                    <Image source={Icons.icon_three_colons}
+                                        resizeMode='contain' style={{ height: verticalScale(12), width: moderateScale(12) }}
+                                    />
+                                </TouchableOpacity>
+                            </TouchableOpacity>
+                        )
+                    }}
+                />
+            </View>
 
 
-                    {isBottonSheetVisible ? sheetRef.current.open() : null}
-                    <RBSheet
-                        ref={sheetRef}
-                        height={Dimensions.get('screen').height - moderateScale(130)}
-                        openDuration={250}
-                        customStyles={{
-                            container: {
-                                borderRadius: moderateScale(30)
-                            }
-                        }}
-                        onClose={() => {
-                            setCloseBottonSheet(false)
-                        }
-                        }
-                    >
-                        {showBottomSheet(false)}
-                    </RBSheet>
+            {isBottonSheetVisible ? sheetRef.current.open() : null}
+            <RBSheet
+                ref={sheetRef}
+                height={Dimensions.get('screen').height - moderateScale(130)}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        borderRadius: moderateScale(30)
+                    }
+                }}
+                onClose={() => {
+                    setCloseBottonSheet(false)
+                }
+                }
+            >
+                {showBottomSheet(false)}
+            </RBSheet>
 
-                    {isBottonSheetActivityVisible ? sheetActivityType.current.open() : null}
-                    <RBSheet
-                        ref={sheetActivityType}
-                        height={Dimensions.get('screen').height - moderateScale(130)}
-                        openDuration={250}
-                        customStyles={{
-                            container: {
-                                borderRadius: moderateScale(30)
-                            }
-                        }}
-                        onClose={() => {
-                            setCloseBottonSheetActivity(false)
-                        }
-                        }
-                    >
-                        {showActivityBottomSheet(false)}
-                    </RBSheet>
-
-                </View>
-            </ScrollView>
-
-
+            {isBottonSheetActivityVisible ? sheetActivityType.current.open() : null}
+            <RBSheet
+                ref={sheetActivityType}
+                height={Dimensions.get('screen').height - moderateScale(130)}
+                openDuration={250}
+                customStyles={{
+                    container: {
+                        borderRadius: moderateScale(30)
+                    }
+                }}
+                onClose={() => {
+                    setCloseBottonSheetActivity(false)
+                }
+                }
+            >
+                {showActivityBottomSheet(false)}
+            </RBSheet>
 
         </View>
     );
@@ -387,13 +382,19 @@ function AddCategory(props) {
 
 
 
-                        <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
-                            <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
-                                tintColor: '#404040',
+                        <TouchableOpacity
+                            style={{
+                                height: moderateScale(15),
+                                width: moderateScale(15),
                                 position: 'absolute',
                                 top: verticalScale(8),
                                 right: moderateScale(20),
                                 alignSelf: 'flex-end',
+                            }}
+                            onPress={() => { sheetRef.current.close() }}>
+                            <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
+                                tintColor: '#404040',
+
                                 height: moderateScale(15),
                                 width: moderateScale(15)
                             }} />
@@ -449,19 +450,6 @@ function AddCategory(props) {
 
                             </View>
 
-                            {/* <TouchableOpacity
-                                style={{ backgroundColor: '#F5F5F5', height: verticalScale(32), width: moderateScale(30), justifyContent: "center", alignItems: 'center', borderRadius: moderateScale(5) }}
-                                onPress={() => {
-                                    if (isEditShow === -1)
-                                        addCategoryApi()
-                                    else {
-                                        console.log('selected category--->', selectedCategory)
-                                        updateCategoryApi(selectedCategory._id)
-                                    }
-
-                                }}>
-                                <Image source={Icons.icon_white_plus} resizeMode='contain' style={{ tintColor: 'black', height: verticalScale(10), width: moderateScale(12) }} />
-                            </TouchableOpacity> */}
 
                         </View>
                     </View>
@@ -582,59 +570,94 @@ function AddCategory(props) {
                         Select Category
                     </Text>
 
-                    <View style={{
-                        ...styles.boxcontainer,
-                        //shadowColor: validateState ? 'white' : 'darkred',
-                        //shadowOpacity: validateState ? 0.25 : 1,
-                        marginTop: 0,
-                        marginStart: verticalScale(20),
-                        marginEnd: verticalScale(25),
-                        paddingEnd: verticalScale(100),
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: moderateScale(10),
-                        zIndex: 2
-                    }}>
+                    {isEditShow == -1 ?
+                        <View style={{
+                            ...styles.boxcontainer,
+                            //shadowColor: validateState ? 'white' : 'darkred',
+                            //shadowOpacity: validateState ? 0.25 : 1,
+                            marginTop: 0,
+                            marginStart: verticalScale(20),
+                            marginEnd: verticalScale(25),
+                            paddingEnd: verticalScale(100),
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: moderateScale(10),
+                            zIndex: 2
+                        }}>
 
-                        <DropDownPicker
-                            showArrow={false}
-                            disabled={isEditShow > -1 ? true : false}
-                            labelStyle={{
-                                fontSize: moderateScale(14),
-                                color: 'black',
-                                width: '100%',
+                            <DropDownPicker
+                                showArrow={false}
+                                disabled={isEditShow > -1 ? true : false}
+                                labelStyle={{
+                                    fontSize: moderateScale(14),
+                                    color: 'black',
+                                    width: '100%',
 
 
-                            }}
-                            itemStyle={{
-                                width: '100%', justifyContent: 'flex-start',
-                            }}
-                            dropDownStyle={{
-                                width: Dimensions.get('screen').width - moderateScale(55)
-                            }}
-                            style={{
-                                ...styles.styleTextInput,
-                                width: Dimensions.get('screen').width - moderateScale(90),
-                                height: verticalScale(40),
-                                color: '#404040',
-                                marginEnd: moderateScale(10),
-                                backgroundColor: 'transparent',
-                                borderColor: 'transparent',
-                                justifyContent: 'center', alignItems: 'center',
+                                }}
+                                itemStyle={{
+                                    width: '100%', justifyContent: 'flex-start',
+                                }}
+                                dropDownStyle={{
+                                    width: Dimensions.get('screen').width - moderateScale(55)
+                                }}
+                                style={{
+                                    ...styles.styleTextInput,
+                                    width: Dimensions.get('screen').width - moderateScale(90),
+                                    height: verticalScale(40),
+                                    color: '#404040',
+                                    marginEnd: moderateScale(10),
+                                    backgroundColor: 'transparent',
+                                    borderColor: 'transparent',
+                                    justifyContent: 'center', alignItems: 'center',
 
-                            }}
-                            placeholder={categoryName ? categoryName : arrCategoryList[0]?.label}
-                            items={arrCategoryList}
-                            onChangeItem={(item) => {
-                                setSelectedCategory({ name: item.label, _id: item.value });
-                            }}
-                        />
+                                }}
+                                placeholder={categoryName ? categoryName : arrCategoryList[0]?.label}
+                                items={arrCategoryList}
+                                onChangeItem={(item, index) => {
+                                    let tmp = [];
+                                    tmp = tmp.concat(allCategory[index].subType);
+                                    setAddCategoryActivityType([...tmp])
+                                    setSelectedCategory({ name: item.label, _id: item.value });
+                                    setCategoryName(item.label)
+                                }}
+                            />
 
-                        <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
+                            <Image source={Icons.icon_ios_arrow_down} resizeMode='contain' style={{ height: verticalScale(5), width: moderateScale(8) }} />
 
-                    </View>
+                        </View> :
 
+                        <View style={{
+                            marginEnd: moderateScale(35),
+                            marginStart: moderateScale(25),
+                            flex: 1, flexDirection: 'row', alignItems: 'center',
+                            justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                        }}>
+
+                            <TextInput
+                                onChangeText={(e) => {
+                                    setCategoryName(e)
+                                }}
+                                maxLength={80}
+                                value={categoryName}
+                                placeholder='Category Name'
+                                numberOfLines={1}
+                                keyboardType='default'
+                                autoCapitalize='none'
+                                style={{
+                                    keyboardShouldPersistTaps: true,
+                                    flex: 1,
+                                    paddingStart: moderateScale(10),
+                                    paddingEnd: moderateScale(10),
+                                    height: verticalScale(32),
+                                    ...styles.generalTxt,
+                                    color: '#777777',
+                                    fontSize: moderateScale(14),
+                                }} />
+
+                        </View>
+                    }
 
 
                     <Text
@@ -807,9 +830,7 @@ function AddCategory(props) {
                         marginTop: verticalScale(75), backgroundColor: '#FFC081'
                     }}
                         onPress={() => {
-                            setTimeout(() => {
-                                updateTypeWithCategoryApi(selectedCategory._id)
-                            }, 200)
+                            updateTypeWithCategoryApi(selectedCategory._id)
                         }}>
                         <Text style={{
                             ...styles.generalTxt,
@@ -911,17 +932,29 @@ function AddCategory(props) {
 
     function updateTypeWithCategoryApi(id) {
 
+        if (!id) {
+            Util.topAlert('Please create category first')
+            return
+        }
         sheetActivityType.current.close()
 
+
+        let tmp = addCategoryActivityType;
+        if (activityName.length > 0) {
+            tmp.push(activityName)
+        }
+
+        console.log('selected category-->', categoryName);
         setTimeout(() => {
-            dispatch(updateTypeCategory(id, { subType: addCategoryActivityType })).then((response) => {
+            dispatch(updateTypeCategory(id, { subType: tmp, name: categoryName })).then((response) => {
                 if (response) {
                     setCategoryName('')
                     setEditShow(-1)
                     getAllCategoriesList()
+                    setActivityName('')
                 }
             })
-        }, 200)
+        }, 500)
     }
 
 }

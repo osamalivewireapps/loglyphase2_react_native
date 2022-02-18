@@ -48,7 +48,7 @@ function BusProfileView(props) {
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false)
     const [valueHolidays, setValueHolidays] = useState('');
     const [indexHoliday, setIndexHoliday] = useState(0);
-    const [valueTaxPercentage, setValueTaxPercentage] = useState('');
+    const [valueTaxPercentage, setValueTaxPercentage] = useState(0);
     const [validateHolidays, setValidateHolidays] = useState(true);
     const [addHolidays, setAddHolidays] = useState([]);
     const [verticalOffSet, setVerticalOffSet] = useState(50);
@@ -70,10 +70,10 @@ function BusProfileView(props) {
         if (busDetails.length > 0) {
             setDesc(busDetails[0].businessInfo ? busDetails[0].businessInfo:'')
             setSelectWeekFrequency(busDetails[0].daysOpen ? busDetails[0].daysOpen:[])
-            setValueStartBusTiming(busDetails[0].openHrStart ? moment(busDetails[0].openHrStart, 'YYYY-MM-DDThh:mm:ss') : '')
-            setValueEndBusTiming(busDetails[0].openHrEnd ? moment(busDetails[0].openHrEnd, 'YYYY-MM-DDThh:mm:ss') : '')
-            setValueStartTiming(busDetails[0].breakTimeStart ? moment(busDetails[0].breakTimeStart, 'YYYY-MM-DDThh:mm:ss') : '')
-            setValueEndTiming(busDetails[0].breakTimeEnd ? moment(busDetails[0].breakTimeEnd, 'YYYY-MM-DDThh:mm:ss') : '')
+            setValueStartBusTiming(busDetails[0].openHrStart ? moment(busDetails[0].openHrStart).format('YYYY-MM-DDTHH:mm') : '')
+            setValueEndBusTiming(busDetails[0].openHrEnd ? moment(busDetails[0].openHrEnd).format('YYYY-MM-DDTHH:mm') : '')
+            setValueStartTiming(busDetails[0].breakTimeStart ? moment(busDetails[0].breakTimeStart).format('YYYY-MM-DDTHH:mm') : '')
+            setValueEndTiming(busDetails[0].breakTimeEnd ? moment(busDetails[0].breakTimeEnd).format('YYYY-MM-DDTHH:mm') : '')
             setAddHolidays(busDetails[0].holidays ? busDetails[0].holidays:[])
             setValueTaxPercentage(busDetails[0].taxPercentage + "")
             setPhotoUri(busDetails[0].imageUrl ? busDetails[0].imageUrl:'')
@@ -459,16 +459,17 @@ function BusProfileView(props) {
 
                             if (validateSpecificFields()) {
                                 let busDetail = {};
+                                busDetail.description = valueDesc;
                                 if (accountType === INDIVIDUAL) {
-                                    busDetail.businessInfo = valueDesc;
+                                    //busDetail.businessInfo = valueDesc;
                                     busDetail.imageUrl = photoUri;
                                 } else {
-                                    busDetail.businessInfo = valueDesc;
+                                    //busDetail.businessInfo = valueDesc;
                                     busDetail.daysOpen = selectWeekFrequency
-                                    busDetail.openHrStart = moment(valueStartBusTiming).format('YYYY-MM-DDThh:mm:ss')
-                                    busDetail.openHrEnd = moment(valueEndBusTiming).format('YYYY-MM-DDThh:mm:ss')
-                                    busDetail.breakTimeStart = moment(valueStartTiming).format('YYYY-MM-DDThh:mm:ss')
-                                    busDetail.breakTimeEnd = moment(valueEndTiming).format('YYYY-MM-DDThh:mm:ss')
+                                    busDetail.openHrStart = moment(valueStartBusTiming).format('YYYY-MM-DDTHH:mm')
+                                    busDetail.openHrEnd = moment(valueEndBusTiming).format('YYYY-MM-DDTHH:mm')
+                                    busDetail.breakTimeStart = moment(valueStartTiming).format('YYYY-MM-DDTHH:mm')
+                                    busDetail.breakTimeEnd = moment(valueEndTiming).format('YYYY-MM-DDTHH:mm')
                                     busDetail.holidays = addHolidays//[{ "holi_date": "2019-04-28T14:45:15", "holi_name": "newyear" }],
                                     busDetail.taxPercentage = valueTaxPercentage;
                                     busDetail.imageUrl = photoUri;
@@ -781,6 +782,7 @@ function BusProfileView(props) {
                         <DateTimePickerModal
                             isVisible={showBusTimings}
                             mode={mode}
+                            is24Hour={true}
                             date={valueStartBusTiming ? new Date(valueStartBusTiming) : new Date()}
                             maximumDate={valueEndBusTiming ? new Date(valueEndBusTiming) : ''}
                             onConfirm={(time) => {
@@ -794,6 +796,7 @@ function BusProfileView(props) {
                         <DateTimePickerModal
                             isVisible={showBusTimings}
                             mode={mode}
+                            is24Hour={true}
                             date={valueEndBusTiming ? new Date(valueEndBusTiming) : new Date()}
                             //minimumDate={valueStartBusTiming ? new Date(valueStartBusTiming) : ''}
                             onConfirm={(time) => {
@@ -890,6 +893,7 @@ function BusProfileView(props) {
                         <DateTimePickerModal
                             isVisible={show}
                             mode={mode}
+                            is24Hour={true}
                             date={valueStartTiming ? new Date(valueStartTiming) : new Date()}
                             maximumDate={valueEndTiming ? new Date(valueEndTiming) : ''}
                             onConfirm={(time) => {
@@ -903,6 +907,7 @@ function BusProfileView(props) {
                         <DateTimePickerModal
                             isVisible={show}
                             mode={mode}
+                            is24Hour={true}
                             date={valueEndTiming ? new Date(valueEndTiming) : new Date()}
                             //minimumDate={valueStartTiming ? new Date(valueStartTiming) : ''}
                             onConfirm={(time) => {

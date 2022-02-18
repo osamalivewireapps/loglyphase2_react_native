@@ -19,7 +19,7 @@ import { DisableLoader, EnableLoader } from '../../../actions/LoaderProgress';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
 import ImageGallery from '../../inventory_management/pet_detail/ImageGallery';
 import moment from 'moment';
-
+import CustomButton from '../../../components/CustomButton';
 
 function GalleryUser(props) {
 
@@ -37,7 +37,7 @@ function GalleryUser(props) {
         },
     };
 
-    const { userObject, accountType, updateUser } = props;
+    const { userObject, accountType, updateUser,isSameUser } = props;
     const dispatch = useDispatch();
     const [listFileUri, setListFileUri] = useState([])
 
@@ -60,7 +60,8 @@ function GalleryUser(props) {
                 style={{ flex: 1, paddingStart: moderateScale(20) }}
                 listCollection={listFileUri} removeImage={(e) => removeImage(e)} />
 
-            <TouchableOpacity style={{
+            <CustomButton
+                isSameUser={isSameUser} styles={{
                 ...styles.styleButtons, flex: 0,
                 margin: verticalScale(25),
                 marginStart: moderateScale(25),
@@ -72,7 +73,7 @@ function GalleryUser(props) {
                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                 }}>Add Photos</Text>
-            </TouchableOpacity>
+            </CustomButton>
         </View>
     )
 

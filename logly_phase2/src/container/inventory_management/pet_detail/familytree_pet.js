@@ -13,13 +13,14 @@ import { Colors, Fonts, Icons, Images } from '../../../theme';
 import DeviceInfo from 'react-native-device-info';
 import { useDispatch } from "react-redux";
 import { getAnimal, addParent, deleteParent, deleteChild } from '../../../actions/AnimalModule';
+import CustomButton from '../../../components/CustomButton';
 
 function FamilyTreePetView(props) {
 
-    const { animalData, route } = props;
+    const { animalData, route, isSameUser } = props;
     const [father, setFather] = useState(animalData && animalData.family.parent1 ? animalData.family.parent1 : '');
     const [mother, setMother] = useState(animalData && animalData.family.parent2 ? animalData.family.parent2 : '');
-    const [children, setChildren] = useState(animalData && animalData.family.children ? animalData.family.children:[]);
+    const [children, setChildren] = useState(animalData && animalData.family.children ? animalData.family.children : []);
 
     const dispatch = useDispatch();
 
@@ -30,27 +31,147 @@ function FamilyTreePetView(props) {
             height: '100%',
 
         }}>
-        <View style={{
-            paddingTop:0,
-            paddingStart: moderateScale(20),
-            paddingEnd: verticalScale(20),
-            height: '100%',
-            paddingBottom: verticalScale(10),
-    
-        }}>
-            <Text style={{
-                marginTop: verticalScale(25),
-                ...styles.generalTxt, color: '#464646',
-                fontFamily: Fonts.type.medium,
-            }}>Parents</Text>
+            <View style={{
+                paddingTop: 0,
+                paddingStart: moderateScale(20),
+                paddingEnd: verticalScale(20),
+                height: '100%',
+                paddingBottom: verticalScale(10),
 
-            <View flexDirection='row' marginTop={0}>
+            }}>
+                <Text style={{
+                    marginTop: verticalScale(25),
+                    ...styles.generalTxt, color: '#464646',
+                    fontFamily: Fonts.type.medium,
+                }}>Parents</Text>
 
-                <TouchableOpacity style={{
+                <View flexDirection='row' marginTop={0}>
+
+                    <CustomButton
+                        isSameUser={isSameUser} styles={{
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: moderateScale(10),
+                            marginTop: verticalScale(5),
+                            flex: 1,
+                            height: verticalScale(40),
+                            flexDirection: 'row',
+                            paddingStart: moderateScale(15),
+                            paddingEnd: moderateScale(15),
+                            alignItems: 'center',
+                            marginStart: 0,
+                        }} onPress={() => {
+                            if (!father || !father.name)
+                                props.navigation.navigate('AllAnimal', { FamilyData: getFamily(), mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, true) } })
+                            else {
+                                deleteAnimalasParent(father, true)
+                            }
+                        }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: '#464646',
+                                paddingEnd: moderateScale(5),
+                                flex: 7,
+                            }}>{father && father.name ? father.name : 'Add Father'}
+                        </AutoSizeText>
+                        <Image source={father ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                    </CustomButton>
+                    <CustomButton
+                        isSameUser={isSameUser}
+                        styles={{
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: moderateScale(10),
+                        marginTop: verticalScale(5),
+                        flex: 1,
+                        height: verticalScale(40),
+                        paddingStart: moderateScale(15),
+                        paddingEnd: moderateScale(15),
+                        alignItems: 'center',
+                        marginStart: moderateScale(10),
+                        flexDirection: 'row'
+                    }} onPress={() => {
+                        if (!mother || !mother.name)
+                            props.navigation.navigate('AllAnimal', { FamilyData: getFamily(), mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, false) } })
+                        else {
+                            deleteAnimalasParent(mother, false)
+                        }
+                    }}>
+
+                        <AutoSizeText
+                            numberOfLines={1}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                ...styles.generalTxt,
+                                color: '#464646',
+                                flex: 7,
+                            }}>{mother && mother.name ? mother.name : 'Add Mother'}
+                        </AutoSizeText>
+                        <Image source={mother ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                    </CustomButton>
+
+
+                </View>
+                <Text style={{
+                    marginTop: verticalScale(25),
+                    ...styles.generalTxt, color: '#464646',
+                    fontFamily: Fonts.type.medium,
+                }}>Child</Text>
+
+                <FlatList
+                    numColumns={2}
+                    data={children}
+                    renderItem={({ item, index }) => {
+
+                        return (
+                            <CustomButton
+                                isSameUser={isSameUser}
+                                styles={{
+                                backgroundColor: '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
+                                flex: 0.5,
+                                height: verticalScale(40),
+                                flexDirection: 'row',
+                                paddingStart: moderateScale(15),
+                                paddingEnd: moderateScale(15),
+                                alignItems: 'center',
+                                marginStart: index % 2 === 0 ? 0 : moderateScale(10),
+                            }} onPress={() => {
+                                deleteChildAsParent(item, index)
+                            }}>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(14)}
+                                    fontSize={moderateScale(16)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: '#464646',
+                                        paddingEnd: moderateScale(5),
+                                        flex: 7,
+                                    }}>{item && item.data ? item.data.name : ''}
+                                </AutoSizeText>
+                                <Image source={item && item.data ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                            </CustomButton>
+                        )
+                    }}
+                />
+
+                <CustomButton
+                    isSameUser={isSameUser} styles={{
                     backgroundColor: '#F5F5F5',
                     borderRadius: moderateScale(10),
-                    marginTop: verticalScale(5),
-                    flex: 1,
+                    marginTop: verticalScale(15),
+                    //flex: 1,
+                    width: '55%',
                     height: verticalScale(40),
                     flexDirection: 'row',
                     paddingStart: moderateScale(15),
@@ -58,11 +179,13 @@ function FamilyTreePetView(props) {
                     alignItems: 'center',
                     marginStart: 0,
                 }} onPress={() => {
-                    if (!father || !father.name)
-                        props.navigation.navigate('AllAnimal', { FamilyData: getFamily(), mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, true) } })
-                    else {
-                        deleteAnimalasParent(father, true)
-                    }
+                    let family = getFamily();
+                    family.children = children;
+                    props.navigation.navigate('AllAnimal', {
+                        FamilyData: family, mainId: '', updateAnimal: (e) => {
+                            addChildAsParent(e)
+                        }
+                    })
                 }}>
 
                     <AutoSizeText
@@ -75,128 +198,12 @@ function FamilyTreePetView(props) {
                             color: '#464646',
                             paddingEnd: moderateScale(5),
                             flex: 7,
-                        }}>{father && father.name ? father.name : 'Add Father'}
+                        }}>Add Children
                     </AutoSizeText>
-                    <Image source={father ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                </TouchableOpacity>
-                <TouchableOpacity style={{
-                    backgroundColor: '#F5F5F5',
-                    borderRadius: moderateScale(10),
-                    marginTop: verticalScale(5),
-                    flex: 1,
-                    height: verticalScale(40),
-                    paddingStart: moderateScale(15),
-                    paddingEnd: moderateScale(15),
-                    alignItems: 'center',
-                    marginStart: moderateScale(10),
-                    flexDirection: 'row'
-                }} onPress={() => {
-                    if (!mother || !mother.name)
-                        props.navigation.navigate('AllAnimal', { FamilyData: getFamily(), mainId: animalData._id, updateAnimal: (e) => { addAnimalasParent(e, false) } })
-                    else {
-                        deleteAnimalasParent(mother, false)
-                    }
-                }}>
-
-                    <AutoSizeText
-                        numberOfLines={1}
-                        minFontSize={moderateScale(14)}
-                        fontSize={moderateScale(16)}
-                        mode={ResizeTextMode.max_lines}
-                        style={{
-                            ...styles.generalTxt,
-                            color: '#464646',
-                            flex: 7,
-                        }}>{mother && mother.name ? mother.name : 'Add Mother'}
-                    </AutoSizeText>
-                    <Image source={mother ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                </TouchableOpacity>
-
+                    <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                </CustomButton>
 
             </View>
-            <Text style={{
-                marginTop: verticalScale(25),
-                ...styles.generalTxt, color: '#464646',
-                fontFamily: Fonts.type.medium,
-            }}>Child</Text>
-
-            <FlatList
-                numColumns={2}
-                data={children}
-                renderItem={({ item, index }) => {
-
-                    return (
-                        <TouchableOpacity style={{
-                            backgroundColor: '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(5),
-                            flex: 0.5,
-                            height: verticalScale(40),
-                            flexDirection: 'row',
-                            paddingStart: moderateScale(15),
-                            paddingEnd: moderateScale(15),
-                            alignItems: 'center',
-                            marginStart: index % 2 === 0 ? 0 : moderateScale(10),
-                        }} onPress={() => {
-                            deleteChildAsParent(item,index)
-                        }}>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: '#464646',
-                                    paddingEnd: moderateScale(5),
-                                    flex: 7,
-                                }}>{item && item.data ? item.data.name : ''}
-                            </AutoSizeText>
-                            <Image source={item && item.data ? Icons.icon_close : Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                        </TouchableOpacity>
-                    )
-                }}
-            />
-
-            <TouchableOpacity style={{
-                backgroundColor: '#F5F5F5',
-                borderRadius: moderateScale(10),
-                marginTop: verticalScale(15),
-                //flex: 1,
-                width: '55%',
-                height: verticalScale(40),
-                flexDirection: 'row',
-                paddingStart: moderateScale(15),
-                paddingEnd: moderateScale(15),
-                alignItems: 'center',
-                marginStart: 0,
-            }} onPress={() => {
-                let family = getFamily();
-                family.children = children;
-                props.navigation.navigate('AllAnimal', {
-                    FamilyData: family, mainId: '', updateAnimal: (e) => {
-                       addChildAsParent(e)
-                    }
-                })
-            }}>
-
-                <AutoSizeText
-                    numberOfLines={1}
-                    minFontSize={moderateScale(14)}
-                    fontSize={moderateScale(16)}
-                    mode={ResizeTextMode.max_lines}
-                    style={{
-                        ...styles.generalTxt,
-                        color: '#464646',
-                        paddingEnd: moderateScale(5),
-                        flex: 7,
-                    }}>Add Children
-                </AutoSizeText>
-                <Image source={Icons.icon_awesome_plus} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-            </TouchableOpacity>
-
-        </View>
         </ScrollView>
     );
 
@@ -214,12 +221,12 @@ function FamilyTreePetView(props) {
         values.id = animalData._id
         values.animalId = e._id;
         values.type = isFather ? 'parent1' : 'parent2';
-        values.name= e.data.name
+        values.name = e.data.name
         dispatch(addParent(values)).then((response) => {
-            if (isFather){
-                setFather({ id: e._id,name:e.data.name})
+            if (isFather) {
+                setFather({ id: e._id, name: e.data.name })
             }
-            else{
+            else {
                 setMother({ id: e._id, name: e.data.name })
             }
             dispatch(getAnimal(props.route.params.id));
@@ -234,7 +241,7 @@ function FamilyTreePetView(props) {
         values.type = 'children';
         values.name = e.data.name
         dispatch(addParent(values)).then((response) => {
-           
+
             let tmp = children;
             tmp.push(e)
             setChildren([...tmp]);
@@ -252,8 +259,8 @@ function FamilyTreePetView(props) {
         })
     }
 
-    function deleteChildAsParent(e,index) {
-        dispatch(deleteChild(animalData._id,e._id)).then((response) => {
+    function deleteChildAsParent(e, index) {
+        dispatch(deleteChild(animalData._id, e._id)).then((response) => {
             let tmp = children;
             tmp.splice(index, 1)
             setChildren([...tmp]);

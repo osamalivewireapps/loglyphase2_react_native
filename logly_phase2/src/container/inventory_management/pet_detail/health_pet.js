@@ -17,10 +17,11 @@ import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import Util from '../../../utils';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import DocumentPicker from 'react-native-document-picker';
+import CustomButton from '../../../components/CustomButton';
 
 function HealthPetView(props) {
 
-    const { healthRecord } = props.animalData;
+    const { healthRecord,isSameUser } = props.animalData;
 
     const [arrHealthRecord, setArrHealthRecord] = useState([]);
     const [initialPg, setInitialPg] = useState(0);
@@ -232,17 +233,18 @@ function HealthPetView(props) {
                                         </AutoSizeText>
                                     </TouchableOpacity>
 
-                                    <TouchableOpacity
+                                    <CustomButton
+                                        isSameUser={isSameUser}
                                         onPress={() => {
                                             delHealthRecords(props.animalData._id, item._id)
                                         }
                                         }
-                                        style={{
+                                        styles={{
                                             justifyContent: 'center',
                                             marginStart: moderateScale(10)
                                         }}>
                                         <Image source={Icons.icon_close} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                                    </TouchableOpacity>
+                                    </CustomButton>
                                 </View>
                             )
                         }}
@@ -251,7 +253,8 @@ function HealthPetView(props) {
              : <View style={{flex:1}}/>}
 
             {initialPg === 0 ?
-                <TouchableOpacity style={{
+                <CustomButton
+                    isSameUser={isSameUser} styles={{
                     ...styles.styleButtons, flex: 0,
                     margin: verticalScale(25),
                     marginStart: 0,
@@ -263,7 +266,7 @@ function HealthPetView(props) {
                         paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                     }}>Add Document</Text>
-                </TouchableOpacity> : null}
+                </CustomButton> : null}
         </View>
         //</ScrollView>
     );

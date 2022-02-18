@@ -20,6 +20,7 @@ import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/
 import ImageGallery from '../../inventory_management/pet_detail/ImageGallery';
 import VideoPlayer from 'react-native-video-player';
 import moment from 'moment';
+import CustomButton from '../../../components/CustomButton';
 
 function GalleryUserVideos(props) {
 
@@ -39,7 +40,7 @@ function GalleryUserVideos(props) {
         },
     };
 
-    const { userObject, accountType, updateUser } = props;
+    const { userObject, accountType, updateUser, isSameUser } = props;
     const dispatch = useDispatch();
     const [listFileUri, setListFileUri] = useState([])
 
@@ -87,7 +88,9 @@ function GalleryUserVideos(props) {
 
             </Pages>
 
-            <TouchableOpacity style={{
+            <CustomButton
+                isSameUser={isSameUser}
+                styles={{
                 ...styles.styleButtons, flex: 0,
                 margin: verticalScale(25),
                 marginStart: moderateScale(25),
@@ -99,7 +102,7 @@ function GalleryUserVideos(props) {
                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                 }}>Add Videos</Text>
-            </TouchableOpacity>
+            </CustomButton>
         </View>
     )
 

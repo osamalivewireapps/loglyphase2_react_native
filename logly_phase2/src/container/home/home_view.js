@@ -57,12 +57,17 @@ function HomeView(props) {
                     <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
                 </TouchableOpacity>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-
+                    
                     <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
                         <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
                     </TouchableOpacity>
                     <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
-                    <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+
+                    <TouchableOpacity onPress={() => props.navigation.navigate('QrScan')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+
+                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    </TouchableOpacity>
+
                 </View>
             </View>
             <ScrollView keyboardShouldPersistTaps='handled'>
@@ -457,13 +462,13 @@ function HomeView(props) {
                                             props.navigation.navigate('AddTeamMember', { updateContacts: {}, isTransfer: false })
                                         }}
                                     >
-                                    <Text style={{
-                                        ...styles.generalTxt,
-                                        color: 'white',
+                                        <Text style={{
+                                            ...styles.generalTxt,
+                                            color: 'white',
 
-                                        fontFamily: Fonts.type.medium,
-                                        fontSize: moderateScale(20),
-                                    }}>Add a Team Member</Text>
+                                            fontFamily: Fonts.type.medium,
+                                            fontSize: moderateScale(20),
+                                        }}>Add a Team Member</Text>
                                     </TouchableOpacity>
                                 </View>
 

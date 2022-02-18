@@ -11,13 +11,19 @@ import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../theme';
 import DeviceInfo from 'react-native-device-info';
-
+import ViewPager from '@react-native-community/viewpager';
+import SearchResults from './searchresult';
+import { ActivityIndicator } from 'react-native';
 
 function SearchView(props) {
 
-    const { searchData, globalSearch } = props;
+    const { searchData, globalSearch, addSearch, resentSearch, delSearch, isLoading } = props;
 
     const [searchTxt, setSearchTxt] = useState('');
+
+    const pagerRef = useRef(null)
+
+    console.log('recent search-->', resentSearch.length + '--' + globalSearch.length)
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -52,37 +58,82 @@ function SearchView(props) {
                             height: verticalScale(30),
                             ...styles.generalTxt,
                         }} />
-                    <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10) }} />
+
+                    {isLoading ? <ActivityIndicator style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10) }} /> :
+
+                        <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10) }} />
+                    }
 
                 </View>
             </View>
 
             <View style={{ backgroundColor: '#707070', width: '100%', height: verticalScale(0.5) }} />
-            <View style={{ padding: moderateScale(25), paddingTop: 0 }}>
 
-                {/* <FlatList
+
+
+            <ViewPager
+
+                style={{ flex: 1 }} scrollEnabled={false} ref={pagerRef}>
+
+                {getSearchView()}
+                <View key={1} style={{ paddingTop: verticalScale(10) }}>
+                    <SearchResults {...props} searchData={globalSearch} addSearch={addSearch} navigateScreen={(e) => navigateScreen(e)} />
+                </View>
+
+            </ViewPager>
+
+
+
+        </View>);
+
+    function getSearchView() {
+        return (
+            <View key={0} style={{ padding: moderateScale(25), paddingTop: 0 }}>
+
+                {globalSearch.length > 0 || resentSearch.length === 0 ? <View /> :
+                    <AutoSizeText
+                        numberOfLines={1}
+                        minFontSize={moderateScale(12)}
+                        fontSize={moderateScale(16)}
+                        mode={ResizeTextMode.max_lines}
+                        style={{
+                            ...styles.generalTxt,
+                            marginTop: verticalScale(10),
+                            marginStart: moderateScale(25),
+                            fontFamily: Fonts.type.medium,
+                            color: '#404040'
+                        }}>Recent Searches
+                    </AutoSizeText>
+                }
+                <FlatList
+                    keyboardShouldPersistTaps='handled'
                     contentContainerStyle={{
-                        padding: moderateScale(25),
-                        paddingBottom: verticalScale(80)
+                        paddingBottom: verticalScale(80),
                     }}
-                    data={globalSearch}
+                    data={globalSearch.length > 0 ? globalSearch : resentSearch}
                     renderItem={({ item, index }) => {
                         return (
                             <TouchableOpacity
-                                onPress={() => props.navigation.navigate('ContactDetails', { id: item._id, updateContacts: updateContacts })}
+                                onPress={() => resentSearch.length > 0 ? navigateScreen(item) : pagerRef.current.setPage(1)}
 
                                 style={{
                                     borderRadius: moderateScale(10),
                                     marginTop: verticalScale(10),
-                                    height: verticalScale(50),
+                                    height: verticalScale(30),
                                     flexDirection: 'row',
                                     alignItems: 'center',
-                                    paddingEnd: moderateScale(0)
 
                                 }}>
+
+                                <Image source={Icons.icon_feather_search} resizeMode='contain'
+                                    style={{
+                                        height: moderateScale(15),
+                                        width: moderateScale(15),
+                                    }} />
                                 <View style={{
                                     flex: 1,
                                     marginStart: moderateScale(15),
+                                    marginEnd: moderateScale(15),
                                 }}>
                                     <AutoSizeText
                                         numberOfLines={1}
@@ -92,51 +143,69 @@ function SearchView(props) {
                                         style={{
                                             ...styles.generalTxt,
                                             fontFamily: Fonts.type.medium,
-                                            paddingEnd: moderateScale(10),
                                             color: Colors.appBgColor
                                         }}>{item.name}
                                     </AutoSizeText>
-                                    <View style={{ flexDirection: 'row' }}>
 
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={moderateScale(10)}
-                                            fontSize={moderateScale(12)}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                fontFamily: Fonts.type.base,
-                                                paddingEnd: moderateScale(10),
-                                                color: '#464646',
-                                                marginTop: verticalScale(5)
-                                            }}>{item.phone.length > 0 ? item.phone[0] : ''}
-                                        </AutoSizeText>
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={moderateScale(10)}
-                                            fontSize={moderateScale(12)}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                fontFamily: Fonts.type.base,
-                                                paddingEnd: moderateScale(10),
-                                                color: item.category === VET_ID ? listBorderColors[0] : listBorderColors[1],
-                                                marginTop: verticalScale(5)
-                                            }}>{item.category === VET_ID ? 'Veterinary' : 'Vendor'}
-                                        </AutoSizeText>
-                                    </View>
 
                                 </View>
+                                {globalSearch.length > 0 ? null :
+                                    <TouchableOpacity
+                                        onPress={() => delSearch(item._id)}
+                                    >
+                                        <Image source={Icons.icon_close} resizeMode='contain'
+                                            style={{
+                                                height: moderateScale(15), width: moderateScale(15),
+                                            }} />
+                                    </TouchableOpacity>
+                                }
                             </TouchableOpacity>
                         )
                     }}
-                    keyExtractor={(item) => item.id}
 
-                /> */}
+                />
 
             </View>
- 
-        </View>)
+        )
+    }
+
+    function navigateScreen(item) {
+        switch (item.type.toLowerCase()) {
+            case 'animal':
+                props.navigation.navigate('PetDetail', { id: item.searchId ? item.searchId : item.id, updateContacts: {} });
+                if (!item.searchId) {
+                    addSearch({
+                        name: item.name,
+                        searchId: item.id,
+                        type: item.type
+                    })
+                }
+                break;
+
+            case 'product':
+                props.navigation.navigate('ProductDetail', { id: item.searchId ? item.searchId : item.id, updateContacts: {} })
+                if (!item.searchId) {
+                    addSearch({
+                        name: item.name,
+                        searchId: item.id,
+                        type: item.type
+                    })
+                }
+                break;
+
+            default:
+                props.navigation.navigate('ViewProfile', { id: item.searchId ? item.searchId : item.id})
+                if (!item.searchId) {
+                    addSearch({
+                        name: item.name,
+                        searchId: item.id,
+                        type: item.type
+                    })
+                }
+                break;
+        }
+    }
+
 
 }
 

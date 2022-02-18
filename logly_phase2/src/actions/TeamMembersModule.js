@@ -248,7 +248,7 @@ export const getTeamMembersByEmail = (keyword) => async (dispatch) => {
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .get(`${baseUrl}/user/userData?email=${keyword}`, config)
+            .get(`${baseUrl}/user/v2/userDetail?email=${keyword}`, config)
             .then(response => {
 
                 console.log("response-->", response);

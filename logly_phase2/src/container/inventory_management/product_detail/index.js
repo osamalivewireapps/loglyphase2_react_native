@@ -6,6 +6,7 @@ import { Alert, View } from 'react-native';
 import ProductDetailView from './productdetailview';
 import { getProductsDetails, deleteProducts } from '../../../actions/ProductModule'
 import { connect } from 'react-redux';
+import DataHandler from '../../../utils/DataHandler';
 
 class ProductDetail extends Component {
 
@@ -14,11 +15,15 @@ class ProductDetail extends Component {
     }
 
     componentDidMount() {
+        DataHandler.getUserObject().then(value => {
+            this.userObject = JSON.parse(value)
+        })
         this.props.getProductsDetails(this.props.route.params.id)
     }
 
     render() {
         return (<ProductDetailView {...this.props}
+            userObject={this.userObject}
             removeAnimal={() => this.confirmModal()}
 
         />);

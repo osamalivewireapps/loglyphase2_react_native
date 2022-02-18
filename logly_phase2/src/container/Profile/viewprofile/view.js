@@ -31,6 +31,7 @@ function ProfileView(props) {
 
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
 
+    const isSameUser = props.route.params?.id? false : true;
 
     return (
         <View style={{ flex: 1, }}>
@@ -68,7 +69,7 @@ function ProfileView(props) {
                         style={{
                         }}
 
-                        src={userObject.coverImage ? userObject.coverImage:''}
+                        src={userObject.coverImage ? userObject.coverImage : ''}
                         placeholder={Icons.icon_paw}
                     />
 
@@ -79,12 +80,18 @@ function ProfileView(props) {
                         paddingTop: verticalScale(30),
                     }}
                 >
-                    <TouchableOpacity onPress={() => { props.navigation.goBack() }}>
-                        <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
-                    </TouchableOpacity>
+                    {props.route.params?.id ?
+                        <TouchableOpacity onPress={() => { props.navigation.pop() }}>
+                            <Image source={Icons.icon_whitebg_back} resizeMode='contain' style={{ margin: moderateScale(0), height: moderateScale(45), width: moderateScale(45) }} />
+                        </TouchableOpacity> :
+                        <TouchableOpacity onPress={() => { props.navigation.goBack() }}>
+                            <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
+                        </TouchableOpacity>
+                    }
 
                 </View>
 
+               {isSameUser?
                 <View
                     style={{ position: 'absolute', right: moderateScale(25), top: verticalScale(140) }}
                     flexDirection='row'>
@@ -97,7 +104,7 @@ function ProfileView(props) {
                             }} />
                     </TouchableOpacity>
 
-                </View>
+                </View>:<View/>}
 
             </View>
 
@@ -166,6 +173,8 @@ function ProfileView(props) {
 
 
                 </View>
+
+                {isSameUser ?
                 <TouchableOpacity
                     style={{
                         flex: 0.1,
@@ -188,7 +197,7 @@ function ProfileView(props) {
 
                         }}
                         source={Icons.icon_edit_petprofile} />
-                </TouchableOpacity>
+                </TouchableOpacity>:<View/>}
             </View>
 
             <View style={{
@@ -422,23 +431,23 @@ function ProfileView(props) {
 
             case 1:
                 return (
-                    <AboutUserView {...props} />
+                    <AboutUserView {...props} isSameUser={isSameUser}/>
                 );
 
 
             case 2:
                 return (
-                    <GalleryUser {...props} />
+                    <GalleryUser {...props} isSameUser={isSameUser}/>
                 );
 
 
             case 3:
                 return (
-                    <GalleryUserVideos {...props} />
+                    <GalleryUserVideos {...props} isSameUser={isSameUser}/>
                 );
 
             case 4:
-                return (<PetListing {...props} />)
+                return (<PetListing {...props} isSameUser={isSameUser}/>)
 
 
 

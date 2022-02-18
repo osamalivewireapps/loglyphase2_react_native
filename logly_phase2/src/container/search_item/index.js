@@ -5,22 +5,50 @@ import React, { Component } from 'react';
 import { View } from 'react-native';
 import { connect } from 'react-redux';
 import SearchView from './search_view';
-import { globalSearch } from '../../actions/GlobalSearch'
+import { globalSearch, getRecentResearch, addRecentResearch, deleteRecentResearch } from '../../actions/GlobalSearch'
 
 class SearchItem extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            globalSearch: []
+            globalSearch: [],
+            resentSearch: [],
+            isLoading:false
         }
     }
 
-    searchData(e) {
+    componentDidMount() {
+        this.getRecentSearch();
+    }
 
+    getRecentSearch() {
+        this.props.getRecentResearch().then((response) => {
+            if (response) {
+                this.setState({ resentSearch: response.payload })
+            }
+        })
+    }
+
+    addSearch(e) {
+        this.props.addRecentResearch(e)
+    }
+
+    delSearch(e) {
+        this.props.deleteRecentResearch(e).then(() => {
+            this.getRecentSearch();
+        })
+    }
+
+    searchData(e) {
+        if (e.length === 0) {
+            this.setState({ globalSearch: [], resentSearch: [],isLoading:false })
+            return
+        }
+        this.setState({ isLoading:true })
         this.props.globalSearch(e).then((response) => {
             if (response) {
-                this.setState({ globalSearch: response })
+                this.setState({ globalSearch: response.payload, resentSearch: [], isLoading: false })
             }
         })
     }
@@ -28,9 +56,13 @@ class SearchItem extends Component {
     render() {
         return (<SearchView
             {...this.props}
+            addSearch={(e) => this.addSearch(e)}
+            resentSearch={this.state.resentSearch}
             globalSearch={this.state.globalSearch}
             toggleDrawer={this.props.navigation}
             searchData={(e) => this.searchData(e)}
+            delSearch={(e) => this.delSearch(e)}
+            isLoading={this.state.isLoading}
         />);
     }
 }
@@ -43,6 +75,9 @@ const mapStateToProps = ({ }) => {
 
 const mapDispatchToProps = dispatch => ({
     globalSearch: (keyword) => dispatch(globalSearch(keyword)),
+    getRecentResearch: () => dispatch(getRecentResearch()),
+    addRecentResearch: (data) => dispatch(addRecentResearch(data)),
+    deleteRecentResearch: (id) => dispatch(deleteRecentResearch(id))
 
 });
 

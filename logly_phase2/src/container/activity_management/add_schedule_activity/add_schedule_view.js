@@ -22,7 +22,7 @@ import ImagePlaceholder from '../../../components/ImagePlaceholder';
 
 function AddScheduleActivityView(props) {
 
-    const { getAnimalList, allAnimals, getGroupList, allGroups, getTeams, allTeams, getAllCategories, addScheduleActivity } = props;
+    const { userObject, getAnimalList, allAnimals, getGroupList, allGroups, getTeams, allTeams, getAllCategories, addScheduleActivity } = props;
 
     const initialDate = moment().format('YYYY-MM-DD');
 
@@ -63,6 +63,7 @@ function AddScheduleActivityView(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
+    console.log('userobject--->', userObject)
 
     useEffect(() => {
         if (allAnimals.length > 0) {
@@ -128,7 +129,7 @@ function AddScheduleActivityView(props) {
     }, [searchFriend]);
 
     useEffect(() => {
-        setSelectTimeFrequency([])
+        //setSelectTimeFrequency([])
     }, [tabs])
 
     return (
@@ -217,7 +218,7 @@ function AddScheduleActivityView(props) {
                                     fontFamily: Fonts.type.base,
                                     width: '97%',
                                 }}>
-                                {category.length>0&&category[petIndex].name?category[petIndex].name:'Select Category'}
+                                {category.length > 0 && category[petIndex].name ? category[petIndex].name : 'Select Category'}
 
                             </AutoSizeText>
                             <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />
@@ -685,25 +686,35 @@ function AddScheduleActivityView(props) {
                 Util.topAlert('Please select animal')
                 return
             }
-            if (addFriendItems.length > 0)
-                data.employeeId = addFriendItems.map(value => value._id);
-            else {
-                Util.topAlert('Please select friend')
-                return
+
+            if (listFriends.length > 0) {
+                if (addFriendItems.length > 0)
+                    data.employeeId = addFriendItems.map(value => value._id);
+                else {
+                    Util.topAlert('Please select friend')
+                    return
+                }
             }
             data.isAssignEmployee = true;
+
+            if (data.employeeId)
+                data.employeeId.push(userObject._id);
+            else{
+                data.employeeId = [];
+                data.employeeId.push(userObject._id);
+            }
         }
 
         if (assignFrequency > 0) {
             if (selectWeekFrequency.length > 0) {
-                data.days = selectWeekFrequency.filter(value => value.day).map(value=>value.day);
+                data.days = selectWeekFrequency.filter(value => value.day).map(value => value.day);
             } else {
                 Util.topAlert('Please select days')
                 return
             }
             if (assignFrequency > 1 && setMonthFrequency.length > 0) {
                 data.months = selectMonthFrequency.filter(value => value.day).map(value => value.day);
-            } else if (assignFrequency >1) {
+            } else if (assignFrequency > 1) {
                 Util.topAlert('Please select months')
                 return
             }
@@ -722,422 +733,187 @@ function AddScheduleActivityView(props) {
             return
         }
 
+        console.log('activity-->', data);
         addScheduleActivity(data)
     }
 
 
-function getFrequecy(item) {
-    switch (item) {
-        case 0:
-            return 'Daily';
+    function getFrequecy(item) {
+        switch (item) {
+            case 0:
+                return 'Daily';
 
-        case 1:
-            return 'Weekly';
+            case 1:
+                return 'Weekly';
 
-        case 2:
-            return 'Monthly';
+            case 2:
+                return 'Monthly';
 
-        case 3:
-            return 'Yearly';
+            case 3:
+                return 'Yearly';
+        }
     }
-}
 
-function showCategory() {
-    return (
-        <ScrollView keyboardShouldPersistTaps='handled'>
-            <View>
-                <View style={{
-                    alignItems: 'flex-end', justifyContent: 'center',
-                    height: verticalScale(50)
-                }}>
-
-                    <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
-                        <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
-                            tintColor: '#404040',
-                            position: 'absolute',
-                            top: verticalScale(12),
-                            right: moderateScale(20),
-                            alignSelf: 'flex-end',
-                            height: moderateScale(15),
-                            width: moderateScale(15)
-                        }} />
-                    </TouchableOpacity>
-
-                    <Text style={{
-                        ...styles.generalTxt,
-                        alignSelf: 'center',
-                        color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10)
-                    }}>Select Category</Text>
-                    <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
-                </View>
-                <FlatList
-                    data={category}
-                    contentContainerStyle={{
-                        padding: moderateScale(30)
-                    }}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setPetIndex(index);
-                                    sheetRef.current.close();
-                                    setCloseBottonSheet(false);
-                                }}
-                                style={{ flexDirection: 'row', marginTop: verticalScale(10) }}>
-                                <View
-                                    style={{ width: moderateScale(25), height: verticalScale(25), alignItems: 'center', justifyContent: 'center' }}
-                                >
-                                    <Image
-                                        source={index === petIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
-                                        resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
-                                    />
-                                </View>
-                                <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item.name}</Text>
-                            </TouchableOpacity>
-                        )
-                    }}
-                    keyExtractor={(item) => item.id}
-
-                />
-            </View>
-        </ScrollView>
-    );
-}
-
-function showActivityCategory() {
-    return (
-        <ScrollView keyboardShouldPersistTaps='handled'>
-            <View>
-                <View style={{
-                    alignItems: 'flex-end', justifyContent: 'center',
-                    height: verticalScale(50)
-                }}>
-
-                    <TouchableOpacity onPress={() => { sheetActivityRef.current.close() }}>
-                        <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
-                            tintColor: '#404040',
-                            position: 'absolute',
-                            top: verticalScale(12),
-                            right: moderateScale(20),
-                            alignSelf: 'flex-end',
-                            height: moderateScale(15),
-                            width: moderateScale(15)
-                        }} />
-                    </TouchableOpacity>
-                    <Text style={{
-                        ...styles.generalTxt, color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10),
-                        textAlign: 'center',
-                        alignSelf: 'center'
-                    }}>Select Activity Type</Text>
-                    <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
-                </View>
-                <FlatList
-                    data={activityType}
-                    contentContainerStyle={{
-                        padding: moderateScale(30)
-                    }}
-                    renderItem={({ item, index }) => {
-                        return (
-                            <TouchableOpacity
-                                onPress={() => {
-                                    setActivityIndex(index);
-                                    sheetActivityRef.current.close();
-                                    setCloseBottonSheetActivity(false);
-                                }}
-                                style={{ flexDirection: 'row', marginTop: verticalScale(10) }}>
-                                <View
-                                    style={{ width: moderateScale(25), height: verticalScale(25), alignItems: 'center', justifyContent: 'center' }}
-                                >
-                                    <Image
-                                        source={index === activityIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
-                                        resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
-                                    />
-                                </View>
-                                <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item}</Text>
-                            </TouchableOpacity>
-                        )
-                    }}
-                    keyExtractor={(item) => item.id}
-
-                />
-            </View>
-        </ScrollView>
-    );
-}
-
-
-function getHorizontalLine() {
-    return (
-        <View style={{
-            backgroundColor: '#20B6F8',
-            borderTopStartRadius: moderateScale(5),
-            borderTopEndRadius: moderateScale(5),
-            height: verticalScale(3), width: moderateScale(30)
-        }} />
-    )
-}
-
-//////////////////// ANIMAL SELECTION BOTTOM SHEET /////////////
-
-function manipulateAnimaList() {
-    if (!allAnimals || allAnimals.length === 0) {
-        getAnimalList()
-    } else if (listAnimals && listAnimals.length > 0)
-        setCloseBottonSheetAnimal(true)
-}
-
-function manipulateGroupList() {
-    if (!allGroups || allGroups.length === 0) {
-        getGroupList()
-    } else if (groupList && groupList.length > 0)
-        setCloseBottonSheetAnimal(true)
-}
-
-function manipulateTeamList() {
-    if (!allTeams || allTeams.length === 0) {
-        getTeams()
-    } else if (listFriends && listFriends.length > 0)
-        setCloseBottonSheetTeam(true);
-}
-function showBottomSheet() {
-
-    return (
-        <View
-            style={{
-                backgroundColor: 'white',
-                height: '100%',
-                flex: 1,
-                justifyContent: 'flex-start'
-            }}>
-
-            <View style={{
-                alignItems: 'flex-end', justifyContent: 'center',
-                height: verticalScale(50)
-            }}>
-
-                <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
-                    <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
-                        tintColor: '#404040',
-                        position: 'absolute',
-                        top: verticalScale(8),
-                        right: moderateScale(20),
-                        alignSelf: 'flex-end',
-                        height: moderateScale(15),
-                        width: moderateScale(15)
-                    }} />
-                </TouchableOpacity>
-                <Text style={{
-                    ...styles.generalTxt, color: '#464646',
-                    textAlign: 'center',
-                    alignSelf: 'center',
-                    fontSize: moderateScale(18),
-                    fontFamily: Fonts.type.medium,
-                    marginTop: verticalScale(10)
-                }}>{assignAnimals === 0 ? 'Add Animals' : 'Add Group'}</Text>
-                <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
-
-
-            </View>
-
-            <View style={{
-                flexDirection: 'row', alignItems: 'center',
-                margin: moderateScale(25),
-                marginTop: verticalScale(15),
-                marginBottom: verticalScale(15),
-
-                justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
-            }}>
-
-                <TextInput
-                    onChangeText={(e) => {
-                        setSearchAnimalTxt(e)
-                    }}
-                    value={searchAnimalTxt}
-                    placeholder='Search'
-                    numberOfLines={1}
-                    keyboardType='default'
-                    autoCapitalize='none'
-                    style={{
-                        keyboardShouldPersistTaps: true,
-                        flex: 0.9,
-                        height: verticalScale(40),
-                        ...styles.generalTxt,
-                        color: '#777777',
-                        fontSize: moderateScale(14),
-                    }} />
-                <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
-
-            </View>
-
-            <FlatList
-                data={assignAnimals === 0 ? listAnimals : groupList}
-                contentContainerStyle={{
-                    margin: moderateScale(25),
-                    marginTop: verticalScale(0),
-                }}
-                renderItem={({ item, index }) => {
-                    return renderBreedItem(item, index, false);
-                }}
-            />
-
-            <TouchableOpacity style={{
-                ...styles.styleButtons, flex: 0,
-                width: '60%', alignSelf: 'center',
-                marginBottom: verticalScale(20), backgroundColor: '#FFC081'
-            }}
-                onPress={() => {
-                    setTimeout(() => {
-                        sheetAnimalRef.current.close();
-                    }, 200)
-                }}>
-                <Text style={{
-                    ...styles.generalTxt,
-                    fontFamily: Fonts.type.base,
-                    color: Colors.appBgColor,
-                    fontSize: moderateScale(18), textAlign: 'center',
-                    padding: moderateScale(10),
-                    paddingTop: verticalScale(5),
-                    paddingBottom: verticalScale(5),
-
-                }}>{'Add'}</Text>
-            </TouchableOpacity>
-
-
-
-        </View>
-
-    )
-}
-
-function renderFriendItem(item, index, isDeleteIcon) {
-
-    return (
-        <View style={{
-            ...styles.boxcontainer,
-            backgroundColor: 'white',
-            shadowColor: 'white',
-            shadowOpacity: 1,
-            marginTop: verticalScale(10),
-            height: moderateVerticalScale(60),
-            borderRadius: moderateScale(15),
-            flexDirection: 'row',
-            alignItems: 'center',
-        }}>
-            <ImagePlaceholder
-                showActivityIndicator={false}
-                activityIndicatorProps={{
-                    size: 'small',
-                    color: '#777777',
-                }}
-                resizeMode='cover'
-                placeholderStyle={{
-                    width: moderateScale(50),
-                    height: moderateScale(50),
-                    borderRadius: moderateScale(50),
-
-                }}
-                imgStyle={{
-                    borderRadius: moderateScale(50),
-                    borderColor: 'transparent',
-                    borderWidth: moderateScale(2),
-                    width: moderateScale(50),
-                    height: moderateScale(50),
-                }}
-
-                style={{
-                    marginEnd: moderateScale(15),
-                    flex: 0
-                }}
-
-                src={item.image ? item.image : ''}
-                placeholder={Images.img_user_placeholder}
-            />
-
-            <TouchableOpacity
-                onPress={() => addFriend(index)}
-                style={{
-                    flex: 0.95,
-                }}>
-                <View style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
-
-
-                }}>
+    function showCategory() {
+        return (
+            <ScrollView keyboardShouldPersistTaps='handled'>
+                <View>
                     <View style={{
-                        width: '100%',
-                        paddingEnd: moderateScale(15),
-                        alignItems: 'flex-start'
+                        alignItems: 'flex-end', justifyContent: 'center',
+                        height: verticalScale(50)
                     }}>
 
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={moderateScale(12)}
-                            fontSize={moderateScale(16)}
-                            style={{
-                                fontFamily: Fonts.type.medium,
-                                color: '#404040',
+                        <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
+                            <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
+                                tintColor: '#404040',
+                                position: 'absolute',
+                                top: verticalScale(12),
+                                right: moderateScale(20),
+                                alignSelf: 'flex-end',
+                                height: moderateScale(15),
+                                width: moderateScale(15)
+                            }} />
+                        </TouchableOpacity>
 
-                            }}
-                        >
-                            {item.name}
-                        </AutoSizeText>
-
-
+                        <Text style={{
+                            ...styles.generalTxt,
+                            alignSelf: 'center',
+                            color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10)
+                        }}>Select Category</Text>
+                        <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
+                    <FlatList
+                        data={category}
+                        contentContainerStyle={{
+                            padding: moderateScale(30)
+                        }}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setPetIndex(index);
+                                        sheetRef.current.close();
+                                        setCloseBottonSheet(false);
+                                    }}
+                                    style={{ flexDirection: 'row', marginTop: verticalScale(10) }}>
+                                    <View
+                                        style={{ width: moderateScale(25), height: verticalScale(25), alignItems: 'center', justifyContent: 'center' }}
+                                    >
+                                        <Image
+                                            source={index === petIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
+                                            resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
+                                        />
+                                    </View>
+                                    <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item.name}</Text>
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(item) => item.id}
+
+                    />
+                </View>
+            </ScrollView>
+        );
+    }
+
+    function showActivityCategory() {
+        return (
+            <ScrollView keyboardShouldPersistTaps='handled'>
+                <View>
                     <View style={{
-                        flexDirection: 'row',
-                        width: '100%',
-                        alignItems: 'center',
+                        alignItems: 'flex-end', justifyContent: 'center',
+                        height: verticalScale(50)
                     }}>
 
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={moderateScale(12)}
-                            fontSize={moderateScale(12)}
-                            style={{
-                                fontFamily: Fonts.type.base,
-                                color: '#404040',
-                                marginStart: moderateScale(0)
-
-                            }}
-                        >
-                            {item.phone}
-                        </AutoSizeText>
+                        <TouchableOpacity onPress={() => { sheetActivityRef.current.close() }}>
+                            <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
+                                tintColor: '#404040',
+                                position: 'absolute',
+                                top: verticalScale(12),
+                                right: moderateScale(20),
+                                alignSelf: 'flex-end',
+                                height: moderateScale(15),
+                                width: moderateScale(15)
+                            }} />
+                        </TouchableOpacity>
+                        <Text style={{
+                            ...styles.generalTxt, color: '#464646', fontSize: moderateScale(18), fontFamily: Fonts.type.medium, marginTop: verticalScale(10),
+                            textAlign: 'center',
+                            alignSelf: 'center'
+                        }}>Select Activity Type</Text>
+                        <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
                     </View>
+                    <FlatList
+                        data={activityType}
+                        contentContainerStyle={{
+                            padding: moderateScale(30)
+                        }}
+                        renderItem={({ item, index }) => {
+                            return (
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        setActivityIndex(index);
+                                        sheetActivityRef.current.close();
+                                        setCloseBottonSheetActivity(false);
+                                    }}
+                                    style={{ flexDirection: 'row', marginTop: verticalScale(10) }}>
+                                    <View
+                                        style={{ width: moderateScale(25), height: verticalScale(25), alignItems: 'center', justifyContent: 'center' }}
+                                    >
+                                        <Image
+                                            source={index === activityIndex ? Icons.icon_awesome_blue_check_circle : Icons.icon_black_hollow}
+                                            resizeMode='contain' style={{ height: verticalScale(15), width: moderateScale(15), marginTop: verticalScale(-10) }}
+                                        />
+                                    </View>
+                                    <Text style={{ ...styles.generalTxt, color: '#464646', marginStart: moderateScale(10) }}>{item}</Text>
+                                </TouchableOpacity>
+                            )
+                        }}
+                        keyExtractor={(item) => item.id}
 
-
+                    />
                 </View>
+            </ScrollView>
+        );
+    }
 
 
+    function getHorizontalLine() {
+        return (
+            <View style={{
+                backgroundColor: '#20B6F8',
+                borderTopStartRadius: moderateScale(5),
+                borderTopEndRadius: moderateScale(5),
+                height: verticalScale(3), width: moderateScale(30)
+            }} />
+        )
+    }
 
-            </TouchableOpacity>
+    //////////////////// ANIMAL SELECTION BOTTOM SHEET /////////////
 
-            {isDeleteIcon ?
-                <View /> :
-                <Image
-                    source={item.isSelect ? Icons.icon_check_circle_green : Icons.icon_uncheck_paackage}
-                    resizeMode='contain'
-                    style={{
-                        width: moderateScale(15),
-                        height: moderateScale(15),
-                    }}
-                />}
-        </View>
-    )
-}
+    function manipulateAnimaList() {
+        if (!allAnimals || allAnimals.length === 0) {
+            getAnimalList()
+        } else if (listAnimals && listAnimals.length > 0)
+            setCloseBottonSheetAnimal(true)
+    }
 
-function addFriend(index) {
-    listFriends[index].isSelect = !listFriends[index].isSelect;
-    setAddFriendItems(listFriends.filter((value) => value.isSelect))
-    setListFriends([...listFriends])
-}
+    function manipulateGroupList() {
+        if (!allGroups || allGroups.length === 0) {
+            getGroupList()
+        } else if (groupList && groupList.length > 0)
+            setCloseBottonSheetAnimal(true)
+    }
 
-//////////////////// TEAM SELECTION BOTTOM SHEET /////////////
-function showTeamBottomSheet() {
+    function manipulateTeamList() {
+        if (!allTeams || allTeams.length === 0) {
+            getTeams()
+        } else if (listFriends && listFriends.length > 0)
+            setCloseBottonSheetTeam(true);
+    }
+    function showBottomSheet() {
 
-    return (
-        <ScrollView keyboardShouldPersistTaps='handled'>
+        return (
             <View
                 style={{
                     backgroundColor: 'white',
@@ -1151,7 +927,7 @@ function showTeamBottomSheet() {
                     height: verticalScale(50)
                 }}>
 
-                    <TouchableOpacity onPress={() => { sheetTeamRef.current.close() }}>
+                    <TouchableOpacity onPress={() => { sheetRef.current.close() }}>
                         <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
                             tintColor: '#404040',
                             position: 'absolute',
@@ -1169,7 +945,7 @@ function showTeamBottomSheet() {
                         fontSize: moderateScale(18),
                         fontFamily: Fonts.type.medium,
                         marginTop: verticalScale(10)
-                    }}>Assign Employee</Text>
+                    }}>{assignAnimals === 0 ? 'Add Animals' : 'Add Group'}</Text>
                     <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
 
 
@@ -1186,10 +962,10 @@ function showTeamBottomSheet() {
 
                     <TextInput
                         onChangeText={(e) => {
-                            setSearchFriend(e)
+                            setSearchAnimalTxt(e)
                         }}
-                        value={searchFriend}
-                        placeholder='Search Employee'
+                        value={searchAnimalTxt}
+                        placeholder='Search'
                         numberOfLines={1}
                         keyboardType='default'
                         autoCapitalize='none'
@@ -1206,28 +982,24 @@ function showTeamBottomSheet() {
                 </View>
 
                 <FlatList
-                    data={listFriends}
+                    data={assignAnimals === 0 ? listAnimals : groupList}
                     contentContainerStyle={{
                         margin: moderateScale(25),
                         marginTop: verticalScale(0),
                     }}
                     renderItem={({ item, index }) => {
-                        return renderFriendItem(item, index, false);
+                        return renderBreedItem(item, index, false);
                     }}
                 />
 
                 <TouchableOpacity style={{
                     ...styles.styleButtons, flex: 0,
                     width: '60%', alignSelf: 'center',
-                    marginTop: verticalScale(0), backgroundColor: '#FFC081'
+                    marginBottom: verticalScale(20), backgroundColor: '#FFC081'
                 }}
                     onPress={() => {
                         setTimeout(() => {
-                            //setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
-                            let tmp = listFriends.filter((value) => value.isSelect === true);
-                            setAddFriendItems(tmp)
-
-                            sheetTeamRef.current.close();
+                            sheetAnimalRef.current.close();
                         }, 200)
                     }}>
                     <Text style={{
@@ -1245,105 +1017,92 @@ function showTeamBottomSheet() {
 
 
             </View>
-        </ScrollView>
-    )
-}
 
-function renderBreedItem(item, index, isDeleteIcon) {
+        )
+    }
 
-    return (
-        <View style={{
-            ...styles.boxcontainer,
-            backgroundColor: 'white',
-            shadowColor: 'white',
-            shadowOpacity: 1,
-            marginTop: verticalScale(10),
-            height: moderateVerticalScale(60),
-            borderRadius: moderateScale(15),
-            flexDirection: 'row',
-            alignItems: 'center',
-        }}>
-            <ImagePlaceholder
-                showActivityIndicator={false}
-                activityIndicatorProps={{
-                    size: 'small',
-                    color: '#777777',
-                }}
-                resizeMode='cover'
-                placeholderStyle={{
-                    width: moderateScale(50),
-                    height: moderateScale(50),
-                    borderRadius: moderateScale(50),
+    function renderFriendItem(item, index, isDeleteIcon) {
 
-                }}
-                imgStyle={{
-                    borderRadius: moderateScale(50),
-                    borderColor: 'transparent',
-                    borderWidth: moderateScale(2),
-                    width: moderateScale(50),
-                    height: moderateScale(50),
-                }}
+        return (
+            <View style={{
+                ...styles.boxcontainer,
+                backgroundColor: 'white',
+                shadowColor: 'white',
+                shadowOpacity: 1,
+                marginTop: verticalScale(10),
+                height: moderateVerticalScale(60),
+                borderRadius: moderateScale(15),
+                flexDirection: 'row',
+                alignItems: 'center',
+            }}>
+                <ImagePlaceholder
+                    showActivityIndicator={false}
+                    activityIndicatorProps={{
+                        size: 'small',
+                        color: '#777777',
+                    }}
+                    resizeMode='cover'
+                    placeholderStyle={{
+                        width: moderateScale(50),
+                        height: moderateScale(50),
+                        borderRadius: moderateScale(50),
 
-                style={{
-                    marginEnd: moderateScale(15),
-                    flex: 0
-                }}
+                    }}
+                    imgStyle={{
+                        borderRadius: moderateScale(50),
+                        borderColor: 'transparent',
+                        borderWidth: moderateScale(2),
+                        width: moderateScale(50),
+                        height: moderateScale(50),
+                    }}
 
-                src={item.image ? item.image : ''}
-                placeholder={Icons.icon_paw}
-            />
-            <TouchableOpacity
-                onPress={() => assignAnimals === 0 ? addBreeder(index) : addGroups(index)}
-                style={{
-                    flex: 0.95,
-                }}>
-                <View style={{
-                    alignItems: 'center',
-                    justifyContent: 'center',
+                    style={{
+                        marginEnd: moderateScale(15),
+                        flex: 0
+                    }}
 
+                    src={item.image ? item.image : ''}
+                    placeholder={Images.img_user_placeholder}
+                />
 
-                }}>
-                    <View style={{
-                        width: '100%',
-                        paddingEnd: moderateScale(15),
-                        alignItems: 'flex-start'
+                <TouchableOpacity
+                    onPress={() => addFriend(index)}
+                    style={{
+                        flex: 0.95,
                     }}>
-
-                        <AutoSizeText
-                            numberOfLines={1}
-                            minFontSize={moderateScale(12)}
-                            fontSize={moderateScale(16)}
-                            style={{
-                                fontFamily: Fonts.type.medium,
-                                color: '#404040',
-
-                            }}
-                        >
-                            {assignAnimals === 0 ? (item?.data?.name) : item.name}
-                        </AutoSizeText>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
 
 
-                    </View>
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            paddingEnd: moderateScale(15),
+                            alignItems: 'flex-start'
+                        }}>
 
-                    {assignAnimals === 0 ?
+                            <AutoSizeText
+                                numberOfLines={1}
+                                minFontSize={moderateScale(12)}
+                                fontSize={moderateScale(16)}
+                                style={{
+                                    fontFamily: Fonts.type.medium,
+                                    color: '#404040',
+
+                                }}
+                            >
+                                {item.name}
+                            </AutoSizeText>
+
+
+                        </View>
                         <View style={{
                             flexDirection: 'row',
                             width: '100%',
                             alignItems: 'center',
                         }}>
 
-                            <Text
-                                numberOfLines={1}
-
-                                style={{
-                                    fontFamily: Fonts.type.base,
-                                    color: '#A1A1A1',
-                                    fontSize: moderateScale(12)
-
-                                }}
-                            >
-                                Category:
-                            </Text>
                             <AutoSizeText
                                 numberOfLines={1}
                                 minFontSize={moderateScale(12)}
@@ -1351,12 +1110,292 @@ function renderBreedItem(item, index, isDeleteIcon) {
                                 style={{
                                     fontFamily: Fonts.type.base,
                                     color: '#404040',
-                                    marginStart: moderateScale(5)
+                                    marginStart: moderateScale(0)
 
                                 }}
                             >
-                                {item.categoryName}
+                                {item.phone}
                             </AutoSizeText>
+                        </View>
+
+
+                    </View>
+
+
+
+                </TouchableOpacity>
+
+                {isDeleteIcon ?
+                    <View /> :
+                    <Image
+                        source={item.isSelect ? Icons.icon_check_circle_green : Icons.icon_uncheck_paackage}
+                        resizeMode='contain'
+                        style={{
+                            width: moderateScale(15),
+                            height: moderateScale(15),
+                        }}
+                    />}
+            </View>
+        )
+    }
+
+    function addFriend(index) {
+        listFriends[index].isSelect = !listFriends[index].isSelect;
+        setAddFriendItems(listFriends.filter((value) => value.isSelect))
+        setListFriends([...listFriends])
+    }
+
+    //////////////////// TEAM SELECTION BOTTOM SHEET /////////////
+    function showTeamBottomSheet() {
+
+        return (
+            <ScrollView keyboardShouldPersistTaps='handled'>
+                <View
+                    style={{
+                        backgroundColor: 'white',
+                        height: '100%',
+                        flex: 1,
+                        justifyContent: 'flex-start'
+                    }}>
+
+                    <View style={{
+                        alignItems: 'flex-end', justifyContent: 'center',
+                        height: verticalScale(50)
+                    }}>
+
+                        <TouchableOpacity onPress={() => { sheetTeamRef.current.close() }}>
+                            <Image source={Icons.icon_metro_cancel} resizeMode="contain" style={{
+                                tintColor: '#404040',
+                                position: 'absolute',
+                                top: verticalScale(8),
+                                right: moderateScale(20),
+                                alignSelf: 'flex-end',
+                                height: moderateScale(15),
+                                width: moderateScale(15)
+                            }} />
+                        </TouchableOpacity>
+                        <Text style={{
+                            ...styles.generalTxt, color: '#464646',
+                            textAlign: 'center',
+                            alignSelf: 'center',
+                            fontSize: moderateScale(18),
+                            fontFamily: Fonts.type.medium,
+                            marginTop: verticalScale(10)
+                        }}>Assign Employee</Text>
+                        <View style={{ width: '100%', height: 1, backgroundColor: '#464646', marginTop: verticalScale(10) }} />
+
+
+                    </View>
+
+                    <View style={{
+                        flexDirection: 'row', alignItems: 'center',
+                        margin: moderateScale(25),
+                        marginTop: verticalScale(15),
+                        marginBottom: verticalScale(15),
+
+                        justifyContent: 'flex-end', backgroundColor: '#F5F5F5', borderRadius: moderateScale(10)
+                    }}>
+
+                        <TextInput
+                            onChangeText={(e) => {
+                                setSearchFriend(e)
+                            }}
+                            value={searchFriend}
+                            placeholder='Search Employee'
+                            numberOfLines={1}
+                            keyboardType='default'
+                            autoCapitalize='none'
+                            style={{
+                                keyboardShouldPersistTaps: true,
+                                flex: 0.9,
+                                height: verticalScale(40),
+                                ...styles.generalTxt,
+                                color: '#777777',
+                                fontSize: moderateScale(14),
+                            }} />
+                        <Image source={Icons.icon_feather_search} resizeMode='contain' style={{ height: moderateScale(15), width: moderateScale(15), margin: moderateScale(10), marginEnd: moderateScale(15) }} />
+
+                    </View>
+
+                    <FlatList
+                        data={listFriends}
+                        contentContainerStyle={{
+                            margin: moderateScale(25),
+                            marginTop: verticalScale(0),
+                        }}
+                        renderItem={({ item, index }) => {
+                            return renderFriendItem(item, index, false);
+                        }}
+                    />
+
+                    <TouchableOpacity style={{
+                        ...styles.styleButtons, flex: 0,
+                        width: '60%', alignSelf: 'center',
+                        marginTop: verticalScale(0), backgroundColor: '#FFC081'
+                    }}
+                        onPress={() => {
+                            setTimeout(() => {
+                                //setHolidays({ id: indexHoliday, holiday: valueHolidays, date: selected, markedDate: markedDates });
+                                let tmp = listFriends.filter((value) => value.isSelect === true);
+                                setAddFriendItems(tmp)
+
+                                sheetTeamRef.current.close();
+                            }, 200)
+                        }}>
+                        <Text style={{
+                            ...styles.generalTxt,
+                            fontFamily: Fonts.type.base,
+                            color: Colors.appBgColor,
+                            fontSize: moderateScale(18), textAlign: 'center',
+                            padding: moderateScale(10),
+                            paddingTop: verticalScale(5),
+                            paddingBottom: verticalScale(5),
+
+                        }}>{'Add'}</Text>
+                    </TouchableOpacity>
+
+
+
+                </View>
+            </ScrollView>
+        )
+    }
+
+    function renderBreedItem(item, index, isDeleteIcon) {
+
+        return (
+            <View style={{
+                ...styles.boxcontainer,
+                backgroundColor: 'white',
+                shadowColor: 'white',
+                shadowOpacity: 1,
+                marginTop: verticalScale(10),
+                height: moderateVerticalScale(60),
+                borderRadius: moderateScale(15),
+                flexDirection: 'row',
+                alignItems: 'center',
+            }}>
+                <ImagePlaceholder
+                    showActivityIndicator={false}
+                    activityIndicatorProps={{
+                        size: 'small',
+                        color: '#777777',
+                    }}
+                    resizeMode='cover'
+                    placeholderStyle={{
+                        width: moderateScale(50),
+                        height: moderateScale(50),
+                        borderRadius: moderateScale(50),
+
+                    }}
+                    imgStyle={{
+                        borderRadius: moderateScale(50),
+                        borderColor: 'transparent',
+                        borderWidth: moderateScale(2),
+                        width: moderateScale(50),
+                        height: moderateScale(50),
+                    }}
+
+                    style={{
+                        marginEnd: moderateScale(15),
+                        flex: 0
+                    }}
+
+                    src={item.image ? item.image : ''}
+                    placeholder={Icons.icon_paw}
+                />
+                <TouchableOpacity
+                    onPress={() => assignAnimals === 0 ? addBreeder(index) : addGroups(index)}
+                    style={{
+                        flex: 0.95,
+                    }}>
+                    <View style={{
+                        alignItems: 'center',
+                        justifyContent: 'center',
+
+
+                    }}>
+                        <View style={{
+                            width: '100%',
+                            paddingEnd: moderateScale(15),
+                            alignItems: 'flex-start'
+                        }}>
+
+                            <AutoSizeText
+                                numberOfLines={1}
+                                minFontSize={moderateScale(12)}
+                                fontSize={moderateScale(16)}
+                                style={{
+                                    fontFamily: Fonts.type.medium,
+                                    color: '#404040',
+
+                                }}
+                            >
+                                {assignAnimals === 0 ? (item?.data?.name) : item.name}
+                            </AutoSizeText>
+
+
+                        </View>
+
+                        {assignAnimals === 0 ?
+                            <View style={{
+                                flexDirection: 'row',
+                                width: '100%',
+                                alignItems: 'center',
+                            }}>
+
+                                <Text
+                                    numberOfLines={1}
+
+                                    style={{
+                                        fontFamily: Fonts.type.base,
+                                        color: '#A1A1A1',
+                                        fontSize: moderateScale(12)
+
+                                    }}
+                                >
+                                    Category:
+                                </Text>
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(12)}
+                                    style={{
+                                        fontFamily: Fonts.type.base,
+                                        color: '#404040',
+                                        marginStart: moderateScale(5)
+
+                                    }}
+                                >
+                                    {item.categoryName}
+                                </AutoSizeText>
+                                <Text
+                                    numberOfLines={1}
+
+                                    style={{
+                                        fontFamily: Fonts.type.base,
+                                        color: '#A1A1A1',
+                                        fontSize: moderateScale(12),
+                                        marginStart: moderateScale(10)
+
+                                    }}
+                                >
+                                    Status:
+                                </Text>
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(12)}
+                                    style={{
+                                        fontFamily: Fonts.type.base,
+                                        color: '#404040',
+                                        marginStart: moderateScale(5)
+
+                                    }}
+                                >
+                                    {item.status}
+                                </AutoSizeText>
+                            </View> :
                             <Text
                                 numberOfLines={1}
 
@@ -1364,396 +1403,369 @@ function renderBreedItem(item, index, isDeleteIcon) {
                                     fontFamily: Fonts.type.base,
                                     color: '#A1A1A1',
                                     fontSize: moderateScale(12),
-                                    marginStart: moderateScale(10)
+                                    width: '100%',
 
                                 }}
                             >
-                                Status:
+                                {item._id.substring(0, 8)}
                             </Text>
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(12)}
-                                style={{
-                                    fontFamily: Fonts.type.base,
-                                    color: '#404040',
-                                    marginStart: moderateScale(5)
-
-                                }}
-                            >
-                                {item.status}
-                            </AutoSizeText>
-                        </View> :
-                        <Text
-                            numberOfLines={1}
-
-                            style={{
-                                fontFamily: Fonts.type.base,
-                                color: '#A1A1A1',
-                                fontSize: moderateScale(12),
-                                width: '100%',
-
-                            }}
-                        >
-                            {item._id.substring(0, 8)}
-                        </Text>
-                    }
+                        }
 
 
-                </View>
+                    </View>
 
 
 
-            </TouchableOpacity>
+                </TouchableOpacity>
 
-            {isDeleteIcon ?
-                <View /> :
-                <Image
-                    source={item.isSelect ? Icons.icon_check_circle_green : Icons.icon_uncheck_paackage}
-                    resizeMode='contain'
-                    style={{
-                        width: moderateScale(15),
-                        height: moderateScale(15),
+                {isDeleteIcon ?
+                    <View /> :
+                    <Image
+                        source={item.isSelect ? Icons.icon_check_circle_green : Icons.icon_uncheck_paackage}
+                        resizeMode='contain'
+                        style={{
+                            width: moderateScale(15),
+                            height: moderateScale(15),
+                        }}
+                    />}
+            </View>
+        )
+    }
+
+    function addBreeder(index) {
+        listAnimals[index].isSelect = !listAnimals[index].isSelect;
+        setAddItems(listAnimals.filter((value) => value.isSelect))
+        setListAnimals([...listAnimals])
+    }
+
+    function addGroups(index) {
+        groupList[index].isSelect = !groupList[index].isSelect;
+        setAddGroupItems(groupList.filter((value) => value.isSelect))
+        setGroupList([...groupList])
+    }
+
+    ////////////////////  WEEK UI //////////////////
+    function getWeeklyRecurring() {
+        return (
+            <View>
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginTop: verticalScale(25),
+                    marginStart: moderateScale(25),
+                    marginBottom: verticalScale(10)
+                }}>Days of the week *</Text>
+                <FlatList
+                    numColumns={4}
+                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+                    data={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: isDaySelect(item) ? '#FFC081' : '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
+                                width: Dimensions.get('screen').width / 5,
+                                height: verticalScale(30),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginStart: moderateScale(5),
+                            }} onPress={() => setWeekFrequency(
+                                { day: item }
+                            )}>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(14)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
                     }}
-                />}
-        </View>
-    )
-}
 
-function addBreeder(index) {
-    listAnimals[index].isSelect = !listAnimals[index].isSelect;
-    setAddItems(listAnimals.filter((value) => value.isSelect))
-    setListAnimals([...listAnimals])
-}
+                />
 
-function addGroups(index) {
-    groupList[index].isSelect = !groupList[index].isSelect;
-    setAddGroupItems(groupList.filter((value) => value.isSelect))
-    setGroupList([...groupList])
-}
+                {
+                    assignFrequency >= 2 ?
+                        getMonthUI() : <View />
 
-////////////////////  WEEK UI //////////////////
-function getWeeklyRecurring() {
-    return (
-        <View>
-            <Text style={{
-                ...styles.bottomSheetHeader,
-                marginTop: verticalScale(25),
-                marginStart: moderateScale(25),
-                marginBottom: verticalScale(10)
-            }}>Days of the week *</Text>
-            <FlatList
-                numColumns={4}
-                contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-                data={['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']}
-                renderItem={({ item, index }) => {
-                    return (
-                        <TouchableOpacity style={{
-                            backgroundColor: isDaySelect(item) ? '#FFC081' : '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(5),
-                            width: Dimensions.get('screen').width / 5,
-                            height: verticalScale(30),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginStart: moderateScale(5),
-                        }} onPress={() => setWeekFrequency(
-                            { day: item }
-                        )}>
+                }
+                {
+                    assignFrequency === 3 ?
+                        getYearlyRecurring() : <View />
 
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: Colors.appBgColor
-                                }}>{item}
-                            </AutoSizeText>
-                        </TouchableOpacity>
-                    )
-                }}
-
-            />
-
-            {
-                assignFrequency >= 2 ?
-                    getMonthUI() : <View />
-
+                }
+            </View>
+        )
+    }
+    function setWeekFrequency(e) {
+        let tmp = selectWeekFrequency;
+        if (tmp.length === 0) { tmp.push(e); }
+        else {
+            let itemService = tmp.find(item => item.day === e.day);
+            if (itemService) {
+                tmp.splice(tmp.indexOf(itemService), 1);
+            } else {
+                tmp.push(e);
             }
-            {
-                assignFrequency === 3 ?
-                    getYearlyRecurring() : <View />
 
+        }
+        setSelectWeekFrequency([...tmp]);//result => [...result, tmp])
+    }
+
+    function isDaySelect(item) {
+
+        let itemService = selectWeekFrequency.find(e => e.day === item);
+        if (itemService) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    ////////////////////  MONTH UI //////////////////
+    function getMonthUI() {
+        return (
+            <View>
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginTop: verticalScale(25),
+                    marginStart: moderateScale(25),
+                    marginBottom: verticalScale(10)
+                }}>Months *</Text>
+                <FlatList
+                    numColumns={4}
+                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+                    data={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: isMonthSelect(item) ? '#FFC081' : '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
+                                width: Dimensions.get('screen').width / 5,
+                                height: verticalScale(30),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginStart: moderateScale(5),
+                            }} onPress={() => setMonthFrequency(
+                                { day: item }
+                            )}>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(14)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
+                    }}
+
+                />
+            </View>
+        )
+    }
+    function setMonthFrequency(e) {
+        let tmp = selectMonthFrequency;
+        if (tmp.length === 0) { tmp.push(e); }
+        else {
+            let itemService = tmp.find(item => item.day === e.day);
+            if (itemService) {
+                tmp.splice(tmp.indexOf(itemService), 1);
+            } else {
+                tmp.push(e);
             }
-        </View>
-    )
-}
-function setWeekFrequency(e) {
-    let tmp = selectWeekFrequency;
-    if (tmp.length === 0) { tmp.push(e); }
-    else {
-        let itemService = tmp.find(item => item.day === e.day);
-        if (itemService) {
-            tmp.splice(tmp.indexOf(itemService), 1);
-        } else {
-            tmp.push(e);
+
         }
-
+        setSelectMonthFrequency(result => [...result, tmp])
     }
-    setSelectWeekFrequency([...tmp]);//result => [...result, tmp])
-}
 
-function isDaySelect(item) {
+    function isMonthSelect(item) {
 
-    let itemService = selectWeekFrequency.find(e => e.day === item);
-    if (itemService) {
-        return true;
-    } else {
-        return false;
-    }
-}
-
-////////////////////  MONTH UI //////////////////
-function getMonthUI() {
-    return (
-        <View>
-            <Text style={{
-                ...styles.bottomSheetHeader,
-                marginTop: verticalScale(25),
-                marginStart: moderateScale(25),
-                marginBottom: verticalScale(10)
-            }}>Months *</Text>
-            <FlatList
-                numColumns={4}
-                contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-                data={['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec']}
-                renderItem={({ item, index }) => {
-                    return (
-                        <TouchableOpacity style={{
-                            backgroundColor: isMonthSelect(item) ? '#FFC081' : '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(5),
-                            width: Dimensions.get('screen').width / 5,
-                            height: verticalScale(30),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginStart: moderateScale(5),
-                        }} onPress={() => setMonthFrequency(
-                            { day: item }
-                        )}>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: Colors.appBgColor
-                                }}>{item}
-                            </AutoSizeText>
-                        </TouchableOpacity>
-                    )
-                }}
-
-            />
-        </View>
-    )
-}
-function setMonthFrequency(e) {
-    let tmp = selectMonthFrequency;
-    if (tmp.length === 0) { tmp.push(e); }
-    else {
-        let itemService = tmp.find(item => item.day === e.day);
+        let itemService = selectMonthFrequency.find(e => e.day === item);
         if (itemService) {
-            tmp.splice(tmp.indexOf(itemService), 1);
+            return true;
         } else {
-            tmp.push(e);
+            return false;
         }
-
     }
-    setSelectMonthFrequency(result => [...result, tmp])
-}
 
-function isMonthSelect(item) {
+    ////////////////////  YEARLY UI //////////////////
+    function getYearlyRecurring() {
+        return (
+            <View>
+                <Text style={{
+                    ...styles.bottomSheetHeader,
+                    marginTop: verticalScale(25),
+                    marginStart: moderateScale(25),
+                    marginBottom: verticalScale(10)
+                }}>Years *</Text>
+                <FlatList
+                    numColumns={4}
+                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+                    data={['2021', '2022', '2023', '2024', '2025']}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: isYearSelect(item) ? '#FFC081' : '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
+                                width: Dimensions.get('screen').width / 5,
+                                height: verticalScale(30),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginStart: moderateScale(5),
+                            }} onPress={() => setYearFrequency(
+                                { day: item }
+                            )}>
 
-    let itemService = selectMonthFrequency.find(e => e.day === item);
-    if (itemService) {
-        return true;
-    } else {
-        return false;
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(14)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: Colors.appBgColor
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
+                    }}
+
+                />
+            </View>
+        )
     }
-}
+    function setYearFrequency(e) {
+        let tmp = selectYearFrequency;
+        if (tmp.length === 0) { tmp.push(e); }
+        else {
+            let itemService = tmp.find(item => item.day === e.day);
+            if (itemService) {
+                tmp.splice(tmp.indexOf(itemService), 1);
+            } else {
+                tmp.push(e);
+            }
 
-////////////////////  YEARLY UI //////////////////
-function getYearlyRecurring() {
-    return (
-        <View>
-            <Text style={{
-                ...styles.bottomSheetHeader,
-                marginTop: verticalScale(25),
-                marginStart: moderateScale(25),
-                marginBottom: verticalScale(10)
-            }}>Years *</Text>
-            <FlatList
-                numColumns={4}
-                contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-                data={['2021', '2022', '2023', '2024', '2025']}
-                renderItem={({ item, index }) => {
-                    return (
-                        <TouchableOpacity style={{
-                            backgroundColor: isYearSelect(item) ? '#FFC081' : '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(5),
-                            width: Dimensions.get('screen').width / 5,
-                            height: verticalScale(30),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            marginStart: moderateScale(5),
-                        }} onPress={() => setYearFrequency(
-                            { day: item }
-                        )}>
+        }
+        setSelectYearFrequency(result => [...result, tmp])
+    }
 
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: Colors.appBgColor
-                                }}>{item}
-                            </AutoSizeText>
-                        </TouchableOpacity>
-                    )
-                }}
+    function isYearSelect(item) {
 
-            />
-        </View>
-    )
-}
-function setYearFrequency(e) {
-    let tmp = selectYearFrequency;
-    if (tmp.length === 0) { tmp.push(e); }
-    else {
-        let itemService = tmp.find(item => item.day === e.day);
+        let itemService = selectYearFrequency.find(e => e.day === item);
         if (itemService) {
-            tmp.splice(tmp.indexOf(itemService), 1);
+            return true;
         } else {
-            tmp.push(e);
+            return false;
         }
-
     }
-    setSelectYearFrequency(result => [...result, tmp])
-}
 
-function isYearSelect(item) {
 
-    let itemService = selectYearFrequency.find(e => e.day === item);
-    if (itemService) {
-        return true;
-    } else {
-        return false;
+    ////////////////////  TIME UI //////////////////
+    function getTimeUI() {
+
+        let time = ['12:00 AM', '12:30 AM', '01:00 AM', '01:30 AM',
+            '02:00 AM', '02:30 AM', '03:00 AM', '03:30 AM',
+            '04:00 AM', '04:30 AM', '05:00 AM', '05:30 AM',
+            '06:00 AM', '06:30 AM', '07:00 AM', '07:30 AM',
+            '08:00 AM', '08:30 AM', '09:00 AM', '09:30 AM',
+            '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM']
+
+
+        let timeAfternoon = ['12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
+            '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM'];
+
+        let timeEvening = [
+            '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
+            '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM',
+            '08:00 PM', '08:30 PM', '09:00 PM', '09:30 PM',
+            '10:00 PM', '10:30 PM', '11:00 PM', '11:30 PM']
+
+        let timeData = [];
+
+        if (tabs === 0)
+            timeData = time;
+        else if (tabs === 1)
+            timeData = timeAfternoon;
+        else
+            timeData = timeEvening;
+
+        return (
+            <View>
+                <FlatList
+                    numColumns={4}
+                    contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
+                    data={timeData}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity style={{
+                                backgroundColor: isTimeSelect(item) ? Colors.appBgColor : 'white',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(5),
+                                width: Dimensions.get('screen').width / 5,
+                                height: verticalScale(30),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                borderColor: Colors.appBgColor,
+                                borderWidth: moderateScale(1),
+                                marginStart: moderateScale(5),
+                            }} onPress={() => setTimeFrequency(
+                                { day: item }
+                            )}>
+
+                                <AutoSizeText
+                                    numberOfLines={1}
+                                    minFontSize={moderateScale(12)}
+                                    fontSize={moderateScale(14)}
+                                    mode={ResizeTextMode.max_lines}
+                                    style={{
+                                        ...styles.generalTxt,
+                                        color: isTimeSelect(item) ? 'white' : Colors.appBgColor
+                                    }}>{item}
+                                </AutoSizeText>
+                            </TouchableOpacity>
+                        )
+                    }}
+
+                />
+            </View>
+        )
     }
-}
+    function setTimeFrequency(e) {
+        let tmp = selectTimeFrequency;
+        if (tmp.length === 0) { tmp.push(e); }
+        else {
+            let itemService = tmp.find(item => item.day === e.day);
+            if (itemService) {
+                tmp.splice(tmp.indexOf(itemService), 1);
+            } else {
+                tmp.push(e);
+            }
 
+        }
+        setSelectTimeFrequency([...tmp]);//result => [...result, tmp])
+    }
 
-////////////////////  TIME UI //////////////////
-function getTimeUI() {
+    function isTimeSelect(item) {
 
-    let time = ['12:00 AM', '12:30 AM', '01:00 AM', '01:30 AM',
-        '02:00 AM', '02:30 AM', '03:00 AM', '03:30 AM',
-        '04:00 AM', '04:30 AM', '05:00 AM', '05:30 AM',
-        '06:00 AM', '06:30 AM', '07:00 AM', '07:30 AM',
-        '08:00 AM', '08:30 AM', '09:00 AM', '09:30 AM',
-        '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM']
-
-
-    let timeAfternoon = ['12:00 PM', '12:30 PM', '01:00 PM', '01:30 PM',
-        '02:00 PM', '02:30 PM', '03:00 PM', '03:30 PM'];
-
-    let timeEvening = [
-        '04:00 PM', '04:30 PM', '05:00 PM', '05:30 PM',
-        '06:00 PM', '06:30 PM', '07:00 PM', '07:30 PM',
-        '08:00 PM', '08:30 PM', '09:00 PM', '09:30 PM',
-        '10:00 PM', '10:30 PM', '11:00 PM', '11:30 PM']
-
-    let timeData = [];
-
-    if (tabs === 0)
-        timeData = time;
-    else if (tabs === 1)
-        timeData = timeAfternoon;
-    else
-        timeData = timeEvening;
-
-    return (
-        <View>
-            <FlatList
-                numColumns={4}
-                contentContainerStyle={{ justifyContent: 'center', alignItems: 'center' }}
-                data={timeData}
-                renderItem={({ item, index }) => {
-                    return (
-                        <TouchableOpacity style={{
-                            backgroundColor: isTimeSelect(item) ? Colors.appBgColor : 'white',
-                            borderRadius: moderateScale(10),
-                            marginTop: verticalScale(5),
-                            width: Dimensions.get('screen').width / 5,
-                            height: verticalScale(30),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderColor: Colors.appBgColor,
-                            borderWidth: moderateScale(1),
-                            marginStart: moderateScale(5),
-                        }} onPress={() => setTimeFrequency(
-                            { day: item }
-                        )}>
-
-                            <AutoSizeText
-                                numberOfLines={1}
-                                minFontSize={moderateScale(12)}
-                                fontSize={moderateScale(14)}
-                                mode={ResizeTextMode.max_lines}
-                                style={{
-                                    ...styles.generalTxt,
-                                    color: isTimeSelect(item) ? 'white' : Colors.appBgColor
-                                }}>{item}
-                            </AutoSizeText>
-                        </TouchableOpacity>
-                    )
-                }}
-
-            />
-        </View>
-    )
-}
-function setTimeFrequency(e) {
-    let tmp = selectTimeFrequency;
-    if (tmp.length === 0) { tmp.push(e); }
-    else {
-        let itemService = tmp.find(item => item.day === e.day);
+        let itemService = selectTimeFrequency.find(e => e.day === item);
         if (itemService) {
-            tmp.splice(tmp.indexOf(itemService), 1);
+            return true;
         } else {
-            tmp.push(e);
+            return false;
         }
-
     }
-    setSelectTimeFrequency([...tmp]);//result => [...result, tmp])
-}
-
-function isTimeSelect(item) {
-
-    let itemService = selectTimeFrequency.find(e => e.day === item);
-    if (itemService) {
-        return true;
-    } else {
-        return false;
-    }
-}
 
 }
 

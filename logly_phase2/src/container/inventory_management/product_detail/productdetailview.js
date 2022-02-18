@@ -20,10 +20,12 @@ function ProductDetailView(props) {
     const [isEditShow, setIsEditShow] = useState(false);
     const [listFileUri, setListFileUri] = useState([]);
 
-    const { removeAnimal} = props;
+    const { removeAnimal, userObject, productData } = props;
+
+    const isSameUser = userObject?._id !== productData.breederId ? false : true;
 
     useEffect(() => {
-        if (props.productData){
+        if (props.productData) {
             let tmp = [];
             tmp.push({ filename: props.productData.image })
             tmp = tmp.concat(props.productData.gallery);
@@ -61,7 +63,7 @@ function ProductDetailView(props) {
                             }}
                             indicatorColor={Colors.appBgColor}
                         >
-                            {listFileUri && listFileUri.length > 0 ?  listFileUri.map((item, index) => {
+                            {listFileUri && listFileUri.length > 0 ? listFileUri.map((item, index) => {
                                 return (
 
                                     <ImagePlaceholder
@@ -89,7 +91,7 @@ function ProductDetailView(props) {
 
                                         }}
 
-                                        src={item?.filename ? (item?.filename ? item.filename:''):''}
+                                        src={item?.filename ? (item?.filename ? item.filename : '') : ''}
                                         placeholder={Icons.icon_paw}
                                     />
 
@@ -180,7 +182,12 @@ function ProductDetailView(props) {
                         </View> : <View style={{ flex: 0.1 }} />}
                     <TouchableOpacity
                         style={{ flex: 0.1, height: moderateScale(25) }}
-                        onPress={() => isEditShow ? setIsEditShow(false) : setIsEditShow(true)}>
+                        onPress={() => {
+                            if (!isSameUser)
+                                return
+
+                            return isEditShow ? setIsEditShow(false) : setIsEditShow(true)
+                        }}>
                         <Image source={Icons.icon_kebab} resizeMode='contain'
                             style={{ height: moderateScale(25) }} />
 

@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 import React from 'react';
 import ProfileView from './view';
-import { getUser, uploadUserImage } from '../../../actions/LoginModule';
+import { getUser, uploadUserImage,getUserById } from '../../../actions/LoginModule';
 import { connect } from 'react-redux';
 import DataHandler from '../../../utils/DataHandler';
 import { launchImageLibrary, launchCamera } from 'react-native-image-picker/src/index';
@@ -14,7 +14,7 @@ class ViewProfile extends React.Component {
         super(props);
         this.state = {
             userObject: {},
-            fileUri:''
+            fileUri: ''
         }
     }
 
@@ -24,22 +24,33 @@ class ViewProfile extends React.Component {
 
     componentDidMount() {
 
-        
+        //ONLY SEE USER PROFILE
+        if (this.props.route.params?.id) {
+            this.props.getUserById(this.props.route.params.id).then((response) => {
+                console.log("user object-->", response.payload);
+                this.accountType = response.payload.packageType;
+                let tmpUser = response.payload;
+                tmpUser.busDetails = response.busDetails;
+                this.setState({ userObject:tmpUser})
+            })
+            return
+        }
+
         DataHandler.getAccountType().then((value) => {
             this.accountType = value;
         });
 
         DataHandler.getUserObject().then((value) => {
             this.userObject = JSON.parse(value);
-            this.setState({userObject:this.userObject})
+            this.setState({ userObject: this.userObject })
         })
 
     }
 
     updateUser() {
-        this.props.getUser().then((response)=>{
+        this.props.getUser().then((response) => {
             DataHandler.saveUserObject(JSON.stringify(response.payload));
-            console.log("user object-->",response.payload);
+            console.log("user object-->", response.payload);
             this.setState({ userObject: response.payload })
         })
     }
@@ -49,12 +60,12 @@ class ViewProfile extends React.Component {
             <ProfileView {...this.props}
                 userObject={this.state.userObject}
                 accountType={this.accountType}
-                updateUser={() => this.updateUser()} 
+                updateUser={() => this.updateUser()}
 
                 capturePic={(e) => { this.getPic(e) }}
 
                 imgUri={this.state.fileUri}
-                />
+            />
         );
     }
 
@@ -110,15 +121,15 @@ class ViewProfile extends React.Component {
         }
     }
 
-    uploadUserImage(source){
+    uploadUserImage(source) {
         let formdata = new FormData();
         formdata.append('file', {
             uri: source.uri,
             name: 'user_img' + moment().unix() + '.jpg', type: 'image/jpg',
         });
-        formdata.append('name','coverImage')
-        this.props.uploadUserImage(formdata).then((response)=>{
-            if(response){
+        formdata.append('name', 'coverImage')
+        this.props.uploadUserImage(formdata).then((response) => {
+            if (response) {
                 this.updateUser()
             }
         })
@@ -135,6 +146,7 @@ const mapStateToProps = ({ user }) => {
 
 const mapDispatchToProps = dispatch => ({
     getUser: () => dispatch(getUser()),
+    getUserById: (id) => dispatch(getUserById(id)),
     uploadUserImage: (data) => dispatch(uploadUserImage(data))
 });
 

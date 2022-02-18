@@ -20,7 +20,7 @@ import { INDIVIDUAL } from '../../../constants';
 
 function AboutUserView(props) {
 
-    const { userObject, accountType, updateUser } = props;
+    const { userObject, accountType, updateUser, isSameUser } = props;
 
     const dispatch = useDispatch();
 
@@ -56,7 +56,7 @@ function AboutUserView(props) {
 
                     }}
                 >
-                    {userObject ? userObject.city + ', ' + userObject.state : ''}
+                    {userObject && userObject?.city ? userObject.city + ', ' + userObject.state : ''}
                 </AutoSizeText>
             </View>
             <View
@@ -160,7 +160,7 @@ function AboutUserView(props) {
                         fontFamily: Fonts.type.medium,
                         color: '#464646',
                         marginStart: moderateScale(10),
-                        fontSize:moderateScale(16)
+                        fontSize: moderateScale(16)
 
                     }}
                 >
@@ -173,22 +173,23 @@ function AboutUserView(props) {
                     style={{
                         fontFamily: Fonts.type.base,
                         color: '#464646',
-                        marginTop:verticalScale(5),
+                        marginTop: verticalScale(5),
                         marginStart: moderateScale(10)
 
                     }}
                 >
-                    {userObject.businessDetails !== null && userObject.businessDetails ? userObject.businessDetails?.businessInfo: ''}
+                    {userObject.description}
+                    {/* {userObject.businessDetails !== null && userObject.businessDetails ? userObject.businessDetails?.businessInfo : ''} */}
                 </AutoSizeText>
 
-                {accountType !== INDIVIDUAL?<View>
+                {accountType !== INDIVIDUAL ? <View>
                     <Text
                         style={{
                             fontFamily: Fonts.type.medium,
                             color: '#464646',
                             marginStart: moderateScale(10),
                             fontSize: moderateScale(16),
-                            marginTop:verticalScale(10)
+                            marginTop: verticalScale(10)
 
                         }}
                     >
@@ -206,7 +207,7 @@ function AboutUserView(props) {
 
                         }}
                     >
-                        {userObject && userObject.businessDetails !== null && userObject.businessDetails?.daysOpen? getDays(userObject.businessDetails.daysOpen) : ''} 
+                        {BusDaysOpen()}
                     </AutoSizeText>
 
                     <Text
@@ -233,9 +234,9 @@ function AboutUserView(props) {
 
                         }}
                     >
-                        {userObject.businessDetails !== null && userObject.businessDetails && userObject.businessDetails.openHrStart !== null && userObject.businessDetails.openHrEnd !== null ? moment(userObject.businessDetails.openHrStart).format('hh:mm:ss A') + " - " + moment(userObject.businessDetails.openHrEnd).format('hh:mm:ss A') : ''}
+                        {operationHours()}
                     </AutoSizeText>
-                </View>:<View/>}
+                </View> : <View />}
 
             </View>
 
@@ -247,15 +248,44 @@ function AboutUserView(props) {
 
     ///////////////////////   FEATURED STATUS ////////////////
     function getDays(e) {
-        console.log('days open-->',e)
-        let days='';
+        console.log('days open-->', e)
+        let days = '';
         e.forEach((value) => {
-            days = days+value + ","
+            days = days + value + ","
         })
-        days=days.substring(0,days.length-1);
+        days = days.substring(0, days.length - 1);
         return days;
     }
 
+    function BusDaysOpen() {
+        if (isSameUser)
+            return userObject && userObject.businessDetails !== null && userObject.businessDetails?.daysOpen ? getDays(userObject.businessDetails.daysOpen) : ''
+        else {
+            return userObject && userObject.busDetails !== null && userObject.busDetails?.daysOpen ? getDays(userObject.busDetails.daysOpen) : ''
+        }
+    }
+
+    function operationHours() {
+        if (isSameUser) {
+            return manipulateOperatingHours(userObject.businessDetails)
+        }
+        else {
+            return manipulateOperatingHours(userObject.busDetails)
+        }
+
+    }
+
+    function manipulateOperatingHours(businessDetails){
+        businessDetails !== null && businessDetails &&
+            businessDetails.openHrStart !== null &&
+            businessDetails.openHrEnd !== null ?
+            moment(businessDetails.openHrStart.includes('Z') ?
+                businessDetails.openHrStart.substring(0, businessDetails.openHrStart.length - 1) :
+                businessDetails.openHrStart).format('hh:mm A') + " - " +
+            moment(businessDetails.openHrEnd.includes('Z') ?
+                businessDetails.openHrEnd.substring(0, businessDetails.openHrEnd.length - 1) :
+                businessDetails.openHrEnd).format('hh:mm A') : ''
+    }
 
 
 }
