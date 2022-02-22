@@ -203,6 +203,7 @@ function GalleryPetView(props) {
 
                 : <View style={{ flex: 1 }} />}
 
+            {isSameUser ?
             <CustomButton
                 isSameUser={isSameUser} styles={{
                 ...styles.styleButtons, flex: 0,
@@ -216,7 +217,7 @@ function GalleryPetView(props) {
                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                 }}>Add Photos / Videos</Text>
-            </CustomButton>
+            </CustomButton>:<View/>}
 
 
             {modalVisible ? showPicsOnly() : null}

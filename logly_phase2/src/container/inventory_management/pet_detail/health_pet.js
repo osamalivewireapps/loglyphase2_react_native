@@ -21,7 +21,8 @@ import CustomButton from '../../../components/CustomButton';
 
 function HealthPetView(props) {
 
-    const { healthRecord,isSameUser } = props.animalData;
+    const { healthRecord } = props.animalData;
+    const { isSameUser} = props;
 
     const [arrHealthRecord, setArrHealthRecord] = useState([]);
     const [initialPg, setInitialPg] = useState(0);
@@ -252,7 +253,8 @@ function HealthPetView(props) {
             
              : <View style={{flex:1}}/>}
 
-            {initialPg === 0 ?
+            {(initialPg === 0 && isSameUser) ?
+            
                 <CustomButton
                     isSameUser={isSameUser} styles={{
                     ...styles.styleButtons, flex: 0,
@@ -266,7 +268,9 @@ function HealthPetView(props) {
                         paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                     }}>Add Document</Text>
-                </CustomButton> : null}
+                </CustomButton> 
+                
+                : null}
         </View>
         //</ScrollView>
     );

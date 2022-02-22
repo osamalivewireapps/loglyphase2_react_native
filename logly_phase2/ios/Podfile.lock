@@ -361,6 +361,8 @@ PODS:
     - React-Core
   - RNGestureHandler (1.10.3):
     - React-Core
+  - RNIap (4.0.0):
+    - React
   - RNPermissions (3.2.0):
     - React-Core
   - RNReanimated (2.2.4):
@@ -472,6 +474,7 @@ DEPENDENCIES:
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
   - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
+  - RNIap (from `../node_modules/react-native-iap`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -586,6 +589,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-device-info"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
+  RNIap:
+    :path: "../node_modules/react-native-iap"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -658,6 +663,7 @@ SPEC CHECKSUMS:
   RNDateTimePicker: c9911be59b1f8670b9f244b85af3a7c295e175ed
   RNDeviceInfo: 417b2ef4456c13a9d50ad8c57895eea837b735a8
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
+  RNIap: d317df39e7774ccce007bc5d6c5f733ee2254bd0
   RNPermissions: bf844d392fe0ecbfbd2e4ae2b88cc32f2f09b369
   RNReanimated: 024eff8202342abf4b24e11575a16afc441dabfe
   RNScreens: 4d79118be80f79fa1f4aa131909a1d6e86280af3

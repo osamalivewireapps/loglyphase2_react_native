@@ -131,7 +131,13 @@ class SplashScreen extends React.Component {
                     }}>
 
                         <TouchableOpacity
-                            onPress={() => { this.props.navigation.navigate('Login') }}
+                            onPress={() => {
+
+                                this.props.navigation.navigate('Login') 
+                                //this.props.navigation.navigate('BusAccountPackages', { packageId: 'Business' })
+                            }
+
+                            }
                             style={{ marginTop: 0, backgroundColor: Colors.appBgColor, borderRadius: moderateScale(20) }}>
                             <Text style={{
                                 fontSize: moderateScale(22), textAlign: 'center',

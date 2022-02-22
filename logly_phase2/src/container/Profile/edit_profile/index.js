@@ -128,7 +128,7 @@ class EditProfile extends Component {
     }
     render() {
         return (<EditProfileView {...this.props}
-
+            userObject={this.userObject}
             name={this.state.name}
             email={this.state.email}
             phone={this.state.phone}

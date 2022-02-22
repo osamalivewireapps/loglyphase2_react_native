@@ -180,6 +180,8 @@ function ProductDetailView(props) {
                                     }} />
                             </TouchableOpacity>
                         </View> : <View style={{ flex: 0.1 }} />}
+
+                    {isSameUser?    
                     <TouchableOpacity
                         style={{ flex: 0.1, height: moderateScale(25) }}
                         onPress={() => {
@@ -191,7 +193,7 @@ function ProductDetailView(props) {
                         <Image source={Icons.icon_kebab} resizeMode='contain'
                             style={{ height: moderateScale(25) }} />
 
-                    </TouchableOpacity>
+                    </TouchableOpacity>:<View/>}
                 </View>
 
             </View>

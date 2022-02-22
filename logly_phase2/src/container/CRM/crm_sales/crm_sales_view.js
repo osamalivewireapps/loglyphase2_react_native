@@ -30,17 +30,20 @@ function CRMSalesView(props) {
     const [saleDetail, setSaleDetail] = useState({});
     useEffect(() => {
         let tmp = [];
-        tmp = props.saleDetail?.animals.concat(props.saleDetail?.products)
-        setOrderSummaryList(tmp)
-        setSaleDetail(props.saleDetail)
-        console.log('installment data--->', props.saleDetail)
+        console.log('sale detail--->', props.saleDetail)
+        if (props.saleDetail && (props.saleDetail.animals || props.saleDetail.products)){
+            tmp = props.saleDetail?.animals.concat(props.saleDetail?.products)
+            setOrderSummaryList(tmp)
+            setSaleDetail(props.saleDetail)
+            console.log('installment data--->', props.saleDetail)
+        }
     }, [props.saleDetail])
 
-    useEffect(()=>{
-            setSaleDetail({})
-            setOrderSummaryList([])
-        
-    },[])
+    useEffect(() => {
+        setSaleDetail({})
+        setOrderSummaryList([])
+
+    }, [])
 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
@@ -152,7 +155,7 @@ function CRMSalesView(props) {
 
                                     }}
                                 >
-                                    {saleDetail.updatedAt?moment(saleDetail.updatedAt).format('DD MMM,YYYY'):''}
+                                    {saleDetail.updatedAt ? moment(saleDetail.updatedAt).format('DD MMM,YYYY') : ''}
                                 </AutoSizeText>
                             </View>
                             <View style={{
@@ -226,7 +229,7 @@ function CRMSalesView(props) {
                                 <View style={{
                                     ...CRMStyles.boxcontainer,
                                     shadowOpacity: 0.09,
-                                    marginTop:verticalScale(10),
+                                    marginTop: verticalScale(10),
                                     height: verticalScale(55),
                                     borderRadius: moderateScale(15),
                                     flexDirection: 'row', alignItems: 'center', marginStart: moderateScale(25),
@@ -450,7 +453,7 @@ function CRMSalesView(props) {
 
                             }}
                         >
-                            {saleDetail.tax ? saleDetail.tax.toFixed(2):''}%
+                            {saleDetail.tax ? saleDetail.tax.toFixed(2) : ''}%
                         </AutoSizeText>
                     </View>
                     <View style={{
@@ -487,7 +490,7 @@ function CRMSalesView(props) {
 
                             }}
                         >
-                            ${saleDetail.price ? Math.round((utils.CalculateTaxAmount(saleDetail.price, saleDetail.tax) + Number.EPSILON) * 100) / 100:''}
+                            ${saleDetail.price ? Math.round((utils.CalculateTaxAmount(saleDetail.price, saleDetail.tax) + Number.EPSILON) * 100) / 100 : ''}
                         </AutoSizeText>
                     </View>
 
@@ -532,21 +535,21 @@ function CRMSalesView(props) {
 
                             }}
                         >
-                            ${saleDetail.price?(saleDetail.totalPrice ? saleDetail.totalPrice : utils.CalculateTaxAmount(saleDetail.price, saleDetail.tax)):''}
+                            ${saleDetail.price ? (saleDetail.totalPrice ? saleDetail.totalPrice : utils.CalculateTaxAmount(saleDetail.price, saleDetail.tax)) : ''}
                         </AutoSizeText>
 
-                       
+
                     </View>
-                    {saleDetail.installmentData?
-                    <FlatList
-                        data={props.saleDetail.installmentData}
-                        contentContainerStyle={{
-                            marginBottom: verticalScale(10)
-                        }}
-                        renderItem={({ item, index }) => {
-                            return renderBreedItem(item, index);
-                        }}
-                    />:null}
+                    {saleDetail.installmentData ?
+                        <FlatList
+                            data={props.saleDetail.installmentData}
+                            contentContainerStyle={{
+                                marginBottom: verticalScale(10)
+                            }}
+                            renderItem={({ item, index }) => {
+                                return renderBreedItem(item, index);
+                            }}
+                        /> : null}
 
                 </View>
             </ScrollView>
@@ -563,7 +566,7 @@ function CRMSalesView(props) {
                 padding: moderateScale(10),
                 paddingStart: moderateScale(15),
                 paddingEnd: moderateScale(15),
-                alignItems: 'center', 
+                alignItems: 'center',
                 marginStart: moderateScale(20),
                 marginEnd: moderateScale(20),
                 marginBottom: moderateScale(10)

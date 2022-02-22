@@ -28,7 +28,7 @@ function CRMCustomerDetailView(props) {
 
     useEffect(() => {
 
-        if (customerDetail) {
+        if (customerDetail && customerDetail.length>0) {
             let totalPrice = 0;
             customerDetail.forEach((value) => { totalPrice = totalPrice + value.totalPrice });
             setTotalPurchase(Math.round(totalPrice));

@@ -40,7 +40,7 @@
 		</dict>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string></string>
+	<string>Logly need access camera for gallery and QRCode</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPhotoLibraryAddUsageDescription</key>

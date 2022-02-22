@@ -252,7 +252,7 @@ export const addScheduleActivity = (dataToSubmit) => async (dispatch) => {
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .post(`${baseUrl}/activity`, dataToSubmit, config)
+            .post(`${baseUrl}/activity/create`, dataToSubmit, config)
             .then(response => {
 
                 console.log('response-->', response);
@@ -292,7 +292,7 @@ export const updateActivityType = (id, dataToSubmit) => async (dispatch) => {
     return new Promise((resolve) => {
         dispatch(EnableLoader());
         axios
-            .put(`${baseUrl}/activity/${id}`, dataToSubmit, config)
+            .put(`${baseUrl}/activity/v2/${id}`, dataToSubmit, config)
             .then(response => {
 
                 console.log('response-->', response);

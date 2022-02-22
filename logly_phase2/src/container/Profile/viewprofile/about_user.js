@@ -178,8 +178,8 @@ function AboutUserView(props) {
 
                     }}
                 >
-                    {userObject.description}
-                    {/* {userObject.businessDetails !== null && userObject.businessDetails ? userObject.businessDetails?.businessInfo : ''} */}
+                    {/* {userObject.description} */}
+                    {userObject.businessDetails !== null && userObject.businessDetails ? userObject.businessDetails?.businessInfo : ''}
                 </AutoSizeText>
 
                 {accountType !== INDIVIDUAL ? <View>
@@ -276,7 +276,8 @@ function AboutUserView(props) {
     }
 
     function manipulateOperatingHours(businessDetails){
-        businessDetails !== null && businessDetails &&
+
+        return businessDetails !== null && businessDetails &&
             businessDetails.openHrStart !== null &&
             businessDetails.openHrEnd !== null ?
             moment(businessDetails.openHrStart.includes('Z') ?

@@ -16,6 +16,7 @@ import { connect, useDispatch } from 'react-redux';
 import { getScheduleData } from '../../../actions/ActivityManagement';
 import { SectionList } from 'react-native';
 import moment from 'moment';
+import { values } from 'lodash';
 
 
 function ScheduleListingView(props) {
@@ -44,62 +45,189 @@ function ScheduleListingView(props) {
         getScheduleActivitiesList(filterSchedule)
     }, [filterSchedule]);
 
+    let today = moment().format('ddd');
+    let tomorrow = moment().add(1, 'days').format('ddd');
+    let currentMonth = moment().format('MMM');
+    let currentYear = moment().format('YYYY');
+    let futureDay = moment().add(2, 'days').format('ddd');
+
     function getScheduleActivitiesList(response) {
 
         if (!response || response.length === 0)
             return;
 
+
+        let listToday = response.filter((value) => value.period.toLowerCase().includes('daily'));
+        let listTommorow = listToday.concat([]);
+        let listFuture = listToday.concat([]);
+
+        // response.forEach(value => {
+        //     if (value.period.toLowerCase().includes('weekly')) {
+        //         pushDataByDay(value, listToday, listTommorow, listFuture)
+        //     }
+        //     else if (value.period.toLowerCase().includes('monthly')) {
+        //         if (value.months.find(months => months.includes(currentMonth))) {
+        //             value.days.forEach(element => {
+        //                 console.log('element--->', element)
+        //                 if (element === today) {
+        //                     listToday.push({ ...value, days: element });
+        //                 } else if (element === tomorrow) {
+        //                     listTommorow.push({ ...value, days: element });
+        //                 } else {
+        //                     listFuture.push({ ...value, days: element });
+        //                 }
+        //             })
+        //         }
+
+        //         else {
+        //             value.days.forEach(element => {
+        //                 listFuture.push({ ...value, days: element });
+        //             })
+        //         }
+        //     }
+        //     else if (value.period.toLowerCase().includes('yearly')) {
+        //         value.years.forEach(tmpYear => {
+        //             if (tmpYear === currentYear) {
+
+        //                 value.months.forEach(monthElement => {
+        //                     if (monthElement === currentMonth) {
+        //                         value.days.forEach(element => {
+        //                             console.log('element--->', element)
+        //                             if (element === today) {
+        //                                 listToday.push({ ...value, days: element, months: monthElement, years: currentYear });
+        //                             } else if (element === tomorrow) {
+        //                                 listTommorow.push({ ...value, days: element, months: monthElement, years: currentYear });
+        //                             } else {
+        //                                 listFuture.push({ ...value, days: element, months: monthElement, years: currentYear });
+        //                             }
+        //                         })
+        //                     } else {
+        //                         value.days.forEach(element => {
+        //                             listFuture.push({ ...value, days: element, months: monthElement, years: currentYear });
+        //                         })
+        //                     }
+        //                 })
+        //             }
+        //             else {
+        //                 value.months.forEach(monthElement => {
+        //                     if (monthElement === currentMonth) {
+        //                         value.days.forEach(element => {
+        //                             listFuture.push({ ...value, days: element, months: monthElement });
+        //                         })
+        //                     }
+        //                 })
+        //             }
+        //         })
+        //     }
+        // });
+
+        response.forEach(value => {
+            if (value.period.toLowerCase().includes('weekly')) {
+                pushDataByDay(value, listToday, listTommorow, listFuture)
+            }
+            else if (value.period.toLowerCase().includes('monthly')) {
+                if (value.months.includes(currentMonth)) {
+                    pushDataByDay(value, listToday, listTommorow, listFuture)
+                } else
+                    listFuture.push(value)
+            }
+            else if (value.period.toLowerCase().includes('yearly')) {
+                if (value.years.includes(currentYear)) {
+                    if (value.months.includes(currentMonth)) {
+                        pushDataByDay(value, listToday, listTommorow, listFuture)
+                    } else
+                        listFuture.push(value)
+                } else {
+                    listFuture.push(value)
+                }
+            }
+        });
         let tmp = [];
-        let time = response[0].createdAt;
-        let schData = response;
 
-        if (response)
-            console.log('schedule data-->', time);
+        if (listToday.length > 0)
+            tmp.push({
+                title: 'Today', data: listToday
+            })
 
-        if (schData) {
-            time = getTimeFormat(time)
+        if (listTommorow.length > 0)
+            tmp.push({
+                title: 'Tomorrow', data: listTommorow
+            })
+        if (listFuture.length > 0)
+            tmp.push({
+                title: 'Upcoming', data: listFuture
+            })
+        setListSchedule(tmp)
+        // console.log('today--->', tomorrow);
+        // let tmp = [];
+        // let time = response[0].createdAt;
+        // let schData = response;
 
-            schData.forEach((element, index) => {
+        // if (schData) {
+
+        // }
+        // let tmp = [];
+        // let time = response[0].createdAt;
+        // let schData = response;
+
+        // if (response)
+        //     console.log('schedule data-->', time);
+
+        // if (schData) {
+        //     time = getTimeFormat(time)
+
+        //     schData.forEach((element, index) => {
 
 
-                console.log('time456--->', time)
+        //         console.log('time456--->', time)
 
-                if (time.includes(getTimeFormat(element.createdAt))) {
-                    console.log(`index${index} first--->`, time)
-                    if (index === schData.length - 1) {
-                        tmp.push({
-                            title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
-                        })
-                    }
-                }
-              
-                else {
-                    console.log(`index${index} second--->`, time)
-                    tmp.push({
-                        title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
-                    })
-                    console.log('time data--->', tmp)
-                    time = getTimeFormat(element.createdAt)
+        //         if (time.includes(getTimeFormat(element.createdAt))) {
+        //             console.log(`index${index} first--->`, time)
+        //             if (index === schData.length - 1) {
+        //                 tmp.push({
+        //                     title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
+        //                 })
+        //             }
+        //         }
 
-                    if (index === schData.length - 1) {
-                        tmp.push({
-                            title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
-                        })
-                    }
-                }
-            });
-            setListSchedule(tmp)
-        }
+        //         else {
+        //             console.log(`index${index} second--->`, time)
+        //             tmp.push({
+        //                 title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
+        //             })
+        //             console.log('time data--->', tmp)
+        //             time = getTimeFormat(element.createdAt)
+
+        //             if (index === schData.length - 1) {
+        //                 tmp.push({
+        //                     title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
+        //                 })
+        //             }
+        //         }
+        //     });
+        //     setListSchedule(tmp)
+        // }
 
     }
+
+    function pushDataByDay(value, listToday, listTommorow, listFuture) {
+        if (value.days.find(days => days.includes(today))) {
+            listToday.push(value);
+        } else if (value.days.find(days => days.includes(tomorrow))) {
+            listTommorow.push(value)
+        } else {
+            listFuture.push(value)
+        }
+    }
     return (
-        <View style={{height:'100%'}}>
+        <View style={{ height: '100%' }}>
 
             <SectionList
+                stickySectionHeadersEnabled={false}
                 sections={listSchedule}
                 keyExtractor={(item, index) => item + index}
                 contentContainerStyle={{
-                    paddingBottom:verticalScale(50)
+                    paddingBottom: verticalScale(50)
                 }}
                 renderItem={({ item }) => {
                     return (
@@ -146,7 +274,8 @@ function ScheduleListingView(props) {
 
                                     }}
                                 >
-                                    {moment(item.createdAt).format('DD MMM, hh:mm:ss A')}
+                                    {item.time}
+                                    {/* {moment(item.createdAt).format('DD MMM, hh:mm:ss A')} */}
                                 </AutoSizeText>
 
 
@@ -189,7 +318,7 @@ function ScheduleListingView(props) {
         </View>
     );
 
-    function getTimeFormat(time){
+    function getTimeFormat(time) {
         let tmp = moment(time).calendar(null, {
             sameDay: '[Today]',
             nextDay: '[Tomorrow]',
@@ -199,7 +328,7 @@ function ScheduleListingView(props) {
             sameElse: '[Past]'
 
         })
-        console.log('tmp-->',tmp)
+        console.log('tmp-->', tmp)
         return tmp;
     }
 }

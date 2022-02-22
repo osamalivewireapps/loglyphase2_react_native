@@ -28,7 +28,7 @@ function EditProfileView(props) {
         enterZipCode, validateZipCode, setZipCode, zipCodes, description,
         nameBus, validateBusName, setBusName,
         validateBusEmp, setEmpStrength, strengthEmp,
-        urlBus, validateBusURL, setBusUrl, accountType } = props;
+        urlBus, validateBusURL, setBusUrl, accountType,userObject } = props;
 
 
 
@@ -101,7 +101,7 @@ function EditProfileView(props) {
             setValueName(name);
             setValueEmail(email);
             setValuePhone(phone);
-            setDescription(description);
+            setDescription(userObject.businessDetails !== null && userObject.businessDetails ? userObject.businessDetails?.businessInfo : '');
             console.log('url--->', urlBus)
         }
     }, [name]);

@@ -47,7 +47,7 @@ export default class DataHandler {
         try {
             let value = await AsyncStorage.getItem(accountType);
             if (value !== null) {
-                console.log("get accountType---->", value);
+                //console.log("get accountType---->", value);
                 return value;
             }
 

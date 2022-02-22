@@ -26,8 +26,9 @@ class App extends React.Component {
 
   constructor() {
     super();
-
-    LogBox.ignoreAllLogs();
+    console.disableYellowBox = true;
+    LogBox.ignoreLogs(["Warning: Each", "Warning: Failed"]); // Ignore log notification by message
+    LogBox.ignoreAllLogs();//Ignore all log notifications
   }
 
   render() {

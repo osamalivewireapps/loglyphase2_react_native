@@ -140,17 +140,18 @@ function AboutPetView(props) {
                         }}>Featured
                     </Text>
                 </View>
-                <CustomButton
-                    styles={{ height: '100%', width: '75%', alignItems: 'flex-end' }}
-                    isSameUser={isSameUser}
-                    onPress={() => updateStatusFeatured()}>
-                    <Image
-                        source={animalData.featured ? Icons.icon_toggle_on : Icons.icon_toggle_off}
-                        resizeMode='contain'
-                        style={{ height: verticalScale(15), width: moderateScale(30) }}
+                {isSameUser ?
+                    <CustomButton
+                        styles={{ height: '100%', width: '75%', alignItems: 'flex-end' }}
+                        isSameUser={isSameUser}
+                        onPress={() => updateStatusFeatured()}>
+                        <Image
+                            source={animalData.featured ? Icons.icon_toggle_on : Icons.icon_toggle_off}
+                            resizeMode='contain'
+                            style={{ height: verticalScale(15), width: moderateScale(30) }}
 
-                    />
-                </CustomButton>
+                        />
+                    </CustomButton> : <View />}
             </View>
 
             <View style={{
@@ -182,18 +183,18 @@ function AboutPetView(props) {
                     </Text>
 
                 </View>
+                {isSameUser ?
+                    <CustomButton
+                        isSameUser={isSameUser}
+                        styles={{ width: '75%', alignItems: 'flex-end' }}
+                        onPress={() => updatePrivacyStatus()}>
+                        <Image
+                            source={animalData.isPrivate ? Icons.icon_toggle_on : Icons.icon_toggle_off}
+                            resizeMode='contain'
+                            style={{ height: verticalScale(15), width: moderateScale(30) }}
 
-                <CustomButton
-                    isSameUser={isSameUser}
-                    styles={{ width: '75%', alignItems: 'flex-end' }}
-                    onPress={() => updatePrivacyStatus()}>
-                    <Image
-                        source={animalData.isPrivate ? Icons.icon_toggle_on : Icons.icon_toggle_off}
-                        resizeMode='contain'
-                        style={{ height: verticalScale(15), width: moderateScale(30) }}
-
-                    />
-                </CustomButton>
+                        />
+                    </CustomButton> : <View />}
             </View>
 
             <Text
@@ -220,6 +221,7 @@ function AboutPetView(props) {
                 }}>{animalData.data?.Notes}
             </Text>
 
+            {isSameUser?
             <FlatList
                 data={TABS}
                 numColumns={4}
@@ -231,37 +233,38 @@ function AboutPetView(props) {
                 renderItem={({ item, index }) => {
 
                     return (
+                        
                         <CustomButton
-                            isSameUser={isSameUser} 
+                            isSameUser={isSameUser}
                             styles={{
-                            backgroundColor: '#F5F5F5',
-                            borderRadius: moderateScale(10),
-                            height: verticalScale(30),
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            flex: 1,
-                            marginEnd: moderateScale(5),
-                        }} onPress={() => {
-                            setTabsSelect(index);
+                                backgroundColor: '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                height: verticalScale(30),
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                flex: 1,
+                                marginEnd: moderateScale(5),
+                            }} onPress={() => {
+                                setTabsSelect(index);
 
-                            if (index === 0)
-                                props.navigation.navigate('CreateActivity', { id: animalData._id })
-                            else if (index === 1) {
+                                if (index === 0)
+                                    props.navigation.navigate('CreateActivity', { id: animalData._id })
+                                else if (index === 1) {
 
-                                if (animalData.data.quantity > 0)
-                                    props.navigation.navigate('TransferListing', {
-                                        animalData: animalData, updateAnimalList: (e) => {
-                                            console.log('transfer quantity-->', e)
-                                            props.route.params.updateAnimal();
-                                            dispatch(getAnimal(props.route.params.id));
-                                        }
-                                    })
-                                else
-                                    Util.topAlert('No Animal left')
-                            } else {
-                                setModalVisible(true)
-                            }
-                        }}>
+                                    if (animalData.data.quantity > 0)
+                                        props.navigation.navigate('TransferListing', {
+                                            animalData: animalData, updateAnimalList: (e) => {
+                                                console.log('transfer quantity-->', e)
+                                                props.route.params.updateAnimal();
+                                                dispatch(getAnimal(props.route.params.id));
+                                            }
+                                        })
+                                    else
+                                        Util.topAlert('No Animal left')
+                                } else {
+                                    setModalVisible(true)
+                                }
+                            }}>
 
                             <AutoSizeText
                                 numberOfLines={1}
@@ -281,7 +284,10 @@ function AboutPetView(props) {
                     );
                 }}
 
-            />
+                /> : <View style={{
+                    paddingStart: moderateScale(10),
+                    paddingEnd: moderateScale(10),
+                    padding: moderateScale(50), paddingTop: moderateScale(10),}}/>}
 
             {modalVisible ? showQrCode() : null}
         </View>

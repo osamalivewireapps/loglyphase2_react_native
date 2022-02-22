@@ -447,7 +447,7 @@ function ProfileView(props) {
                 );
 
             case 4:
-                return (<PetListing {...props} isSameUser={isSameUser}/>)
+                return (<PetListing {...props} isSameUser={isSameUser} memberId={props.route.params?.id}/>)
 
 
 

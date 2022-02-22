@@ -17,7 +17,7 @@ import moment from 'moment';
 import ImageBlurLoading from 'react-native-image-blur-loading';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { TextInput } from 'react-native';
-import { getAnimals } from '../../../actions/AnimalModule';
+import { getAnimals, getAnimalsById } from '../../../actions/AnimalModule';
 
 function PetListing(props) {
 
@@ -27,6 +27,7 @@ function PetListing(props) {
 
     const isTablet = DeviceInfo.isTablet();
 
+    const { isSameUser, memberId } = props;
 
     const dispatch = useDispatch();
 
@@ -98,7 +99,7 @@ function PetListing(props) {
                         return (
                             <TouchableOpacity
                                 onPress={() => {
-                                    props.navigation.navigate('PetDetail', { id: item._id, updateAnimal:(e)=>getAnimalsList(e) })
+                                    props.navigation.navigate('PetDetail', { id: item._id, updateAnimal: (e) => getAnimalsList(e) })
                                 }}
                                 style={{
                                     ...styles.boxcontainer,
@@ -276,14 +277,25 @@ function PetListing(props) {
     </ScrollView>);
 
 
-function getAnimalsList(){
-    dispatch(getAnimals('Active')).then((response) => {
-        console.log("animal list---->", response.payload)
-        setOrgAnimalList(response.payload);
-        setAnimalList(response.payload);
+    function getAnimalsList() {
 
-    })
-}
+        if (isSameUser)
+            dispatch(getAnimals('Active')).then((response) => {
+                console.log("animal list---->", response.payload)
+                setOrgAnimalList(response.payload);
+                setAnimalList(response.payload);
+
+            })
+
+        else { 
+            dispatch(getAnimalsById(memberId)).then((response) => {
+                console.log("animal list---->", response.payload)
+                setOrgAnimalList(response.payload);
+                setAnimalList(response.payload);
+
+            })
+        }
+    }
 }
 
 const styles = StyleSheet.create({

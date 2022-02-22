@@ -459,12 +459,12 @@ function BusProfileView(props) {
 
                             if (validateSpecificFields()) {
                                 let busDetail = {};
-                                busDetail.description = valueDesc;
+                                //busDetail.description = valueDesc;
                                 if (accountType === INDIVIDUAL) {
-                                    //busDetail.businessInfo = valueDesc;
+                                    busDetail.businessInfo = valueDesc;
                                     busDetail.imageUrl = photoUri;
                                 } else {
-                                    //busDetail.businessInfo = valueDesc;
+                                    busDetail.businessInfo = valueDesc;
                                     busDetail.daysOpen = selectWeekFrequency
                                     busDetail.openHrStart = moment(valueStartBusTiming).format('YYYY-MM-DDTHH:mm')
                                     busDetail.openHrEnd = moment(valueEndBusTiming).format('YYYY-MM-DDTHH:mm')

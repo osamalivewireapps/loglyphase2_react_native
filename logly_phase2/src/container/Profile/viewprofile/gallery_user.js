@@ -37,7 +37,7 @@ function GalleryUser(props) {
         },
     };
 
-    const { userObject, accountType, updateUser,isSameUser } = props;
+    const { userObject, accountType, updateUser, isSameUser } = props;
     const dispatch = useDispatch();
     const [listFileUri, setListFileUri] = useState([])
 
@@ -60,20 +60,21 @@ function GalleryUser(props) {
                 style={{ flex: 1, paddingStart: moderateScale(20) }}
                 listCollection={listFileUri} removeImage={(e) => removeImage(e)} />
 
-            <CustomButton
-                isSameUser={isSameUser} styles={{
-                ...styles.styleButtons, flex: 0,
-                margin: verticalScale(25),
-                marginStart: moderateScale(25),
-                marginTop: verticalScale(15)
-            }} onPress={() => { getPic('gallery') }}>
-                <Text style={{
-                    ...styles.generalTxt,
-                    fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
-                    paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
+            {isSameUser ?
+                <CustomButton
+                    isSameUser={isSameUser} styles={{
+                        ...styles.styleButtons, flex: 0,
+                        margin: verticalScale(25),
+                        marginStart: moderateScale(25),
+                        marginTop: verticalScale(15)
+                    }} onPress={() => { getPic('gallery') }}>
+                    <Text style={{
+                        ...styles.generalTxt,
+                        fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
+                        paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
-                }}>Add Photos</Text>
-            </CustomButton>
+                    }}>Add Photos</Text>
+                </CustomButton> : null}
         </View>
     )
 

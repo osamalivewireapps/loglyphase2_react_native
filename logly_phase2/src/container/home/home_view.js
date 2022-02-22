@@ -5,7 +5,7 @@
 /* eslint-disable keyword-spacing */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
@@ -14,6 +14,7 @@ import { Colors, Fonts, Icons, Images } from '../../theme';
 import DeviceInfo from 'react-native-device-info';
 import * as Animatable from 'react-native-animatable';
 import Util from '../../utils';
+import { useCallback } from 'react';
 
 
 function HomeView(props) {
@@ -26,51 +27,71 @@ function HomeView(props) {
     const PET_ACTIVITY =
         accountType && accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()) ?
             [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }, { bg: Icons.icon_marketing, txt: 'Marketing' }] :
-            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' }]
+            [{ bg: Images.img_pet_profile, txt: 'Pet Profiles' }, { bg: Images.img_activity, txt: 'Activity' }, { bg: Icons.icon_reg_product, txt: 'Product\nInventory' }, { bg: Icons.icon_marketing, txt: 'Marketing' }];
 
 
     const rotateValueHolder = useRef(new Animated.Value(0)).current;
 
     const fadeAnim = useRef(new Animated.Value(0)).current;
 
+
     const fadeIn = () => {
         Animated.timing(fadeAnim, {
             toValue: 1,
-            duration: 0
+            duration: 0,
         }).start();
     };
 
     const fadeOut = () => {
         Animated.timing(fadeAnim, {
             toValue: 0,
-            duration: 0
+            duration: 0,
         }).start();
     };
 
+    const marqueeAnimals = [
+        ' Feed an Animal', ' Support a Non-Profit', ' Become a Foster',
+        ' Volunteer',
+    ];
 
+    const bgColors = ["#4B24D5", "#39A8D6", "#45D685", "#C737AF", "#E58C45"];
+    const [newName, setnewName] = useState(" Feed an Animal");
+    const [newBgColor, setBgColor] = useState('#4B24D5');
+  
+    const shuffle = useCallback(() => {
+        const index = Math.floor(Math.random() * marqueeAnimals.length);
+        setnewName(marqueeAnimals[index]);
+        setBgColor(bgColors[index]);
+    }, []);
 
+    useEffect(() => {
+        const intervalID = setInterval(shuffle, 1500);
+        return () => clearInterval(intervalID);
+    }, [shuffle]);
+
+ 
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
             <View style={{ padding: moderateScale(25), flexDirection: 'row', flex: 1, alignItems: 'center' }}>
-                <TouchableOpacity onPress={() => { toggleDrawer.toggleDrawer() }}>
-                    <Image source={Icons.icon_burger_menu} resizeMode='contain' style={{ height: moderateScale(25), width: moderateScale(25) }} />
+                <TouchableOpacity onPress={() => { toggleDrawer.toggleDrawer(); }}>
+                    <Image source={Icons.icon_burger_menu} resizeMode="contain" style={{ height: moderateScale(25), width: moderateScale(25) }} />
                 </TouchableOpacity>
                 <View style={{ flex: 1, flexDirection: 'row', justifyContent: 'flex-end' }}>
-                    
+
                     <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
-                        <Image source={Icons.icon_search_home} resizeMode='contain' style={{ height: '100%', width: '100%' }} />
+                        <Image source={Icons.icon_search_home} resizeMode="contain" style={{ height: '100%', width: '100%' }} />
                     </TouchableOpacity>
-                    <Image source={Icons.icon_notification} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    <Image source={Icons.icon_notification} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('QrScan')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
 
-                        <Image source={Icons.icon_qrcode} resizeMode='contain' style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                        <Image source={Icons.icon_qrcode} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
                     </TouchableOpacity>
 
                 </View>
             </View>
-            <ScrollView keyboardShouldPersistTaps='handled'>
+            <ScrollView keyboardShouldPersistTaps="handled">
                 <View style={{}}>
 
 
@@ -79,12 +100,12 @@ function HomeView(props) {
                         fontFamily: Fonts.type.bold,
                         fontSize: moderateScale(30),
                         marginEnd: moderateScale(25),
-                        marginStart: moderateScale(25)
+                        marginStart: moderateScale(25),
                     }}>Welcome,</Text>
                     <Text style={{
                         ...styles.generalTxt,
                         marginEnd: moderateScale(25),
-                        marginStart: moderateScale(25)
+                        marginStart: moderateScale(25),
                     }}>{userObject.name}</Text>
 
                     <FlatList
@@ -97,54 +118,53 @@ function HomeView(props) {
                                 <TouchableOpacity
                                     onPress={() => {
                                         if (index === 0) {
-                                            props.navigation.navigate('PetProfile')
+                                            props.navigation.navigate('PetProfile');
                                         } else if (index === 1) {
-                                            props.navigation.navigate('ScheduleListingActivity')
+                                            props.navigation.navigate('ScheduleListingActivity');
                                         }
                                         else if (index === 2) {
-                                            if (accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase()))
-                                                Util.topAlert('Coming Soon')
+                                            if (accountType.toLowerCase().includes(INDIVIDUAL.toLowerCase())) { Util.topAlert('Coming Soon') }
                                             else {
-                                                props.navigation.navigate('ProductListing')
-                                            }
+                                            props.navigation.navigate('ProductListing');
                                         }
+                                    }
                                         else if (index === 3) {
-                                            Util.topAlert('Coming Soon')
-                                        }
-                                    }}
-                                    style={{
-                                        borderRadius: moderateScale(10),
-                                        width: Dimensions.get('screen').width / moderateScale(2.2),
-                                        height: verticalScale(160),
-                                        marginEnd: moderateScale(10),
-                                        alignItems: 'flex-start',
-                                        justifyContent: 'flex-end',
-                                        marginStart: index === 0 ? moderateScale(25) : 0,
-                                    }}
-                                >
-                                    <Image
-                                        source={item.bg}
-                                        resizeMode='stretch'
-                                        style={{
-                                            position: 'absolute',
-                                            width: '100%',
-                                            height: '100%',
-                                        }} />
+                                Util.topAlert('Coming Soon');
+                            }
+                        }}
+                        style={{
+                            borderRadius: moderateScale(10),
+                            width: Dimensions.get('screen').width / moderateScale(2.2),
+                            height: verticalScale(160),
+                            marginEnd: moderateScale(10),
+                            alignItems: 'flex-start',
+                            justifyContent: 'flex-end',
+                            marginStart: index === 0 ? moderateScale(25) : 0,
+                        }}
+                    >
+                        <Image
+                            source={item.bg}
+                            resizeMode="stretch"
+                            style={{
+                                position: 'absolute',
+                                width: '100%',
+                                height: '100%',
+                            }} />
 
-                                    <AutoSizeText
-                                        numberOfLines={2}
-                                        minFontSize={moderateScale(14)}
-                                        fontSize={moderateScale(16)}
-                                        mode={ResizeTextMode.max_lines}
-                                        style={{
-                                            fontFamily: Fonts.type.bold,
-                                            color: 'white',
-                                            marginBottom: verticalScale(15),
-                                            marginStart: moderateScale(15)
-                                        }}>{item.txt}
-                                    </AutoSizeText>
-                                </TouchableOpacity>
-                            )
+                        <AutoSizeText
+                            numberOfLines={2}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
+                            mode={ResizeTextMode.max_lines}
+                            style={{
+                                fontFamily: Fonts.type.bold,
+                                color: 'white',
+                                marginBottom: verticalScale(15),
+                                marginStart: moderateScale(15),
+                            }}>{item.txt}
+                        </AutoSizeText>
+                    </TouchableOpacity>
+                    );
                         }}
 
 
@@ -156,7 +176,7 @@ function HomeView(props) {
                         fontSize: moderateScale(24),
                         marginTop: verticalScale(20),
                         marginEnd: moderateScale(25),
-                        marginStart: moderateScale(25)
+                        marginStart: moderateScale(25),
                     }}>Services</Text>
 
                     <FlatList
@@ -180,12 +200,12 @@ function HomeView(props) {
                                         justifyContent: 'center',
                                         marginEnd: moderateScale(10),
                                         marginStart: index === 0 ? moderateScale(25) : 0,
-                                        backgroundColor: item.bg
+                                        backgroundColor: item.bg,
                                     }}
                                 >
                                     <Image
                                         source={item.url}
-                                        resizeMode='contain'
+                                        resizeMode="contain"
                                         resizeMethod="auto"
                                         style={{ width: '60%', height: '60%' }}
                                     />
@@ -199,11 +219,11 @@ function HomeView(props) {
                                             ...styles.generalTxt,
                                             fontFamily: Fonts.type.bold,
                                             color: 'white',
-                                            paddingTop: verticalScale(10)
+                                            paddingTop: verticalScale(10),
                                         }}>{item.name}
                                     </AutoSizeText>
                                 </TouchableOpacity>
-                            )
+                            );
                         }}
 
 
@@ -223,29 +243,32 @@ function HomeView(props) {
                             marginStart: moderateScale(25),
                             justifyContent: 'center',
                             alignItems: 'center',
-                            backgroundColor: '#4B24D5'
+                            backgroundColor: newBgColor,
                         }}
                     >
                         <Image
                             source={Images.img_donate}
-                            resizeMode='contain'
+                            resizeMode="contain"
                             style={{
                                 flex: 0.35,
                                 height: '100%',
                             }}
                         />
 
-                        <Text
+                        <AutoSizeText
                             numberOfLines={1}
+                            minFontSize={moderateScale(14)}
+                            fontSize={moderateScale(16)}
+                            mode={ResizeTextMode.max_lines}
                             style={{
                                 ...styles.generalTxt,
                                 fontFamily: Fonts.type.bold,
                                 color: 'white',
                                 flex: 0.45,
-                                marginStart: moderateScale(-50),
-                                textAlign: 'center',
-                            }}>Feed an animal
-                        </Text>
+                                marginStart: moderateScale(-45),
+                                textAlign: 'left',
+                            }}>{newName}
+                        </AutoSizeText>
 
 
                         <TouchableOpacity
@@ -280,7 +303,7 @@ function HomeView(props) {
                         fontSize: moderateScale(24),
                         marginEnd: moderateScale(25),
                         marginStart: moderateScale(25),
-                        marginTop: verticalScale(20)
+                        marginTop: verticalScale(20),
                     }}>Logly Community</Text>
 
                     <FlatList
@@ -288,16 +311,17 @@ function HomeView(props) {
                         horizontal
                         contentContainerStyle={{
                             justifyContent: 'center', alignItems: 'center', marginTop: verticalScale(10),
-                            marginBottom: verticalScale(10)
+                            marginBottom: verticalScale(10),
                         }}
                         data={LOGLY_COMMUNITY}
                         renderItem={({ item, index }) => {
                             return (
                                 <TouchableOpacity
 
-                                    onPress={() =>
+                                    onPress={() =>{
                                         //props.navigation.navigate('AppointmentListing')
                                         Util.topAlert('Coming Soon')
+                                    }
                                     }
                                     style={{
                                         borderRadius: moderateScale(15),
@@ -307,7 +331,7 @@ function HomeView(props) {
                                         justifyContent: 'center',
                                         marginEnd: moderateScale(10),
                                         marginStart: index === 0 ? moderateScale(25) : 0,
-                                        backgroundColor: item.bg
+                                        backgroundColor: item.bg,
                                     }}
                                 >
 
@@ -320,11 +344,11 @@ function HomeView(props) {
                                             ...styles.generalTxt,
                                             fontFamily: Fonts.type.bold,
                                             color: 'white',
-                                            paddingTop: verticalScale(10)
+                                            paddingTop: verticalScale(10),
                                         }}>{item.name}
                                     </AutoSizeText>
                                 </TouchableOpacity>
-                            )
+                            );
                         }}
 
 
@@ -339,7 +363,7 @@ function HomeView(props) {
                     animation="slideInUp"
                     duration={500}
                     direction="alternate"
-                    easing='linear'
+                    easing="linear"
                     onAnimationEnd={() => { }}
                     style={{
                         position: 'absolute',
@@ -356,7 +380,7 @@ function HomeView(props) {
                             width: '100%',
                             height: '100%',
                             alignItems: 'center',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
                         }}>
 
                         <ImageBackground source={Images.img_bg_quickmenu}
@@ -364,7 +388,7 @@ function HomeView(props) {
                             style={{
                                 width: '100%',
                                 height: '100%',
-                                position: 'absolute'
+                                position: 'absolute',
                             }}
                         />
 
@@ -384,7 +408,7 @@ function HomeView(props) {
                                     fontSize: moderateScale(30),
                                     marginBottom: moderateScale(30),
                                 }}>Quick Menu</Text>
-                                <View flexDirection='row' style={{
+                                <View flexDirection="row" style={{
                                 }}>
                                     {/* <Image source={Icons.icon_float_reg} resizeMode='contain'
                                 style={{ height: moderateScale(20), width: moderateScale(20) }} /> */}
@@ -459,7 +483,7 @@ function HomeView(props) {
 
                                     <TouchableOpacity
                                         onPress={() => {
-                                            props.navigation.navigate('AddTeamMember', { updateContacts: {}, isTransfer: false })
+                                            props.navigation.navigate('AddTeamMember', { updateContacts: {}, isTransfer: false });
                                         }}
                                     >
                                         <Text style={{
@@ -515,29 +539,30 @@ function HomeView(props) {
                     right: moderateScale(20),
                     position: 'absolute',
                     alignItems: 'center',
-                    justifyContent: 'center'
+                    justifyContent: 'center',
 
                 }}
                 onPress={() => {
-                    setShow(!isShow)
-                    spinImage()
+                    setShow(!isShow);
+                    spinImage();
                 }}>
                 <Image backgroundColor={isShow ? '#F7C637' : Colors.appBgColor}
                     style={{
                         height: moderateScale(50),
                         width: moderateScale(50),
                         borderRadius: moderateScale(50),
-                        position: 'absolute'
+                        position: 'absolute',
 
                     }}
 
                 />
+
                 <Animated.Image
                     source={Icons.icon_white_plus}
                     style={{
                         height: moderateScale(20),
                         width: moderateScale(20),
-                        transform: [{ rotate: isShow ? imgRotateClockWise() : imgRotateAntiClockWise() }]
+                        transform: [{ rotate: isShow ? imgRotateClockWise() : imgRotateAntiClockWise() }],
                     }}>
 
                 </Animated.Image>
@@ -571,6 +596,7 @@ function HomeView(props) {
         </View>
     );
 
+
     function spinImage() {
         rotateValueHolder.setValue(0);
         Animated.timing(rotateValueHolder, {
@@ -583,6 +609,12 @@ function HomeView(props) {
 
     function imgRotateClockWise() {
 
+        if (!isShow) {
+            return rotateValueHolder.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', '0deg'],
+            });
+        }
         return rotateValueHolder.interpolate({
             inputRange: [0, 1],
             outputRange: ['0deg', '45deg'],
@@ -591,6 +623,12 @@ function HomeView(props) {
 
     function imgRotateAntiClockWise() {
 
+        if (!isShow) {
+            return rotateValueHolder.interpolate({
+                inputRange: [0, 1],
+                outputRange: ['0deg', '0deg'],
+            });
+        }
         return rotateValueHolder.interpolate({
             inputRange: [0, 1],
             outputRange: ['45deg', '0deg'],
@@ -615,12 +653,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         elevation: verticalScale(5),
         borderRadius: moderateScale(40),
-        width: '100%'
+        width: '100%',
     },
     generalTxt: {
         color: '#464646',
         fontSize: moderateScale(16),
-        fontFamily: Fonts.type.base
+        fontFamily: Fonts.type.base,
     },
     styleTextInput: {
         fontFamily: Fonts.type.base,
@@ -631,8 +669,8 @@ const styles = StyleSheet.create({
     },
     styleButtons: {
         backgroundColor: Colors.appBgColor,
-        borderRadius: moderateScale(30)
-    }
+        borderRadius: moderateScale(30),
+    },
 });
 
 export default HomeView;

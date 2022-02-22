@@ -88,6 +88,7 @@ function GalleryUserVideos(props) {
 
             </Pages>
 
+            {isSameUser ?
             <CustomButton
                 isSameUser={isSameUser}
                 styles={{
@@ -102,7 +103,7 @@ function GalleryUserVideos(props) {
                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                 }}>Add Videos</Text>
-            </CustomButton>
+            </CustomButton>:null}
         </View>
     )
 

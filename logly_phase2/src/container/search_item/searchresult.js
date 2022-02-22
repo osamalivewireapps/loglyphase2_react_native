@@ -36,7 +36,7 @@ export default function SearchResults(props) {
         <View style={{ flex: 1 }}>
             <View>
                 <ScrollView horizontal keyboardShouldPersistTaps='handled'
-                showsHorizontalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}
                 >
                     <View style={{
                         flexDirection: 'row',
@@ -220,30 +220,33 @@ export default function SearchResults(props) {
 
         let tmp = [];
 
+        if (searchData.length === 0)
+            return
+
         switch (tabs) {
             case 0:
                 tmp = searchData;
                 break;
             case 1:
-                tmp = searchData.filter(value => value.type.toLowerCase().includes('business'));
+                tmp = searchData.filter(value => value.type?.toLowerCase().includes('business'));
                 break;
 
 
             case 2:
-                tmp = searchData.filter(value => value.type.toLowerCase().includes('pet lover'));
+                tmp = searchData.filter(value => value.type?.toLowerCase().includes('pet lover'));
                 break;
 
 
             case 3:
-                tmp = searchData.filter(value => value.type.toLowerCase().includes('animal'));
+                tmp = searchData.filter(value => value.type?.toLowerCase().includes('animal'));
                 break;
 
             case 4:
-                tmp = searchData.filter(value => value.type.toLowerCase().includes('product'));
+                tmp = searchData.filter(value => value.type?.toLowerCase().includes('product'));
                 break;
 
-            case 4:
-                tmp = searchData.filter(value => value.type.toLowerCase().includes('charity'));
+            case 5:
+                tmp = searchData.filter(value => value.type?.toLowerCase().includes('charity'));
                 break;
 
 

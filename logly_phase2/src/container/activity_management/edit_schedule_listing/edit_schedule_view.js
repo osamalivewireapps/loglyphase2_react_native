@@ -16,6 +16,7 @@ import { Platform } from 'react-native';
 import Util from '../../../utils';
 import { getScheduleData, updateActivityType } from '../../../actions/ActivityManagement';
 import { useDispatch } from 'react-redux';
+import moment from 'moment';
 
 function EditScheduleView(props) {
 
@@ -163,7 +164,7 @@ function EditScheduleView(props) {
                                         ...styles.generalTxt,
                                         fontFamily: Fonts.type.medium,
                                         color: Colors.appBgColor
-                                    }}>{data.time[0]}
+                                    }}>{data.time}
                                 </AutoSizeText>
                             </View>
 
@@ -214,7 +215,7 @@ function EditScheduleView(props) {
                                         style={{
                                             ...styles.generalTxt,
                                             color: Colors.appBgColor
-                                        }}>{data.days[0] ? data.days[0]:data.date}
+                                        }}>{data.days}
                                     </AutoSizeText>
                                 </View>
 
@@ -256,7 +257,7 @@ function EditScheduleView(props) {
                         </View>
 
 
-                        {!data.description ?
+                        {!data.isPerformed ?
                             <TouchableOpacity style={{
                                 ...styles.styleButtons, flex: 0,
                                 marginTop: verticalScale(25),
@@ -268,7 +269,7 @@ function EditScheduleView(props) {
                                     return
                                 }
                                 
-                                dispatch(updateActivityType(data._id, { description: valueDesc })).then(value => {
+                                dispatch(updateActivityType(data._id, { description: valueDesc, isPerformed:true })).then(value => {
                                     if (value) {
                                         dispatch(getScheduleData())
                                         props.navigation.pop()
@@ -284,7 +285,18 @@ function EditScheduleView(props) {
                                     paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                                 }}>SUBMIT</Text>
-                            </TouchableOpacity> : null}
+                            </TouchableOpacity> : <AutoSizeText
+                                numberOfLines={2}
+                                minFontSize={moderateScale(12)}
+                                fontSize={moderateScale(14)}
+                                mode={ResizeTextMode.max_lines}
+                                style={{
+                                    ...styles.generalTxt,
+                                    fontFamily:Fonts.type.medium,
+                                    marginStart: moderateScale(25),
+                                    color: '#585858'
+                                }}>Performed By {data.employeeName}{'\n'}Date:{moment(data.performedDate.substring(0, data.performedDate.length - 1)).format('Do MMM,YYYY')}
+                            </AutoSizeText>}
 
                     </View>
                 </KeyboardAvoidingView>
