@@ -10,7 +10,6 @@ import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, Fl
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import RBSheet from "react-native-raw-bottom-sheet";
 import { TextInput } from 'react-native-gesture-handler';
 import Util from '../../../utils';
@@ -59,7 +58,7 @@ function RegisterPetView(props) {
     const sheetCalRef = useRef(null);
     const sheetBreedRef = useRef(null);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     useEffect(() => {
 

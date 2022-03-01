@@ -7,9 +7,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
-import DeviceInfo from 'react-native-device-info';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { TYPES_OF_SERVICES } from '../../constants';
@@ -19,7 +18,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 
 function DashBoardView(props) {
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { animalData, productData, totalAnimals, totalProducts, getInventory } = props;
 

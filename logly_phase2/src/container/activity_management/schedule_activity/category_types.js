@@ -701,8 +701,15 @@ function AddCategory(props) {
                                     <TextInput
                                         onChangeText={(e) => {
                                             console.log('current--->', index === currentActivityIndex)
-                                            if (index === currentActivityIndex)
+                                            if (index === currentActivityIndex){
                                                 setUpdateActivityName(e)
+                                                let tmp = [];
+                                                tmp = tmp.concat(addCategoryActivityType);
+                                                tmp[index] = e;
+                                                console.log('subtype--->', tmp)
+                                                setAddCategoryActivityType([...tmp])
+                                                //setCurrentActivityIndex(-1)
+                                            }
                                         }}
 
 
@@ -711,11 +718,12 @@ function AddCategory(props) {
                                             setUpdateActivityName(item)
                                         }}
                                         onEndEditing={(e) => {
-                                            let tmp = [];
-                                            tmp = tmp.concat(addCategoryActivityType);
-                                            tmp[index] = updateActivityName;
-                                            setAddCategoryActivityType([...tmp])
-                                            setCurrentActivityIndex(-1)
+                                            // let tmp = [];
+                                            // tmp = tmp.concat(addCategoryActivityType);
+                                            // tmp[index] = updateActivityName;
+                                            // console.log('subtype--->',tmp)
+                                            // setAddCategoryActivityType([...tmp])
+                                            // setCurrentActivityIndex(-1)
                                         }}
 
                                         value={index === currentActivityIndex ? updateActivityName : item}
@@ -943,8 +951,8 @@ function AddCategory(props) {
         if (activityName.length > 0) {
             tmp.push(activityName)
         }
-
-        console.log('selected category-->', categoryName);
+       
+        console.log('selected category-->', tmp);
         setTimeout(() => {
             dispatch(updateTypeCategory(id, { subType: tmp, name: categoryName })).then((response) => {
                 if (response) {
@@ -952,6 +960,7 @@ function AddCategory(props) {
                     setEditShow(-1)
                     getAllCategoriesList()
                     setActivityName('')
+                    setCurrentActivityIndex(-1)
                 }
             })
         }, 500)

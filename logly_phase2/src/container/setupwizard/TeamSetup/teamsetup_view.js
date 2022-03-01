@@ -19,7 +19,6 @@ import TeamListing from "./team_listing";
 import DataHandler from "../../../utils/DataHandler";
 import { BUS_LISTING, BUS_SER_PROVIDER } from "../../../constants";
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import DeviceInfo from 'react-native-device-info';
 import Dialog, { DialogContent, ScaleAnimation, DialogButton, DialogTitle } from 'react-native-popup-dialog';
 import utils from '../../../utils';
 import { getTeamMembersByEmail } from '../../../actions/TeamMembersModule';
@@ -78,7 +77,7 @@ function TeamSetupView(props) {
     const scroll = useRef(null);
     const txtInpEmail = useRef(null);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     let dispatch = useDispatch();
 

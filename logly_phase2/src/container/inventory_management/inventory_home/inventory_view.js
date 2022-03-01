@@ -5,11 +5,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React from 'react';
-import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 
 function InventoryView(props) {
 
@@ -20,7 +19,7 @@ function InventoryView(props) {
     { name: 'Products', bg: '#097D3B', icon: Icons.icon_pet_profile },
     { name: 'Register Products', bg: '#C90F22', icon: Icons.icon_pet_profile }];
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />

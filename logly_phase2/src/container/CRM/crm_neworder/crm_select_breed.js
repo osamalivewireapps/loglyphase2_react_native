@@ -11,19 +11,19 @@ import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Ima
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles'
 import CRMHeaderView from '../crm_header';
 import { TextInput } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { getBreederListSimple, getBreederForSale } from '../../../actions/Sales';
 import Util from '../../../utils';
+import { Platform } from 'react-native';
 
 function CRMAddBreedView(props) {
 
     const { nextScreen, buyer } = props;
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
     //const initialBreeder = [{ id: 0 }, { id: 1 }, { id: 2 }]
     const [isSelect, setIsSelect] = useState(-1);
 

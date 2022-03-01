@@ -11,7 +11,7 @@ import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, Touc
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import moment from 'moment';
 import { useDispatch } from "react-redux";
 import { updateFeatured, getAnimal, updatePrivacy } from '../../../actions/AnimalModule';
@@ -21,6 +21,8 @@ import { INDIVIDUAL } from '../../../constants';
 function AboutUserView(props) {
 
     const { userObject, accountType, updateUser, isSameUser } = props;
+
+    console.log('userobjwct---->', userObject)
 
     const dispatch = useDispatch();
 

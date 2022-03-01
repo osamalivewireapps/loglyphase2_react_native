@@ -26,8 +26,9 @@ import {
     DrawerContentScrollView,
     DrawerItemList,
 } from '@react-navigation/drawer';
-import DeviceInfo from 'react-native-device-info';
 import DataHandler from '../../utils/DataHandler';
+import {useDispatch} from 'react-redux';
+import { logoutUser } from '../../actions/LoginModule';
 
 function CustomDrawer(props) {
 
@@ -37,7 +38,8 @@ function CustomDrawer(props) {
             setUserObject(JSON.parse(value));
         });
     }, []);
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
+    let dispatch = useDispatch();
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -82,6 +84,8 @@ function CustomDrawer(props) {
                         });
 
                         props.navigation.dispatch(resetAction);
+
+                        dispatch(logoutUser())
                     }}
                     style={{ flexDirection: 'row', paddingStart: moderateScale(40), marginTop: verticalScale(25) }}>
                     <Image source={Icons.icon_logout} resizeMode='contain'

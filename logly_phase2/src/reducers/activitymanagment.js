@@ -1,7 +1,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable semi */
 
-import { GET_ACTIVITY_LISTING } from "../actions/ActionTypes";
+import { GET_ACTIVITY_LISTING, RESET_SCHEDULING_LISTING } from "../actions/ActionTypes";
 
 
 const initialState = {
@@ -14,9 +14,10 @@ export default (state = initialState, actions) => {
 
   switch (actions.type) {
     case GET_ACTIVITY_LISTING:
-      return ({ ...state, activityListing: actions})
+      return ({ ...state, activityListing: actions })
 
-  
+    case RESET_SCHEDULING_LISTING:
+      return ([]);
     default:
       return state;
   }

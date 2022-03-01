@@ -1,4 +1,4 @@
-package com.logly_phase2;
+package com.livewireapps.LOGLY;
 
 import com.facebook.react.ReactActivity;
 

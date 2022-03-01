@@ -6,11 +6,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from 'react';
-import { Alert, Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import { Alert, Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles'
 import { CommonActions } from '@react-navigation/routers';
 import moment from 'moment';
@@ -19,7 +18,7 @@ import moment from 'moment';
 function CRMCustomerDetailView(props) {
 
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { toggleDrawer, userObject, customerDetail } = props;
     const { customerInfo } = props.route.params;

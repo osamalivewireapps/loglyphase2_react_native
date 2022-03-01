@@ -6,22 +6,23 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from 'react';
-import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { INDIVIDUAL, LOGLY_COMMUNITY, TYPES_OF_SERVICES } from '../../constants';
 import { Colors, Fonts, Icons, Images } from '../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import * as Animatable from 'react-native-animatable';
 import Util from '../../utils';
 import { useCallback } from 'react';
-
+import { Alert } from 'react-native';
+//import messaging from '@react-native-firebase/messaging';
 
 function HomeView(props) {
 
 
     const [isShow, setShow] = useState(false);
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { toggleDrawer, userObject, accountType } = props;
     const PET_ACTIVITY =
@@ -64,12 +65,12 @@ function HomeView(props) {
         setBgColor(bgColors[index]);
     }, []);
 
-    useEffect(() => {
-        const intervalID = setInterval(shuffle, 1500);
-        return () => clearInterval(intervalID);
-    }, [shuffle]);
+    // useEffect(() => {
+    //     const intervalID = setInterval(shuffle, 1500);
+    //     return () => clearInterval(intervalID);
+    // }, [shuffle]);
 
- 
+   
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -82,7 +83,11 @@ function HomeView(props) {
                     <TouchableOpacity onPress={() => props.navigation.navigate('SearchItem')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
                         <Image source={Icons.icon_search_home} resizeMode="contain" style={{ height: '100%', width: '100%' }} />
                     </TouchableOpacity>
-                    <Image source={Icons.icon_notification} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
+
+                    <TouchableOpacity onPress={() => props.navigation.navigate('NotificationListing')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
+                        <Image source={Icons.icon_notification} resizeMode="contain" style={{ height: moderateScale(45), width: moderateScale(45) }} />
+                    </TouchableOpacity>
+                    
 
                     <TouchableOpacity onPress={() => props.navigation.navigate('QrScan')} style={{ height: moderateScale(45), width: moderateScale(45) }}>
 
@@ -275,6 +280,7 @@ function HomeView(props) {
                             style={{
                                 borderRadius: moderateScale(8),
                                 justifyContent: 'center',
+                                alignItems:'center',
                                 backgroundColor: 'white',
                                 height: moderateScale(30),
                                 flex: 0.22,
@@ -283,15 +289,12 @@ function HomeView(props) {
                         >
                             <AutoSizeText
                                 numberOfLines={1}
-                                minFontSize={moderateScale(14)}
-                                fontSize={moderateScale(16)}
                                 mode={ResizeTextMode.max_lines}
                                 style={{
-                                    ...styles.generalTxt,
                                     fontFamily: Fonts.type.bold,
                                     color: Colors.appBgColor,
-                                    flex: 0.4,
                                     textAlign: 'center',
+                                    width:'100%'
                                 }}>Donate Now
                             </AutoSizeText>
                         </TouchableOpacity>
@@ -535,7 +538,7 @@ function HomeView(props) {
                     height: moderateScale(50),
                     width: moderateScale(50),
                     alignSelf: 'flex-end',
-                    top: Dimensions.get('screen').height - moderateScale(80),
+                    top: Dimensions.get('screen').height - (Platform.OS==='ios'?verticalScale(80):verticalScale(120)),
                     right: moderateScale(20),
                     position: 'absolute',
                     alignItems: 'center',

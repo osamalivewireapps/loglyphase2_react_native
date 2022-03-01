@@ -22,6 +22,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import StackNavigator from './StackNavigator';
 
 
+
 class App extends React.Component {
 
   constructor() {

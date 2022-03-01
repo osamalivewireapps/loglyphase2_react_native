@@ -150,3 +150,5 @@ export const POLICY = "policy";
 
 export const VET_ID ='5fc77b223111d20d08083f5e';
 export const VENDOR_ID = '5fc77b283111d20d08083f5f';
+export const NOTIFICATION_PERMISSION_DENIED_ERROR =
+    "Please allow notifications and get notified timely";

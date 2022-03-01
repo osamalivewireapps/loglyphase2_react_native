@@ -9,14 +9,14 @@ import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpaci
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { Pages } from 'react-native-pages';
+import { Platform } from 'react-native';
 
 function ProductDetailView(props) {
 
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
     const [isEditShow, setIsEditShow] = useState(false);
     const [listFileUri, setListFileUri] = useState([]);
 

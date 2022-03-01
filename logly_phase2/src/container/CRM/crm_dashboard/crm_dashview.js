@@ -6,11 +6,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
-import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { SalesHistoryView } from './saleshostory';
 import CRMStyles from './../crm_styles'
 import { PaymentsView } from './payments';
@@ -20,7 +19,7 @@ import { CustomersCRMView } from './customers';
 function CRMDashBoardView(props) {
 
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { userObject } = props;
 
@@ -141,7 +140,7 @@ function CRMDashBoardView(props) {
                     style={{
                         height: moderateScale(50),
                         width: moderateScale(50),
-                        top: Dimensions.get('screen').height - verticalScale(80),
+                        top: Dimensions.get('screen').height - (Platform.OS === 'ios' ? verticalScale(80) : verticalScale(120)),
                         right: moderateScale(20),
                         position: 'absolute',
                         alignItems: 'center',

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable quotes */
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable react/self-closing-comp */
@@ -10,8 +11,7 @@ import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, Touc
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
-import { uploadHealth, getAnimal, delHealthRecord } from '../../../actions/AnimalModule';
+import { uploadHealth, getAnimal, delHealthRecord, getVaccinationHistory } from '../../../actions/AnimalModule';
 import { useDispatch } from "react-redux";
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import Util from '../../../utils';
@@ -22,9 +22,10 @@ import CustomButton from '../../../components/CustomButton';
 function HealthPetView(props) {
 
     const { healthRecord } = props.animalData;
-    const { isSameUser} = props;
+    const { isSameUser } = props;
 
     const [arrHealthRecord, setArrHealthRecord] = useState([]);
+    const [arrVaccinationHistory, setVaccinationHistory] = useState([]);
     const [initialPg, setInitialPg] = useState(0);
     const [isBottonSheetVisible, setCloseBottonSheet] = useState(false);
     const [validateName, setValidateName] = useState(true);
@@ -37,10 +38,18 @@ function HealthPetView(props) {
 
     const dispatch = useDispatch();
 
+
     useEffect(() => {
         setArrHealthRecord(healthRecord)
 
     }, [healthRecord])
+
+    useEffect(() => {
+        dispatch(getVaccinationHistory(props.animalData._id)).then(value => {
+            setVaccinationHistory(value.payload)
+        })
+
+    }, [])
 
     return (
 
@@ -115,161 +124,226 @@ function HealthPetView(props) {
             {isBottonSheetVisible ? sheetRef.current.open() : null}
 
             {initialPg === 0 && arrHealthRecord.length > 0 ?
-                    <FlatList
-                        contentContainerStyle={{
-                            flex:1
-                        }}
-                        data={arrHealthRecord}
-                        renderItem={({ item, index }) => {
-                            return (
+                <FlatList
+                    data={arrHealthRecord}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <View style={{
+                                backgroundColor: '#F5F5F5',
+                                borderRadius: moderateScale(10),
+                                marginTop: verticalScale(10),
+                                marginEnd: moderateScale(35),
+                                height: verticalScale(60),
+                                flexDirection: 'row',
+                                padding: moderateScale(10)
+
+                            }} onPress={() => {
+
+                            }}>
+
+                                <ImagePlaceholder
+                                    showActivityIndicator={false}
+                                    activityIndicatorProps={{
+                                        size: 'small',
+                                        color: '#777777',
+                                    }}
+                                    resizeMode='cover'
+                                    placeholderStyle={{
+                                        height: '100%',
+                                        width: '100%',
+                                        borderWidth: moderateScale(1),
+                                        borderColor: Colors.appBgColor,
+                                        borderRadius: moderateScale(8)
+
+                                    }}
+                                    imgStyle={{
+                                        height: '100%',
+                                        width: '100%',
+                                        borderWidth: moderateScale(1),
+                                        borderColor: Colors.appBgColor,
+                                        borderRadius: moderateScale(8)
+                                    }}
+
+                                    style={{
+                                        flex: 0.2,
+                                    }}
+
+                                    src={item.filename ? item.filename : ''}
+                                    placeholder={item.filename.includes('.pdf') ? Icons.icon_file_pdf : Icons.icon_paw}
+                                />
+
+
                                 <View style={{
-                                    backgroundColor: '#F5F5F5',
-                                    borderRadius: moderateScale(10),
-                                    marginTop: verticalScale(10),
-                                    marginEnd: moderateScale(35),
-                                    height: verticalScale(60),
-                                    flexDirection: 'row',
-                                    padding: moderateScale(10)
-
-                                }} onPress={() => {
-
+                                    flex: 0.6,
+                                    justifyContent: 'center'
                                 }}>
-
-                                    <ImagePlaceholder
-                                        showActivityIndicator={false}
-                                        activityIndicatorProps={{
-                                            size: 'small',
-                                            color: '#777777',
-                                        }}
-                                        resizeMode='cover'
-                                        placeholderStyle={{
-                                            height: '100%',
-                                            width: '100%',
-                                            borderWidth: moderateScale(1),
-                                            borderColor: Colors.appBgColor,
-                                            borderRadius: moderateScale(8)
-
-                                        }}
-                                        imgStyle={{
-                                            height: '100%',
-                                            width: '100%',
-                                            borderWidth: moderateScale(1),
-                                            borderColor: Colors.appBgColor,
-                                            borderRadius: moderateScale(8)
-                                        }}
-
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(16)}
+                                        mode={ResizeTextMode.max_lines}
                                         style={{
-                                            flex: 0.2,
-                                        }}
+                                            ...styles.generalTxt,
+                                            paddingStart: moderateScale(10),
+                                            paddingEnd: moderateScale(10),
+                                            color: Colors.appBgColor
+                                        }}>{item.fileNamed}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={2}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
+                                        style={{
+                                            ...styles.generalTxt,
+                                            fontFamily: Fonts.type.base,
+                                            paddingStart: moderateScale(10),
+                                            paddingEnd: moderateScale(10),
+                                            color: '#585858'
+                                        }}>{item.note}
+                                    </AutoSizeText>
+                                </View>
 
-                                        src={item.filename?item.filename:''}
-                                        placeholder={item.filename.includes('.pdf') ? Icons.icon_file_pdf : Icons.icon_paw}
-                                    />
+                                <TouchableOpacity
+                                    onPress={() => {
+                                        if (item.filename.includes('pdf'))
+                                            props.navigation.navigate('PdfReader', { uri: item.filename })
+                                        else {
 
+                                            let tmp = [];
+                                            tmp.push(item)
+                                            props.navigation.navigate('ImageGallery', { style: { flex: 1 }, listCollection: tmp })
 
-                                    <View style={{
-                                        flex: 0.6,
+                                        }
+                                    }
+                                    }
+                                    style={{
+                                        flex: 0.2,
                                         justifyContent: 'center'
                                     }}>
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={moderateScale(14)}
-                                            fontSize={moderateScale(16)}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                paddingStart: moderateScale(10),
-                                                paddingEnd: moderateScale(10),
-                                                color: Colors.appBgColor
-                                            }}>{item.fileNamed}
-                                        </AutoSizeText>
-                                        <AutoSizeText
-                                            numberOfLines={2}
-                                            minFontSize={moderateScale(12)}
-                                            fontSize={moderateScale(14)}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                fontFamily: Fonts.type.base,
-                                                paddingStart: moderateScale(10),
-                                                paddingEnd: moderateScale(10),
-                                                color: '#585858'
-                                            }}>{item.note}
-                                        </AutoSizeText>
-                                    </View>
-
-                                    <TouchableOpacity
-                                        onPress={() => {
-                                            if (item.filename.includes('pdf'))
-                                                props.navigation.navigate('PdfReader', { uri: item.filename })
-                                            else {
-
-                                                let tmp = [];
-                                                tmp.push(item)
-                                                props.navigation.navigate('ImageGallery', { style: { flex: 1 }, listCollection: tmp })
-
-                                            }
-                                        }
-                                        }
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(14)}
+                                        fontSize={moderateScale(14)}
+                                        mode={ResizeTextMode.max_lines}
                                         style={{
-                                            flex: 0.2,
-                                            justifyContent: 'center'
-                                        }}>
-                                        <AutoSizeText
-                                            numberOfLines={1}
-                                            minFontSize={moderateScale(14)}
-                                            fontSize={moderateScale(14)}
-                                            mode={ResizeTextMode.max_lines}
-                                            style={{
-                                                ...styles.generalTxt,
-                                                textAlign: 'center',
-                                                borderColor: Colors.appBgColor,
-                                                padding: moderateScale(2),
-                                                paddingStart: moderateScale(10),
-                                                paddingEnd: moderateScale(10),
-                                                color: Colors.appBgColor,
-                                                borderWidth: moderateScale(1),
-                                                borderRadius: moderateScale(10)
-                                            }}>View
-                                        </AutoSizeText>
-                                    </TouchableOpacity>
+                                            ...styles.generalTxt,
+                                            textAlign: 'center',
+                                            borderColor: Colors.appBgColor,
+                                            padding: moderateScale(2),
+                                            paddingStart: moderateScale(10),
+                                            paddingEnd: moderateScale(10),
+                                            color: Colors.appBgColor,
+                                            borderWidth: moderateScale(1),
+                                            borderRadius: moderateScale(10)
+                                        }}>View
+                                    </AutoSizeText>
+                                </TouchableOpacity>
 
-                                    <CustomButton
-                                        isSameUser={isSameUser}
-                                        onPress={() => {
-                                            delHealthRecords(props.animalData._id, item._id)
-                                        }
-                                        }
-                                        styles={{
-                                            justifyContent: 'center',
-                                            marginStart: moderateScale(10)
-                                        }}>
-                                        <Image source={Icons.icon_close} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
-                                    </CustomButton>
+                                <CustomButton
+                                    isSameUser={isSameUser}
+                                    onPress={() => {
+                                        delHealthRecords(props.animalData._id, item._id)
+                                    }
+                                    }
+                                    styles={{
+                                        justifyContent: 'center',
+                                        marginStart: moderateScale(10)
+                                    }}>
+                                    <Image source={Icons.icon_close} resizeMode='contain' style={{ height: verticalScale(10), width: verticalScale(10) }} />
+                                </CustomButton>
+                            </View>
+                        )
+                    }}
+                />
+
+                : 
+                initialPg === 1 ?
+                <FlatList
+                    data={arrVaccinationHistory}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity
+                                onPress={() => props.navigation.navigate('EditScheduleActivity', { data: item, updateList: () => {} })}
+
+                                style={{
+                                    backgroundColor: item.isPerformed ? '#FFE7CF' : '#BCFCD8',
+                                    padding: moderateScale(5),
+                                    borderRadius: moderateScale(10),
+                                    marginTop: verticalScale(10),
+                                    flexDirection: 'row',
+                                    alignItems: 'center',
+                                    paddingTop: verticalScale(12),
+                                    paddingBottom: verticalScale(12),
+                                    //marginStart: moderateScale(25),
+                                    marginEnd: moderateScale(25)
+                                }}>
+
+                                <View style={{
+                                    flex: 0.9,
+                                    marginStart: moderateScale(12)
+                                }}>
+
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: item.isPerformed ? '#E57301' : '#097D3B',
+
+                                        }}
+                                    >
+                                        {item.categoryName + (item.categoryType ? ', ' + item.categoryType : '')}
+                                    </AutoSizeText>
+                                    <AutoSizeText
+                                        numberOfLines={1}
+                                        minFontSize={moderateScale(12)}
+                                        fontSize={moderateScale(14)}
+                                        style={{
+                                            fontFamily: Fonts.type.medium,
+                                            color: item.isPerformed ? '#E57301' : '#097D3B',
+
+                                        }}
+                                    >
+                                        {item.time}
+                                        {/* {moment(item.createdAt).format('DD MMM, hh:mm:ss A')} */}
+                                    </AutoSizeText>
+
+
                                 </View>
-                            )
-                        }}
-                        />
-            
-             : <View style={{flex:1}}/>}
+                                <Image
+                                    resizeMode='contain'
+                                    style={{
+                                        flex: 0.1,
+
+                                    }}
+                                    source={Icons.icon_arrow_blue} />
+                            </TouchableOpacity>
+                        )
+                    }}
+                />:<View style={{flex:1}}/>
+                
+                
+                }
 
             {(initialPg === 0 && isSameUser) ?
-            
+
                 <CustomButton
                     isSameUser={isSameUser} styles={{
-                    ...styles.styleButtons, flex: 0,
-                    margin: verticalScale(25),
-                    marginStart: 0,
-                    marginTop: verticalScale(10)
-                }} onPress={() => { docPicker() }}>
+                        ...styles.styleButtons, flex: 0,
+                        margin: verticalScale(25),
+                        marginStart: 0,
+                        marginTop: verticalScale(10)
+                    }} onPress={() => { docPicker() }}>
                     <Text style={{
                         ...styles.generalTxt,
                         fontSize: moderateScale(20), textAlign: 'center', padding: moderateScale(10),
                         paddingTop: verticalScale(12), paddingBottom: verticalScale(12),
 
                     }}>Add Document</Text>
-                </CustomButton> 
-                
+                </CustomButton>
+
                 : null}
         </View>
         //</ScrollView>
@@ -421,8 +495,8 @@ function HealthPetView(props) {
         })
     }
 
-    function delHealthRecords(id,healthRecord){
-        dispatch(delHealthRecord(id,healthRecord)).then((responseData) => {
+    function delHealthRecords(id, healthRecord) {
+        dispatch(delHealthRecord(id, healthRecord)).then((responseData) => {
             dispatch(getAnimal(props.route.params.id));
         })
     }

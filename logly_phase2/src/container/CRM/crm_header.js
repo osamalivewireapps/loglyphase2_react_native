@@ -6,18 +6,17 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
-import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/routers';
 import CRMStyles from './crm_styles';
 
 function CRMHeaderView(props) {
 
    
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { name,icon,bgColor } = props;
 

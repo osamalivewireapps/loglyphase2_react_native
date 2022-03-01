@@ -4,8 +4,8 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 /* eslint-disable quotes */
-import React, { } from 'react';
-import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity, View, SafeAreaView, Text, Dimensions, StyleSheet, Image, FlatList, Platform } from 'react-native';
 import { Colors, Fonts, Icons } from '../../../theme';
 import { ScrollView } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
@@ -19,7 +19,7 @@ function BusAccountPackagesView(props) {
         accountPackage, selectAccountPackage, isShowBack, packageId } = props;
     let btnTxt = showBack ? "BACK" : "PROCEED";
 
-    console.log("package amount-->", packagesAmount)
+    console.log('props--->',props)
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: Colors.appBgColor }} />
@@ -53,7 +53,6 @@ function BusAccountPackagesView(props) {
                     }}>
 
 
-                        {/* {getAccountView(listAccountType)} */}
                         {renderExpandableList(packagesType, packagesAmount, props)}
 
                         <TouchableOpacity
@@ -73,11 +72,11 @@ function BusAccountPackagesView(props) {
                     </View>
                 </ScrollView>) :
                 (<View style={{
-                    height: Dimensions.get('window').height/2,
-                    justifyContent:'center'
+                    height: Dimensions.get('window').height / 2,
+                    justifyContent: 'center'
 
                 }}>
-                    <Text style={{ ...styles.generalTxt, color: 'black',textAlign: 'center',fontSize:moderateScale(30),fontFamily:Fonts.type.bold}}>{getFreeTxt()}</Text>
+                    <Text style={{ ...styles.generalTxt, color: 'black', textAlign: 'center', fontSize: moderateScale(30), fontFamily: Fonts.type.bold }}>{getFreeTxt()}</Text>
                 </View>
                 )}
 
@@ -87,7 +86,7 @@ function BusAccountPackagesView(props) {
 }
 
 
-function getFreeTxt(){
+function getFreeTxt() {
     return "This is a Free\nSubscription.";
 }
 
@@ -113,7 +112,7 @@ function renderCollapsibleItem(item, index, packagesAmount, props) {
                         ...styles.boxcontainer,
                         padding: moderateScale(15), alignItems: 'center',
                         height: verticalScale(70), flexDirection: 'row',
-                        paddingEnd: moderateScale(20)
+                        paddingEnd: moderateScale(20),
                     }}>
                     <Text style={{
                         ...styles.generalTxt,
@@ -122,8 +121,9 @@ function renderCollapsibleItem(item, index, packagesAmount, props) {
                         paddingLeft: moderateScale(20),
                         flex: 9,
 
-                    }}>{item}</Text>
-                    <Image source={Icons.icon_ios_arrow_down} style={{height:verticalScale(5),width:moderateScale(8)
+                    }}>{item.toLowerCase().includes('year') ? 'Quarterly' : item}</Text>
+                    <Image source={Icons.icon_ios_arrow_down} style={{
+                        height: verticalScale(5), width: moderateScale(8)
                     }} />
 
                 </View>
@@ -206,7 +206,7 @@ function getAccountView(listData, packageType, outerId, props) {
                         color: Colors.appBgColor,
                         fontSize: moderateScale(12), padding: moderateScale(4),
 
-                    }}>{packageType.toLowerCase() === "lifetime" ? "$ " + data.lifetimePrice + "/ lifetime" : (packageType === "Monthly" ? " $" + data.monthlyPrice + "/ month" : " $" + data.yearlyPrice + "/ year")}</Text>
+                    }}>{packageType.toLowerCase() === "lifetime" ? "$ " + data.lifetimePrice + "/ lifetime" : (packageType === "Monthly" ? " $" + data.monthlyPrice + "/ month" : " $" + data.yearlyPrice + "/ quarter")}</Text>
                 </TouchableOpacity>
 
 
@@ -243,7 +243,7 @@ const styles = StyleSheet.create({
         marginEnd: moderateScale(10),
         marginBottom: verticalScale(10),
         marginTop: verticalScale(10),
-        width: '100%'
+        width: '95%'
     },
     generalTxt: {
         color: 'white',

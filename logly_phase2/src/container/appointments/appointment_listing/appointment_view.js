@@ -10,7 +10,6 @@ import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, Touchable
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/routers';
 import { FlatList } from 'react-native-gesture-handler';
 import { RegisterPetView } from './registerpet';
@@ -21,7 +20,7 @@ function AppointmentListingView(props) {
 
     const [searchTxt, setSearchTxt] = useState('');
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
     const pagerRef = useRef(null);
     const [pageNumber, setPageNumber] = useState(0);
 

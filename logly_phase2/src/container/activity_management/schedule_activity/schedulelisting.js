@@ -11,12 +11,12 @@ import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Ima
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { connect, useDispatch } from 'react-redux';
 import { getScheduleData } from '../../../actions/ActivityManagement';
 import { SectionList } from 'react-native';
 import moment from 'moment';
 import { values } from 'lodash';
+import { RESET_SCHEDULING_LISTING } from '../../../actions/ActionTypes';
 
 
 function ScheduleListingView(props) {
@@ -32,6 +32,14 @@ function ScheduleListingView(props) {
     useEffect(() => {
         getSchData([])
         dispatch(getScheduleData())
+    },[])
+   
+    useEffect(() => {
+        return (() => {
+            setListSchedule([])
+            getSchData([]);
+            dispatch({ type: RESET_SCHEDULING_LISTING})
+        })
     }, []);
 
     useEffect(() => {
@@ -39,6 +47,7 @@ function ScheduleListingView(props) {
             getSchData(props.scheduleListing.payload)
             getScheduleActivitiesList(props.scheduleListing.payload);
         }
+           
     }, [props.scheduleListing]);
 
     useEffect(() => {
@@ -51,6 +60,7 @@ function ScheduleListingView(props) {
     let currentYear = moment().format('YYYY');
     let futureDay = moment().add(2, 'days').format('ddd');
 
+    let thirdDayList = [];
     function getScheduleActivitiesList(response) {
 
         if (!response || response.length === 0)
@@ -60,66 +70,7 @@ function ScheduleListingView(props) {
         let listToday = response.filter((value) => value.period.toLowerCase().includes('daily'));
         let listTommorow = listToday.concat([]);
         let listFuture = listToday.concat([]);
-
-        // response.forEach(value => {
-        //     if (value.period.toLowerCase().includes('weekly')) {
-        //         pushDataByDay(value, listToday, listTommorow, listFuture)
-        //     }
-        //     else if (value.period.toLowerCase().includes('monthly')) {
-        //         if (value.months.find(months => months.includes(currentMonth))) {
-        //             value.days.forEach(element => {
-        //                 console.log('element--->', element)
-        //                 if (element === today) {
-        //                     listToday.push({ ...value, days: element });
-        //                 } else if (element === tomorrow) {
-        //                     listTommorow.push({ ...value, days: element });
-        //                 } else {
-        //                     listFuture.push({ ...value, days: element });
-        //                 }
-        //             })
-        //         }
-
-        //         else {
-        //             value.days.forEach(element => {
-        //                 listFuture.push({ ...value, days: element });
-        //             })
-        //         }
-        //     }
-        //     else if (value.period.toLowerCase().includes('yearly')) {
-        //         value.years.forEach(tmpYear => {
-        //             if (tmpYear === currentYear) {
-
-        //                 value.months.forEach(monthElement => {
-        //                     if (monthElement === currentMonth) {
-        //                         value.days.forEach(element => {
-        //                             console.log('element--->', element)
-        //                             if (element === today) {
-        //                                 listToday.push({ ...value, days: element, months: monthElement, years: currentYear });
-        //                             } else if (element === tomorrow) {
-        //                                 listTommorow.push({ ...value, days: element, months: monthElement, years: currentYear });
-        //                             } else {
-        //                                 listFuture.push({ ...value, days: element, months: monthElement, years: currentYear });
-        //                             }
-        //                         })
-        //                     } else {
-        //                         value.days.forEach(element => {
-        //                             listFuture.push({ ...value, days: element, months: monthElement, years: currentYear });
-        //                         })
-        //                     }
-        //                 })
-        //             }
-        //             else {
-        //                 value.months.forEach(monthElement => {
-        //                     if (monthElement === currentMonth) {
-        //                         value.days.forEach(element => {
-        //                             listFuture.push({ ...value, days: element, months: monthElement });
-        //                         })
-        //                     }
-        //                 })
-        //             }
-        //         })
-        //     }
-        // });
+        thirdDayList = listToday.concat([]);
 
         response.forEach(value => {
             if (value.period.toLowerCase().includes('weekly')) {
@@ -153,61 +104,11 @@ function ScheduleListingView(props) {
             tmp.push({
                 title: 'Tomorrow', data: listTommorow
             })
-        if (listFuture.length > 0)
+        if (thirdDayList.length > 0)
             tmp.push({
-                title: 'Upcoming', data: listFuture
+                title: moment().add(2, 'days').format('dddd'), data: thirdDayList
             })
         setListSchedule(tmp)
-        // console.log('today--->', tomorrow);
-        // let tmp = [];
-        // let time = response[0].createdAt;
-        // let schData = response;
-
-        // if (schData) {
-
-        // }
-        // let tmp = [];
-        // let time = response[0].createdAt;
-        // let schData = response;
-
-        // if (response)
-        //     console.log('schedule data-->', time);
-
-        // if (schData) {
-        //     time = getTimeFormat(time)
-
-        //     schData.forEach((element, index) => {
-
-
-        //         console.log('time456--->', time)
-
-        //         if (time.includes(getTimeFormat(element.createdAt))) {
-        //             console.log(`index${index} first--->`, time)
-        //             if (index === schData.length - 1) {
-        //                 tmp.push({
-        //                     title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
-        //                 })
-        //             }
-        //         }
-
-        //         else {
-        //             console.log(`index${index} second--->`, time)
-        //             tmp.push({
-        //                 title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
-        //             })
-        //             console.log('time data--->', tmp)
-        //             time = getTimeFormat(element.createdAt)
-
-        //             if (index === schData.length - 1) {
-        //                 tmp.push({
-        //                     title: time, data: schData.filter(value => time === getTimeFormat(value.createdAt))
-        //                 })
-        //             }
-        //         }
-        //     });
-        //     setListSchedule(tmp)
-        // }
-
     }
 
     function pushDataByDay(value, listToday, listTommorow, listFuture) {
@@ -215,13 +116,17 @@ function ScheduleListingView(props) {
             listToday.push(value);
         } else if (value.days.find(days => days.includes(tomorrow))) {
             listTommorow.push(value)
-        } else {
+        }
+        else if (value.days.find(days => days.includes(futureDay))) {
+            thirdDayList.push(value)
+        }
+        else {
             listFuture.push(value)
         }
     }
     return (
         <View style={{ height: '100%' }}>
-
+            {listSchedule.length>0?
             <SectionList
                 stickySectionHeadersEnabled={false}
                 sections={listSchedule}
@@ -235,7 +140,7 @@ function ScheduleListingView(props) {
                             onPress={() => props.navigation.navigate('EditScheduleActivity', { data: item, updateList: () => { dispatch(getScheduleData()) } })}
 
                             style={{
-                                backgroundColor: '#F5F5F5',
+                                backgroundColor: item.isPerformed ? '#FFE7CF' : '#BCFCD8',
                                 padding: moderateScale(5),
                                 borderRadius: moderateScale(10),
                                 marginTop: verticalScale(10),
@@ -258,7 +163,7 @@ function ScheduleListingView(props) {
                                     fontSize={moderateScale(14)}
                                     style={{
                                         fontFamily: Fonts.type.medium,
-                                        color: '#777777',
+                                        color: item.isPerformed ? '#E57301' : '#097D3B',
 
                                     }}
                                 >
@@ -270,7 +175,7 @@ function ScheduleListingView(props) {
                                     fontSize={moderateScale(14)}
                                     style={{
                                         fontFamily: Fonts.type.medium,
-                                        color: '#232323',
+                                        color: item.isPerformed ? '#E57301' : '#097D3B',
 
                                     }}
                                 >
@@ -313,7 +218,7 @@ function ScheduleListingView(props) {
                         </AutoSizeText>
                     </View>
                 )}
-            />
+            />:<View/>}
 
         </View>
     );

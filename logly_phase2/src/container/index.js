@@ -32,3 +32,5 @@ export { TeamListing, MemberDetails, AddTeamMember} from './team_management';
 export { ViewProfile, EditProfile} from './Profile';
 export { TransferListing} from './transferanimal';
 export {QrScan}
+export { NotificationListing } from './notifications';
+

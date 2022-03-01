@@ -21,7 +21,7 @@ import {
   ProductDetail, RegisterProduct, AddContacts, ContactListing, FilterContacts, ContactDetails, PdfReader, ImageGallery,
   CRMDashBoard, CRMNewOrder, CRMAddCustomers, CRMSalesDetails, CRMPaymentDetails, CRMCustomerDetail, CRMPurchaseHistoryDetail, CrmOrderCompleted,
   GroupListing, CreateGroup, CreateActivity, AddScheduleActivity, ScheduleListingActivity, EditScheduleActivity, TeamListing, MemberDetails, AddTeamMember, ViewProfile,
-  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile, TransferListing, SummaryAnimalsView, QrScan
+  AppointmentListing, SelectServices, SelectDateServices, AllAnimal, EditProfile, TransferListing, SummaryAnimalsView, QrScan, NotificationListing
 } from './src';
 import SplashScreen from './src/container/Splash';
 import Loader from './src/components/Loader';
@@ -30,7 +30,6 @@ import { Colors, Fonts, Icons } from './src/theme';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { color } from 'react-native-reanimated';
 import { Image, Platform } from 'react-native';
-import DeviceInfo from 'react-native-device-info';
 import DataHandler from './src/utils/DataHandler'
 import { accountType, INDIVIDUAL } from './src/constants';
 
@@ -131,7 +130,8 @@ function StackNavigator(props) {
             <Stack.Screen name='SummaryAnimalsView' component={SummaryAnimalsView} />
             <Stack.Screen name='SelectDateServices' component={SelectDateServices} />
             <Stack.Screen name='QrScan' component={QrScan} />
-            <Stack.Screen name='QrScanning' component={QrScanning}/>
+            <Stack.Screen name='QrScanning' component={QrScanning} />
+            <Stack.Screen name='NotificationListing' component={NotificationListing} />
           </Stack.Navigator>
         </NavigationContainer>
       </Loader>
@@ -143,7 +143,7 @@ function StackNavigator(props) {
   function homeDrawer() {
     const Drawer = createDrawerNavigator();
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     DataHandler.getAccountType().then((value) => {
       setCurrentType(value)
@@ -217,7 +217,8 @@ function StackNavigator(props) {
                   }}
                 />),
             }} />}
-          <Drawer.Screen name='Team Members' component={TeamListing} options={{
+          <Drawer.Screen name='Team Members' component={TeamListing} 
+          options={{
             drawerLabelStyle: {
               fontSize: moderateScale(18)
             },
@@ -263,20 +264,23 @@ function StackNavigator(props) {
 
               />),
           }} />
-          <Drawer.Screen name='Subscription' component={HomeScreen} options={{
-            drawerLabelStyle: {
-              fontSize: moderateScale(18)
-            },
-            drawerIcon: ({ color }) => (
-              <Image source={Icons.icon_subs}
-                resizeMode='contain'
-                style={{
-                  height: verticalScale(20),
-                  width: moderateScale(20)
-                }}
 
-              />),
-          }} />
+          <Drawer.Screen name='Subscription' component={BusAccountPackagesController}
+            initialParams={{ showBack: true, packageId: currentType}}
+            options={{
+              drawerLabelStyle: {
+                fontSize: moderateScale(18)
+              },
+              drawerIcon: ({ color }) => (
+                <Image source={Icons.icon_subs}
+                  resizeMode='contain'
+                  style={{
+                    height: verticalScale(20),
+                    width: moderateScale(20)
+                  }}
+
+                />),
+            }} />
 
 
 

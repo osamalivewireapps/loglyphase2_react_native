@@ -6,11 +6,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef } from 'react';
-import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground } from 'react-native';
+import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import CRMStyles from './../crm_styles'
 import CRMHeaderView from '../crm_header';
 import CRMAddAnimalView from './crm_select_animal';
@@ -25,7 +25,7 @@ import { useDispatch } from 'react-redux';
 function CRMNewOrderView(props) {
 
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const pagerRef = useRef(null);
     const [pageNumber, setPageNumber] = useState(0);

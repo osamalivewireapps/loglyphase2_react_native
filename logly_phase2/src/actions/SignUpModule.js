@@ -104,10 +104,10 @@ export const registerPackage = (data1) => (dispatch) => {
                 packageType: data1.packageType,
                 packageId: data1.packageId,
                 type: data1.type.toLowerCase(),
-                productId: "",
-                transactionId: "",
-                transactionDate: "",
-                transactionReceipt: ""
+                productId: data1.productId,
+                transactionId: data1.transactionId,
+                transactionDate: data1.transactionDate,
+                transactionReceipt: data1.transactionReceipt
             }
         )
             .then(response => {

@@ -28,7 +28,8 @@ export const userLoginRequest = (data1) =>  (dispatch) => {
                 dispatch(DisableLoader());
                 if (response.data.status === 200) {
                     dispatch({ type: USERLOGIN, payload: response.data.data });
-                    resolve({ status: response.data.status, accountType: response.data.data.user.packageType ? response.data.data.user.packageType : response.data.data.subscriber.subscriptionId.packageType, loginResponse: response.data.data });
+                    //resolve({ status: response.data.status, accountType: response.data.data.user.packageType ? response.data.data.user.packageType : response.data.data.subscriber.subscriptionId.packageType, loginResponse: response.data.data });
+                    resolve({ status: response.data.status, accountType: response.data.data.user.packageType ? response.data.data.user.packageType : response.data.data.user.accountType[0], loginResponse: response.data.data });
                 }
                 else {
                     setTimeout(() => {
@@ -282,3 +283,72 @@ export const DeleteImage = (dataToSubmit) => async (dispatch) => {
             });
     });
 };
+
+export const sendDeviceToken = (dataToSubmit) => async (dispatch) => {
+
+    dataToSubmit = { deviceToken: dataToSubmit};
+    console.log("device Token--->", dataToSubmit)
+
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    console.log('config-->', dataToSubmit);
+
+    return new Promise((resolve) => {
+        axios
+            .put(`${baseUrl}/user/device`, dataToSubmit, config)
+            .then(response => {
+
+                console.log('response--->', response);
+
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        utils.topAlertError(response.data.message);
+                    }, timeOut);
+                }
+
+            })
+            .catch(error => {
+
+                console.log('response sendDeviceToken error-->', error.message);
+                setTimeout(() => {
+                    utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+};
+
+export const logoutUser = () => async (dispatch) => {
+
+   
+    let config = { headers: { 'auth': await DataHandler.getAuth() } };
+
+    return new Promise((resolve) => {
+
+        axios.get(`${baseUrl}/user/logout`, config)
+            .then(response => {
+
+                console.log("response-->", response);
+
+                if (response.data.status === 200) {
+                    resolve(true);
+                }
+                else {
+                    setTimeout(() => {
+                        //utils.topAlertError(response.data.message);
+                    }, timeOut);
+
+                }
+
+            })
+            .catch(error => {
+
+                console.log("response error-->", error);
+                setTimeout(() => {
+                    //utils.topAlertError(error.message);
+                }, timeOut);
+            });
+    });
+}

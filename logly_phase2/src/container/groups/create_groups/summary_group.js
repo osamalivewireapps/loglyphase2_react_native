@@ -10,7 +10,6 @@ import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Ima
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo, { useFirstInstallTime } from 'react-native-device-info';
 import styles from '../styles'
 import AddAnimalsGroups from './add_animals_groups';
 import AddTeamGroups from './add_team_groups';

@@ -9,7 +9,6 @@ import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpaci
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import AboutPetView from './about_pet';
 import GalleryPetView from './gallery_pet';
 import HealthPetView from './health_pet';
@@ -26,12 +25,12 @@ function PetDetailView(props) {
     const { updateAnimal } = props.route.params;
     const { removeAnimal, userObject, animalData } = props;
 
-    const isTablet = DeviceInfo.isTablet();
     const TABS = ["About", "Gallery", "Health", "Family\nTree"]
     const [tabsSelect, setTabsSelect] = useState(0);
 
     const isSameUser = userObject?._id !==animalData.breederId ? false : true;
 
+    const isTablet = Platform.isTV;
     return (
         <View style={{ flex: 1, backgroundColor: 'white' }}>
             <SafeAreaView style={{ flex: 0, backgroundColor: 'white' }} />
@@ -180,7 +179,7 @@ function PetDetailView(props) {
 
             </View>
             {/* <ScrollView keyboardShouldPersistTaps='handled'> */}
-            <View style={{ flex: 1 }}>
+            <View style={{ flex:1}}>
 
                 <FlatList
                     data={TABS}
@@ -222,8 +221,8 @@ function PetDetailView(props) {
                 />
 
 
-                {(isSameUser||!props.animalData.isPrivate) ? getSelectedView() : <View style={{
-                    height:'80%',
+                {(isSameUser || !props.animalData.isPrivate) ? getSelectedView() : <View style={{
+                    height:'100%',
                     justifyContent: 'center',
                     alignItems: 'center'
                 }}>

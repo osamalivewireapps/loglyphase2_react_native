@@ -10,7 +10,7 @@ import { TextInput, View, Text, SafeAreaView, ScrollView, Dimensions, Image, Sty
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import ViewPager from '@react-native-community/viewpager';
 import SearchResults from './searchresult';
 import { ActivityIndicator } from 'react-native';

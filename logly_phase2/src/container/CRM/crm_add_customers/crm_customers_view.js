@@ -11,7 +11,6 @@ import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Ima
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles'
 import CRMHeaderView from '../crm_header';
 import Util from '../../../utils';
@@ -20,7 +19,7 @@ import Util from '../../../utils';
 function CRMAddCustomersView(props) {
 
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { toggleDrawer, userObject, addBreeder } = props;
 

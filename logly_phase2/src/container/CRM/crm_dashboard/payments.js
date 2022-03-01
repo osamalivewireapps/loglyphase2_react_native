@@ -11,7 +11,6 @@ import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Ima
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo, { getApiLevelSync } from 'react-native-device-info';
 import CRMStyles from '../crm_styles';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import {

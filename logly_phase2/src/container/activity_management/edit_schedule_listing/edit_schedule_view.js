@@ -10,7 +10,6 @@ import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, Touchable
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { KeyboardAvoidingView } from 'react-native';
 import { Platform } from 'react-native';
 import Util from '../../../utils';
@@ -20,7 +19,7 @@ import moment from 'moment';
 
 function EditScheduleView(props) {
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { data, updateList } = props.route.params;
 

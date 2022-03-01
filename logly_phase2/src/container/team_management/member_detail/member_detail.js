@@ -10,14 +10,14 @@ import { Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpaci
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from "@react-navigation/native";
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { VENDOR_ID } from '../../../constants';
+import { Platform } from 'react-native';
 
 function MemberDetailView(props) {
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const [contactData, setContactData] = useState({});
     const [isEditShow, setIsEditShow] = useState(false);

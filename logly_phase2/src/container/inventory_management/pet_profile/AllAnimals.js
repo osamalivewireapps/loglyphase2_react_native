@@ -11,7 +11,6 @@ import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, Touc
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import ViewPager from '@react-native-community/viewpager';
 import ActiveProfile from './ActiveProfile';
 import ArchiveProfile from './ArchiveProfile';
@@ -21,6 +20,7 @@ import ImageBlurLoading from 'react-native-image-blur-loading';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { TextInput } from 'react-native';
 import { getAnimals } from '../../../actions/AnimalModule';
+import { Platform } from 'react-native';
 
 function AllAnimal(props) {
 
@@ -28,7 +28,7 @@ function AllAnimal(props) {
     const [animalList, setAnimalList] = useState([]);
     const [orgAnimalList, setOrgAnimalList] = useState([]);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { FamilyData, mainId,updateAnimal } = props.route.params;
     console.log("Family Data-->",FamilyData);

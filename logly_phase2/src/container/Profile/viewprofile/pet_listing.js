@@ -7,11 +7,11 @@
 /* eslint-disable no-unused-vars */
 import React, { useRef, useState, useEffect } from 'react';
 import { useDispatch } from "react-redux";
-import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground } from 'react-native';
+import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import ViewPager from '@react-native-community/viewpager';
 import moment from 'moment';
 import ImageBlurLoading from 'react-native-image-blur-loading';
@@ -25,7 +25,7 @@ function PetListing(props) {
     const [animalList, setAnimalList] = useState([]);
     const [orgAnimalList, setOrgAnimalList] = useState([]);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { isSameUser, memberId } = props;
 

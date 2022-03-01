@@ -9,7 +9,7 @@ import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, Touc
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import moment from 'moment';
 
 function ActiveProfile(props) {

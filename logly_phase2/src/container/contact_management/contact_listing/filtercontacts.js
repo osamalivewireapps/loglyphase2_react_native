@@ -11,7 +11,6 @@ import { TextInput, View, Text, SafeAreaView, ScrollView, Dimensions, Image, Sty
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import ModalDropdown from 'react-native-modal-dropdown';
 import { getFormCategory } from '../../../actions/AnimalModule';
 import AppLoader from '../../../components/AppLoader';
@@ -29,7 +28,7 @@ function FilterContacts(props) {
         { label: 'Vendors', value: VENDOR_ID },
         { label: 'Veterinary', value: VET_ID }]);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     useEffect(() => {
         if (customFilters.contactType) {

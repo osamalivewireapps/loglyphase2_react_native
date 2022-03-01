@@ -9,7 +9,6 @@ import React, { useState, useEffect, useRef } from 'react';
 import { RefreshControl, TextInput, FlatList, View, SafeAreaView, Image, StyleSheet, TouchableOpacity, Dimensions, ImageBackground, Text } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
-import DeviceInfo from 'react-native-device-info';
 import ImagePlaceholder from '../../components/ImagePlaceholder';
 import { useDispatch } from 'react-redux';
 import { Colors, Fonts, Icons } from '../../theme';
@@ -17,6 +16,7 @@ import ViewPager from '@react-native-community/viewpager';
 import { transferAnimal } from '../../actions/AnimalModule';
 import DataHandler from '../../utils/DataHandler';
 import Util from '../../utils';
+import { Platform } from 'react-native';
 
 
 
@@ -24,7 +24,7 @@ import Util from '../../utils';
 function SummaryAnimalsView(props) {
 
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { staffData, animalData, popScreen, updateList } = props.route.params;
 

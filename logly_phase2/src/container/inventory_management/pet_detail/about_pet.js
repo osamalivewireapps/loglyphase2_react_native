@@ -11,7 +11,7 @@ import { Modal, FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleShee
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import moment from 'moment';
 import { useDispatch } from "react-redux";
 import { updateFeatured, getAnimal, updatePrivacy } from '../../../actions/AnimalModule';
@@ -34,7 +34,7 @@ function AboutPetView(props) {
 
     const TABS = ["Add New Activity", 'Transfer', "QR Code"];
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const [isFeatured, setIsFeatured] = useState(0);
     const [tabsSelect, setTabsSelect] = useState(0);

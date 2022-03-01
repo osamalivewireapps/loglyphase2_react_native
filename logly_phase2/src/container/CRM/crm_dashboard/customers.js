@@ -11,7 +11,6 @@ import { Animated, Easing, View, Text, SafeAreaView, ScrollView, Dimensions, Ima
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import CRMStyles from '../crm_styles';
 import { getBreederListSimple, getBreederForSale } from '../../../actions/Sales';
 import { useDispatch } from 'react-redux';

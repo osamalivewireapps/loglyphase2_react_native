@@ -11,7 +11,7 @@ import { KeyboardAvoidingView, View, Text, SafeAreaView, ScrollView, Dimensions,
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { TextInput } from 'react-native-gesture-handler';
 import Util from '../../../utils';
@@ -56,7 +56,7 @@ function ProductRegView(props) {
     const sheetRef = useRef(null);
     const sheetBreedRef = useRef(null);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
     const [dialogVisibleStatus, setDialogVisibleStatus] = useState(false);
 
     console.log('productData-->', listPhotoCollections);

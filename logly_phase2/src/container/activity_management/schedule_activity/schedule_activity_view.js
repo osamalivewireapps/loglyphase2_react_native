@@ -10,7 +10,6 @@ import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, Touchable
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { KeyboardAvoidingView } from 'react-native';
@@ -89,7 +88,7 @@ function ScheduleListingActivityView(props) {
         },
     ];
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
 
 

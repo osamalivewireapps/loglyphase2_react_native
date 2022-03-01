@@ -6,11 +6,11 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect, useRef } from 'react';
-import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Text } from 'react-native';
+import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Text, Platform } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import { CommonActions } from '@react-navigation/routers';
 import ViewPager from '@react-native-community/viewpager';
 import Util from '../../../utils';
@@ -31,7 +31,7 @@ function CreateGroupView(props) {
     const [searchTxt, setSearchTxt] = useState('');
     const [contactList, setGroupsList] = useState([]);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { listGroups, updateContacts, route } = props;
 

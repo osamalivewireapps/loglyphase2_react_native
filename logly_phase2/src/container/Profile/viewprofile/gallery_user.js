@@ -10,7 +10,6 @@ import { FlatList, Text, View, SafeAreaView, ScrollView, Image, StyleSheet, Touc
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { Pages } from 'react-native-pages';
 import { useDispatch } from "react-redux";
 import ImagePlaceholder from '../../../components/ImagePlaceholder';

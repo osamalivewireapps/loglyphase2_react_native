@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "482726443239",
+    "project_id": "logly-82fb5",
+    "storage_bucket": "logly-82fb5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:482726443239:android:50ea21f7f7463f1a744a42",
+        "android_client_info": {
+          "package_name": "com.livewireapps.LOGLY"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "482726443239-dbdam1o672n94ru9dntamajjh2e7r165.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBBzjtDWnlHIxCAcRvtI-iZ5-ddXv_IUkI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "482726443239-dbdam1o672n94ru9dntamajjh2e7r165.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "482726443239-in3jflap9t6ik53i2ndredh4cio4fg49.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.livewireapps.Logly"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

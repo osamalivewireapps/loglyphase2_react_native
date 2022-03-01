@@ -10,7 +10,6 @@ import { TextInput, View, SafeAreaView, ScrollView, Image, StyleSheet, Touchable
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, moderateVerticalScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import { CommonActions } from '@react-navigation/routers';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { KeyboardAvoidingView } from 'react-native';
@@ -31,7 +30,7 @@ function AddScheduleActivityView(props) {
     const [isBottonSheetAnimalVisible, setCloseBottonSheetAnimal] = useState(false);
     const [isBottonSheetTeamVisible, setCloseBottonSheetTeam] = useState(false);
 
-    const [petIndex, setPetIndex] = useState(0);
+    const [petIndex, setPetIndex] = useState(-1);
     const [activityIndex, setActivityIndex] = useState(-1);
 
     const [category, setCategoryList] = useState([]);
@@ -61,7 +60,7 @@ function AddScheduleActivityView(props) {
     const sheetAnimalRef = useRef(null);
     const sheetTeamRef = useRef(null);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     console.log('userobject--->', userObject)
 
@@ -218,7 +217,7 @@ function AddScheduleActivityView(props) {
                                     fontFamily: Fonts.type.base,
                                     width: '97%',
                                 }}>
-                                {category.length > 0 && category[petIndex].name ? category[petIndex].name : 'Select Category'}
+                                {category.length > 0 && petIndex>-1 && category[petIndex].name ? category[petIndex].name : 'Select Category'}
 
                             </AutoSizeText>
                             <Image source={Icons.icon_ios_arrow_down} resizeMode="contain" style={{ height: verticalScale(5), width: moderateScale(8) }} />

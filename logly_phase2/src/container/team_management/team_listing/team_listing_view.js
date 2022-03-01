@@ -10,19 +10,20 @@ import { RefreshControl, TextInput, FlatList, Text, View, SafeAreaView, ScrollVi
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 import { CommonActions } from '@react-navigation/routers';
 import moment from 'moment';
 import ImagePlaceholder from '../../../components/ImagePlaceholder';
 import { VET_ID } from '../../../constants';
 import Util from '../../../utils';
+import { Platform } from 'react-native';
 
 function TeamListingView(props) {
 
     const [searchTxt, setSearchTxt] = useState('');
     const [contactList, setContactList] = useState([]);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     const { listContacts, updateContacts, removeMember } = props;
 
@@ -179,7 +180,7 @@ function TeamListingView(props) {
                     height: moderateScale(50),
                     width: moderateScale(50),
                     alignSelf: 'flex-end',
-                    top: Dimensions.get('screen').height - moderateScale(80),
+                    top: Dimensions.get('screen').height - (Platform.OS === 'ios' ? verticalScale(80) : verticalScale(120)),
                     right: moderateScale(20),
                     position: 'absolute',
                     alignItems: 'center',

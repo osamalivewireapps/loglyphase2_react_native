@@ -9,7 +9,7 @@ import { Text,View, SafeAreaView, ScrollView, Image, StyleSheet, TouchableOpacit
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
+
 
 function ArchiveProfile(props){
 

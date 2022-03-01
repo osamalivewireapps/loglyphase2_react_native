@@ -6,11 +6,10 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-unused-vars */
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Keyboard } from 'react-native';
+import { View, Text, SafeAreaView, ScrollView, Dimensions, Image, StyleSheet, FlatList, TouchableOpacity, ImageBackground, Keyboard, PlatformColor } from 'react-native';
 import { AutoSizeText, ResizeTextMode } from 'react-native-auto-size-text';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
 import { Colors, Fonts, Icons, Images } from '../../../theme';
-import DeviceInfo from 'react-native-device-info';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { TextInput } from 'react-native-gesture-handler';
 import Util from '../../../utils';
@@ -62,7 +61,7 @@ function AddContactsView(props) {
     //SCROLLVIEW
     const scroll = useRef(null);
 
-    const isTablet = DeviceInfo.isTablet();
+    const isTablet = Platform.isTV;
 
     console.log("imageuri---->", imgUri)
 
